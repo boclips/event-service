@@ -1,4 +1,4 @@
-package com.boclips.eventservice
+package com.boclips.event.service
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
