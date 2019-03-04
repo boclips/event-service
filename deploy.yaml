@@ -1,6 +1,6 @@
 app: event-service
 port: 8080
-scale: Medium
+scale: Large
 bootTime: Slow
 healthPath: /actuator/health
 environments:
