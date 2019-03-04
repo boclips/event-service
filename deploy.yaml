@@ -1,0 +1,22 @@
+app: event-service
+port: 8080
+scale: Medium
+bootTime: Slow
+healthPath: /actuator/health
+environments:
+  production:
+    replicas: 2
+    urls:
+      - event-service.boclips.com
+  staging:
+    replicas: 1
+    urls:
+      - event-service.staging-boclips.com
+  testing:
+    replicas: 1
+    urls:
+      - event-service.testing-boclips.com
+  local:
+    replicas: 1
+    urls:
+      - event-service.local-boclips.com
