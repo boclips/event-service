@@ -1,7 +1,6 @@
 package com.boclips.event.service.infrastructure.mixpanel
 
 import com.boclips.event.service.domain.model.Event
-import com.boclips.event.service.domain.service.EventConsumer
 import com.boclips.event.service.infrastructure.EventToBsonConverter
 import com.mixpanel.mixpanelapi.ClientDelivery
 import com.mixpanel.mixpanelapi.MessageBuilder
@@ -9,13 +8,14 @@ import com.mixpanel.mixpanelapi.MixpanelAPI
 import org.json.JSONObject
 import java.util.*
 
-class MixpanelEventConsumer(projectToken: String) : EventConsumer {
-    private val mixpanel = MixpanelAPI()
+open class MixpanelEventConsumer(private val mixpanel: MixpanelAPI = MixpanelAPI(), projectToken: String) {
     private val messageBuilder = MessageBuilder(projectToken)
 
-    override fun consumeEvent(events: List<Event>) = events.map(this::eventToMessage)
-            .fold(ClientDelivery()) { delivery, msg -> delivery.apply { addMessage(msg) } }
-            .let(mixpanel::deliver)
+    open fun consumeEvent(event: Event) {
+        mixpanel.deliver(ClientDelivery().apply {
+            addMessage(eventToMessage(event))
+        })
+    }
 
     private fun eventToMessage(event: Event): JSONObject = messageBuilder.event(
             UUID.randomUUID().toString(),
