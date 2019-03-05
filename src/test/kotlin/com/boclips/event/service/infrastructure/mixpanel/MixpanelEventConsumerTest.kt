@@ -1,6 +1,6 @@
 package com.boclips.event.service.infrastructure.mixpanel
 
-import com.boclips.event.service.domain.model.Event
+import com.boclips.event.service.testsupport.TestFactories.createEvent
 import com.mixpanel.mixpanelapi.MixpanelAPI
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
@@ -22,7 +22,7 @@ class MixpanelEventConsumerTest {
 
     @Test
     fun `sends the event to Mixpanel`() {
-        val event = Event(type = "a-type", properties = mapOf("prop1" to "val1"), userID = null)
+        val event = createEvent()
 
         mixpanelEventConsumer.consumeEvent(event)
 

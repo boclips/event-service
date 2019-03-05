@@ -1,15 +1,10 @@
 package com.boclips.event.service.infrastructure
 
-import com.boclips.event.service.domain.model.Event
 import com.boclips.event.service.infrastructure.MongoEventConsumer.Companion.COLLECTION_NAME
 import com.boclips.event.service.infrastructure.MongoEventConsumer.Companion.DB_NAME
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.TestMongoProcess
-import de.flapdoodle.embed.mongo.MongodProcess
-import mu.KLogging
+import com.boclips.event.service.testsupport.TestFactories.createEvent
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.findOne
 
@@ -17,7 +12,7 @@ class MongoEventConsumerTest : AbstractSpringIntegrationTest() {
     @Test
     fun `it persists the event`() {
         val consumer = MongoEventConsumer(mongoClient)
-        val event = Event("a-type", mapOf("prop1" to "val1"), "user-id")
+        val event = createEvent(type = "a-type", properties = mapOf("prop1" to "val1"), userID = "user-id")
 
         consumer.consumeEvent(event)
 

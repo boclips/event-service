@@ -27,7 +27,9 @@ class TrackEventTest {
 
         trackEvent(event)
 
-        verify(mongoConsumer, times(1)).consumeEvent(Event(type = event.type, properties = event.properties, userID = null))
+        verify(mongoConsumer, times(1)).consumeEvent(
+                Event(type = event.type, properties = event.properties, userID = null)
+        )
     }
 
     @Test
@@ -36,6 +38,8 @@ class TrackEventTest {
 
         trackEvent(event)
 
-        verify(mixpanelEventConsumer, times(1)).consumeEvent(Event(type = event.type, properties = event.properties, userID = null))
+        verify(mixpanelEventConsumer, times(1)).consumeEvent(
+                Event(type = event.type, properties = event.properties, userID = null)
+        )
     }
 }
