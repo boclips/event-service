@@ -19,7 +19,10 @@ class EventServiceHttpSecurityConfigurer : HttpSecurityConfigurer {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+
                 .antMatchers(HttpMethod.GET, "/v1").permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/").permitAll()
+
                 .antMatchers(HttpMethod.POST, "/v1/events").permitAll()
                 .anyRequest().denyAll()
     }
