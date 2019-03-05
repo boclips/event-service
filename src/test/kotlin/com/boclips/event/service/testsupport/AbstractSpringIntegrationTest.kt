@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc
 @SpringBootTest
 @ExtendWith(SpringExtension::class)
 @AutoConfigureMockMvc
-@ActiveProfiles("fake-mixpanel")
+@ActiveProfiles("test", "fake-mixpanel")
 abstract class AbstractSpringIntegrationTest {
     @Autowired
     lateinit var mockMvc: MockMvc

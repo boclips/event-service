@@ -20,7 +20,7 @@ class EventsController(val trackEvent: TrackEvent) {
     }
 
     @PostMapping
-    fun postEvent(@RequestBody event: Event?): ResponseEntity<Void> {
+    fun postEvent(@RequestBody event: EventResource?): ResponseEntity<Void> {
         event ?: throw UnsupportedOperationException()
         trackEvent(event)
         return ResponseEntity(HttpHeaders(), HttpStatus.ACCEPTED)

@@ -11,10 +11,15 @@ open class MongoEventConsumer(private val mongoClient: MongoClient) {
     }
 
     open fun consumeEvent(event: Event) {
-        val json = EventToBsonConverter.convert(event)
-        json.put("type", event.type)
         mongoClient.getDatabase(DB_NAME).getCollection(COLLECTION_NAME)
-                .insertOne(Document.parse(json.toString()))
+                .insertOne(eventToDocument(event))
     }
 
+    private fun eventToDocument(event: Event): Document {
+        val json = EventToBsonConverter.convert(event)
+        json.put("type", event.type)
+        json.put("userId", event.userID)
+
+        return Document.parse(json.toString())
+    }
 }

@@ -1,26 +1,12 @@
 package com.boclips.event.service.presentation
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.TestMongoProcess
-import com.boclips.event.service.testsupport.fakes.FakeMixpanelEventConsumer
-import com.mongodb.MongoClient
+import com.boclips.event.service.testsupport.asUser
 import com.mongodb.client.MongoCollection
-import de.flapdoodle.embed.mongo.MongodProcess
-import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.litote.kmongo.getCollection
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -42,6 +28,27 @@ class EventsControllerTest : AbstractSpringIntegrationTest() {
 
         assertThat(getEventsCollection().countDocuments()).isEqualTo(1)
         assertThat(mixpanelEventConsumer.events.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `it adds user id to events when token is present`() {
+        val content = """
+            {
+                "type": "an-event",
+                "properties": {}
+            }
+        """.trimIndent()
+
+        val userID = "event-creator@example.com"
+
+        mockMvc.perform(post("/v1/events").contentType(MediaType.APPLICATION_JSON).content(content).asUser(userID))
+                .andExpect(status().isAccepted)
+
+        assertThat(mixpanelEventConsumer.events.size).isEqualTo(1)
+
+        val event = mixpanelEventConsumer.events.first()
+
+        assertThat(event.userID).isEqualTo(userID)
     }
 
     private fun getEventsCollection(): MongoCollection<Document> {

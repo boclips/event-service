@@ -22,7 +22,7 @@ class MixpanelEventConsumerTest {
 
     @Test
     fun `sends the event to Mixpanel`() {
-        val event = Event(type = "a-type", properties = mapOf("prop1" to "val1"))
+        val event = Event(type = "a-type", properties = mapOf("prop1" to "val1"), userID = null)
 
         mixpanelEventConsumer.consumeEvent(event)
 

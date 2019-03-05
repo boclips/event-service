@@ -15,7 +15,7 @@ class LinksControllerTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `GET links includes the events resource`() {
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1"))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.events.href", endsWith("/v1/events")))
     }

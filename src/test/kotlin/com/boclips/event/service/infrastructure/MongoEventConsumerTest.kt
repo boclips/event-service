@@ -17,7 +17,7 @@ class MongoEventConsumerTest : AbstractSpringIntegrationTest() {
     @Test
     fun `it persists the event`() {
         val consumer = MongoEventConsumer(mongoClient)
-        val event = Event("a-type", mapOf("prop1" to "val1"))
+        val event = Event("a-type", mapOf("prop1" to "val1"), "user-id")
 
         consumer.consumeEvent(event)
 
@@ -29,6 +29,7 @@ class MongoEventConsumerTest : AbstractSpringIntegrationTest() {
 
         assertThat(persistedEvent.getString("type")).isEqualTo("a-type")
         assertThat(persistedEvent.getString("prop1")).isEqualTo("val1")
+        assertThat(persistedEvent.getString("userId")).isEqualTo("user-id")
     }
 
     private fun getEventsCollection() = mongoClient.getDatabase(DB_NAME).getCollection(COLLECTION_NAME)

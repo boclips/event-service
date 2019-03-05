@@ -13,13 +13,7 @@ open class MixpanelEventConsumer(private val mixpanel: MixpanelAPI = MixpanelAPI
 
     open fun consumeEvent(event: Event) {
         mixpanel.deliver(ClientDelivery().apply {
-            addMessage(eventToMessage(event))
+            EventToMixpanelMessageConverter().invoke(messageBuilder, event)
         })
     }
-
-    private fun eventToMessage(event: Event): JSONObject = messageBuilder.event(
-            UUID.randomUUID().toString(),
-            event.type,
-            EventToBsonConverter.convert(event)
-    )
 }

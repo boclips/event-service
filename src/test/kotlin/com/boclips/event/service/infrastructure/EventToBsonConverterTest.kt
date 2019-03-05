@@ -8,8 +8,10 @@ class EventToBsonConverterTest {
 
     @Test
     fun `converts text properties`() {
-        val bson = EventToBsonConverter.convert(Event("SOME_EVENT_TYPE", mapOf(
-                "text property" to "value")
+        val bson = EventToBsonConverter.convert(Event(
+                type = "SOME_EVENT_TYPE",
+                properties = mapOf("text property" to "value"),
+                userID = null
         ))
 
         assertThat(bson.getString("text property")).isEqualTo("value")
@@ -17,8 +19,10 @@ class EventToBsonConverterTest {
 
     @Test
     fun `converts numeric properites`() {
-        val bson = EventToBsonConverter.convert(Event("SOME_EVENT_TYPE", mapOf(
-                        "numeric property" to 10)
+        val bson = EventToBsonConverter.convert(Event(
+                type = "SOME_EVENT_TYPE",
+                properties = mapOf("numeric property" to 10),
+                userID = null
         ))
 
         assertThat(bson.getInt("numeric property")).isEqualTo(10)
