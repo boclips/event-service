@@ -2,10 +2,7 @@ package com.boclips.event.service.infrastructure.mixpanel
 
 import com.boclips.event.service.testsupport.TestFactories.createEvent
 import com.mixpanel.mixpanelapi.MixpanelAPI
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -26,6 +23,15 @@ class MixpanelEventConsumerTest {
 
         mixpanelEventConsumer.consumeEvent(event)
 
-        verify(mixpanelAPI, times(1)).deliver(any())
+        verify(mixpanelAPI, times(1)).deliver(any(), any())
+    }
+
+    @Test
+    fun `indicates the server's IP should not be recorded as the user's location`() {
+        val event = createEvent()
+
+        mixpanelEventConsumer.consumeEvent(event)
+
+        verify(mixpanelAPI, times(1)).deliver(any(), eq(false))
     }
 }

@@ -12,8 +12,10 @@ open class MixpanelEventConsumer(private val mixpanel: MixpanelAPI = MixpanelAPI
     private val messageBuilder = MessageBuilder(projectToken)
 
     open fun consumeEvent(event: Event) {
-        mixpanel.deliver(ClientDelivery().apply {
-            EventToMixpanelMessageConverter().invoke(messageBuilder, event)
-        })
+        val delivery = ClientDelivery()
+        delivery.addMessage(EventToMixpanelMessageConverter().invoke(messageBuilder, event))
+
+        val useIpAddress = false
+        mixpanel.deliver(delivery, useIpAddress)
     }
 }
