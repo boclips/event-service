@@ -1,7 +1,6 @@
 package com.boclips.event.service.config
 
-import com.boclips.event.service.infrastructure.MongoEventConsumer
-import com.boclips.event.service.infrastructure.mixpanel.MixpanelEventConsumer
+import com.boclips.event.service.infrastructure.MongoEventWriter
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import org.litote.kmongo.KMongo
@@ -17,12 +16,8 @@ class InfrastructureContext(val mongoProperties: MongoProperties) {
     }
 
     @Bean
-    fun mongoEventConsumer(mongoClient: MongoClient): MongoEventConsumer {
-        return MongoEventConsumer(mongoClient)
+    fun mongoEventWriter(mongoClient: MongoClient): MongoEventWriter {
+        return MongoEventWriter(mongoClient)
     }
 
-    @Bean
-    fun mixpanelEventConsumer(mixpanelProperties: MixpanelProperties): MixpanelEventConsumer {
-        return MixpanelEventConsumer(projectToken = mixpanelProperties.projectToken)
-    }
 }

@@ -1,6 +1,5 @@
 package com.boclips.event.service.testsupport
 
-import com.boclips.event.service.testsupport.fakes.FakeMixpanelEventConsumer
 import com.mongodb.MongoClient
 import de.flapdoodle.embed.mongo.MongodProcess
 import mu.KLogging
@@ -25,9 +24,6 @@ abstract class AbstractSpringIntegrationTest {
     @Autowired
     lateinit var mongoClient: MongoClient
 
-    @Autowired
-    lateinit var mixpanelEventConsumer: FakeMixpanelEventConsumer
-
     companion object : KLogging() {
         private var mongoProcess: MongodProcess? = null
 
@@ -51,6 +47,5 @@ abstract class AbstractSpringIntegrationTest {
                     }
         }
 
-        mixpanelEventConsumer.reset()
     }
 }
