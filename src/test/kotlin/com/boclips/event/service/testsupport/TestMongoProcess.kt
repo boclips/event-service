@@ -19,10 +19,10 @@ object TestMongoProcess {
         KLogging().logger.info { "Booting up MongoDB ${Version.Main.V3_6} on $host:$port" }
 
         val mongoConfig = MongodConfigBuilder()
-            .version(Version.Main.V3_6)
-            .cmdOptions(MongoCmdOptionsBuilder().useStorageEngine("ephemeralForTest").build())
-            .net(Net(host, port, Network.localhostIsIPv6()))
-            .build()
+                .version(Version.Main.V3_6)
+                .cmdOptions(MongoCmdOptionsBuilder().useStorageEngine("ephemeralForTest").build())
+                .net(Net(host, port, Network.localhostIsIPv6()))
+                .build()
 
         val mongoExecutable = starter.prepare(mongoConfig)
         mongoExecutable.start()
