@@ -1,5 +1,6 @@
 package com.boclips.event.service.config
 
+import com.boclips.event.service.domain.EventWriter
 import com.boclips.event.service.infrastructure.MongoEventWriter
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
@@ -16,8 +17,8 @@ class InfrastructureContext(val mongoProperties: MongoProperties) {
     }
 
     @Bean
-    fun mongoEventWriter(mongoClient: MongoClient): MongoEventWriter {
-        return MongoEventWriter(mongoClient)
+    fun eventWriter(): EventWriter {
+        return MongoEventWriter(mongoClient())
     }
 
 }
