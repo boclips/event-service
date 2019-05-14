@@ -2,11 +2,16 @@ package com.boclips.event.service.infrastructure
 
 import com.boclips.event.service.domain.EventWriter
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertUserActivated
+import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideosSearched
 import com.boclips.events.types.UserActivated
+import com.boclips.events.types.video.VideosSearched
 import com.mongodb.MongoClient
 import org.bson.Document
 
 class MongoEventWriter(private val mongoClient: MongoClient) : EventWriter {
+    override fun writeVideosSearched(videosSearched: VideosSearched) {
+        write(convertVideosSearched(videosSearched))
+    }
 
     override fun writeUserActivated(userActivated: UserActivated) {
         write(convertUserActivated(userActivated))

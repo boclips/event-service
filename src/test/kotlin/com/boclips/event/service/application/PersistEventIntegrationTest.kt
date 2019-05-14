@@ -2,6 +2,7 @@ package com.boclips.event.service.application
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories.createUserActivated
+import com.boclips.event.service.testsupport.TestFactories.createVideosSearched
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
@@ -17,6 +18,15 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         subscriptions.userActivated().send(msg(event))
 
         assertThat(document().toJson()).contains("user-id")
+    }
+
+    @Test
+    fun videosSearched() {
+        val event = createVideosSearched(query = "hi")
+
+        subscriptions.videosSearched().send(msg(event))
+
+        assertThat(document().toJson()).contains("hi")
     }
 
     private fun document(): Document {
