@@ -107,7 +107,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
 
 
     private fun document(): Document {
-        return mongoClient.getDatabase("video-service-db").getCollection("event-log").find().toList().single()
+        return mongoClient.getDatabase("event-service-db").getCollection("events").find().toList().single()
     }
 
     private fun <T> msg(payload: T): Message<T> {

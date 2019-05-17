@@ -15,9 +15,13 @@ import com.boclips.events.types.collection.*
 import com.boclips.events.types.video.VideoSegmentPlayed
 import com.boclips.events.types.video.VideosSearched
 import com.mongodb.MongoClient
+import mu.KLogging
 import org.bson.Document
 
 class MongoEventWriter(private val mongoClient: MongoClient) : EventWriter {
+
+    companion object: KLogging()
+
     override fun writeVideosSearched(videosSearched: VideosSearched) {
         write(convertVideosSearched(videosSearched))
     }
@@ -55,6 +59,13 @@ class MongoEventWriter(private val mongoClient: MongoClient) : EventWriter {
     }
 
     private fun write(document: Document) {
-        mongoClient.getDatabase("video-service-db").getCollection("event-log").insertOne(document)
+        try {
+            getCollection().insertOne(document)
+        }
+        catch(e: Exception) {
+            logger.error(e) { "Error writing event ${document["type"]}" }
+        }
     }
+
+    private fun getCollection() = mongoClient.getDatabase("event-service-db").getCollection("events")
 }
