@@ -2,11 +2,9 @@ package com.boclips.event.service.infrastructure
 
 import com.boclips.event.service.domain.EventWriter
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionAgeRangeChanged
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionBookmarked
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionMadePrivate
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionMadePublic
+import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionBookmarkChanged
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionSubjectsChanged
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionUnbookmarked
+import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionVisibilityChanged
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertUserActivated
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoAddedToCollection
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoRemovedFromCollection
@@ -40,20 +38,12 @@ class MongoEventWriter(private val mongoClient: MongoClient) : EventWriter {
         write(convertVideoRemovedFromCollection(videoRemovedFromCollection))
     }
 
-    override fun writeCollectionBookmarked(collectionBookmarked: CollectionBookmarked) {
-        write(convertCollectionBookmarked(collectionBookmarked))
+    override fun writeCollectionBookmarkChanged(collectionBookmarkChanged: CollectionBookmarkChanged) {
+        write(convertCollectionBookmarkChanged(collectionBookmarkChanged))
     }
 
-    override fun writeCollectionUnbookmarked(collectionUnbookmarked: CollectionUnbookmarked) {
-        write(convertCollectionUnbookmarked(collectionUnbookmarked))
-    }
-
-    override fun writeCollectionMadePrivate(collectionMadePrivate: CollectionMadePrivate) {
-        write(convertCollectionMadePrivate(collectionMadePrivate))
-    }
-
-    override fun writeCollectionMadePublic(collectionMadePublic: CollectionMadePublic) {
-        write(convertCollectionMadePublic(collectionMadePublic))
+    override fun writeCollectionVisibilityChanged(collectionVisibilityChanged: CollectionVisibilityChanged) {
+        write(convertCollectionVisibilityChanged(collectionVisibilityChanged))
     }
 
     override fun writeCollectionSubjectsChanged(collectionSubjectsChanged: CollectionSubjectsChanged) {

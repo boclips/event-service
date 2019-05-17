@@ -8,13 +8,13 @@ import com.boclips.events.types.video.VideosSearched
 
 object TestFactories {
 
-    fun createUser(userId: String = "user-1", userEmail: String = "user@example.com"): User {
-        return User.builder().id(userId).email(userEmail).build()
+    fun createUser(userId: String = "user-1", isBoclipsEmployee: Boolean = false): User {
+        return User.builder().id(userId).isBoclipsEmployee(isBoclipsEmployee).build()
     }
 
-    fun createUserActivated(userId: String = "user-1", userEmail: String = "user@example.com"): UserActivated {
+    fun createUserActivated(userId: String = "user-1", isBoclipsEmployee: Boolean = false): UserActivated {
         return UserActivated.builder()
-                .user(User.builder().id(userId).email(userEmail).build())
+                .user(User.builder().id(userId).isBoclipsEmployee(isBoclipsEmployee).build())
                 .totalUsers(100)
                 .activatedUsers(50)
                 .build()
@@ -60,30 +60,18 @@ object TestFactories {
                 .build()
     }
 
-    fun createCollectionBookmarked(collectionId: String): CollectionBookmarked {
-        return CollectionBookmarked.builder()
+    fun createCollectionBookmarkChanged(collectionId: String, isBookmarked: Boolean): CollectionBookmarkChanged {
+        return CollectionBookmarkChanged.builder()
                 .collectionId(collectionId)
                 .user(createUser())
+                .isBookmarked(isBookmarked)
                 .build()
     }
 
-    fun createCollectionUnbookmarked(collectionId: String): CollectionUnbookmarked {
-        return CollectionUnbookmarked.builder()
+    fun createCollectionVisibilityChanged(collectionId: String, isPublic: Boolean): CollectionVisibilityChanged {
+        return CollectionVisibilityChanged.builder()
                 .collectionId(collectionId)
-                .user(createUser())
-                .build()
-    }
-
-    fun createCollectionMadePrivate(collectionId: String): CollectionMadePrivate {
-        return CollectionMadePrivate.builder()
-                .collectionId(collectionId)
-                .user(createUser())
-                .build()
-    }
-
-    fun createCollectionMadePublic(collectionId: String): CollectionMadePublic {
-        return CollectionMadePublic.builder()
-                .collectionId(collectionId)
+                .isPublic(isPublic)
                 .user(createUser())
                 .build()
     }

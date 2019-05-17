@@ -35,24 +35,14 @@ class PersistEvent(private val eventWriter: EventWriter) {
         eventWriter.writeVideoRemovedFromCollection(videoRemovedFromCollection)
     }
 
-    @StreamListener(COLLECTION_BOOKMARKED)
-    fun collectionBookmarked(collectionBookmarked: CollectionBookmarked) {
-        eventWriter.writeCollectionBookmarked(collectionBookmarked)
+    @StreamListener(COLLECTION_BOOKMARK_CHANGED)
+    fun collectionBookmarkChanged(collectionBookmarkChanged: CollectionBookmarkChanged) {
+        eventWriter.writeCollectionBookmarkChanged(collectionBookmarkChanged)
     }
 
-    @StreamListener(COLLECTION_UNBOOKARMED)
-    fun collectionUnbookmarked(collectionUnbookmarked: CollectionUnbookmarked) {
-        eventWriter.writeCollectionUnbookmarked(collectionUnbookmarked)
-    }
-
-    @StreamListener(COLLECTION_MADE_PRIVATE)
-    fun collectionMadePrivate(collectionMadePrivate: CollectionMadePrivate) {
-        eventWriter.writeCollectionMadePrivate(collectionMadePrivate)
-    }
-
-    @StreamListener(COLLECTION_MADE_PUBLIC)
-    fun collectionMadePublic(collectionMadePublic: CollectionMadePublic) {
-        eventWriter.writeCollectionMadePublic(collectionMadePublic)
+    @StreamListener(COLLECTION_VISIBILITY_CHANGED)
+    fun collectionMadePrivate(collectionVisibilityChanged: CollectionVisibilityChanged) {
+        eventWriter.writeCollectionVisibilityChanged(collectionVisibilityChanged)
     }
 
     @StreamListener(COLLECTION_SUBJECTS_CHANGED)

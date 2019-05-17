@@ -54,20 +54,12 @@ object EventToDocumentConverter {
         )
     }
 
-    fun convertCollectionBookmarked(collectionBookmarked: CollectionBookmarked): Document {
-        return convertCollectionEvent(collectionBookmarked, "COLLECTION_BOOKMARKED")
+    fun convertCollectionBookmarkChanged(event: CollectionBookmarkChanged): Document {
+        return convertCollectionEvent(event, "COLLECTION_BOOKMARK_CHANGED").append("isBookmarked", event.isBookmarked)
     }
 
-    fun convertCollectionUnbookmarked(collectionUnbookmarked: CollectionUnbookmarked): Document {
-        return convertCollectionEvent(collectionUnbookmarked, "COLLECTION_UNBOOKMARKED")
-    }
-
-    fun convertCollectionMadePrivate(event: CollectionMadePrivate): Document {
-        return convertCollectionEvent(event, "COLLECTION_MADE_PRIVATE")
-    }
-
-    fun convertCollectionMadePublic(event: CollectionMadePublic): Document {
-        return convertCollectionEvent(event, "COLLECTION_MADE_PUBLIC")
+    fun convertCollectionVisibilityChanged(event: CollectionVisibilityChanged): Document {
+        return convertCollectionEvent(event, "COLLECTION_VISIBILITY_CHANGED").append("isPublic", event.isPublic)
     }
 
     fun convertCollectionSubjectsChanged(event: CollectionSubjectsChanged): Document {
@@ -82,11 +74,11 @@ object EventToDocumentConverter {
         return Document(convertUserEvent(event, type) + ("collectionId" to event.collectionId))
     }
 
-    private fun <T> convertUserEvent(event: T, type: String): Map<String, Any> where T : UserEvent, T : Event {
+    private fun convertUserEvent(event: UserEvent, type: String): Map<String, Any> {
         return mapOf<String, Any>(
                 "type" to type,
                 "userId" to event.user.id,
-                "userIsBoclips" to event.user.email.endsWith("@boclips.com"),
+                "userIsBoclips" to event.user.isBoclipsEmployee,
                 "timestamp" to event.timestamp,
                 "url" to event.url
         )

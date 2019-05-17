@@ -11,10 +11,8 @@ interface EventWriter {
     fun writeVideoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed)
     fun writeVideoAddedToCollection(videoAddedToCollection: VideoAddedToCollection)
     fun writeVideoRemovedFromCollection(videoRemovedFromCollection: VideoRemovedFromCollection)
-    fun writeCollectionBookmarked(collectionBookmarked: CollectionBookmarked)
-    fun writeCollectionUnbookmarked(collectionUnbookmarked: CollectionUnbookmarked)
-    fun writeCollectionMadePrivate(collectionMadePrivate: CollectionMadePrivate)
-    fun writeCollectionMadePublic(collectionMadePublic: CollectionMadePublic)
+    fun writeCollectionBookmarkChanged(collectionBookmarkChanged: CollectionBookmarkChanged)
+    fun writeCollectionVisibilityChanged(collectionVisibilityChanged: CollectionVisibilityChanged)
     fun writeCollectionSubjectsChanged(collectionSubjectsChanged: CollectionSubjectsChanged)
     fun writeCollectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged)
 }

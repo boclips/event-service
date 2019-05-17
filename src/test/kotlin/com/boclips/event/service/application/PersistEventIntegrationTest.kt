@@ -2,11 +2,9 @@ package com.boclips.event.service.application
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories.createCollectionAgeRangeChanged
-import com.boclips.event.service.testsupport.TestFactories.createCollectionBookmarked
-import com.boclips.event.service.testsupport.TestFactories.createCollectionMadePrivate
-import com.boclips.event.service.testsupport.TestFactories.createCollectionMadePublic
+import com.boclips.event.service.testsupport.TestFactories.createCollectionBookmarkChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionSubjectsChanged
-import com.boclips.event.service.testsupport.TestFactories.createCollectionUnbookmarked
+import com.boclips.event.service.testsupport.TestFactories.createCollectionVisibilityChanged
 import com.boclips.event.service.testsupport.TestFactories.createUserActivated
 import com.boclips.event.service.testsupport.TestFactories.createVideoAddedToCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideoRemovedFromCollection
@@ -68,37 +66,20 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
-    fun collectionBookmarked() {
-        val event = createCollectionBookmarked(collectionId = "456")
+    fun collectionBookmarkChanged() {
+        val event = createCollectionBookmarkChanged(collectionId = "456", isBookmarked = true)
 
-        subscriptions.collectionBookmarked().send(msg(event))
+        subscriptions.collectionBookmarkChanged().send(msg(event))
 
         assertThat(document().toJson()).contains("456")
+        assertThat(document().toJson()).contains("true")
     }
 
     @Test
-    fun collectionUnbookmarked() {
-        val event = createCollectionUnbookmarked(collectionId = "456")
+    fun collectionVisibilityChanged() {
+        val event = createCollectionVisibilityChanged(collectionId = "456", isPublic = false)
 
-        subscriptions.collectionUnbookmarked().send(msg(event))
-
-        assertThat(document().toJson()).contains("456")
-    }
-
-    @Test
-    fun collectionMadePrivate() {
-        val event = createCollectionMadePrivate(collectionId = "456")
-
-        subscriptions.collectionMadePrivate().send(msg(event))
-
-        assertThat(document().toJson()).contains("456")
-    }
-
-    @Test
-    fun collectionMadePublic() {
-        val event = createCollectionMadePublic(collectionId = "456")
-
-        subscriptions.collectionMadePublic().send(msg(event))
+        subscriptions.collectionVisibilityChanged().send(msg(event))
 
         assertThat(document().toJson()).contains("456")
     }

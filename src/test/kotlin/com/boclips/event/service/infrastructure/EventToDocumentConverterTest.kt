@@ -15,7 +15,7 @@ class EventToDocumentConverterTest {
 
     @Test
     fun `userIsBoclips marked true for boclips email addresses`() {
-        val event = TestFactories.createUserActivated(userEmail = "david@boclips.com")
+        val event = TestFactories.createUserActivated(isBoclipsEmployee = true)
 
         val document = EventToDocumentConverter.convertUserActivated(event)
 
@@ -28,7 +28,7 @@ class EventToDocumentConverterTest {
                 .timestamp(Date.from(ZonedDateTime.parse("2018-05-31T13:45:59Z").toInstant()))
                 .user(User.builder()
                         .id("user-1")
-                        .email("someone@gmail.com")
+                        .isBoclipsEmployee(false)
                         .build()
                 )
                 .totalUsers(100)
@@ -51,7 +51,7 @@ class EventToDocumentConverterTest {
                 .timestamp(Date.from(ZonedDateTime.parse("2018-05-31T13:45:59Z").toInstant()))
                 .user(User.builder()
                         .id("user-1")
-                        .email("someone@gmail.com")
+                        .isBoclipsEmployee(false)
                         .build()
                 )
                 .url("http://example.com/hello")
@@ -79,7 +79,7 @@ class EventToDocumentConverterTest {
                 .timestamp(Date.from(ZonedDateTime.parse("2019-05-31T13:45:59Z").toInstant()))
                 .user(User.builder()
                         .id("user-1")
-                        .email("someone@boclips.com")
+                        .isBoclipsEmployee(true)
                         .build()
                 )
                 .url("http://example.com/video")
@@ -128,43 +128,47 @@ class EventToDocumentConverterTest {
     }
 
     @Test
-    fun convertCollectionBookmarked() {
-        val event = TestFactories.createCollectionBookmarked(collectionId = "collection-id")
+    fun `convertCollectionBookmarkChanged bookmarking`() {
+        val event = TestFactories.createCollectionBookmarkChanged(collectionId = "collection-id", isBookmarked = true)
 
-        val document = EventToDocumentConverter.convertCollectionBookmarked(event)
+        val document = EventToDocumentConverter.convertCollectionBookmarkChanged(event)
 
-        assertThat(document.getString("type")).isEqualTo("COLLECTION_BOOKMARKED")
+        assertThat(document.getString("type")).isEqualTo("COLLECTION_BOOKMARK_CHANGED")
         assertThat(document.getString("collectionId")).isEqualTo("collection-id")
+        assertThat(document.getBoolean("isBookmarked")).isTrue()
     }
 
     @Test
-    fun convertCollectionUnbookmarked() {
-        val event = TestFactories.createCollectionUnbookmarked(collectionId = "collection-id")
+    fun `convertCollectionBookmarkChanged unbookmarking`() {
+        val event = TestFactories.createCollectionBookmarkChanged(collectionId = "collection-id", isBookmarked = false)
 
-        val document = EventToDocumentConverter.convertCollectionUnbookmarked(event)
+        val document = EventToDocumentConverter.convertCollectionBookmarkChanged(event)
 
-        assertThat(document.getString("type")).isEqualTo("COLLECTION_UNBOOKMARKED")
+        assertThat(document.getString("type")).isEqualTo("COLLECTION_BOOKMARK_CHANGED")
         assertThat(document.getString("collectionId")).isEqualTo("collection-id")
+        assertThat(document.getBoolean("isBookmarked")).isFalse()
     }
 
     @Test
-    fun convertCollectionMadePrivate() {
-        val event = TestFactories.createCollectionMadePrivate(collectionId = "collection-id")
+    fun `convertCollectionVisibilityChanged made public`() {
+        val event = TestFactories.createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = true)
 
-        val document = EventToDocumentConverter.convertCollectionMadePrivate(event)
+        val document = EventToDocumentConverter.convertCollectionVisibilityChanged(event)
 
-        assertThat(document.getString("type")).isEqualTo("COLLECTION_MADE_PRIVATE")
+        assertThat(document.getString("type")).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
         assertThat(document.getString("collectionId")).isEqualTo("collection-id")
+        assertThat(document.getBoolean("isPublic")).isTrue()
     }
 
     @Test
-    fun convertCollectionMadePublic() {
-        val event = TestFactories.createCollectionMadePublic(collectionId = "collection-id")
+    fun `convertCollectionVisibilityChanged made private`() {
+        val event = TestFactories.createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = false)
 
-        val document = EventToDocumentConverter.convertCollectionMadePublic(event)
+        val document = EventToDocumentConverter.convertCollectionVisibilityChanged(event)
 
-        assertThat(document.getString("type")).isEqualTo("COLLECTION_MADE_PUBLIC")
+        assertThat(document.getString("type")).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
         assertThat(document.getString("collectionId")).isEqualTo("collection-id")
+        assertThat(document.getBoolean("isPublic")).isFalse()
     }
 
     @Test
