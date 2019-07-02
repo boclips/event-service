@@ -3,6 +3,7 @@ package com.boclips.event.service.testsupport
 import com.boclips.events.types.User
 import com.boclips.events.types.UserActivated
 import com.boclips.events.types.collection.*
+import com.boclips.events.types.video.VideoPlayerInteractedWith
 import com.boclips.events.types.video.VideoSegmentPlayed
 import com.boclips.events.types.video.VideosSearched
 
@@ -41,6 +42,27 @@ object TestFactories {
                 .videoIndex(videoIndex)
                 .playerId(playerId)
                 .user(user)
+                .build()
+    }
+
+    fun createVideoPlayerInteractedWith(
+            user: User = createUser(),
+            videoId: String = "123",
+            playerId: String = "1",
+            videoDurationSeconds: Long = 100,
+            currentTime: Long = 55,
+            subtype: String = "captions-on",
+            payload: Map<String, Any> = mapOf(Pair("id", "caption-id"))
+    ): VideoPlayerInteractedWith {
+        return VideoPlayerInteractedWith
+                .builder()
+                .user(user)
+                .videoId(videoId)
+                .playerId(playerId)
+                .videoDurationSeconds(videoDurationSeconds)
+                .currentTime(currentTime)
+                .subtype(subtype)
+                .payload(payload)
                 .build()
     }
 

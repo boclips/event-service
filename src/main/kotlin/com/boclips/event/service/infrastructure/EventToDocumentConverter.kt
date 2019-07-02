@@ -5,6 +5,7 @@ import com.boclips.events.types.base.CollectionEvent
 import com.boclips.events.types.base.Event
 import com.boclips.events.types.base.UserEvent
 import com.boclips.events.types.collection.*
+import com.boclips.events.types.video.VideoPlayerInteractedWith
 import com.boclips.events.types.video.VideoSegmentPlayed
 import com.boclips.events.types.video.VideosSearched
 import org.bson.Document
@@ -37,6 +38,17 @@ object EventToDocumentConverter {
                 + ("videoDurationSeconds" to videoSegmentPlayed.videoDurationSeconds)
                 + ("videoIndex" to videoSegmentPlayed.videoIndex)
                 + ("videoId" to videoSegmentPlayed.videoId)
+        )
+    }
+
+    fun convertVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith): Document {
+        return Document(convertUserEvent(videoPlayerInteractedWith, "VIDEO_PLAYER_INTERACTED_WITH")
+                + ("playerId" to videoPlayerInteractedWith.playerId)
+                + ("videoId" to videoPlayerInteractedWith.videoId)
+                + ("videoDurationSeconds" to videoPlayerInteractedWith.videoDurationSeconds)
+                + ("currentTime" to videoPlayerInteractedWith.currentTime)
+                + ("subtype" to videoPlayerInteractedWith.subtype)
+                + ("payload" to videoPlayerInteractedWith.payload)
         )
     }
 

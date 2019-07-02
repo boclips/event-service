@@ -7,6 +7,7 @@ import com.boclips.event.service.testsupport.TestFactories.createCollectionSubje
 import com.boclips.event.service.testsupport.TestFactories.createCollectionVisibilityChanged
 import com.boclips.event.service.testsupport.TestFactories.createUserActivated
 import com.boclips.event.service.testsupport.TestFactories.createVideoAddedToCollection
+import com.boclips.event.service.testsupport.TestFactories.createVideoPlayerInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createVideoRemovedFromCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideoSegmentPlayed
 import com.boclips.event.service.testsupport.TestFactories.createVideosSearched
@@ -41,6 +42,15 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         val event = createVideoSegmentPlayed(videoId = "123")
 
         subscriptions.videoSegmentPlayed().send(msg(event))
+
+        assertThat(document().toJson()).contains("123")
+    }
+
+    @Test
+    fun videoPlayerInteractedWith() {
+        val event = createVideoPlayerInteractedWith(videoId = "123")
+
+        subscriptions.videoPlayerInteractedWith().send(msg(event))
 
         assertThat(document().toJson()).contains("123")
     }

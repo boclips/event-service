@@ -4,6 +4,7 @@ import com.boclips.event.service.domain.EventWriter
 import com.boclips.events.config.Subscriptions.*
 import com.boclips.events.types.UserActivated
 import com.boclips.events.types.collection.*
+import com.boclips.events.types.video.VideoPlayerInteractedWith
 import com.boclips.events.types.video.VideoSegmentPlayed
 import com.boclips.events.types.video.VideosSearched
 import org.springframework.cloud.stream.annotation.StreamListener
@@ -23,6 +24,11 @@ class PersistEvent(private val eventWriter: EventWriter) {
     @StreamListener(VIDEO_SEGMENT_PLAYED)
     fun videoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed) {
         eventWriter.writeVideoSegmentPlayed(videoSegmentPlayed)
+    }
+
+    @StreamListener(VIDEO_PLAYER_INTERACTED_WITH)
+    fun videoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith) {
+        eventWriter.writeVideoPlayerInteractedWith(videoPlayerInteractedWith)
     }
 
     @StreamListener(VIDEO_ADDED_TO_COLLECTION)

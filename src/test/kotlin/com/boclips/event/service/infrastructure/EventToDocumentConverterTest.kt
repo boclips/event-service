@@ -106,6 +106,33 @@ class EventToDocumentConverterTest {
     }
 
     @Test
+    fun videoPlayerInteractedWith() {
+        val event = TestFactories.createVideoPlayerInteractedWith(
+                videoId = "video-id",
+                playerId = "player-id",
+                videoDurationSeconds = 50,
+                currentTime = 34,
+                subtype = "captions-on",
+                payload = mapOf<String, Any>(
+                        Pair("kind", "caption-kind"),
+                        Pair("language", "caption-language"),
+                        Pair("id", "caption-id"),
+                        Pair("label", "caption-label")
+                )
+        )
+
+        val document = EventToDocumentConverter.convertVideoPlayerInteractedWith(event)
+        assertThat(document.getString("type")).isEqualTo("VIDEO_PLAYER_INTERACTED_WITH")
+        assertThat(document.getString("userId")).isEqualTo("user-1")
+        assertThat(document.getString("playerId")).isEqualTo("player-id")
+        assertThat(document.getString("videoId")).isEqualTo("video-id")
+        assertThat(document.getLong("videoDurationSeconds")).isEqualTo(50)
+        assertThat(document.getLong("currentTime")).isEqualTo(34)
+        assertThat(document.getString("subtype")).isEqualTo("captions-on")
+        assertThat(document["payload"]).isEqualTo(event.payload)
+    }
+
+    @Test
     fun convertVideoAddedToCollection() {
         val event = TestFactories.createVideoAddedToCollection(videoId = "video-id", collectionId = "collection-id")
 

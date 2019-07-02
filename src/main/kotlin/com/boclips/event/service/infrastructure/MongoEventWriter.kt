@@ -7,11 +7,13 @@ import com.boclips.event.service.infrastructure.EventToDocumentConverter.convert
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionVisibilityChanged
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertUserActivated
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoAddedToCollection
+import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoPlayerInteractedWith
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoRemovedFromCollection
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoSegmentPlayed
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideosSearched
 import com.boclips.events.types.UserActivated
 import com.boclips.events.types.collection.*
+import com.boclips.events.types.video.VideoPlayerInteractedWith
 import com.boclips.events.types.video.VideoSegmentPlayed
 import com.boclips.events.types.video.VideosSearched
 import com.mongodb.MongoClient
@@ -32,6 +34,10 @@ class MongoEventWriter(private val mongoClient: MongoClient) : EventWriter {
 
     override fun writeVideoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed) {
         write(convertVideoSegmentPlayed(videoSegmentPlayed))
+    }
+
+    override fun writeVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith) {
+        write(convertVideoPlayerInteractedWith(videoPlayerInteractedWith))
     }
 
     override fun writeVideoAddedToCollection(videoAddedToCollection: VideoAddedToCollection) {
