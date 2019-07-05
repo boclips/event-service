@@ -73,5 +73,5 @@ class MongoEventRepository(private val mongoClient: MongoClient) : EventReposito
         }
     }
 
-    private fun getCollection() = mongoClient.getDatabase("event-service-db").getCollection("events")
+    private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection("events")
 }

@@ -5,9 +5,18 @@ import com.boclips.events.types.UserActivated
 import com.boclips.events.types.collection.*
 import com.boclips.events.types.video.VideoPlayerInteractedWith
 import com.boclips.events.types.video.VideoSegmentPlayed
+import com.boclips.events.types.video.VideoUpdated
 import com.boclips.events.types.video.VideosSearched
 
 object TestFactories {
+
+    fun createVideoUpdates(videoId: String, title: String, contentPartnerName: String): VideoUpdated {
+        return VideoUpdated.builder()
+            .videoId(videoId)
+            .title(title)
+            .contentPartnerName(contentPartnerName)
+            .build()
+    }
 
     fun createUser(userId: String = "user-1", isBoclipsEmployee: Boolean = false): User {
         return User.builder().id(userId).isBoclipsEmployee(isBoclipsEmployee).build()

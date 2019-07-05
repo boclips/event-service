@@ -1,5 +1,6 @@
 package com.boclips.event.service.application
 
+import com.boclips.event.service.infrastructure.DatabaseConstants
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories.createCollectionAgeRangeChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionBookmarkChanged
@@ -14,8 +15,6 @@ import com.boclips.event.service.testsupport.TestFactories.createVideosSearched
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
-import org.springframework.messaging.Message
-import org.springframework.messaging.support.MessageBuilder
 
 class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
 
@@ -117,10 +116,6 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
 
 
     private fun document(): Document {
-        return mongoClient.getDatabase("event-service-db").getCollection("events").find().toList().single()
-    }
-
-    private fun <T> msg(payload: T): Message<T> {
-        return MessageBuilder.withPayload(payload).build()
+        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection("events").find().toList().single()
     }
 }
