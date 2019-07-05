@@ -1,7 +1,7 @@
 package com.boclips.event.service.config
 
-import com.boclips.event.service.domain.EventWriter
-import com.boclips.event.service.infrastructure.MongoEventWriter
+import com.boclips.event.service.domain.EventRepository
+import com.boclips.event.service.infrastructure.MongoEventRepository
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import org.litote.kmongo.KMongo
@@ -17,8 +17,8 @@ class InfrastructureContext(val mongoProperties: MongoProperties) {
     }
 
     @Bean
-    fun eventWriter(): EventWriter {
-        return MongoEventWriter(mongoClient())
+    fun eventWriter(): EventRepository {
+        return MongoEventRepository(mongoClient())
     }
 
 }

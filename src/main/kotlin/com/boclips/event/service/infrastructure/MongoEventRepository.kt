@@ -1,6 +1,6 @@
 package com.boclips.event.service.infrastructure
 
-import com.boclips.event.service.domain.EventWriter
+import com.boclips.event.service.domain.EventRepository
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionAgeRangeChanged
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionBookmarkChanged
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionSubjectsChanged
@@ -20,47 +20,47 @@ import com.mongodb.MongoClient
 import mu.KLogging
 import org.bson.Document
 
-class MongoEventWriter(private val mongoClient: MongoClient) : EventWriter {
+class MongoEventRepository(private val mongoClient: MongoClient) : EventRepository {
 
     companion object: KLogging()
 
-    override fun writeVideosSearched(videosSearched: VideosSearched) {
+    override fun saveVideosSearched(videosSearched: VideosSearched) {
         write(convertVideosSearched(videosSearched))
     }
 
-    override fun writeUserActivated(userActivated: UserActivated) {
+    override fun saveUserActivated(userActivated: UserActivated) {
         write(convertUserActivated(userActivated))
     }
 
-    override fun writeVideoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed) {
+    override fun saveVideoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed) {
         write(convertVideoSegmentPlayed(videoSegmentPlayed))
     }
 
-    override fun writeVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith) {
+    override fun saveVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith) {
         write(convertVideoPlayerInteractedWith(videoPlayerInteractedWith))
     }
 
-    override fun writeVideoAddedToCollection(videoAddedToCollection: VideoAddedToCollection) {
+    override fun saveVideoAddedToCollection(videoAddedToCollection: VideoAddedToCollection) {
         write(convertVideoAddedToCollection(videoAddedToCollection))
     }
 
-    override fun writeVideoRemovedFromCollection(videoRemovedFromCollection: VideoRemovedFromCollection) {
+    override fun saveVideoRemovedFromCollection(videoRemovedFromCollection: VideoRemovedFromCollection) {
         write(convertVideoRemovedFromCollection(videoRemovedFromCollection))
     }
 
-    override fun writeCollectionBookmarkChanged(collectionBookmarkChanged: CollectionBookmarkChanged) {
+    override fun saveCollectionBookmarkChanged(collectionBookmarkChanged: CollectionBookmarkChanged) {
         write(convertCollectionBookmarkChanged(collectionBookmarkChanged))
     }
 
-    override fun writeCollectionVisibilityChanged(collectionVisibilityChanged: CollectionVisibilityChanged) {
+    override fun saveCollectionVisibilityChanged(collectionVisibilityChanged: CollectionVisibilityChanged) {
         write(convertCollectionVisibilityChanged(collectionVisibilityChanged))
     }
 
-    override fun writeCollectionSubjectsChanged(collectionSubjectsChanged: CollectionSubjectsChanged) {
+    override fun saveCollectionSubjectsChanged(collectionSubjectsChanged: CollectionSubjectsChanged) {
         write(convertCollectionSubjectsChanged(collectionSubjectsChanged))
     }
 
-    override fun writeCollectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged) {
+    override fun saveCollectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged) {
         write(convertCollectionAgeRangeChanged(collectionAgeRangeChanged))
     }
 

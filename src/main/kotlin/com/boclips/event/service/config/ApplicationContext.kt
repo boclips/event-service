@@ -1,16 +1,16 @@
 package com.boclips.event.service.config
 
 import com.boclips.event.service.application.PersistEvent
-import com.boclips.event.service.domain.EventWriter
+import com.boclips.event.service.domain.EventRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class ApplicationContext(private val eventWriter: EventWriter) {
+class ApplicationContext(private val eventRepository: EventRepository) {
 
     @Bean
     fun persistEvent(): PersistEvent {
-        return PersistEvent(eventWriter)
+        return PersistEvent(eventRepository)
     }
 
 }
