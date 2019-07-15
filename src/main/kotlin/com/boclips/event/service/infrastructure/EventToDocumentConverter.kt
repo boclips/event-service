@@ -26,8 +26,7 @@ object EventToDocumentConverter {
                         + ("query" to videosSearched.query)
                         + ("pageIndex" to videosSearched.pageIndex)
                         + ("pageSize" to videosSearched.pageSize)
-                        + ("pageVideoIds" to videosSearched.pageVideoIds)
-                        + ("totalResults" to videosSearched.totalResults)
+                        + ("totalResults" to videosSearched.totalResults.toLong())
         )
     }
 
