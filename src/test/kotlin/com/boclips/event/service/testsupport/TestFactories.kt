@@ -30,19 +30,11 @@ object TestFactories {
                 .build()
     }
 
-    fun createVideosSearched(
-            pageIndex: Int = 0,
-            pageSize: Int = 10,
-            pageVideoIds: List<String> = emptyList(),
-            query: String = "a great video",
-            totalResults: Long = 14,
-            user: User = createUser()
-    ): VideosSearched {
+    fun createVideosSearched(pageIndex: Int = 0, pageSize: Int = 10, query: String = "a great video", totalResults: Long = 14, user: User = createUser()): VideosSearched {
         return VideosSearched
                 .builder()
                 .pageIndex(pageIndex)
                 .pageSize(pageSize)
-                .pageVideoIds(pageVideoIds)
                 .query(query)
                 .totalResults(totalResults)
                 .user(user)

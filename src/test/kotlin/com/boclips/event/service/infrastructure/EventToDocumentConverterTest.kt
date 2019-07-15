@@ -57,7 +57,6 @@ class EventToDocumentConverterTest {
                 .url("http://example.com/hello")
                 .pageIndex(5)
                 .pageSize(10)
-                .pageVideoIds(emptyList())
                 .query("hello")
                 .totalResults(100)
                 .build()
