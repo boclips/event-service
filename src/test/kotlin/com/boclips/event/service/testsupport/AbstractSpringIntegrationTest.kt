@@ -1,6 +1,5 @@
 package com.boclips.event.service.testsupport
 
-import com.boclips.events.config.Subscriptions
 import com.mongodb.MongoClient
 import de.flapdoodle.embed.mongo.MongodProcess
 import mu.KLogging
@@ -26,9 +25,6 @@ abstract class AbstractSpringIntegrationTest {
 
     @Autowired
     lateinit var mongoClient: MongoClient
-
-    @Autowired
-    lateinit var subscriptions: Subscriptions
 
     companion object : KLogging() {
         private var mongoProcess: MongodProcess? = null
