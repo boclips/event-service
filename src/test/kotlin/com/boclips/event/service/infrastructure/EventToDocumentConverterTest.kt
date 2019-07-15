@@ -57,7 +57,7 @@ class EventToDocumentConverterTest {
                 .url("http://example.com/hello")
                 .pageIndex(5)
                 .pageSize(10)
-                .pageVideoIds(emptyList())
+                .pageVideoIds(listOf("v4", "v5"))
                 .query("hello")
                 .totalResults(100)
                 .build()
@@ -72,6 +72,7 @@ class EventToDocumentConverterTest {
         assertThat(document.getInteger("pageIndex")).isEqualTo(5)
         assertThat(document.getInteger("pageSize")).isEqualTo(10)
         assertThat(document.getLong("totalResults")).isEqualTo(100)
+        assertThat(document.getList("pageVideoIds", String::class.java)).containsExactly("v4", "v5")
     }
 
     @Test
