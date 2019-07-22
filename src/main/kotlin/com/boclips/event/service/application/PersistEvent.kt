@@ -1,62 +1,61 @@
 package com.boclips.event.service.application
 
 import com.boclips.event.service.domain.EventRepository
-import com.boclips.events.config.Subscriptions.*
-import com.boclips.events.types.UserActivated
-import com.boclips.events.types.collection.*
-import com.boclips.events.types.video.VideoPlayerInteractedWith
-import com.boclips.events.types.video.VideoSegmentPlayed
-import com.boclips.events.types.video.VideosSearched
-import org.springframework.cloud.stream.annotation.StreamListener
+import com.boclips.eventbus.BoclipsEventListener
+import com.boclips.eventbus.events.collection.*
+import com.boclips.eventbus.events.user.UserActivated
+import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
+import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideosSearched
 
 class PersistEvent(private val eventRepository: EventRepository) {
 
-    @StreamListener(USER_ACTIVATED)
+    @BoclipsEventListener
     fun userActivated(userActivated: UserActivated) {
         eventRepository.saveUserActivated(userActivated)
     }
 
-    @StreamListener(VIDEOS_SEARCHED)
+    @BoclipsEventListener
     fun videosSearched(videosSearched: VideosSearched) {
         eventRepository.saveVideosSearched(videosSearched)
     }
 
-    @StreamListener(VIDEO_SEGMENT_PLAYED)
+    @BoclipsEventListener
     fun videoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed) {
         eventRepository.saveVideoSegmentPlayed(videoSegmentPlayed)
     }
 
-    @StreamListener(VIDEO_PLAYER_INTERACTED_WITH)
+    @BoclipsEventListener
     fun videoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith) {
         eventRepository.saveVideoPlayerInteractedWith(videoPlayerInteractedWith)
     }
 
-    @StreamListener(VIDEO_ADDED_TO_COLLECTION)
+    @BoclipsEventListener
     fun videoAddedToCollection(videoAddedToCollection: VideoAddedToCollection) {
         eventRepository.saveVideoAddedToCollection(videoAddedToCollection)
     }
 
-    @StreamListener(VIDEO_REMOVED_FROM_COLLECTION)
+    @BoclipsEventListener
     fun videoRemovedFromCollection(videoRemovedFromCollection: VideoRemovedFromCollection) {
         eventRepository.saveVideoRemovedFromCollection(videoRemovedFromCollection)
     }
 
-    @StreamListener(COLLECTION_BOOKMARK_CHANGED)
+    @BoclipsEventListener
     fun collectionBookmarkChanged(collectionBookmarkChanged: CollectionBookmarkChanged) {
         eventRepository.saveCollectionBookmarkChanged(collectionBookmarkChanged)
     }
 
-    @StreamListener(COLLECTION_VISIBILITY_CHANGED)
+    @BoclipsEventListener
     fun collectionMadePrivate(collectionVisibilityChanged: CollectionVisibilityChanged) {
         eventRepository.saveCollectionVisibilityChanged(collectionVisibilityChanged)
     }
 
-    @StreamListener(COLLECTION_SUBJECTS_CHANGED)
+    @BoclipsEventListener
     fun collectionSubjectsChanged(collectionSubjectsChanged: CollectionSubjectsChanged) {
         eventRepository.saveCollectionSubjectsChanged(collectionSubjectsChanged)
     }
 
-    @StreamListener(COLLECTION_AGE_RANGE_CHANGED)
+    @BoclipsEventListener
     fun collectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged) {
         eventRepository.saveCollectionAgeRangeChanged(collectionAgeRangeChanged)
     }

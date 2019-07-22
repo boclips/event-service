@@ -22,7 +22,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun userActivated() {
         val event = createUserActivated(userId = "user-id")
 
-        subscriptions.userActivated().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("user-id")
     }
@@ -31,7 +31,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun videosSearched() {
         val event = createVideosSearched(query = "hi")
 
-        subscriptions.videosSearched().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("hi")
     }
@@ -40,7 +40,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun videoSegmentPlayed() {
         val event = createVideoSegmentPlayed(videoId = "123")
 
-        subscriptions.videoSegmentPlayed().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("123")
     }
@@ -49,7 +49,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun videoPlayerInteractedWith() {
         val event = createVideoPlayerInteractedWith(videoId = "123")
 
-        subscriptions.videoPlayerInteractedWith().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("123")
     }
@@ -58,7 +58,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun videoAddedToCollection() {
         val event = createVideoAddedToCollection(videoId = "123", collectionId = "456")
 
-        subscriptions.videoAddedToCollection().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("123")
         assertThat(document().toJson()).contains("456")
@@ -68,7 +68,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun videoRemovedFromCollection() {
         val event = createVideoRemovedFromCollection(videoId = "123", collectionId = "456")
 
-        subscriptions.videoRemovedFromCollection().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("123")
         assertThat(document().toJson()).contains("456")
@@ -78,7 +78,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun collectionBookmarkChanged() {
         val event = createCollectionBookmarkChanged(collectionId = "456", isBookmarked = true)
 
-        subscriptions.collectionBookmarkChanged().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("456")
         assertThat(document().toJson()).contains("true")
@@ -88,7 +88,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun collectionVisibilityChanged() {
         val event = createCollectionVisibilityChanged(collectionId = "456", isPublic = false)
 
-        subscriptions.collectionVisibilityChanged().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("456")
     }
@@ -97,7 +97,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun collectionSubjectsChanged() {
         val event = createCollectionSubjectsChanged(collectionId = "456", subjects = setOf("Maths"))
 
-        subscriptions.collectionSubjectsChanged().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("456")
         assertThat(document().toJson()).contains("Maths")
@@ -107,7 +107,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     fun collectionAgeRangeChanged() {
         val event = createCollectionAgeRangeChanged(collectionId = "456", rangeMin = 11, rangeMax = 19)
 
-        subscriptions.collectionAgeRangeChanged().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("456")
         assertThat(document().toJson()).contains("11")

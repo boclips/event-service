@@ -1,12 +1,12 @@
 package com.boclips.event.service.testsupport
 
-import com.boclips.events.types.User
-import com.boclips.events.types.UserActivated
-import com.boclips.events.types.collection.*
-import com.boclips.events.types.video.VideoPlayerInteractedWith
-import com.boclips.events.types.video.VideoSegmentPlayed
-import com.boclips.events.types.video.VideoUpdated
-import com.boclips.events.types.video.VideosSearched
+import com.boclips.eventbus.events.collection.*
+import com.boclips.eventbus.events.user.User
+import com.boclips.eventbus.events.user.UserActivated
+import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
+import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideoUpdated
+import com.boclips.eventbus.events.video.VideosSearched
 
 object TestFactories {
 
@@ -35,6 +35,7 @@ object TestFactories {
                 .builder()
                 .pageIndex(pageIndex)
                 .pageSize(pageSize)
+                .pageVideoIds(emptyList())
                 .query(query)
                 .totalResults(totalResults)
                 .user(user)

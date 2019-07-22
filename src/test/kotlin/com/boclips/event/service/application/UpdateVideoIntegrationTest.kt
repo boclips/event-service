@@ -17,7 +17,7 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
             contentPartnerName = "content partner"
         )
 
-        subscriptions.videoUpdated().send(msg(event))
+        eventBus.publish(event)
 
         assertThat(document().toJson()).contains("the title")
     }

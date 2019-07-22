@@ -11,11 +11,11 @@ import com.boclips.event.service.infrastructure.EventToDocumentConverter.convert
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoRemovedFromCollection
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoSegmentPlayed
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideosSearched
-import com.boclips.events.types.UserActivated
-import com.boclips.events.types.collection.*
-import com.boclips.events.types.video.VideoPlayerInteractedWith
-import com.boclips.events.types.video.VideoSegmentPlayed
-import com.boclips.events.types.video.VideosSearched
+import com.boclips.eventbus.events.collection.*
+import com.boclips.eventbus.events.user.UserActivated
+import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
+import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideosSearched
 import com.mongodb.MongoClient
 import mu.KLogging
 import org.bson.Document

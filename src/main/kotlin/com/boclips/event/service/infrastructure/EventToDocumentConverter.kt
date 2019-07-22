@@ -1,13 +1,11 @@
 package com.boclips.event.service.infrastructure
 
-import com.boclips.events.types.UserActivated
-import com.boclips.events.types.base.CollectionEvent
-import com.boclips.events.types.base.Event
-import com.boclips.events.types.base.UserEvent
-import com.boclips.events.types.collection.*
-import com.boclips.events.types.video.VideoPlayerInteractedWith
-import com.boclips.events.types.video.VideoSegmentPlayed
-import com.boclips.events.types.video.VideosSearched
+import com.boclips.eventbus.events.base.UserEvent
+import com.boclips.eventbus.events.collection.*
+import com.boclips.eventbus.events.user.UserActivated
+import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
+import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideosSearched
 import org.bson.Document
 
 object EventToDocumentConverter {
@@ -26,7 +24,8 @@ object EventToDocumentConverter {
                         + ("query" to videosSearched.query)
                         + ("pageIndex" to videosSearched.pageIndex)
                         + ("pageSize" to videosSearched.pageSize)
-                        + ("totalResults" to videosSearched.totalResults.toLong())
+                        + ("pageVideoIds" to videosSearched.pageVideoIds)
+                        + ("totalResults" to videosSearched.totalResults)
         )
     }
 

@@ -1,10 +1,10 @@
 package com.boclips.event.service.infrastructure
 
 import com.boclips.event.service.testsupport.TestFactories
-import com.boclips.events.types.User
-import com.boclips.events.types.UserActivated
-import com.boclips.events.types.video.VideoSegmentPlayed
-import com.boclips.events.types.video.VideosSearched
+import com.boclips.eventbus.events.user.User
+import com.boclips.eventbus.events.user.UserActivated
+import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideosSearched
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.ZoneOffset
@@ -58,6 +58,7 @@ class EventToDocumentConverterTest {
                 .pageIndex(5)
                 .pageSize(10)
                 .query("hello")
+                .pageVideoIds(listOf("v1", "v2"))
                 .totalResults(100)
                 .build()
 
@@ -71,6 +72,7 @@ class EventToDocumentConverterTest {
         assertThat(document.getInteger("pageIndex")).isEqualTo(5)
         assertThat(document.getInteger("pageSize")).isEqualTo(10)
         assertThat(document.getLong("totalResults")).isEqualTo(100)
+        assertThat(document.getList("pageVideoIds", String::class.java)).containsExactly("v1", "v2")
     }
 
     @Test

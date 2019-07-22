@@ -1,6 +1,6 @@
 package com.boclips.event.service.testsupport
 
-import com.boclips.events.config.Subscriptions
+import com.boclips.eventbus.EventBus
 import com.mongodb.MongoClient
 import de.flapdoodle.embed.mongo.MongodProcess
 import mu.KLogging
@@ -10,8 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.messaging.Message
-import org.springframework.messaging.support.MessageBuilder
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
@@ -28,7 +26,7 @@ abstract class AbstractSpringIntegrationTest {
     lateinit var mongoClient: MongoClient
 
     @Autowired
-    lateinit var subscriptions: Subscriptions
+    lateinit var eventBus: EventBus
 
     companion object : KLogging() {
         private var mongoProcess: MongodProcess? = null
@@ -53,9 +51,5 @@ abstract class AbstractSpringIntegrationTest {
                     }
         }
 
-    }
-
-    protected fun <T> msg(payload: T): Message<T> {
-        return MessageBuilder.withPayload(payload).build()
     }
 }

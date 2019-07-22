@@ -16,19 +16,13 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-ext {
-    set('springCloudVersion', 'Greenwich.SR1')
-}
-
 def junitVersion = "5.3.1"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.cloud:spring-cloud-gcp-starter-pubsub")
-    implementation("org.springframework.cloud:spring-cloud-gcp-pubsub-stream-binder")
 
-    implementation("com.github.boclips:events:0.63.0")
+    implementation("com.github.boclips:event-bus:1.6.0")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -39,18 +33,11 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "junit", module: "junit"
     }
-    testImplementation("org.springframework.cloud:spring-cloud-stream-test-support")
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
     testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0")
     testImplementation("com.nhaarman:mockito-kotlin:1.5.0")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
 }
 
 test {

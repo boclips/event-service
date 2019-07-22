@@ -1,10 +1,10 @@
 package com.boclips.event.service.domain
 
-import com.boclips.events.types.UserActivated
-import com.boclips.events.types.collection.*
-import com.boclips.events.types.video.VideoPlayerInteractedWith
-import com.boclips.events.types.video.VideoSegmentPlayed
-import com.boclips.events.types.video.VideosSearched
+import com.boclips.eventbus.events.collection.*
+import com.boclips.eventbus.events.user.UserActivated
+import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
+import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideosSearched
 
 interface EventRepository {
     fun saveUserActivated(userActivated: UserActivated)
