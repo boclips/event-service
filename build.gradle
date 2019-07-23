@@ -29,6 +29,7 @@ dependencies {
     implementation("org.mongodb:mongo-java-driver:3.10.1")
     implementation("org.litote.kmongo:kmongo:3.9.2")
     implementation("io.github.microutils:kotlin-logging:1.4.9")
+    implementation('io.sentry:sentry-logback:1.7.21')
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "junit", module: "junit"
