@@ -2,12 +2,23 @@ package com.boclips.event.service.application
 
 import com.boclips.event.service.domain.VideoRepository
 import com.boclips.eventbus.BoclipsEventListener
+import com.boclips.eventbus.domain.video.Video
+import com.boclips.eventbus.events.video.VideoCreated
 import com.boclips.eventbus.events.video.VideoUpdated
 
 class UpdateVideo(private val videoRepository: VideoRepository) {
 
     @BoclipsEventListener
     fun videoUpdated(event: VideoUpdated) {
-        videoRepository.saveVideo(event.video.id.value, event.video.title, event.video.contentPartner.name)
+        saveVideo(event.video)
+    }
+
+    @BoclipsEventListener
+    fun videoCreated(event: VideoCreated) {
+        saveVideo(event.video)
+    }
+
+    private fun saveVideo(video: Video) {
+        videoRepository.saveVideo(video.id.value, video.title, video.contentPartner.name)
     }
 }

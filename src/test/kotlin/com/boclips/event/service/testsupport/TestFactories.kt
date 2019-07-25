@@ -7,15 +7,12 @@ import com.boclips.eventbus.domain.video.Video
 import com.boclips.eventbus.domain.video.VideoId
 import com.boclips.eventbus.events.collection.*
 import com.boclips.eventbus.events.user.UserActivated
-import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
-import com.boclips.eventbus.events.video.VideoSegmentPlayed
-import com.boclips.eventbus.events.video.VideoUpdated
-import com.boclips.eventbus.events.video.VideosSearched
+import com.boclips.eventbus.events.video.*
 
 object TestFactories {
 
-    fun createVideoUpdates(videoId: String, title: String, contentPartnerName: String): VideoUpdated {
-        val video = Video
+    fun createVideo(videoId: String = "", title: String = "", contentPartnerName: String = ""): Video {
+        return Video
             .builder()
             .id(VideoId(videoId))
             .title(title)
@@ -23,11 +20,14 @@ object TestFactories {
             .subjects(emptyList())
             .ageRange(AgeRange())
             .build()
+    }
 
-        return VideoUpdated
-            .builder()
-            .video(video)
-            .build()
+    fun createVideoCreated(video: Video = createVideo()): VideoCreated {
+        return VideoCreated(video)
+    }
+
+    fun createVideoUpdated(video: Video = createVideo()): VideoUpdated {
+        return VideoUpdated(video)
     }
 
     fun createUser(userId: String = "user-1", isBoclipsEmployee: Boolean = false): User {
