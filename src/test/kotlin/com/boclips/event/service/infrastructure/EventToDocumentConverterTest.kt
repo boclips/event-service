@@ -1,7 +1,7 @@
 package com.boclips.event.service.infrastructure
 
 import com.boclips.event.service.testsupport.TestFactories
-import com.boclips.eventbus.events.user.User
+import com.boclips.eventbus.domain.user.User
 import com.boclips.eventbus.events.user.UserActivated
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched

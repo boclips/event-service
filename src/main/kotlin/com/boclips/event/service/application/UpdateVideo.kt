@@ -8,6 +8,6 @@ class UpdateVideo(private val videoRepository: VideoRepository) {
 
     @BoclipsEventListener
     fun videoUpdated(event: VideoUpdated) {
-        videoRepository.saveVideo(event.videoId, event.title, event.contentPartnerName)
+        videoRepository.saveVideo(event.video.id.value, event.video.title, event.video.contentPartner.name)
     }
 }
