@@ -1,6 +1,8 @@
 package com.boclips.event.service.domain
 
+import com.boclips.eventbus.domain.video.Video
+
 interface VideoRepository {
 
-    fun saveVideo(id: String, title: String, contentPartnerName: String)
+    fun saveVideo(video: Video)
 }

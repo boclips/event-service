@@ -1,6 +1,8 @@
 package com.boclips.event.service.testsupport
 
 import com.boclips.eventbus.domain.AgeRange
+import com.boclips.eventbus.domain.Subject
+import com.boclips.eventbus.domain.SubjectId
 import com.boclips.eventbus.domain.user.User
 import com.boclips.eventbus.domain.video.ContentPartner
 import com.boclips.eventbus.domain.video.Video
@@ -11,14 +13,20 @@ import com.boclips.eventbus.events.video.*
 
 object TestFactories {
 
-    fun createVideo(videoId: String = "", title: String = "", contentPartnerName: String = ""): Video {
+    fun createVideo(id: String = "", title: String = "", contentPartnerName: String = "", subjectNames: List<String> = emptyList(), ageRange: AgeRange = AgeRange()): Video {
         return Video
             .builder()
-            .id(VideoId(videoId))
+            .id(VideoId(id))
             .title(title)
             .contentPartner(ContentPartner.of(contentPartnerName))
-            .subjects(emptyList())
-            .ageRange(AgeRange())
+            .subjects(subjectNames.map {
+                Subject
+                    .builder()
+                    .id(SubjectId("id-$it"))
+                    .name(it)
+                    .build()
+            })
+            .ageRange(ageRange)
             .build()
     }
 

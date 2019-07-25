@@ -14,7 +14,7 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `insert a video when created`() {
         val video = createVideo(
-            videoId = "video-id",
+            id = "video-id",
             title = "new video",
             contentPartnerName = "content partner"
         )
@@ -29,7 +29,7 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `update a video on update`() {
         val video = createVideo(
-            videoId = "video-id",
+            id = "video-id",
             title = "the title",
             contentPartnerName = "content partner"
         )

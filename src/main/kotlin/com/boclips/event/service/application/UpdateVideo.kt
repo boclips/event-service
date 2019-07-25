@@ -19,6 +19,6 @@ class UpdateVideo(private val videoRepository: VideoRepository) {
     }
 
     private fun saveVideo(video: Video) {
-        videoRepository.saveVideo(video.id.value, video.title, video.contentPartner.name)
+        videoRepository.saveVideo(video)
     }
 }
