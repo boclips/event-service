@@ -3,6 +3,7 @@ package com.boclips.event.service.application
 import com.boclips.event.service.domain.VideoRepository
 import com.boclips.eventbus.BoclipsEventListener
 import com.boclips.eventbus.domain.video.Video
+import com.boclips.eventbus.events.video.VideoBroadcastRequested
 import com.boclips.eventbus.events.video.VideoCreated
 import com.boclips.eventbus.events.video.VideoUpdated
 
@@ -15,6 +16,11 @@ class UpdateVideo(private val videoRepository: VideoRepository) {
 
     @BoclipsEventListener
     fun videoCreated(event: VideoCreated) {
+        saveVideo(event.video)
+    }
+
+    @BoclipsEventListener
+    fun videoBroadcastRequested(event: VideoBroadcastRequested) {
         saveVideo(event.video)
     }
 

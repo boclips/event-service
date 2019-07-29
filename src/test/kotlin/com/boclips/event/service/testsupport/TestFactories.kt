@@ -30,14 +30,6 @@ object TestFactories {
             .build()
     }
 
-    fun createVideoCreated(video: Video = createVideo()): VideoCreated {
-        return VideoCreated(video)
-    }
-
-    fun createVideoUpdated(video: Video = createVideo()): VideoUpdated {
-        return VideoUpdated(video)
-    }
-
     fun createUser(userId: String = "user-1", isBoclipsEmployee: Boolean = false): User {
         return User
             .builder()
