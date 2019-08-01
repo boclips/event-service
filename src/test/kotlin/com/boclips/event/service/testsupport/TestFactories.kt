@@ -5,6 +5,7 @@ import com.boclips.eventbus.domain.Subject
 import com.boclips.eventbus.domain.SubjectId
 import com.boclips.eventbus.domain.user.User
 import com.boclips.eventbus.domain.video.ContentPartner
+import com.boclips.eventbus.domain.video.PlaybackProviderType
 import com.boclips.eventbus.domain.video.Video
 import com.boclips.eventbus.domain.video.VideoId
 import com.boclips.eventbus.events.collection.*
@@ -13,12 +14,20 @@ import com.boclips.eventbus.events.video.*
 
 object TestFactories {
 
-    fun createVideo(id: String = "", title: String = "", contentPartnerName: String = "", subjectNames: List<String> = emptyList(), ageRange: AgeRange = AgeRange()): Video {
+    fun createVideo(
+            id: String = "",
+            title: String = "",
+            contentPartnerName: String = "",
+            playbackProviderType: PlaybackProviderType = PlaybackProviderType.KALTURA,
+            subjectNames: List<String> = emptyList(),
+            ageRange: AgeRange = AgeRange()
+    ): Video {
         return Video
             .builder()
             .id(VideoId(id))
             .title(title)
             .contentPartner(ContentPartner.of(contentPartnerName))
+            .playbackProviderType(playbackProviderType)
             .subjects(subjectNames.map {
                 Subject
                     .builder()

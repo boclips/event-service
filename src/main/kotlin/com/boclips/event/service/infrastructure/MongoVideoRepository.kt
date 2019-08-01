@@ -13,6 +13,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
             .append("_id", video.id.value)
             .append("title", video.title)
             .append("contentPartnerName", video.contentPartner.name)
+            .append("playbackProviderType", video.playbackProviderType.name)
             .append("subjects", video.subjects.map {
                 it
                     .name
