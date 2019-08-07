@@ -37,6 +37,7 @@ object EventToDocumentConverter {
                 + ("videoDurationSeconds" to videoSegmentPlayed.videoDurationSeconds)
                 + ("videoIndex" to videoSegmentPlayed.videoIndex)
                 + ("videoId" to videoSegmentPlayed.videoId)
+                + ("consumerDevice" to videoSegmentPlayed.consumerDevice)
         )
     }
 
