@@ -91,7 +91,7 @@ class EventToDocumentConverterTest {
                 .videoDurationSeconds(60)
                 .videoIndex(10)
                 .videoId("123")
-                .consumerDevice("device-id")
+                .playbackDevice("device-id")
                 .build()
 
         val document = EventToDocumentConverter.convertVideoSegmentPlayed(videoSegmentPlayed = event)
@@ -106,7 +106,7 @@ class EventToDocumentConverterTest {
         assertThat(document.getLong("videoDurationSeconds")).isEqualTo(60)
         assertThat(document.getInteger("videoIndex")).isEqualTo(10)
         assertThat(document.getString("videoId")).isEqualTo("123")
-        assertThat(document.getString("consumerDevice")).isEqualTo("device-id")
+        assertThat(document.getString("playbackDevice")).isEqualTo("device-id")
     }
 
     @Test
