@@ -148,4 +148,13 @@ object TestFactories {
             .rangeMax(rangeMax)
             .build()
     }
+
+    fun createVideoVisited(videoId: String): VideoVisited {
+        return VideoVisited
+            .builder()
+            .videoId(videoId)
+            .user(createUser())
+            .build()
+    }
+
 }

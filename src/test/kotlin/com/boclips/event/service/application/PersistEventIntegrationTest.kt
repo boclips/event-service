@@ -11,6 +11,7 @@ import com.boclips.event.service.testsupport.TestFactories.createVideoAddedToCol
 import com.boclips.event.service.testsupport.TestFactories.createVideoPlayerInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createVideoRemovedFromCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideoSegmentPlayed
+import com.boclips.event.service.testsupport.TestFactories.createVideoVisited
 import com.boclips.event.service.testsupport.TestFactories.createVideosSearched
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
@@ -114,6 +115,14 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         assertThat(document().toJson()).contains("19")
     }
 
+    @Test
+    fun videoVisited() {
+        val event = createVideoVisited(videoId = "123")
+
+        eventBus.publish(event)
+
+        assertThat(document().toJson()).contains("123")
+    }
 
     private fun document(): Document {
         return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection("events").find().toList().single()

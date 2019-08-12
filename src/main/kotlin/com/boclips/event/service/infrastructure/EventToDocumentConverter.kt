@@ -5,6 +5,7 @@ import com.boclips.eventbus.events.collection.*
 import com.boclips.eventbus.events.user.UserActivated
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideoVisited
 import com.boclips.eventbus.events.video.VideosSearched
 import org.bson.Document
 
@@ -64,6 +65,11 @@ object EventToDocumentConverter {
                 + ("videoId" to videoRemovedFromCollection.videoId)
                 + ("collectionId" to videoRemovedFromCollection.collectionId)
         )
+    }
+
+    fun convertVideoVisited(event: VideoVisited): Document {
+        return Document(convertUserEvent(event, "VIDEO_VISITED")
+                + ("videoId" to event.videoId))
     }
 
     fun convertCollectionBookmarkChanged(event: CollectionBookmarkChanged): Document {

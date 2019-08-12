@@ -159,6 +159,16 @@ class EventToDocumentConverterTest {
     }
 
     @Test
+    fun convertVideoVisited() {
+        val event = TestFactories.createVideoVisited(videoId = "video-id")
+
+        val document = EventToDocumentConverter.convertVideoVisited(event)
+
+        assertThat(document.getString("type")).isEqualTo("VIDEO_VISITED")
+        assertThat(document.getString("videoId")).isEqualTo("video-id")
+    }
+
+    @Test
     fun `convertCollectionBookmarkChanged bookmarking`() {
         val event = TestFactories.createCollectionBookmarkChanged(collectionId = "collection-id", isBookmarked = true)
 

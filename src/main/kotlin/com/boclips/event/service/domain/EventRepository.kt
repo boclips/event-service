@@ -4,6 +4,7 @@ import com.boclips.eventbus.events.collection.*
 import com.boclips.eventbus.events.user.UserActivated
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideoVisited
 import com.boclips.eventbus.events.video.VideosSearched
 
 interface EventRepository {
@@ -13,6 +14,7 @@ interface EventRepository {
     fun saveVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith)
     fun saveVideoAddedToCollection(videoAddedToCollection: VideoAddedToCollection)
     fun saveVideoRemovedFromCollection(videoRemovedFromCollection: VideoRemovedFromCollection)
+    fun saveVideoVisited(videoVisited: VideoVisited)
     fun saveCollectionBookmarkChanged(collectionBookmarkChanged: CollectionBookmarkChanged)
     fun saveCollectionVisibilityChanged(collectionVisibilityChanged: CollectionVisibilityChanged)
     fun saveCollectionSubjectsChanged(collectionSubjectsChanged: CollectionSubjectsChanged)

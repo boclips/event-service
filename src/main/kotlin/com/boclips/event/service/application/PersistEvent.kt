@@ -6,6 +6,7 @@ import com.boclips.eventbus.events.collection.*
 import com.boclips.eventbus.events.user.UserActivated
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideoVisited
 import com.boclips.eventbus.events.video.VideosSearched
 
 class PersistEvent(private val eventRepository: EventRepository) {
@@ -58,6 +59,11 @@ class PersistEvent(private val eventRepository: EventRepository) {
     @BoclipsEventListener
     fun collectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged) {
         eventRepository.saveCollectionAgeRangeChanged(collectionAgeRangeChanged)
+    }
+
+    @BoclipsEventListener
+    fun videoVisited(videoVisited: VideoVisited) {
+        eventRepository.saveVideoVisited(videoVisited)
     }
 
 }
