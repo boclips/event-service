@@ -1,9 +1,11 @@
 package com.boclips.event.service.testsupport
 
+import com.boclips.event.service.infrastructure.DatabaseConstants
 import com.boclips.eventbus.EventBus
 import com.mongodb.MongoClient
 import de.flapdoodle.embed.mongo.MongodProcess
 import mu.KLogging
+import org.bson.Document
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -52,4 +54,15 @@ abstract class AbstractSpringIntegrationTest {
         }
 
     }
+
+    fun documents(collection: String): List<Document> {
+        return mongoClient
+                .getDatabase(DatabaseConstants.DB_NAME)
+                .getCollection(collection)
+                .find()
+                .toList()
+    }
+
+    fun document(collection: String) = documents(collection).single()
+
 }

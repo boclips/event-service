@@ -1,6 +1,11 @@
 package com.boclips.event.service.domain
 
-import com.boclips.eventbus.events.collection.*
+import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
+import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
+import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
+import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
+import com.boclips.eventbus.events.collection.VideoAddedToCollection
+import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.user.UserActivated
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed

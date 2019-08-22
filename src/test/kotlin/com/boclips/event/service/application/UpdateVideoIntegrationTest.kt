@@ -20,11 +20,9 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
             contentPartnerName = "content partner"
         )
 
-        eventBus
-            .publish(VideoCreated(video))
+        eventBus.publish(VideoCreated(video))
 
-        assertThat(document().toJson())
-            .contains("new video")
+        assertThat(document().toJson()).contains("new video")
     }
 
     @Test
@@ -35,11 +33,9 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
             contentPartnerName = "content partner"
         )
 
-        eventBus
-            .publish(VideoUpdated(video))
+        eventBus.publish(VideoUpdated(video))
 
-        assertThat(document().toJson())
-            .contains("the title")
+        assertThat(document().toJson()).contains("the title")
     }
 
     @Test
@@ -50,11 +46,9 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
             contentPartnerName = "content partner"
         )
 
-        eventBus
-            .publish(VideoBroadcastRequested(video))
+        eventBus.publish(VideoBroadcastRequested(video))
 
-        assertThat(document().toJson())
-            .contains("the title")
+        assertThat(document().toJson()).contains("the title")
     }
 
     private fun document(): Document {

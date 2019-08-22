@@ -14,6 +14,7 @@ import com.boclips.event.service.infrastructure.EventToDocumentConverter.convert
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideosSearched
 import com.boclips.eventbus.events.collection.*
 import com.boclips.eventbus.events.user.UserActivated
+import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideoVisited

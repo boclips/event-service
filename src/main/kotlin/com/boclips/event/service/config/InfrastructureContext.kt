@@ -1,8 +1,10 @@
 package com.boclips.event.service.config
 
 import com.boclips.event.service.domain.EventRepository
+import com.boclips.event.service.domain.UserRepository
 import com.boclips.event.service.domain.VideoRepository
 import com.boclips.event.service.infrastructure.MongoEventRepository
+import com.boclips.event.service.infrastructure.MongoUserRepository
 import com.boclips.event.service.infrastructure.MongoVideoRepository
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
@@ -26,6 +28,11 @@ class InfrastructureContext(val mongoProperties: MongoProperties) {
     @Bean
     fun videoRepository(): VideoRepository {
         return MongoVideoRepository(mongoClient())
+    }
+
+    @Bean
+    fun userRepository(): UserRepository {
+        return MongoUserRepository(mongoClient())
     }
 
 }

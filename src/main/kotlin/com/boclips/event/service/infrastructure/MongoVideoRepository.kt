@@ -25,8 +25,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
 
     private fun write(id: String, document: Document) {
         try {
-            getCollection()
-                .replaceOne(Document("_id", id), document, ReplaceOptions().upsert(true))
+            getCollection().replaceOne(Document("_id", id), document, ReplaceOptions().upsert(true))
         } catch (e: Exception) {
             MongoEventRepository
                 .logger

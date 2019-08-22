@@ -8,19 +8,30 @@ import com.boclips.eventbus.domain.video.ContentPartner
 import com.boclips.eventbus.domain.video.PlaybackProviderType
 import com.boclips.eventbus.domain.video.Video
 import com.boclips.eventbus.domain.video.VideoId
-import com.boclips.eventbus.events.collection.*
+import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
+import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
+import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
+import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
+import com.boclips.eventbus.events.collection.VideoAddedToCollection
+import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.user.UserActivated
-import com.boclips.eventbus.events.video.*
+import com.boclips.eventbus.events.user.UserCreated
+import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
+import com.boclips.eventbus.events.video.VideoSegmentPlayed
+import com.boclips.eventbus.events.video.VideoVisited
+import com.boclips.eventbus.events.video.VideosSearched
+import java.time.ZonedDateTime
+import java.util.Date
 
 object TestFactories {
 
     fun createVideo(
-            id: String = "",
-            title: String = "",
-            contentPartnerName: String = "",
-            playbackProviderType: PlaybackProviderType = PlaybackProviderType.KALTURA,
-            subjectNames: List<String> = emptyList(),
-            ageRange: AgeRange = AgeRange()
+        id: String = "",
+        title: String = "",
+        contentPartnerName: String = "",
+        playbackProviderType: PlaybackProviderType = PlaybackProviderType.KALTURA,
+        subjectNames: List<String> = emptyList(),
+        ageRange: AgeRange = AgeRange()
     ): Video {
         return Video
             .builder()
@@ -39,11 +50,16 @@ object TestFactories {
             .build()
     }
 
-    fun createUser(userId: String = "user-1", isBoclipsEmployee: Boolean = false): User {
+    fun createUser(
+        userId: String = "user-1",
+        isBoclipsEmployee: Boolean = false,
+        organisationId: String = "organisation-id"
+    ): User {
         return User
             .builder()
             .id(userId)
             .isBoclipsEmployee(isBoclipsEmployee)
+            .organisationId(organisationId)
             .build()
     }
 
@@ -56,7 +72,13 @@ object TestFactories {
             .build()
     }
 
-    fun createVideosSearched(pageIndex: Int = 0, pageSize: Int = 10, query: String = "a great video", totalResults: Long = 14, user: User = createUser()): VideosSearched {
+    fun createVideosSearched(
+        pageIndex: Int = 0,
+        pageSize: Int = 10,
+        query: String = "a great video",
+        totalResults: Long = 14,
+        user: User = createUser()
+    ): VideosSearched {
         return VideosSearched
             .builder()
             .pageIndex(pageIndex)
@@ -68,7 +90,15 @@ object TestFactories {
             .build()
     }
 
-    fun createVideoSegmentPlayed(segmentEndSeconds: Long = 10, segmentStartSeconds: Long = 5, videoDurationSeconds: Long = 100, videoId: String = "123", videoIndex: Int = 1, playerId: String = "1", user: User = createUser()): VideoSegmentPlayed {
+    fun createVideoSegmentPlayed(
+        segmentEndSeconds: Long = 10,
+        segmentStartSeconds: Long = 5,
+        videoDurationSeconds: Long = 100,
+        videoId: String = "123",
+        videoIndex: Int = 1,
+        playerId: String = "1",
+        user: User = createUser()
+    ): VideoSegmentPlayed {
         return VideoSegmentPlayed
             .builder()
             .segmentEndSeconds(segmentEndSeconds)
@@ -81,7 +111,15 @@ object TestFactories {
             .build()
     }
 
-    fun createVideoPlayerInteractedWith(user: User = createUser(), videoId: String = "123", playerId: String = "1", videoDurationSeconds: Long = 100, currentTime: Long = 55, subtype: String = "captions-on", payload: Map<String, Any> = mapOf(Pair("id", "caption-id"))): VideoPlayerInteractedWith {
+    fun createVideoPlayerInteractedWith(
+        user: User = createUser(),
+        videoId: String = "123",
+        playerId: String = "1",
+        videoDurationSeconds: Long = 100,
+        currentTime: Long = 55,
+        subtype: String = "captions-on",
+        payload: Map<String, Any> = mapOf(Pair("id", "caption-id"))
+    ): VideoPlayerInteractedWith {
         return VideoPlayerInteractedWith
             .builder()
             .user(user)
@@ -139,7 +177,11 @@ object TestFactories {
             .build()
     }
 
-    fun createCollectionAgeRangeChanged(collectionId: String, rangeMin: Int, rangeMax: Int?): CollectionAgeRangeChanged {
+    fun createCollectionAgeRangeChanged(
+        collectionId: String,
+        rangeMin: Int,
+        rangeMax: Int?
+    ): CollectionAgeRangeChanged {
         return CollectionAgeRangeChanged
             .builder()
             .collectionId(collectionId)
@@ -157,4 +199,21 @@ object TestFactories {
             .build()
     }
 
+    fun createUserCreated(
+        userId: String = "user-id",
+        organisationId: String = "organisation-id",
+        isBoclipsEmployee: Boolean = false,
+        timestamp: ZonedDateTime = ZonedDateTime.now()
+    ): UserCreated {
+        return UserCreated.builder()
+            .user(
+                User.builder()
+                    .id(userId)
+                    .organisationId(organisationId)
+                    .isBoclipsEmployee(isBoclipsEmployee)
+                    .build()
+            )
+            .timestamp(Date.from(timestamp.toInstant()))
+            .build()
+    }
 }
