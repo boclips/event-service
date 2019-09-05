@@ -6,6 +6,7 @@ import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
+import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
@@ -20,4 +21,5 @@ interface EventRepository {
     fun saveCollectionVisibilityChanged(collectionVisibilityChanged: CollectionVisibilityChanged)
     fun saveCollectionSubjectsChanged(collectionSubjectsChanged: CollectionSubjectsChanged)
     fun saveCollectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged)
+    fun saveVideoInteractedWith(event: VideoInteractedWith)
 }

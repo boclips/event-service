@@ -15,6 +15,7 @@ import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.user.UserCreated
+import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
@@ -47,6 +48,24 @@ object TestFactories {
             })
             .ageRange(ageRange)
             .durationSeconds(durationSeconds)
+            .build()
+    }
+
+    fun createVideoInteractedWith(
+        timestamp: ZonedDateTime = ZonedDateTime.now(),
+        videoId: String = "video-id",
+        subtype: String = "share-to-google-classroom",
+        payload: Map<String, Any> = HashMap(),
+        user: User = createUser(),
+        url: String? = "https://example.com"
+    ): VideoInteractedWith {
+        return VideoInteractedWith.builder()
+            .timestamp(Date.from(timestamp.toInstant()))
+            .videoId(videoId)
+            .subtype(subtype)
+            .payload(payload)
+            .user(user)
+            .url(url)
             .build()
     }
 

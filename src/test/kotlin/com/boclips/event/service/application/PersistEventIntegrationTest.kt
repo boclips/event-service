@@ -2,12 +2,15 @@ package com.boclips.event.service.application
 
 import com.boclips.event.service.infrastructure.DatabaseConstants
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
+import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.event.service.testsupport.TestFactories.createCollectionAgeRangeChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionBookmarkChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionSubjectsChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionVisibilityChanged
 import com.boclips.event.service.testsupport.TestFactories.createUser
+import com.boclips.event.service.testsupport.TestFactories.createVideo
 import com.boclips.event.service.testsupport.TestFactories.createVideoAddedToCollection
+import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createVideoPlayerInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createVideoRemovedFromCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideoSegmentPlayed
@@ -67,7 +70,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun collectionBookmarkChanged() {
-        val event = createCollectionBookmarkChanged(collectionId = "456", isBookmarked = true)
+        val event = createCollectionBookmarkChanged(collectionId = "456", isBookmarked = true, user = createUser())
 
         eventBus.publish(event)
 
@@ -103,6 +106,15 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         assertThat(document().toJson()).contains("456")
         assertThat(document().toJson()).contains("11")
         assertThat(document().toJson()).contains("19")
+    }
+
+    @Test
+    fun videoInteractedWith() {
+        val event = createVideoInteractedWith(videoId = "the video id")
+
+        eventBus.publish(event)
+
+        assertThat(document().toJson()).contains("the video id")
     }
 
     private fun document(): Document {

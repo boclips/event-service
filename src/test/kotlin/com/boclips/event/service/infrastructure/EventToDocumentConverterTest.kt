@@ -2,7 +2,10 @@ package com.boclips.event.service.infrastructure
 
 import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.event.service.testsupport.TestFactories.createUser
+import com.boclips.event.service.testsupport.TestFactories.createVideo
+import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
 import com.boclips.eventbus.domain.user.User
+import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
 import org.assertj.core.api.Assertions.assertThat
@@ -10,6 +13,7 @@ import org.junit.jupiter.api.Test
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
+import kotlin.collections.HashMap
 
 class EventToDocumentConverterTest {
 
@@ -205,6 +209,28 @@ class EventToDocumentConverterTest {
         val document = EventToDocumentConverter.convertCollectionAgeRangeChanged(event)
 
         assertThat(document.get("rangeMax")).isNull()
+    }
+
+    @Test
+    fun convertVideoInteractedWith() {
+        val event = createVideoInteractedWith(
+            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC),
+            videoId = "the-video-id",
+            subtype = "copy-share-link",
+            payload = HashMap<String, Any>().apply { put("additional-field", "bunny") },
+            user = createUser(userId = "user-id"),
+            url = "https://boclips.com/videos?q=hello"
+        )
+
+        val document = EventToDocumentConverter.convertVideoInteractedWith(event)
+
+        assertThat(document.getString("type")).isEqualTo("VIDEO_INTERACTED_WITH")
+        assertThat(document.getDate("timestamp")).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+        assertThat(document.getString("videoId")).isEqualTo("the-video-id")
+        assertThat(document.getString("subtype")).isEqualTo("copy-share-link")
+        assertThat(document.get("payload")).isEqualTo(mapOf("additional-field" to "bunny"))
+        assertThat(document.getString("userId")).isEqualTo("user-id")
+        assertThat(document.getString("url")).isEqualTo("https://boclips.com/videos?q=hello")
     }
 }
 

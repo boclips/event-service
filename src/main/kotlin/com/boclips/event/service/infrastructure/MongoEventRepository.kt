@@ -6,11 +6,13 @@ import com.boclips.event.service.infrastructure.EventToDocumentConverter.convert
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionSubjectsChanged
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionVisibilityChanged
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoAddedToCollection
+import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoInteractedWith
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoPlayerInteractedWith
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoRemovedFromCollection
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoSegmentPlayed
 import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideosSearched
 import com.boclips.eventbus.events.collection.*
+import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
@@ -55,6 +57,10 @@ class MongoEventRepository(private val mongoClient: MongoClient) : EventReposito
 
     override fun saveCollectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged) {
         write(convertCollectionAgeRangeChanged(collectionAgeRangeChanged))
+    }
+
+    override fun saveVideoInteractedWith(event: VideoInteractedWith) {
+        write(convertVideoInteractedWith(event))
     }
 
     private fun write(document: Document) {
