@@ -6,27 +6,17 @@ import com.boclips.event.service.testsupport.TestFactories.createCollectionAgeRa
 import com.boclips.event.service.testsupport.TestFactories.createCollectionBookmarkChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionSubjectsChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionVisibilityChanged
-import com.boclips.event.service.testsupport.TestFactories.createUserActivated
+import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoAddedToCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideoPlayerInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createVideoRemovedFromCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideoSegmentPlayed
-import com.boclips.event.service.testsupport.TestFactories.createVideoVisited
 import com.boclips.event.service.testsupport.TestFactories.createVideosSearched
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
 
 class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
-
-    @Test
-    fun userActivated() {
-        val event = createUserActivated(userId = "user-id")
-
-        eventBus.publish(event)
-
-        assertThat(document().toJson()).contains("user-id")
-    }
 
     @Test
     fun videosSearched() {
@@ -113,15 +103,6 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         assertThat(document().toJson()).contains("456")
         assertThat(document().toJson()).contains("11")
         assertThat(document().toJson()).contains("19")
-    }
-
-    @Test
-    fun videoVisited() {
-        val event = createVideoVisited(videoId = "123")
-
-        eventBus.publish(event)
-
-        assertThat(document().toJson()).contains("123")
     }
 
     private fun document(): Document {

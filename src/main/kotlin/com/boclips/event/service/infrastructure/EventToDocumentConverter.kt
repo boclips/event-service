@@ -2,22 +2,12 @@ package com.boclips.event.service.infrastructure
 
 import com.boclips.eventbus.events.base.UserEvent
 import com.boclips.eventbus.events.collection.*
-import com.boclips.eventbus.events.user.UserActivated
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
-import com.boclips.eventbus.events.video.VideoVisited
 import com.boclips.eventbus.events.video.VideosSearched
 import org.bson.Document
 
 object EventToDocumentConverter {
-
-    fun convertUserActivated(userActivated: UserActivated): Document {
-        return Document(
-                convertUserEvent(userActivated, type = "USER_ACTIVATED")
-                        + ("totalUsers" to userActivated.totalUsers)
-                        + ("activatedUsers" to userActivated.activatedUsers)
-        )
-    }
 
     fun convertVideosSearched(videosSearched: VideosSearched): Document {
         return Document(
@@ -35,7 +25,6 @@ object EventToDocumentConverter {
                 + ("segmentStartSeconds" to videoSegmentPlayed.segmentStartSeconds)
                 + ("segmentEndSeconds" to videoSegmentPlayed.segmentEndSeconds)
                 + ("playerId" to videoSegmentPlayed.playerId)
-                + ("videoDurationSeconds" to videoSegmentPlayed.videoDurationSeconds)
                 + ("videoIndex" to videoSegmentPlayed.videoIndex)
                 + ("videoId" to videoSegmentPlayed.videoId)
                 + ("playbackDevice" to videoSegmentPlayed.playbackDevice)
@@ -46,7 +35,6 @@ object EventToDocumentConverter {
         return Document(convertUserEvent(videoPlayerInteractedWith, "VIDEO_PLAYER_INTERACTED_WITH")
                 + ("playerId" to videoPlayerInteractedWith.playerId)
                 + ("videoId" to videoPlayerInteractedWith.videoId)
-                + ("videoDurationSeconds" to videoPlayerInteractedWith.videoDurationSeconds)
                 + ("currentTime" to videoPlayerInteractedWith.currentTime)
                 + ("subtype" to videoPlayerInteractedWith.subtype)
                 + ("payload" to videoPlayerInteractedWith.payload)
@@ -65,11 +53,6 @@ object EventToDocumentConverter {
                 + ("videoId" to videoRemovedFromCollection.videoId)
                 + ("collectionId" to videoRemovedFromCollection.collectionId)
         )
-    }
-
-    fun convertVideoVisited(event: VideoVisited): Document {
-        return Document(convertUserEvent(event, "VIDEO_VISITED")
-                + ("videoId" to event.videoId))
     }
 
     fun convertCollectionBookmarkChanged(event: CollectionBookmarkChanged): Document {

@@ -20,6 +20,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
             })
             .append("ageRangeMin", video.ageRange.min)
             .append("ageRangeMax", video.ageRange.max)
+            .append("durationSeconds", video.durationSeconds)
         write(video.id.value, document)
     }
 

@@ -14,11 +14,9 @@ import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
-import com.boclips.eventbus.events.user.UserActivated
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
-import com.boclips.eventbus.events.video.VideoVisited
 import com.boclips.eventbus.events.video.VideosSearched
 import java.time.ZonedDateTime
 import java.util.Date
@@ -31,7 +29,8 @@ object TestFactories {
         contentPartnerName: String = "",
         playbackProviderType: PlaybackProviderType = PlaybackProviderType.KALTURA,
         subjectNames: List<String> = emptyList(),
-        ageRange: AgeRange = AgeRange()
+        ageRange: AgeRange = AgeRange(),
+        durationSeconds: Int = 180
     ): Video {
         return Video
             .builder()
@@ -47,6 +46,7 @@ object TestFactories {
                     .build()
             })
             .ageRange(ageRange)
+            .durationSeconds(durationSeconds)
             .build()
     }
 
@@ -60,15 +60,6 @@ object TestFactories {
             .id(userId)
             .isBoclipsEmployee(isBoclipsEmployee)
             .organisationId(organisationId)
-            .build()
-    }
-
-    fun createUserActivated(userId: String = "user-1", isBoclipsEmployee: Boolean = false): UserActivated {
-        return UserActivated
-            .builder()
-            .user(User.builder().id(userId).isBoclipsEmployee(isBoclipsEmployee).build())
-            .totalUsers(100)
-            .activatedUsers(50)
             .build()
     }
 
@@ -93,7 +84,6 @@ object TestFactories {
     fun createVideoSegmentPlayed(
         segmentEndSeconds: Long = 10,
         segmentStartSeconds: Long = 5,
-        videoDurationSeconds: Long = 100,
         videoId: String = "123",
         videoIndex: Int = 1,
         playerId: String = "1",
@@ -103,7 +93,6 @@ object TestFactories {
             .builder()
             .segmentEndSeconds(segmentEndSeconds)
             .segmentStartSeconds(segmentStartSeconds)
-            .videoDurationSeconds(videoDurationSeconds)
             .videoId(videoId)
             .videoIndex(videoIndex)
             .playerId(playerId)
@@ -115,7 +104,6 @@ object TestFactories {
         user: User = createUser(),
         videoId: String = "123",
         playerId: String = "1",
-        videoDurationSeconds: Long = 100,
         currentTime: Long = 55,
         subtype: String = "captions-on",
         payload: Map<String, Any> = mapOf(Pair("id", "caption-id"))
@@ -125,7 +113,6 @@ object TestFactories {
             .user(user)
             .videoId(videoId)
             .playerId(playerId)
-            .videoDurationSeconds(videoDurationSeconds)
             .currentTime(currentTime)
             .subtype(subtype)
             .payload(payload)
@@ -150,11 +137,11 @@ object TestFactories {
             .build()
     }
 
-    fun createCollectionBookmarkChanged(collectionId: String, isBookmarked: Boolean): CollectionBookmarkChanged {
+    fun createCollectionBookmarkChanged(collectionId: String = "collection-id", isBookmarked: Boolean = true, user: User = createUser()): CollectionBookmarkChanged {
         return CollectionBookmarkChanged
             .builder()
             .collectionId(collectionId)
-            .user(createUser())
+            .user(user)
             .isBookmarked(isBookmarked)
             .build()
     }
@@ -188,14 +175,6 @@ object TestFactories {
             .user(createUser())
             .rangeMin(rangeMin)
             .rangeMax(rangeMax)
-            .build()
-    }
-
-    fun createVideoVisited(videoId: String): VideoVisited {
-        return VideoVisited
-            .builder()
-            .videoId(videoId)
-            .user(createUser())
             .build()
     }
 

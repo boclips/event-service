@@ -22,7 +22,8 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                 contentPartnerName = "the content partner",
                 playbackProviderType = PlaybackProviderType.YOUTUBE,
                 subjectNames = listOf("Maths"),
-                ageRange = AgeRange(5, 11)
+                ageRange = AgeRange(5, 11),
+                durationSeconds = 60
         ))
 
         val document = document()
@@ -33,6 +34,8 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getList("subjects", String::class.java)).containsExactly("Maths")
         assertThat(document.getInteger("ageRangeMin")).isEqualTo(5)
         assertThat(document.getInteger("ageRangeMax")).isEqualTo(11)
+        assertThat(document.getInteger("durationSeconds")).isEqualTo(60)
+
     }
 
     @Test
