@@ -13,7 +13,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
         val document = Document()
             .append("_id", event.user.id)
             .append("createdAt", event.timestamp.toInstant().atZone(ZoneOffset.UTC).toString())
-            .append("organisationId", event.user.organisationId)
+            .append("organisationId", event.organisation?.id)
             .append("isBoclipsEmployee", event.user.isBoclipsEmployee)
         getCollection().save(document)
     }

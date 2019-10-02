@@ -3,6 +3,7 @@ package com.boclips.event.service.testsupport
 import com.boclips.eventbus.domain.AgeRange
 import com.boclips.eventbus.domain.Subject
 import com.boclips.eventbus.domain.SubjectId
+import com.boclips.eventbus.domain.user.Organisation
 import com.boclips.eventbus.domain.user.User
 import com.boclips.eventbus.domain.video.ContentPartner
 import com.boclips.eventbus.domain.video.PlaybackProviderType
@@ -71,15 +72,22 @@ object TestFactories {
 
     fun createUser(
         userId: String = "user-1",
-        isBoclipsEmployee: Boolean = false,
-        organisationId: String = "organisation-id"
+        isBoclipsEmployee: Boolean = false
     ): User {
         return User
             .builder()
             .id(userId)
             .isBoclipsEmployee(isBoclipsEmployee)
-            .organisationId(organisationId)
             .build()
+    }
+
+    fun createOrganisation(
+            id: String = "organisation-id"
+    ): Organisation {
+        return Organisation
+                .builder()
+                .id(id)
+                .build()
     }
 
     fun createVideosSearched(
@@ -199,7 +207,7 @@ object TestFactories {
 
     fun createUserCreated(
         userId: String = "user-id",
-        organisationId: String = "organisation-id",
+        organisation: Organisation? = createOrganisation(),
         isBoclipsEmployee: Boolean = false,
         timestamp: ZonedDateTime = ZonedDateTime.now()
     ): UserCreated {
@@ -207,9 +215,11 @@ object TestFactories {
             .user(
                 User.builder()
                     .id(userId)
-                    .organisationId(organisationId)
                     .isBoclipsEmployee(isBoclipsEmployee)
                     .build()
+            )
+            .organisation(
+                    organisation
             )
             .timestamp(Date.from(timestamp.toInstant()))
             .build()

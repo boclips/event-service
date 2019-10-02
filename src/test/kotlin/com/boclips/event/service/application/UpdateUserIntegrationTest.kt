@@ -13,11 +13,13 @@ class UpdateUserIntegrationTest : AbstractSpringIntegrationTest() {
     fun `insert a user when user is created`() {
         val user = TestFactories.createUser(
                 userId = "some-id",
-                isBoclipsEmployee = true,
-                organisationId = "some-org-id"
+                isBoclipsEmployee = true
+        )
+        val organisation = TestFactories.createOrganisation(
+                id = "some-org-id"
         )
 
-        eventBus.publish(UserCreated.builder().user(user).build())
+        eventBus.publish(UserCreated.builder().user(user).organisation(organisation).build())
 
         assertThat(userDocuments()).hasSize(1)
     }

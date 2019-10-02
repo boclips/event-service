@@ -2,6 +2,7 @@ package com.boclips.event.service.infrastructure
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories
+import com.boclips.event.service.testsupport.TestFactories.createOrganisation
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createUserCreated
 import com.nhaarman.mockito_kotlin.times
@@ -18,10 +19,17 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     lateinit var userRepository: MongoUserRepository
 
     @Test
-    fun `saveUser saves organisation id`() {
-        userRepository.saveUser(createUserCreated(organisationId = "teachers"))
+    fun `saveUser saves organisation`() {
+        userRepository.saveUser(createUserCreated(organisation = createOrganisation(id = "teachers")))
 
         assertThat(userDocument().getString("organisationId")).isEqualTo("teachers")
+    }
+
+    @Test
+    fun `saveUser handles missing organisation`() {
+        userRepository.saveUser(createUserCreated(organisation = null))
+
+        assertThat(userDocument().getString("organisationId")).isNull()
     }
 
     @Test
