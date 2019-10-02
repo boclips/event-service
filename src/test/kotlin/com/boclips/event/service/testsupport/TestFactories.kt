@@ -82,11 +82,13 @@ object TestFactories {
     }
 
     fun createOrganisation(
-            id: String = "organisation-id"
+            id: String = "organisation-id",
+            type: String = "API"
     ): Organisation {
         return Organisation
                 .builder()
                 .id(id)
+                .type(type)
                 .build()
     }
 

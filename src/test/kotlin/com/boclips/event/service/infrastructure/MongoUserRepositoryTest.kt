@@ -9,9 +9,11 @@ import com.nhaarman.mockito_kotlin.times
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.litote.kmongo.MongoOperator
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
+
 
 class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
@@ -20,9 +22,11 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `saveUser saves organisation`() {
-        userRepository.saveUser(createUserCreated(organisation = createOrganisation(id = "teachers")))
+        userRepository.saveUser(createUserCreated(organisation = createOrganisation(id = "teachers", type = "School")))
 
-        assertThat(userDocument().getString("organisationId")).isEqualTo("teachers")
+        val organisationDocument = userDocument()["organisation"] as Map<*, *>
+        assertThat(organisationDocument["id"]).isEqualTo("teachers")
+        assertThat(organisationDocument["type"]).isEqualTo("School")
     }
 
     @Test
