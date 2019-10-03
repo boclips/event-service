@@ -35,9 +35,11 @@ class UpdateUserIntegrationTest : AbstractSpringIntegrationTest() {
                 id = "some-org-id"
         )
 
+        eventBus.publish(UserCreated.builder().user(user).userId("some-id").organisation(null).build())
         eventBus.publish(UserUpdated.builder().user(user).userId("some-id").organisation(organisation).build())
 
         assertThat(userDocuments()).hasSize(1)
+        assertThat(userDocuments().first().get("organisation")).isNotNull
     }
 
     fun userDocuments() = documents(MongoUserRepository.COLLECTION)

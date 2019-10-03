@@ -16,6 +16,7 @@ import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.user.UserCreated
+import com.boclips.eventbus.events.user.UserUpdated
 import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
@@ -242,4 +243,26 @@ object TestFactories {
             .timestamp(Date.from(timestamp.toInstant()))
             .build()
     }
+
+    fun createUserUpdated(
+        userId: String = "user-id",
+        organisation: Organisation? = createOrganisation(),
+        isBoclipsEmployee: Boolean = false,
+        timestamp: ZonedDateTime = ZonedDateTime.now()
+    ): UserUpdated {
+        return UserUpdated.builder()
+            .user(
+                User.builder()
+                    .id(userId)
+                    .isBoclipsEmployee(isBoclipsEmployee)
+                    .build()
+            )
+            .userId(userId)
+            .organisation(
+                    organisation
+            )
+            .timestamp(Date.from(timestamp.toInstant()))
+            .build()
+    }
+
 }

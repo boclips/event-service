@@ -14,6 +14,6 @@ class UpdateUser(private val userRepository: UserRepository) {
 
     @BoclipsEventListener
     fun userUpdated(userUpdated: UserUpdated) {
-        userRepository.saveUser(UserCreated.builder().organisation(userUpdated.organisation).user(userUpdated.user).userId(userUpdated.userId).build())
+        userRepository.updateUser(userUpdated)
     }
 }

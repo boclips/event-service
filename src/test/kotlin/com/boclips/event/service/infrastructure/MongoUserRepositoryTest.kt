@@ -5,6 +5,8 @@ import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.event.service.testsupport.TestFactories.createOrganisation
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createUserCreated
+import com.boclips.event.service.testsupport.TestFactories.createUserUpdated
+import com.boclips.eventbus.domain.user.Organisation
 import com.nhaarman.mockito_kotlin.times
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -53,6 +55,25 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     @Test
     fun `saveUser saves createdAt`() {
         userRepository.saveUser(createUserCreated(timestamp = ZonedDateTime.of(2019, 6, 8, 10, 12, 23, 100, ZoneOffset.UTC)))
+
+        assertThat(userDocument().getString("createdAt")).isEqualTo("2019-06-08T10:12:23Z")
+    }
+
+    @Test
+    fun `updateUser updates organisation`() {
+        userRepository.saveUser(createUserCreated(userId = "u1", organisation = null))
+        userRepository.updateUser(createUserUpdated(userId = "u1", organisation = createOrganisation(id = "org1", type = "api")))
+
+        val organisationDocument = userDocument()["organisation"] as Map<*, *>?
+        assertThat(organisationDocument).isNotNull
+        assertThat(organisationDocument?.get("id")).isEqualTo("org1")
+        assertThat(organisationDocument?.get("type")).isEqualTo("api")
+    }
+
+    @Test
+    fun `updateUser does not update createdAt`() {
+        userRepository.saveUser(createUserCreated(userId = "u1", timestamp = ZonedDateTime.of(2019, 6, 8, 10, 12, 23, 100, ZoneOffset.UTC)))
+        userRepository.updateUser(createUserUpdated(userId = "u1", timestamp = ZonedDateTime.of(2020, 6, 8, 10, 12, 23, 100, ZoneOffset.UTC)))
 
         assertThat(userDocument().getString("createdAt")).isEqualTo("2019-06-08T10:12:23Z")
     }
