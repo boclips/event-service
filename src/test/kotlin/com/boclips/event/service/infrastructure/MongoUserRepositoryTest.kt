@@ -49,7 +49,7 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     fun `saveUser saves isBoclipsEmployee`() {
         userRepository.saveUser(createUserCreated(isBoclipsEmployee = true))
 
-        assertThat(userDocument().getBoolean("isBoclipsEmployee")).isTrue()
+        assertThat(userDocument().getBoolean("boclipsEmployee")).isTrue()
     }
 
     @Test

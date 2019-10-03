@@ -4,35 +4,48 @@ import com.boclips.event.service.domain.VideoRepository
 import com.boclips.eventbus.domain.video.Video
 import com.mongodb.MongoClient
 import com.mongodb.client.model.ReplaceOptions
+import mu.KLogging
 import org.bson.Document
+import org.bson.codecs.pojo.annotations.BsonId
+import org.litote.kmongo.getCollection
 
 class MongoVideoRepository(private val mongoClient: MongoClient) : VideoRepository {
+    companion object: KLogging()
 
     override fun saveVideo(video: Video) {
-        val document = Document()
-            .append("_id", video.id.value)
-            .append("title", video.title)
-            .append("contentPartnerName", video.contentPartner.name)
-            .append("playbackProviderType", video.playbackProviderType.name)
-            .append("subjects", video.subjects.map {
-                it
-                    .name
-            })
-            .append("ageRangeMin", video.ageRange.min)
-            .append("ageRangeMax", video.ageRange.max)
-            .append("durationSeconds", video.durationSeconds)
+        val document = VideoDocument(
+                id = video.id.value,
+                title = video.title,
+                contentPartnerName = video.contentPartner.name,
+                playbackProviderType = video.playbackProviderType.name,
+                subjects = video.subjects.map { it.name }.toSet(),
+                ageRangeMin = video.ageRange.min,
+                ageRangeMax = video.ageRange.max,
+                durationSeconds = video.durationSeconds
+        )
+
         write(video.id.value, document)
     }
 
-    private fun write(id: String, document: Document) {
+    private fun write(id: String, document: VideoDocument) {
         try {
             getCollection().replaceOne(Document("_id", id), document, ReplaceOptions().upsert(true))
         } catch (e: Exception) {
-            MongoEventRepository
-                .logger
-                .error(e) { "Error writing video ${document["id"]}" }
+            logger.error(e) { "Error writing video ${document.id}" }
         }
     }
 
-    private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection("videos")
+    private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<VideoDocument>("videos")
 }
+
+data class VideoDocument(
+        @BsonId
+        val id: String,
+        val title: String,
+        val contentPartnerName: String,
+        val playbackProviderType: String,
+        val subjects: Set<String>,
+        val ageRangeMin: Int?,
+        val ageRangeMax: Int?,
+        val durationSeconds: Int
+)
