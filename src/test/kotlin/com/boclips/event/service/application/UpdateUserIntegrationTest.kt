@@ -4,6 +4,7 @@ import com.boclips.event.service.infrastructure.MongoUserRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.eventbus.events.user.UserCreated
+import com.boclips.eventbus.events.user.UserUpdated
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -19,7 +20,22 @@ class UpdateUserIntegrationTest : AbstractSpringIntegrationTest() {
                 id = "some-org-id"
         )
 
-        eventBus.publish(UserCreated.builder().user(user).organisation(organisation).build())
+        eventBus.publish(UserCreated.builder().user(user).userId("some-id").organisation(organisation).build())
+
+        assertThat(userDocuments()).hasSize(1)
+    }
+
+    @Test
+    fun `update a user when user is updated`() {
+        val user = TestFactories.createUser(
+                userId = "some-id",
+                isBoclipsEmployee = true
+        )
+        val organisation = TestFactories.createOrganisation(
+                id = "some-org-id"
+        )
+
+        eventBus.publish(UserUpdated.builder().user(user).userId("some-id").organisation(organisation).build())
 
         assertThat(userDocuments()).hasSize(1)
     }

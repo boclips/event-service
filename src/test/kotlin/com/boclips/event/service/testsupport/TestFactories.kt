@@ -66,6 +66,7 @@ object TestFactories {
             .subtype(subtype)
             .payload(payload)
             .user(user)
+            .userId(user.id)
             .url(url)
             .build()
     }
@@ -107,6 +108,7 @@ object TestFactories {
             .query(query)
             .totalResults(totalResults)
             .user(user)
+            .userId(user.id)
             .build()
     }
 
@@ -126,6 +128,7 @@ object TestFactories {
             .videoIndex(videoIndex)
             .playerId(playerId)
             .user(user)
+            .userId(user.id)
             .build()
     }
 
@@ -140,6 +143,7 @@ object TestFactories {
         return VideoPlayerInteractedWith
             .builder()
             .user(user)
+            .userId(user.id)
             .videoId(videoId)
             .playerId(playerId)
             .currentTime(currentTime)
@@ -149,20 +153,24 @@ object TestFactories {
     }
 
     fun createVideoAddedToCollection(videoId: String, collectionId: String): VideoAddedToCollection {
+        val user = createUser()
         return VideoAddedToCollection
             .builder()
             .videoId(videoId)
             .collectionId(collectionId)
-            .user(createUser())
+            .user(user)
+            .userId(user.id)
             .build()
     }
 
     fun createVideoRemovedFromCollection(videoId: String, collectionId: String): VideoRemovedFromCollection {
+        val user = createUser()
         return VideoRemovedFromCollection
             .builder()
             .videoId(videoId)
             .collectionId(collectionId)
-            .user(createUser())
+            .user(user)
+            .userId(user.id)
             .build()
     }
 
@@ -171,24 +179,29 @@ object TestFactories {
             .builder()
             .collectionId(collectionId)
             .user(user)
+            .userId(user.id)
             .isBookmarked(isBookmarked)
             .build()
     }
 
     fun createCollectionVisibilityChanged(collectionId: String, isPublic: Boolean): CollectionVisibilityChanged {
+        val user = createUser()
         return CollectionVisibilityChanged
             .builder()
             .collectionId(collectionId)
             .isPublic(isPublic)
-            .user(createUser())
+            .user(user)
+            .userId(user.id)
             .build()
     }
 
     fun createCollectionSubjectsChanged(collectionId: String, subjects: Set<String>): CollectionSubjectsChanged {
+        val user = createUser()
         return CollectionSubjectsChanged
             .builder()
             .collectionId(collectionId)
-            .user(createUser())
+            .user(user)
+            .userId(user.id)
             .subjects(subjects)
             .build()
     }
@@ -198,10 +211,12 @@ object TestFactories {
         rangeMin: Int,
         rangeMax: Int?
     ): CollectionAgeRangeChanged {
+        val user = createUser()
         return CollectionAgeRangeChanged
             .builder()
             .collectionId(collectionId)
-            .user(createUser())
+            .user(user)
+            .userId(user.id)
             .rangeMin(rangeMin)
             .rangeMax(rangeMax)
             .build()
@@ -220,6 +235,7 @@ object TestFactories {
                     .isBoclipsEmployee(isBoclipsEmployee)
                     .build()
             )
+            .userId(userId)
             .organisation(
                     organisation
             )
