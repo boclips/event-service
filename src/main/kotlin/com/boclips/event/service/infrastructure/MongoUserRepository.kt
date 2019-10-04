@@ -4,7 +4,6 @@ import com.boclips.event.service.domain.UserRepository
 import com.boclips.eventbus.domain.user.Organisation
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.mongodb.MongoClient
 import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.eq
@@ -39,7 +38,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
     }
 
     private fun organisationDocument(organisation: Organisation): OrganisationDocument {
-        return OrganisationDocument(id = organisation.id, type = organisation.type)
+        return OrganisationDocument(id = organisation.id, type = organisation.type, name = organisation.name, parent = organisation.parent?.let(this::organisationDocument))
     }
 
     private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<UserDocument>(COLLECTION)
@@ -59,5 +58,7 @@ data class UserDocument (
 
 data class OrganisationDocument (
         val id: String,
+        val name: String,
+        val parent: OrganisationDocument?,
         val type: String
 )

@@ -1,17 +1,11 @@
 package com.boclips.event.service.infrastructure
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.event.service.testsupport.TestFactories.createOrganisation
-import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createUserCreated
 import com.boclips.event.service.testsupport.TestFactories.createUserUpdated
-import com.boclips.eventbus.domain.user.Organisation
-import com.nhaarman.mockito_kotlin.times
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.litote.kmongo.MongoOperator
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -62,12 +56,15 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     @Test
     fun `updateUser updates organisation`() {
         userRepository.saveUser(createUserCreated(userId = "u1", organisation = null))
-        userRepository.updateUser(createUserUpdated(userId = "u1", organisation = createOrganisation(id = "org1", type = "api")))
+        userRepository.updateUser(createUserUpdated(userId = "u1", organisation = createOrganisation(id = "org1", type = "api", name = "org name", parent = createOrganisation(name = "parent org"))))
 
         val organisationDocument = userDocument()["organisation"] as Map<*, *>?
         assertThat(organisationDocument).isNotNull
         assertThat(organisationDocument?.get("id")).isEqualTo("org1")
         assertThat(organisationDocument?.get("type")).isEqualTo("api")
+        assertThat(organisationDocument?.get("name")).isEqualTo("org name")
+        assertThat(organisationDocument?.get("parent") as Map<*, *>?).isNotNull
+        assertThat((organisationDocument?.get("parent") as Map<*, *>?)?.get("name")).isEqualTo("parent org")
     }
 
     @Test
