@@ -66,7 +66,6 @@ object TestFactories {
             .videoId(videoId)
             .subtype(subtype)
             .payload(payload)
-            .user(user)
             .userId(user.id)
             .url(url)
             .build()
@@ -74,12 +73,14 @@ object TestFactories {
 
     fun createUser(
         userId: String = "user-1",
+        organisation: Organisation? = null,
         isBoclipsEmployee: Boolean = false
     ): User {
         return User
             .builder()
             .id(userId)
             .isBoclipsEmployee(isBoclipsEmployee)
+            .organisation(organisation)
             .build()
     }
 
@@ -112,7 +113,6 @@ object TestFactories {
             .pageVideoIds(emptyList())
             .query(query)
             .totalResults(totalResults)
-            .user(user)
             .userId(user.id)
             .build()
     }
@@ -132,7 +132,6 @@ object TestFactories {
             .videoId(videoId)
             .videoIndex(videoIndex)
             .playerId(playerId)
-            .user(user)
             .userId(user.id)
             .build()
     }
@@ -147,7 +146,6 @@ object TestFactories {
     ): VideoPlayerInteractedWith {
         return VideoPlayerInteractedWith
             .builder()
-            .user(user)
             .userId(user.id)
             .videoId(videoId)
             .playerId(playerId)
@@ -163,7 +161,6 @@ object TestFactories {
             .builder()
             .videoId(videoId)
             .collectionId(collectionId)
-            .user(user)
             .userId(user.id)
             .build()
     }
@@ -174,7 +171,6 @@ object TestFactories {
             .builder()
             .videoId(videoId)
             .collectionId(collectionId)
-            .user(user)
             .userId(user.id)
             .build()
     }
@@ -183,7 +179,6 @@ object TestFactories {
         return CollectionBookmarkChanged
             .builder()
             .collectionId(collectionId)
-            .user(user)
             .userId(user.id)
             .isBookmarked(isBookmarked)
             .build()
@@ -195,7 +190,6 @@ object TestFactories {
             .builder()
             .collectionId(collectionId)
             .isPublic(isPublic)
-            .user(user)
             .userId(user.id)
             .build()
     }
@@ -205,7 +199,6 @@ object TestFactories {
         return CollectionSubjectsChanged
             .builder()
             .collectionId(collectionId)
-            .user(user)
             .userId(user.id)
             .subjects(subjects)
             .build()
@@ -220,7 +213,6 @@ object TestFactories {
         return CollectionAgeRangeChanged
             .builder()
             .collectionId(collectionId)
-            .user(user)
             .userId(user.id)
             .rangeMin(rangeMin)
             .rangeMax(rangeMax)
@@ -238,11 +230,8 @@ object TestFactories {
                 User.builder()
                     .id(userId)
                     .isBoclipsEmployee(isBoclipsEmployee)
+                    .organisation(organisation)
                     .build()
-            )
-            .userId(userId)
-            .organisation(
-                    organisation
             )
             .timestamp(Date.from(timestamp.toInstant()))
             .build()
@@ -259,11 +248,8 @@ object TestFactories {
                 User.builder()
                     .id(userId)
                     .isBoclipsEmployee(isBoclipsEmployee)
+                    .organisation(organisation)
                     .build()
-            )
-            .userId(userId)
-            .organisation(
-                    organisation
             )
             .timestamp(Date.from(timestamp.toInstant()))
             .build()

@@ -12,31 +12,38 @@ class UpdateUserIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `insert a user when user is created`() {
-        val user = TestFactories.createUser(
-                userId = "some-id",
-                isBoclipsEmployee = true
-        )
         val organisation = TestFactories.createOrganisation(
                 id = "some-org-id"
         )
+        val user = TestFactories.createUser(
+                userId = "some-id",
+                isBoclipsEmployee = true,
+                organisation = organisation
+        )
 
-        eventBus.publish(UserCreated.builder().user(user).userId("some-id").organisation(organisation).build())
+        eventBus.publish(UserCreated.builder().user(user).build())
 
         assertThat(userDocuments()).hasSize(1)
     }
 
     @Test
     fun `update a user when user is updated`() {
-        val user = TestFactories.createUser(
-                userId = "some-id",
-                isBoclipsEmployee = true
-        )
         val organisation = TestFactories.createOrganisation(
                 id = "some-org-id"
         )
+        val userWithOrganisation = TestFactories.createUser(
+                userId = "some-id",
+                isBoclipsEmployee = true,
+                organisation = organisation
+        )
+        val userWithoutOrganisation = TestFactories.createUser(
+                userId = "some-id",
+                isBoclipsEmployee = true,
+                organisation = null
+        )
 
-        eventBus.publish(UserCreated.builder().user(user).userId("some-id").organisation(null).build())
-        eventBus.publish(UserUpdated.builder().user(user).userId("some-id").organisation(organisation).build())
+        eventBus.publish(UserCreated.builder().user(userWithoutOrganisation).build())
+        eventBus.publish(UserUpdated.builder().user(userWithOrganisation).build())
 
         assertThat(userDocuments()).hasSize(1)
         assertThat(userDocuments().first().get("organisation")).isNotNull

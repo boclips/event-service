@@ -1,6 +1,7 @@
 package com.boclips.event.service.infrastructure
 
-import com.boclips.eventbus.events.base.AbstractUserEvent
+import com.boclips.eventbus.events.base.AbstractCollectionEvent
+import com.boclips.eventbus.events.base.AbstractEventWithUserId
 import com.boclips.eventbus.events.collection.*
 import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
@@ -85,15 +86,14 @@ object EventToDocumentConverter {
             .append("rangeMax", event.rangeMax)
     }
 
-    private fun convertCollectionEvent(event: CollectionEvent, type: String): Document {
+    private fun convertCollectionEvent(event: AbstractCollectionEvent, type: String): Document {
         return Document(convertUserEvent(event, type) + ("collectionId" to event.collectionId))
     }
 
-    private fun convertUserEvent(event: AbstractUserEvent, type: String): Map<String, Any> {
+    private fun convertUserEvent(event: AbstractEventWithUserId, type: String): Map<String, Any> {
         return mapOf<String, Any>(
             "type" to type,
-            "userId" to event.user.id,
-            "userIsBoclips" to event.user.isBoclipsEmployee,
+            "userId" to event.userId,
             "timestamp" to event.timestamp,
             "url" to event.url
         )

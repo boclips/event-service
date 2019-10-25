@@ -18,23 +18,9 @@ import kotlin.collections.HashMap
 class EventToDocumentConverterTest {
 
     @Test
-    fun `userIsBoclips marked true for boclips email addresses`() {
-        val event = TestFactories.createCollectionBookmarkChanged(user = createUser(isBoclipsEmployee = true))
-
-        val document = EventToDocumentConverter.convertCollectionBookmarkChanged(event)
-
-        assertThat(document.getBoolean("userIsBoclips")).isTrue()
-    }
-
-    @Test
     fun videosSearched() {
         val event = VideosSearched.builder()
                 .timestamp(Date.from(ZonedDateTime.parse("2018-05-31T13:45:59Z").toInstant()))
-                .user(User.builder()
-                        .id("user-1")
-                        .isBoclipsEmployee(false)
-                        .build()
-                )
                 .userId("user-1")
                 .url("http://example.com/hello")
                 .pageIndex(5)
@@ -47,7 +33,6 @@ class EventToDocumentConverterTest {
         val document = EventToDocumentConverter.convertVideosSearched(videosSearched = event)
         assertThat(document.getString("type")).isEqualTo("VIDEOS_SEARCHED")
         assertThat(document.getString("userId")).isEqualTo("user-1")
-        assertThat(document.getBoolean("userIsBoclips")).isEqualTo(false)
         assertThat(document.getDate("timestamp").toInstant().atZone(ZoneOffset.UTC)).isEqualTo(ZonedDateTime.of(2018, 5, 31, 13, 45, 59, 0, ZoneOffset.UTC))
         assertThat(document.getString("url")).isEqualTo("http://example.com/hello")
         assertThat(document.getString("query")).isEqualTo("hello")
@@ -61,11 +46,6 @@ class EventToDocumentConverterTest {
     fun videoSegmentPlayed() {
         val event = VideoSegmentPlayed.builder()
                 .timestamp(Date.from(ZonedDateTime.parse("2019-05-31T13:45:59Z").toInstant()))
-                .user(User.builder()
-                        .id("user-1")
-                        .isBoclipsEmployee(true)
-                        .build()
-                )
                 .userId("user-1")
                 .url("http://example.com/video")
                 .playerId("playerId")
@@ -79,7 +59,6 @@ class EventToDocumentConverterTest {
         val document = EventToDocumentConverter.convertVideoSegmentPlayed(videoSegmentPlayed = event)
         assertThat(document.getString("type")).isEqualTo("VIDEO_SEGMENT_PLAYED")
         assertThat(document.getString("userId")).isEqualTo("user-1")
-        assertThat(document.getBoolean("userIsBoclips")).isEqualTo(true)
         assertThat(document.getDate("timestamp").toInstant().atZone(ZoneOffset.UTC)).isEqualTo(ZonedDateTime.of(2019, 5, 31, 13, 45, 59, 0, ZoneOffset.UTC))
         assertThat(document.getString("url")).isEqualTo("http://example.com/video")
         assertThat(document.getString("playerId")).isEqualTo("playerId")

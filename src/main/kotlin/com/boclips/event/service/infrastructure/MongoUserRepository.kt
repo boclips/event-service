@@ -16,7 +16,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
 
     override fun saveUser(event: UserCreated) {
 
-        val organisation = event.organisation?.let(this::organisationDocument)
+        val organisation = event.user.organisation?.let(this::organisationDocument)
 
         val document = UserDocument(
                 id = event.user.id,
@@ -29,11 +29,11 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
     }
 
     override fun updateUser(event: UserUpdated) {
-        val organisation = event.organisation ?: return
+        val organisation = event.user.organisation?.let(this::organisationDocument)
         getCollection()
                 .updateOne(
-                        UserDocument::id eq event.userId,
-                        set(UserDocument::organisation, organisationDocument(organisation))
+                        UserDocument::id eq event.user.id,
+                        set(UserDocument::organisation, organisation)
                 )
     }
 
