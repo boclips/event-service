@@ -223,6 +223,9 @@ object TestFactories {
 
     fun createUserCreated(
         userId: String = "user-id",
+        firstName: String = "first-name",
+        lastName: String = "last-name",
+        email: String = "email@example.com",
         organisation: Organisation? = createOrganisation(),
         isBoclipsEmployee: Boolean = false,
         timestamp: ZonedDateTime = ZonedDateTime.now()
@@ -231,6 +234,9 @@ object TestFactories {
             .user(
                 User.builder()
                     .id(userId)
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .email(email)
                     .isBoclipsEmployee(isBoclipsEmployee)
                     .organisation(organisation)
                     .build()
@@ -241,6 +247,9 @@ object TestFactories {
 
     fun createUserUpdated(
         userId: String = "user-id",
+        firstName: String = "first-name",
+        lastName: String = "last-name",
+        email: String = "email@example.com",
         organisation: Organisation? = createOrganisation(),
         isBoclipsEmployee: Boolean = false,
         timestamp: ZonedDateTime = ZonedDateTime.now()
@@ -249,6 +258,9 @@ object TestFactories {
             .user(
                 User.builder()
                     .id(userId)
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .email(email)
                     .isBoclipsEmployee(isBoclipsEmployee)
                     .organisation(organisation)
                     .build()

@@ -6,11 +6,8 @@ import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
 import com.mongodb.MongoClient
 import org.bson.codecs.pojo.annotations.BsonId
-import org.litote.kmongo.eq
-import org.litote.kmongo.save
+import org.litote.kmongo.*
 import java.time.ZoneOffset
-import org.litote.kmongo.getCollection
-import org.litote.kmongo.set
 
 class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository {
 
@@ -20,6 +17,9 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
 
         val document = UserDocument(
                 id = event.user.id,
+                firstName = event.user.firstName,
+                lastName = event.user.lastName,
+                email = event.user.email,
                 createdAt = event.timestamp.toInstant().atZone(ZoneOffset.UTC).toString(),
                 organisation = organisation,
                 isBoclipsEmployee = event.user.isBoclipsEmployee
@@ -33,7 +33,13 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
         getCollection()
                 .updateOne(
                         UserDocument::id eq event.user.id,
-                        set(UserDocument::organisation, organisation)
+                        set(
+                            UserDocument::organisation.setTo(organisation),
+                            UserDocument::firstName.setTo(event.user.firstName),
+                            UserDocument::lastName.setTo(event.user.lastName),
+                            UserDocument::email.setTo(event.user.email)
+                        )
+
                 )
     }
 
@@ -52,6 +58,9 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
 data class UserDocument (
         @BsonId
         val id: String,
+        val firstName: String?,
+        val lastName: String?,
+        val email: String?,
         val createdAt: String,
         val organisation: OrganisationDocument?,
         val isBoclipsEmployee: Boolean
