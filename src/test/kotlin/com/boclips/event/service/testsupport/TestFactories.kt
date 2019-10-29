@@ -41,13 +41,7 @@ object TestFactories {
             .title(title)
             .contentPartner(ContentPartner.of(contentPartnerName))
             .playbackProviderType(playbackProviderType)
-            .subjects(subjectNames.map {
-                Subject
-                    .builder()
-                    .id(SubjectId("id-$it"))
-                    .name(it)
-                    .build()
-            })
+            .subjects(subjectsFromNames(subjectNames))
             .ageRange(ageRange)
             .durationSeconds(durationSeconds)
             .build()
@@ -74,6 +68,7 @@ object TestFactories {
     fun createUser(
         userId: String = "user-1",
         organisation: Organisation? = null,
+        subjectNames: List<String> = emptyList(),
         isBoclipsEmployee: Boolean = false
     ): User {
         return User
@@ -81,6 +76,7 @@ object TestFactories {
             .id(userId)
             .isBoclipsEmployee(isBoclipsEmployee)
             .organisation(organisation)
+            .subjects(subjectsFromNames(subjectNames))
             .build()
     }
 
@@ -228,6 +224,7 @@ object TestFactories {
         email: String = "email@example.com",
         organisation: Organisation? = createOrganisation(),
         isBoclipsEmployee: Boolean = false,
+        subjectNames: List<String> = emptyList(),
         timestamp: ZonedDateTime = ZonedDateTime.now()
     ): UserCreated {
         return UserCreated.builder()
@@ -237,6 +234,7 @@ object TestFactories {
                     .firstName(firstName)
                     .lastName(lastName)
                     .email(email)
+                    .subjects(subjectsFromNames(subjectNames))
                     .isBoclipsEmployee(isBoclipsEmployee)
                     .organisation(organisation)
                     .build()
@@ -252,6 +250,7 @@ object TestFactories {
         email: String = "email@example.com",
         organisation: Organisation? = createOrganisation(),
         isBoclipsEmployee: Boolean = false,
+        subjectNames: List<String> = emptyList(),
         timestamp: ZonedDateTime = ZonedDateTime.now()
     ): UserUpdated {
         return UserUpdated.builder()
@@ -261,12 +260,23 @@ object TestFactories {
                     .firstName(firstName)
                     .lastName(lastName)
                     .email(email)
+                    .subjects(subjectsFromNames(subjectNames))
                     .isBoclipsEmployee(isBoclipsEmployee)
                     .organisation(organisation)
                     .build()
             )
             .timestamp(Date.from(timestamp.toInstant()))
             .build()
+    }
+
+    private fun subjectsFromNames(subjectNames: List<String>): List<Subject> {
+        return subjectNames.map {
+            Subject
+                    .builder()
+                    .id(SubjectId("id-$it"))
+                    .name(it)
+                    .build()
+        }
     }
 
 }

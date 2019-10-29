@@ -2,6 +2,7 @@ package com.boclips.event.service.infrastructure
 
 import com.boclips.event.service.domain.UserRepository
 import com.boclips.eventbus.domain.user.Organisation
+import com.boclips.eventbus.domain.user.User
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
 import com.mongodb.MongoClient
@@ -21,6 +22,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
                 lastName = event.user.lastName,
                 email = event.user.email,
                 createdAt = event.timestamp.toInstant().atZone(ZoneOffset.UTC).toString(),
+                subjects = subjects(event.user),
                 organisation = organisation,
                 isBoclipsEmployee = event.user.isBoclipsEmployee
         )
@@ -37,10 +39,14 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
                             UserDocument::organisation.setTo(organisation),
                             UserDocument::firstName.setTo(event.user.firstName),
                             UserDocument::lastName.setTo(event.user.lastName),
-                            UserDocument::email.setTo(event.user.email)
+                            UserDocument::email.setTo(event.user.email),
+                            UserDocument::subjects.setTo(subjects(event.user))
                         )
-
                 )
+    }
+
+    private fun subjects(user: User): List<String> {
+        return user.subjects.map { it.name }
     }
 
     private fun organisationDocument(organisation: Organisation): OrganisationDocument {
@@ -61,6 +67,7 @@ data class UserDocument (
         val firstName: String?,
         val lastName: String?,
         val email: String?,
+        val subjects: List<String>,
         val createdAt: String,
         val organisation: OrganisationDocument?,
         val isBoclipsEmployee: Boolean

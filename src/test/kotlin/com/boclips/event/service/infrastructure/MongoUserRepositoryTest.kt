@@ -64,7 +64,7 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `updateUser updates user details`() {
-        userRepository.saveUser(createUserCreated(userId = "u1", organisation = null))
+        userRepository.saveUser(createUserCreated(userId = "u1", firstName = "", lastName = "", email = ""))
         userRepository.updateUser(createUserUpdated(userId = "u1", firstName = "Bob", lastName = "Bobson", email = "bob@email.com"))
 
         assertThat(userDocument().getString("firstName")).isEqualTo("Bob")
@@ -85,6 +85,14 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(organisationDocument?.get("postcode")).isEqualTo("12345")
         assertThat(organisationDocument?.get("parent") as Map<*, *>?).isNotNull
         assertThat((organisationDocument?.get("parent") as Map<*, *>?)?.get("name")).isEqualTo("parent org")
+    }
+
+    @Test
+    fun `updateUser updates user subjects`() {
+        userRepository.saveUser(createUserCreated(userId = "u1"))
+        userRepository.updateUser(createUserUpdated(userId = "u1", subjectNames = listOf("Maths")))
+
+        assertThat(userDocument().get("subjects")).isEqualTo(listOf("Maths"))
     }
 
     @Test
