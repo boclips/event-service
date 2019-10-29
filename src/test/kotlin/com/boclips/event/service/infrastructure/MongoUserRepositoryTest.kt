@@ -56,13 +56,14 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     @Test
     fun `updateUser updates organisation`() {
         userRepository.saveUser(createUserCreated(userId = "u1", organisation = null))
-        userRepository.updateUser(createUserUpdated(userId = "u1", organisation = createOrganisation(id = "org1", type = "api", name = "org name", parent = createOrganisation(name = "parent org"))))
+        userRepository.updateUser(createUserUpdated(userId = "u1", organisation = createOrganisation(id = "org1", type = "api", name = "org name", postcode = "12345", parent = createOrganisation(name = "parent org"))))
 
         val organisationDocument = userDocument()["organisation"] as Map<*, *>?
         assertThat(organisationDocument).isNotNull
         assertThat(organisationDocument?.get("id")).isEqualTo("org1")
         assertThat(organisationDocument?.get("type")).isEqualTo("api")
         assertThat(organisationDocument?.get("name")).isEqualTo("org name")
+        assertThat(organisationDocument?.get("postcode")).isEqualTo("12345")
         assertThat(organisationDocument?.get("parent") as Map<*, *>?).isNotNull
         assertThat((organisationDocument?.get("parent") as Map<*, *>?)?.get("name")).isEqualTo("parent org")
     }

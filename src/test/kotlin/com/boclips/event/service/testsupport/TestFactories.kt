@@ -87,6 +87,7 @@ object TestFactories {
     fun createOrganisation(
             id: String = "organisation-id",
             name: String = "organisation-name",
+            postcode: String = "post-code",
             parent: Organisation? = null,
             type: String = "API"
     ): Organisation {
@@ -95,6 +96,7 @@ object TestFactories {
                 .id(id)
                 .type(type)
                 .name(name)
+                .postcode(postcode)
                 .parent(parent)
                 .build()
     }
