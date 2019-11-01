@@ -96,6 +96,14 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
+    fun `updateUser updates user ages`() {
+        userRepository.saveUser(createUserCreated(userId = "u1"))
+        userRepository.updateUser(createUserUpdated(userId = "u1", ages = listOf(10)))
+
+        assertThat(userDocument().get("ages")).isEqualTo(listOf(10))
+    }
+
+    @Test
     fun `updateUser does not update createdAt`() {
         userRepository.saveUser(createUserCreated(userId = "u1", timestamp = ZonedDateTime.of(2019, 6, 8, 10, 12, 23, 100, ZoneOffset.UTC)))
         userRepository.updateUser(createUserUpdated(userId = "u1", timestamp = ZonedDateTime.of(2020, 6, 8, 10, 12, 23, 100, ZoneOffset.UTC)))

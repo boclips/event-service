@@ -69,6 +69,7 @@ object TestFactories {
         userId: String = "user-1",
         organisation: Organisation? = null,
         subjectNames: List<String> = emptyList(),
+        ages: List<Int> = emptyList(),
         isBoclipsEmployee: Boolean = false
     ): User {
         return User
@@ -77,6 +78,7 @@ object TestFactories {
             .isBoclipsEmployee(isBoclipsEmployee)
             .organisation(organisation)
             .subjects(subjectsFromNames(subjectNames))
+            .ages(ages)
             .build()
     }
 
@@ -225,6 +227,7 @@ object TestFactories {
         organisation: Organisation? = createOrganisation(),
         isBoclipsEmployee: Boolean = false,
         subjectNames: List<String> = emptyList(),
+        ages: List<Int> = emptyList(),
         timestamp: ZonedDateTime = ZonedDateTime.now()
     ): UserCreated {
         return UserCreated.builder()
@@ -235,6 +238,7 @@ object TestFactories {
                     .lastName(lastName)
                     .email(email)
                     .subjects(subjectsFromNames(subjectNames))
+                    .ages(ages)
                     .isBoclipsEmployee(isBoclipsEmployee)
                     .organisation(organisation)
                     .build()
@@ -251,6 +255,7 @@ object TestFactories {
         organisation: Organisation? = createOrganisation(),
         isBoclipsEmployee: Boolean = false,
         subjectNames: List<String> = emptyList(),
+        ages: List<Int> = emptyList(),
         timestamp: ZonedDateTime = ZonedDateTime.now()
     ): UserUpdated {
         return UserUpdated.builder()
@@ -261,6 +266,7 @@ object TestFactories {
                     .lastName(lastName)
                     .email(email)
                     .subjects(subjectsFromNames(subjectNames))
+                    .ages(ages)
                     .isBoclipsEmployee(isBoclipsEmployee)
                     .organisation(organisation)
                     .build()

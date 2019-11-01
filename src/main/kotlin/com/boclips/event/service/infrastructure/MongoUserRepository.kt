@@ -23,6 +23,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
                 email = event.user.email,
                 createdAt = event.timestamp.toInstant().atZone(ZoneOffset.UTC).toString(),
                 subjects = subjects(event.user),
+                ages = event.user.ages,
                 organisation = organisation,
                 isBoclipsEmployee = event.user.isBoclipsEmployee
         )
@@ -40,7 +41,8 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
                             UserDocument::firstName.setTo(event.user.firstName),
                             UserDocument::lastName.setTo(event.user.lastName),
                             UserDocument::email.setTo(event.user.email),
-                            UserDocument::subjects.setTo(subjects(event.user))
+                            UserDocument::subjects.setTo(subjects(event.user)),
+                            UserDocument::ages.setTo(event.user.ages)
                         )
                 )
     }
@@ -68,6 +70,7 @@ data class UserDocument (
         val lastName: String?,
         val email: String?,
         val subjects: List<String>,
+        val ages: List<Int>,
         val createdAt: String,
         val organisation: OrganisationDocument?,
         val isBoclipsEmployee: Boolean
