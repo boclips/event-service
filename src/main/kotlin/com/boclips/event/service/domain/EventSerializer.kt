@@ -1,4 +1,4 @@
-package com.boclips.event.service.infrastructure
+package com.boclips.event.service.domain
 
 import com.boclips.eventbus.events.base.AbstractCollectionEvent
 import com.boclips.eventbus.events.base.AbstractEventWithUserId
@@ -8,7 +8,7 @@ import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
 
-object EventToEntityConverter {
+object EventSerializer {
 
     fun convertVideosSearched(videosSearched: VideosSearched): Map<String, Any> {
         return convertUserEvent(videosSearched, type = "VIDEOS_SEARCHED") +

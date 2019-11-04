@@ -1,4 +1,4 @@
-package com.boclips.event.service.infrastructure
+package com.boclips.event.service.domain
 
 import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.event.service.testsupport.TestFactories.createUser
@@ -12,7 +12,7 @@ import java.time.ZonedDateTime
 import java.util.*
 import kotlin.collections.HashMap
 
-class EventToEntityConverterTest {
+class EventSerializerTest {
 
     @Test
     fun videosSearched() {
@@ -27,7 +27,7 @@ class EventToEntityConverterTest {
                 .totalResults(100)
                 .build()
 
-        val document = EventToEntityConverter.convertVideosSearched(videosSearched = event)
+        val document = EventSerializer.convertVideosSearched(videosSearched = event)
         assertThat(document["type"]).isEqualTo("VIDEOS_SEARCHED")
         assertThat(document["userId"]).isEqualTo("user-1")
         assertThat(document["url"]).isEqualTo("http://example.com/hello")
@@ -53,7 +53,7 @@ class EventToEntityConverterTest {
                 .playbackDevice("device-id")
                 .build()
 
-        val document = EventToEntityConverter.convertVideoSegmentPlayed(videoSegmentPlayed = event)
+        val document = EventSerializer.convertVideoSegmentPlayed(videoSegmentPlayed = event)
         assertThat(document["type"]).isEqualTo("VIDEO_SEGMENT_PLAYED")
         assertThat(document["userId"]).isEqualTo("user-1")
         assertThat(document["url"]).isEqualTo("http://example.com/video")
@@ -81,7 +81,7 @@ class EventToEntityConverterTest {
                 )
         )
 
-        val document = EventToEntityConverter.convertVideoPlayerInteractedWith(event)
+        val document = EventSerializer.convertVideoPlayerInteractedWith(event)
         assertThat(document["type"]).isEqualTo("VIDEO_PLAYER_INTERACTED_WITH")
         assertThat(document["userId"]).isEqualTo("user-1")
         assertThat(document["playerId"]).isEqualTo("player-id")
@@ -95,7 +95,7 @@ class EventToEntityConverterTest {
     fun convertVideoAddedToCollection() {
         val event = TestFactories.createVideoAddedToCollection(videoId = "video-id", collectionId = "collection-id")
 
-        val document = EventToEntityConverter.convertVideoAddedToCollection(event)
+        val document = EventSerializer.convertVideoAddedToCollection(event)
 
         assertThat(document["type"]).isEqualTo("VIDEO_ADDED_TO_COLLECTION")
         assertThat(document["videoId"]).isEqualTo("video-id")
@@ -106,7 +106,7 @@ class EventToEntityConverterTest {
     fun convertVideoRemovedFromCollection() {
         val event = TestFactories.createVideoRemovedFromCollection(videoId = "video-id", collectionId = "collection-id")
 
-        val document = EventToEntityConverter.convertVideoRemovedFromCollection(event)
+        val document = EventSerializer.convertVideoRemovedFromCollection(event)
 
         assertThat(document["type"]).isEqualTo("VIDEO_REMOVED_FROM_COLLECTION")
         assertThat(document["videoId"]).isEqualTo("video-id")
@@ -117,7 +117,7 @@ class EventToEntityConverterTest {
     fun `convertCollectionBookmarkChanged bookmarking`() {
         val event = TestFactories.createCollectionBookmarkChanged(collectionId = "collection-id", isBookmarked = true)
 
-        val document = EventToEntityConverter.convertCollectionBookmarkChanged(event)
+        val document = EventSerializer.convertCollectionBookmarkChanged(event)
 
         assertThat(document["type"]).isEqualTo("COLLECTION_BOOKMARK_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-id")
@@ -128,7 +128,7 @@ class EventToEntityConverterTest {
     fun `convertCollectionBookmarkChanged unbookmarking`() {
         val event = TestFactories.createCollectionBookmarkChanged(collectionId = "collection-id", isBookmarked = false)
 
-        val document = EventToEntityConverter.convertCollectionBookmarkChanged(event)
+        val document = EventSerializer.convertCollectionBookmarkChanged(event)
 
         assertThat(document["type"]).isEqualTo("COLLECTION_BOOKMARK_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-id")
@@ -139,7 +139,7 @@ class EventToEntityConverterTest {
     fun `convertCollectionVisibilityChanged made public`() {
         val event = TestFactories.createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = true)
 
-        val document = EventToEntityConverter.convertCollectionVisibilityChanged(event)
+        val document = EventSerializer.convertCollectionVisibilityChanged(event)
 
         assertThat(document["type"]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-id")
@@ -150,7 +150,7 @@ class EventToEntityConverterTest {
     fun `convertCollectionVisibilityChanged made private`() {
         val event = TestFactories.createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = false)
 
-        val document = EventToEntityConverter.convertCollectionVisibilityChanged(event)
+        val document = EventSerializer.convertCollectionVisibilityChanged(event)
 
         assertThat(document["type"]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-id")
@@ -161,7 +161,7 @@ class EventToEntityConverterTest {
     fun convertCollectionSubjectsChanged() {
         val event = TestFactories.createCollectionSubjectsChanged(collectionId = "collection-id", subjects = setOf("Science"))
 
-        val document = EventToEntityConverter.convertCollectionSubjectsChanged(event)
+        val document = EventSerializer.convertCollectionSubjectsChanged(event)
 
         assertThat(document["type"]).isEqualTo("COLLECTION_SUBJECTS_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-id")
@@ -172,7 +172,7 @@ class EventToEntityConverterTest {
     fun convertCollectionAgeRangeChanged() {
         val event = TestFactories.createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = 19)
 
-        val document = EventToEntityConverter.convertCollectionAgeRangeChanged(event)
+        val document = EventSerializer.convertCollectionAgeRangeChanged(event)
 
         assertThat(document["type"]).isEqualTo("COLLECTION_AGE_RANGE_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-1")
@@ -184,7 +184,7 @@ class EventToEntityConverterTest {
     fun convertCollectionAgeRangeChanged_whenRangeMaxNull() {
         val event = TestFactories.createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = null)
 
-        val document = EventToEntityConverter.convertCollectionAgeRangeChanged(event)
+        val document = EventSerializer.convertCollectionAgeRangeChanged(event)
 
         assertThat(document["rangeMax"]).isNull()
     }
@@ -200,7 +200,7 @@ class EventToEntityConverterTest {
                 url = "https://boclips.com/videos?q=hello"
         )
 
-        val document = EventToEntityConverter.convertVideoInteractedWith(event)
+        val document = EventSerializer.convertVideoInteractedWith(event)
 
         assertThat(document["type"]).isEqualTo("VIDEO_INTERACTED_WITH")
         assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))

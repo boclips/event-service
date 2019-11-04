@@ -11,15 +11,45 @@ import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
 
-interface EventRepository {
-    fun saveVideosSearched(videosSearched: VideosSearched)
-    fun saveVideoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed)
-    fun saveVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith)
-    fun saveVideoAddedToCollection(videoAddedToCollection: VideoAddedToCollection)
-    fun saveVideoRemovedFromCollection(videoRemovedFromCollection: VideoRemovedFromCollection)
-    fun saveCollectionBookmarkChanged(collectionBookmarkChanged: CollectionBookmarkChanged)
-    fun saveCollectionVisibilityChanged(collectionVisibilityChanged: CollectionVisibilityChanged)
-    fun saveCollectionSubjectsChanged(collectionSubjectsChanged: CollectionSubjectsChanged)
-    fun saveCollectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged)
-    fun saveVideoInteractedWith(event: VideoInteractedWith)
+class EventRepository(private val writer: EventWriter) {
+
+    fun saveVideosSearched(videosSearched: VideosSearched) {
+        writer.write(EventSerializer.convertVideosSearched(videosSearched))
+    }
+
+    fun saveVideoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed) {
+        writer.write(EventSerializer.convertVideoSegmentPlayed(videoSegmentPlayed))
+    }
+
+    fun saveVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith) {
+        writer.write(EventSerializer.convertVideoPlayerInteractedWith(videoPlayerInteractedWith))
+    }
+
+    fun saveVideoAddedToCollection(videoAddedToCollection: VideoAddedToCollection) {
+        writer.write(EventSerializer.convertVideoAddedToCollection(videoAddedToCollection))
+    }
+
+    fun saveVideoRemovedFromCollection(videoRemovedFromCollection: VideoRemovedFromCollection) {
+        writer.write(EventSerializer.convertVideoRemovedFromCollection(videoRemovedFromCollection))
+    }
+
+    fun saveCollectionBookmarkChanged(collectionBookmarkChanged: CollectionBookmarkChanged) {
+        writer.write(EventSerializer.convertCollectionBookmarkChanged(collectionBookmarkChanged))
+    }
+
+    fun saveCollectionVisibilityChanged(collectionVisibilityChanged: CollectionVisibilityChanged) {
+        writer.write(EventSerializer.convertCollectionVisibilityChanged(collectionVisibilityChanged))
+    }
+
+    fun saveCollectionSubjectsChanged(collectionSubjectsChanged: CollectionSubjectsChanged) {
+        writer.write(EventSerializer.convertCollectionSubjectsChanged(collectionSubjectsChanged))
+    }
+
+    fun saveCollectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged) {
+        writer.write(EventSerializer.convertCollectionAgeRangeChanged(collectionAgeRangeChanged))
+    }
+
+    fun saveVideoInteractedWith(event: VideoInteractedWith) {
+        writer.write(EventSerializer.convertVideoInteractedWith(event))
+    }
 }
