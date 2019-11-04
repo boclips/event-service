@@ -3,9 +3,9 @@ package com.boclips.event.service.config
 import com.boclips.event.service.domain.EventRepository
 import com.boclips.event.service.domain.UserRepository
 import com.boclips.event.service.domain.VideoRepository
-import com.boclips.event.service.infrastructure.MongoEventRepository
-import com.boclips.event.service.infrastructure.MongoUserRepository
-import com.boclips.event.service.infrastructure.MongoVideoRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoEventRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoUserRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoVideoRepository
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import org.litote.kmongo.KMongo

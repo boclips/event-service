@@ -1,16 +1,16 @@
-package com.boclips.event.service.infrastructure
+package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.domain.EventRepository
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionAgeRangeChanged
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionBookmarkChanged
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionSubjectsChanged
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertCollectionVisibilityChanged
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoAddedToCollection
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoInteractedWith
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoPlayerInteractedWith
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoRemovedFromCollection
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideoSegmentPlayed
-import com.boclips.event.service.infrastructure.EventToDocumentConverter.convertVideosSearched
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertCollectionAgeRangeChanged
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertCollectionBookmarkChanged
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertCollectionSubjectsChanged
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertCollectionVisibilityChanged
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertVideoAddedToCollection
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertVideoInteractedWith
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertVideoPlayerInteractedWith
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertVideoRemovedFromCollection
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertVideoSegmentPlayed
+import com.boclips.event.service.infrastructure.EventToEntityConverter.convertVideosSearched
 import com.boclips.eventbus.events.collection.*
 import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
@@ -63,12 +63,12 @@ class MongoEventRepository(private val mongoClient: MongoClient) : EventReposito
         write(convertVideoInteractedWith(event))
     }
 
-    private fun write(document: Document) {
+    private fun write(fields: Map<String, Any>) {
         try {
-            getCollection().insertOne(document)
+            getCollection().insertOne(Document(fields))
         }
         catch(e: Exception) {
-            logger.error(e) { "Error writing event ${document["type"]}" }
+            logger.error(e) { "Error writing event ${fields["type"]}" }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.boclips.event.service.infrastructure
+package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.eventbus.domain.AgeRange

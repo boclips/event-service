@@ -1,6 +1,6 @@
 package com.boclips.event.service.testsupport
 
-import com.boclips.event.service.infrastructure.DatabaseConstants
+import com.boclips.event.service.infrastructure.mongodb.DatabaseConstants
 import com.boclips.eventbus.EventBus
 import com.mongodb.MongoClient
 import de.flapdoodle.embed.mongo.MongodProcess

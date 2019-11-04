@@ -1,14 +1,12 @@
 package com.boclips.event.service.application
 
-import com.boclips.event.service.infrastructure.DatabaseConstants
+import com.boclips.event.service.infrastructure.mongodb.DatabaseConstants
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.event.service.testsupport.TestFactories.createCollectionAgeRangeChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionBookmarkChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionSubjectsChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionVisibilityChanged
 import com.boclips.event.service.testsupport.TestFactories.createUser
-import com.boclips.event.service.testsupport.TestFactories.createVideo
 import com.boclips.event.service.testsupport.TestFactories.createVideoAddedToCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createVideoPlayerInteractedWith

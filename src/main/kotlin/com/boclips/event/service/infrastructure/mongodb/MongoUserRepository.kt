@@ -1,4 +1,4 @@
-package com.boclips.event.service.infrastructure
+package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.domain.UserRepository
 import com.boclips.eventbus.domain.user.Organisation
@@ -52,7 +52,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
     }
 
     private fun organisationDocument(organisation: Organisation): OrganisationDocument {
-        return OrganisationDocument(id = organisation.id, type = organisation.type, name = organisation.name,postcode = organisation.postcode,
+        return OrganisationDocument(id = organisation.id, type = organisation.type, name = organisation.name, postcode = organisation.postcode,
                 parent = organisation.parent?.let(this::organisationDocument))
     }
 

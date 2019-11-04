@@ -1,6 +1,6 @@
 package com.boclips.event.service.application
 
-import com.boclips.event.service.infrastructure.MongoUserRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoUserRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.eventbus.events.user.UserCreated

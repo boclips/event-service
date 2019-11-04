@@ -1,4 +1,4 @@
-package com.boclips.event.service.infrastructure
+package com.boclips.event.service.infrastructure.mongodb
 
 class DatabaseConstants {
     companion object {

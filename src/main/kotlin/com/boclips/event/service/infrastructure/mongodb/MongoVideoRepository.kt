@@ -1,4 +1,4 @@
-package com.boclips.event.service.infrastructure
+package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.domain.VideoRepository
 import com.boclips.eventbus.domain.video.Video
