@@ -27,6 +27,7 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
                 videoIds = listOf("v1", "v2"),
                 ownerId = "user@example.com",
                 bookmarks = listOf("anotheruser@example.com"),
+                createdTime = ZonedDateTime.of(2019, 10, 15, 10, 11, 12, 0, ZoneOffset.UTC),
                 updatedTime = ZonedDateTime.of(2019, 11, 15, 10, 11, 12, 0, ZoneOffset.UTC),
                 isPublic = false
         ))
@@ -41,6 +42,7 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getList("videoIds", String::class.java)).containsExactly("v1", "v2")
         assertThat(document.getString("ownerId")).isEqualTo("user@example.com")
         assertThat(document.getList("bookmarks", String::class.java)).containsExactly("anotheruser@example.com")
+        assertThat(document.getDate("createdTime")).isEqualTo("2019-10-15T10:11:12Z")
         assertThat(document.getDate("updatedTime")).isEqualTo("2019-11-15T10:11:12Z")
         assertThat(document.getBoolean("public")).isEqualTo(false)
         assertThat(document.getBoolean("deleted")).isEqualTo(false)

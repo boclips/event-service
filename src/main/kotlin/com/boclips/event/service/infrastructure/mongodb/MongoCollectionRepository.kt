@@ -27,6 +27,7 @@ class MongoCollectionRepository(private val mongoClient: MongoClient) : Collecti
                 videoIds = collection.videosIds.map { it.value },
                 ownerId = collection.ownerId.value,
                 bookmarks = collection.bookmarks.map { it.value },
+                createdTime = collection.createdTime,
                 updatedTime = collection.updatedTime,
                 isPublic = collection.isPublic,
                 isDeleted = false
@@ -63,6 +64,7 @@ data class CollectionDocument(
         val videoIds: List<String>,
         val ownerId: String,
         val bookmarks: List<String>,
+        val createdTime: Date,
         val updatedTime: Date,
         val isPublic: Boolean,
         val isDeleted: Boolean

@@ -58,12 +58,14 @@ object TestFactories {
             ageRange: AgeRange = AgeRange(null, null),
             videoIds: List<String> = emptyList(),
             ownerId: String = "",
+            createdTime: ZonedDateTime = ZonedDateTime.now(),
             updatedTime: ZonedDateTime = ZonedDateTime.now(),
             bookmarks: List<String> = emptyList(),
             isPublic: Boolean = true
     ): Collection {
         return Collection.builder()
                 .id(CollectionId(id))
+                .createdTime(Date.from(createdTime.toInstant()))
                 .updatedTime(Date.from(updatedTime.toInstant()))
                 .title(title)
                 .description(description)
