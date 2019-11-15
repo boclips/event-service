@@ -3,8 +3,11 @@ package com.boclips.event.service.testsupport
 import com.boclips.eventbus.domain.AgeRange
 import com.boclips.eventbus.domain.Subject
 import com.boclips.eventbus.domain.SubjectId
+import com.boclips.eventbus.domain.collection.Collection
+import com.boclips.eventbus.domain.collection.CollectionId
 import com.boclips.eventbus.domain.user.Organisation
 import com.boclips.eventbus.domain.user.User
+import com.boclips.eventbus.domain.user.UserId
 import com.boclips.eventbus.domain.video.ContentPartner
 import com.boclips.eventbus.domain.video.PlaybackProviderType
 import com.boclips.eventbus.domain.video.Video
@@ -45,6 +48,32 @@ object TestFactories {
             .ageRange(ageRange)
             .durationSeconds(durationSeconds)
             .build()
+    }
+
+    fun createCollection(
+            id: String = "",
+            title: String = "",
+            description: String = "",
+            subjects: Set<String> = emptySet(),
+            ageRange: AgeRange = AgeRange(null, null),
+            videoIds: List<String> = emptyList(),
+            ownerId: String = "",
+            updatedTime: ZonedDateTime = ZonedDateTime.now(),
+            bookmarks: List<String> = emptyList(),
+            isPublic: Boolean = true
+    ): Collection {
+        return Collection.builder()
+                .id(CollectionId(id))
+                .updatedTime(Date.from(updatedTime.toInstant()))
+                .title(title)
+                .description(description)
+                .subjects(subjects.map { Subject(SubjectId("$it-id"), it) })
+                .ageRange(ageRange)
+                .videosIds(videoIds.map { VideoId(it) })
+                .ownerId(UserId(ownerId))
+                .bookmarks(bookmarks.map { UserId(it) })
+                .isPublic(isPublic)
+                .build()
     }
 
     fun createVideoInteractedWith(
