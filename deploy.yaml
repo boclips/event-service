@@ -11,6 +11,3 @@ environments:
   staging:
     replicas: 1
     urls: []
-  testing:
-    replicas: 1
-    urls: []
