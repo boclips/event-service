@@ -18,6 +18,7 @@ import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
+import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
 import com.boclips.eventbus.events.video.VideoInteractedWith
@@ -305,6 +306,19 @@ object TestFactories {
             .timestamp(Date.from(timestamp.toInstant()))
             .build()
     }
+
+    fun createPageRendered(
+        userId: String = "user-12",
+        url: String = "http://bbc.co.uk",
+        timestamp: ZonedDateTime = ZonedDateTime.now()
+    ): PageRendered {
+        return PageRendered.builder()
+            .userId(userId)
+            .url(url)
+            .timestamp(Date.from(timestamp.toInstant()))
+            .build()
+    }
+
 
     private fun subjectsFromNames(subjectNames: List<String>): List<Subject> {
         return subjectNames.map {

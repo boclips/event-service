@@ -6,6 +6,7 @@ import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
+import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
@@ -51,5 +52,9 @@ class EventRepository(private val writer: EventWriter) {
 
     fun saveVideoInteractedWith(event: VideoInteractedWith) {
         writer.write(EventSerializer.convertVideoInteractedWith(event))
+    }
+
+    fun savePageRendered(event: PageRendered){
+        writer.write(EventSerializer.convertPageRendered(event))
     }
 }

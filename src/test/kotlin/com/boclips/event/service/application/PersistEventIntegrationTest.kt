@@ -6,6 +6,7 @@ import com.boclips.event.service.testsupport.TestFactories.createCollectionAgeRa
 import com.boclips.event.service.testsupport.TestFactories.createCollectionBookmarkChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionSubjectsChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionVisibilityChanged
+import com.boclips.event.service.testsupport.TestFactories.createPageRendered
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoAddedToCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
@@ -115,7 +116,16 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         assertThat(document().toJson()).contains("the video id")
     }
 
+    @Test
+    fun pageRendered(){
+        val event = createPageRendered(url = "http://teachers.boclips.com/my-videos")
+        eventBus.publish(event)
+        assertThat(document().toJson()).contains("http://teachers.boclips.com/my-videos")
+    }
+
     private fun document(): Document {
         return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection("events").find().toList().single()
     }
+
+
 }

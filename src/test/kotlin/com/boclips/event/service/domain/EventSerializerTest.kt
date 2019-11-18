@@ -1,6 +1,7 @@
 package com.boclips.event.service.domain
 
 import com.boclips.event.service.testsupport.TestFactories
+import com.boclips.event.service.testsupport.TestFactories.createPageRendered
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
@@ -209,6 +210,18 @@ class EventSerializerTest {
         assertThat(document["payload"]).isEqualTo(mapOf("additional-field" to "bunny"))
         assertThat(document["userId"]).isEqualTo("user-id")
         assertThat(document["url"]).isEqualTo("https://boclips.com/videos?q=hello")
+    }
+
+    @Test
+    fun convertPageRendered() {
+        val event = createPageRendered(userId = "my-test-id", url = "http://teachers.boclips.com/test/page?data=123", timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC))
+
+        val document = EventSerializer.convertPageRendered(event)
+
+        assertThat(document["userId"]).isEqualTo("my-test-id")
+        assertThat(document["url"]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+        assertThat(document["type"]).isEqualTo("PAGE_RENDERED")
     }
 }
 

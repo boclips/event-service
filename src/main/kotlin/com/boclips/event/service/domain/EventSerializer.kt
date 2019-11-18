@@ -3,6 +3,7 @@ package com.boclips.event.service.domain
 import com.boclips.eventbus.events.base.AbstractCollectionEvent
 import com.boclips.eventbus.events.base.AbstractEventWithUserId
 import com.boclips.eventbus.events.collection.*
+import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
@@ -90,4 +91,14 @@ object EventSerializer {
                 "url" to event.url
         )
     }
+
+    fun convertPageRendered(event: PageRendered): Map<String, Any> {
+        return mapOf<String,Any>(
+            "userId" to event.userId,
+            "timestamp" to event.timestamp,
+            "url" to event.url,
+            "type" to "PAGE_RENDERED"
+        )
+    }
+
 }
