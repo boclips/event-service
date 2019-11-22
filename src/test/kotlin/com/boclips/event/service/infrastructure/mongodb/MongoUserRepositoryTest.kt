@@ -27,11 +27,12 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `saveUser saves organisation`() {
-        userRepository.saveUser(createUserCreated(organisation = createOrganisation(id = "teachers", type = "School")))
+        userRepository.saveUser(createUserCreated(organisation = createOrganisation(id = "teachers", type = "School", accountType = "Design Partner")))
 
         val organisationDocument = userDocument()["organisation"] as Map<*, *>
         assertThat(organisationDocument["id"]).isEqualTo("teachers")
         assertThat(organisationDocument["type"]).isEqualTo("School")
+        assertThat(organisationDocument["accountType"]).isEqualTo("Design Partner")
     }
 
     @Test
@@ -75,16 +76,27 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     @Test
     fun `updateUser updates organisation`() {
         userRepository.saveUser(createUserCreated(userId = "u1", organisation = null))
-        userRepository.updateUser(createUserUpdated(userId = "u1", organisation = createOrganisation(id = "org1", type = "api", name = "org name", postcode = "12345", parent = createOrganisation(name = "parent org"))))
+        userRepository.updateUser(createUserUpdated(userId = "u1", organisation = createOrganisation(
+            id = "org1",
+            accountType = "DESIGN_PARTNER",
+            type = "api",
+            name = "org name",
+            postcode = "12345",
+            parent = createOrganisation(
+                name = "parent org",
+                accountType = "DESIGN_PARTNER"
+            ))))
 
         val organisationDocument = userDocument()["organisation"] as Map<*, *>?
         assertThat(organisationDocument).isNotNull
         assertThat(organisationDocument?.get("id")).isEqualTo("org1")
+        assertThat(organisationDocument?.get("accountType")).isEqualTo("DESIGN_PARTNER")
         assertThat(organisationDocument?.get("type")).isEqualTo("api")
         assertThat(organisationDocument?.get("name")).isEqualTo("org name")
         assertThat(organisationDocument?.get("postcode")).isEqualTo("12345")
         assertThat(organisationDocument?.get("parent") as Map<*, *>?).isNotNull
         assertThat((organisationDocument?.get("parent") as Map<*, *>?)?.get("name")).isEqualTo("parent org")
+        assertThat((organisationDocument?.get("parent") as Map<*, *>?)?.get("accountType")).isEqualTo("DESIGN_PARTNER")
     }
 
     @Test

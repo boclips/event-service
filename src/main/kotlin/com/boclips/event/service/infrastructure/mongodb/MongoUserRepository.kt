@@ -52,8 +52,14 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
     }
 
     private fun organisationDocument(organisation: Organisation): OrganisationDocument {
-        return OrganisationDocument(id = organisation.id, type = organisation.type, name = organisation.name, postcode = organisation.postcode,
-                parent = organisation.parent?.let(this::organisationDocument))
+        return OrganisationDocument(
+            id = organisation.id,
+            accountType = organisation.accountType,
+            type = organisation.type,
+            name = organisation.name,
+            postcode = organisation.postcode,
+            parent = organisation.parent?.let(this::organisationDocument)
+        )
     }
 
     private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<UserDocument>(COLLECTION)
@@ -78,6 +84,7 @@ data class UserDocument (
 
 data class OrganisationDocument (
         val id: String,
+        val accountType: String,
         val name: String,
         val parent: OrganisationDocument?,
         val type: String,
