@@ -1,6 +1,7 @@
 package com.boclips.event.service.application
 
 import com.boclips.event.service.infrastructure.mongodb.DatabaseConstants
+import com.boclips.event.service.infrastructure.mongodb.MongoVideoRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories.createVideo
 import com.boclips.eventbus.events.video.VideoBroadcastRequested
@@ -54,7 +55,7 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
     private fun document(): Document {
         return mongoClient
             .getDatabase(DatabaseConstants.DB_NAME)
-            .getCollection("videos")
+            .getCollection(MongoVideoRepository.COLLECTION_NAME)
             .find()
             .toList()
             .single()

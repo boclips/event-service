@@ -53,6 +53,6 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     private fun document(): Document {
-        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection("videos").find().toList().single()
+        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoVideoRepository.COLLECTION_NAME).find().toList().single()
     }
 }

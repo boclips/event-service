@@ -1,13 +1,7 @@
 package com.boclips.event.service.config
 
-import com.boclips.event.service.application.PersistEvent
-import com.boclips.event.service.application.UpdateCollection
-import com.boclips.event.service.application.UpdateUser
-import com.boclips.event.service.application.UpdateVideo
-import com.boclips.event.service.domain.CollectionRepository
-import com.boclips.event.service.domain.EventRepository
-import com.boclips.event.service.domain.UserRepository
-import com.boclips.event.service.domain.VideoRepository
+import com.boclips.event.service.application.*
+import com.boclips.event.service.domain.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -16,7 +10,8 @@ class ApplicationContext(
     private val eventRepository: EventRepository,
     private val videoRepository: VideoRepository,
     private val collectionRepository: CollectionRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val orderRepository: OrderRepository
 ) {
 
     @Bean
@@ -37,6 +32,11 @@ class ApplicationContext(
     @Bean
     fun updateCollection(): UpdateCollection {
         return UpdateCollection(collectionRepository)
+    }
+
+    @Bean
+    fun updateOrder(): UpdateOrder {
+        return UpdateOrder(orderRepository)
     }
 
 }

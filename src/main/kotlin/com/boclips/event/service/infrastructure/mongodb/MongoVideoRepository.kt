@@ -10,7 +10,9 @@ import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.getCollection
 
 class MongoVideoRepository(private val mongoClient: MongoClient) : VideoRepository {
-    companion object: KLogging()
+    companion object: KLogging() {
+        const val COLLECTION_NAME = "videos"
+    }
 
     override fun saveVideo(video: Video) {
         val document = VideoDocument(
@@ -24,18 +26,18 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
                 durationSeconds = video.durationSeconds
         )
 
-        write(video.id.value, document)
+        write(document)
     }
 
-    private fun write(id: String, document: VideoDocument) {
+    private fun write(document: VideoDocument) {
         try {
-            getCollection().replaceOne(Document("_id", id), document, ReplaceOptions().upsert(true))
+            getCollection().replaceOne(Document("_id", document.id), document, ReplaceOptions().upsert(true))
         } catch (e: Exception) {
             logger.error(e) { "Error writing video ${document.id}" }
         }
     }
 
-    private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<VideoDocument>("videos")
+    private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<VideoDocument>(COLLECTION_NAME)
 }
 
 data class VideoDocument(

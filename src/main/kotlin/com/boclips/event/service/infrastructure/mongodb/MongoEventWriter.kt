@@ -6,7 +6,9 @@ import mu.KLogging
 import org.bson.Document
 
 class MongoEventWriter(private val mongoClient: MongoClient) : EventWriter {
-    companion object: KLogging()
+    companion object: KLogging() {
+        const val COLLECTION_NAME = "events"
+    }
 
     override fun write(event: Map<String, Any>) {
         try {
@@ -17,5 +19,5 @@ class MongoEventWriter(private val mongoClient: MongoClient) : EventWriter {
         }
     }
 
-    private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(DatabaseConstants.EVENTS_COLLECTION)
+    private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(COLLECTION_NAME)
 }

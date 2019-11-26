@@ -123,5 +123,5 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(userDocument().getString("createdAt")).isEqualTo("2019-06-08T10:12:23Z")
     }
 
-    fun userDocument() = document(MongoUserRepository.COLLECTION)
+    fun userDocument() = document(MongoUserRepository.COLLECTION_NAME)
 }

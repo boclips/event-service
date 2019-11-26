@@ -18,6 +18,7 @@ import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
+import com.boclips.eventbus.events.order.Order
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
@@ -321,6 +322,19 @@ object TestFactories {
             .build()
     }
 
+    fun createOrder(
+            id: String = "order-123",
+            createdAt: ZonedDateTime = ZonedDateTime.now(),
+            updatedAt: ZonedDateTime = ZonedDateTime.now(),
+            videosIds: List<String> = emptyList()
+    ): Order {
+        return Order.builder()
+                .id(id)
+                .dateCreated(Date.from(createdAt.toInstant()))
+                .dateUpdated(Date.from(updatedAt.toInstant()))
+                .videoIds(videosIds.map { VideoId(it) })
+                .build()
+    }
 
     private fun subjectsFromNames(subjectNames: List<String>): List<Subject> {
         return subjectNames.map {

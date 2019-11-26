@@ -18,5 +18,5 @@ class MongoEventWriterTest : AbstractSpringIntegrationTest() {
         assertThat(eventDocument()["query"]).isEqualTo("bla")
     }
 
-    fun eventDocument() = document(DatabaseConstants.EVENTS_COLLECTION)
+    fun eventDocument() = document(MongoEventWriter.COLLECTION_NAME)
 }

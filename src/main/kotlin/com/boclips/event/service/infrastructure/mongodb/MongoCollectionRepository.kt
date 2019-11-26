@@ -14,7 +14,9 @@ import java.util.*
 
 class MongoCollectionRepository(private val mongoClient: MongoClient) : CollectionRepository {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        const val COLLECTION_NAME = "collections"
+    }
 
     override fun saveCollection(collection: Collection) {
         val document = CollectionDocument(
@@ -43,7 +45,7 @@ class MongoCollectionRepository(private val mongoClient: MongoClient) : Collecti
     private fun idEquals(id: String) = Document("_id", id)
 
     private fun withCollection(consumer: (MongoCollection<CollectionDocument>) -> Unit) {
-        val collection = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<CollectionDocument>("collections")
+        val collection = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<CollectionDocument>(COLLECTION_NAME)
         try {
             consumer(collection)
         } catch (e: Exception) {

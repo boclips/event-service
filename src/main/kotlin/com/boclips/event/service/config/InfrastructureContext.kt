@@ -1,13 +1,7 @@
 package com.boclips.event.service.config
 
-import com.boclips.event.service.domain.CollectionRepository
-import com.boclips.event.service.domain.EventWriter
-import com.boclips.event.service.domain.UserRepository
-import com.boclips.event.service.domain.VideoRepository
-import com.boclips.event.service.infrastructure.mongodb.MongoCollectionRepository
-import com.boclips.event.service.infrastructure.mongodb.MongoEventWriter
-import com.boclips.event.service.infrastructure.mongodb.MongoUserRepository
-import com.boclips.event.service.infrastructure.mongodb.MongoVideoRepository
+import com.boclips.event.service.domain.*
+import com.boclips.event.service.infrastructure.mongodb.*
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import org.litote.kmongo.KMongo
@@ -40,6 +34,11 @@ class InfrastructureContext(val mongoProperties: MongoProperties) {
     @Bean
     fun collectionRepository(): CollectionRepository {
         return MongoCollectionRepository(mongoClient())
+    }
+
+    @Bean
+    fun orderRepository(): OrderRepository {
+        return MongoOrderRepository(mongoClient())
     }
 
 }

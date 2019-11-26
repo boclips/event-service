@@ -1,6 +1,7 @@
 package com.boclips.event.service.application
 
 import com.boclips.event.service.infrastructure.mongodb.DatabaseConstants
+import com.boclips.event.service.infrastructure.mongodb.MongoEventWriter
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories.createCollectionAgeRangeChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionBookmarkChanged
@@ -124,7 +125,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     }
 
     private fun document(): Document {
-        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection("events").find().toList().single()
+        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoEventWriter.COLLECTION_NAME).find().toList().single()
     }
 
 

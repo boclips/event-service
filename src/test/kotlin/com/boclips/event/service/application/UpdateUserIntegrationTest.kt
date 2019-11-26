@@ -49,5 +49,5 @@ class UpdateUserIntegrationTest : AbstractSpringIntegrationTest() {
         assertThat(userDocuments().first().get("organisation")).isNotNull
     }
 
-    fun userDocuments() = documents(MongoUserRepository.COLLECTION)
+    fun userDocuments() = documents(MongoUserRepository.COLLECTION_NAME)
 }

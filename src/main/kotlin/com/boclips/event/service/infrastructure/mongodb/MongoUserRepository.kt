@@ -62,10 +62,10 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
         )
     }
 
-    private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<UserDocument>(COLLECTION)
+    private fun getCollection() = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<UserDocument>(COLLECTION_NAME)
 
     companion object {
-        const val COLLECTION = "users"
+        const val COLLECTION_NAME = "users"
     }
 }
 

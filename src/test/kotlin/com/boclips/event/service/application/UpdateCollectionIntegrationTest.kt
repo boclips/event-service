@@ -2,6 +2,7 @@ package com.boclips.event.service.application
 
 import com.boclips.event.service.domain.CollectionRepository
 import com.boclips.event.service.infrastructure.mongodb.DatabaseConstants
+import com.boclips.event.service.infrastructure.mongodb.MongoCollectionRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories.createCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideo
@@ -62,7 +63,7 @@ class UpdateCollectionIntegrationTest : AbstractSpringIntegrationTest() {
     private fun document(): Document {
         return mongoClient
             .getDatabase(DatabaseConstants.DB_NAME)
-            .getCollection("collections")
+            .getCollection(MongoCollectionRepository.COLLECTION_NAME)
             .find()
             .toList()
             .single()

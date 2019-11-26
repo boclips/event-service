@@ -69,6 +69,6 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     private fun document(): Document {
-        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection("collections").find().toList().single()
+        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoCollectionRepository.COLLECTION_NAME).find().toList().single()
     }
 }
