@@ -14,7 +14,7 @@ import java.util.*
 class MongoOrderRepository(private val mongoClient: MongoClient) : OrderRepository {
 
     companion object : KLogging() {
-        const val COLLECTION_NAME = "users"
+        const val COLLECTION_NAME = "orders"
     }
 
     override fun saveOrder(order: Order) {
