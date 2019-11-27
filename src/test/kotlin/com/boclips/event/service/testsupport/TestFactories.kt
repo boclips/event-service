@@ -8,10 +8,7 @@ import com.boclips.eventbus.domain.collection.CollectionId
 import com.boclips.eventbus.domain.user.Organisation
 import com.boclips.eventbus.domain.user.User
 import com.boclips.eventbus.domain.user.UserId
-import com.boclips.eventbus.domain.video.ContentPartner
-import com.boclips.eventbus.domain.video.PlaybackProviderType
-import com.boclips.eventbus.domain.video.Video
-import com.boclips.eventbus.domain.video.VideoId
+import com.boclips.eventbus.domain.video.*
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
 import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
 import com.boclips.eventbus.events.collection.CollectionInteractedWith
@@ -39,7 +36,8 @@ object TestFactories {
         playbackProviderType: PlaybackProviderType = PlaybackProviderType.KALTURA,
         subjectNames: List<String> = emptyList(),
         ageRange: AgeRange = AgeRange(),
-        durationSeconds: Int = 180
+        durationSeconds: Int = 180,
+        type: VideoType? = null
     ): Video {
         return Video
             .builder()
@@ -50,6 +48,7 @@ object TestFactories {
             .subjects(subjectsFromNames(subjectNames))
             .ageRange(ageRange)
             .durationSeconds(durationSeconds)
+            .type(type)
             .build()
     }
 

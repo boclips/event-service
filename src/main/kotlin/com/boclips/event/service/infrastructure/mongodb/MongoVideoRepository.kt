@@ -23,7 +23,8 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
                 subjects = video.subjects.map { it.name }.toSet(),
                 ageRangeMin = video.ageRange.min,
                 ageRangeMax = video.ageRange.max,
-                durationSeconds = video.durationSeconds
+                durationSeconds = video.durationSeconds,
+                type = video.type?.name
         )
 
         write(document)
@@ -49,5 +50,6 @@ data class VideoDocument(
         val subjects: Set<String>,
         val ageRangeMin: Int?,
         val ageRangeMax: Int?,
-        val durationSeconds: Int
+        val durationSeconds: Int,
+        val type:  String?
 )

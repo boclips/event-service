@@ -3,6 +3,7 @@ package com.boclips.event.service.infrastructure.mongodb
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.eventbus.domain.AgeRange
 import com.boclips.eventbus.domain.video.PlaybackProviderType
+import com.boclips.eventbus.domain.video.VideoType
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
@@ -23,6 +24,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                 playbackProviderType = PlaybackProviderType.YOUTUBE,
                 subjectNames = listOf("Maths"),
                 ageRange = AgeRange(5, 11),
+                type = VideoType.NEWS,
                 durationSeconds = 60
         ))
 
@@ -34,9 +36,20 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getList("subjects", String::class.java)).containsExactly("Maths")
         assertThat(document.getInteger("ageRangeMin")).isEqualTo(5)
         assertThat(document.getInteger("ageRangeMax")).isEqualTo(11)
+        assertThat(document.getString("type")).isEqualTo("NEWS")
         assertThat(document.getInteger("durationSeconds")).isEqualTo(60)
 
     }
+
+    @Test
+    fun `creating a video with type null`() {
+        videoRepository.saveVideo(createVideo(type = null))
+
+        val document = document()
+        assertThat(document.getString("type")).isNull()
+    }
+
+
 
     @Test
     fun `updating a video`() {
