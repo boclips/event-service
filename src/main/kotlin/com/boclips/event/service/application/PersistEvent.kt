@@ -4,6 +4,7 @@ import com.boclips.event.service.domain.EventRepository
 import com.boclips.eventbus.BoclipsEventListener
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
 import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
+import com.boclips.eventbus.events.collection.CollectionInteractedWith
 import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
@@ -59,6 +60,11 @@ class PersistEvent(private val eventRepository: EventRepository) {
     @BoclipsEventListener
     fun collectionAgeRangeChanged(collectionAgeRangeChanged: CollectionAgeRangeChanged) {
         eventRepository.saveCollectionAgeRangeChanged(collectionAgeRangeChanged)
+    }
+
+    @BoclipsEventListener
+    fun collectionInteractedWith(event: CollectionInteractedWith) {
+        eventRepository.saveCollectionInteractedWith(event)
     }
 
     @BoclipsEventListener

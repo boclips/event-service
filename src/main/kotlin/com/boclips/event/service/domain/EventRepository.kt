@@ -2,6 +2,7 @@ package com.boclips.event.service.domain
 
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
 import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
+import com.boclips.eventbus.events.collection.CollectionInteractedWith
 import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
@@ -56,5 +57,9 @@ class EventRepository(private val writer: EventWriter) {
 
     fun savePageRendered(event: PageRendered){
         writer.write(EventSerializer.convertPageRendered(event))
+    }
+
+    fun saveCollectionInteractedWith(event: CollectionInteractedWith) {
+        writer.write(EventSerializer.convertCollectionInteractedWith(event))
     }
 }

@@ -5,6 +5,7 @@ import com.boclips.event.service.infrastructure.mongodb.MongoEventWriter
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories.createCollectionAgeRangeChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionBookmarkChanged
+import com.boclips.event.service.testsupport.TestFactories.createCollectionInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createCollectionSubjectsChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionVisibilityChanged
 import com.boclips.event.service.testsupport.TestFactories.createPageRendered
@@ -106,6 +107,15 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         assertThat(document().toJson()).contains("456")
         assertThat(document().toJson()).contains("11")
         assertThat(document().toJson()).contains("19")
+    }
+
+    @Test
+    fun collectionInteractedWith() {
+        val event = createCollectionInteractedWith(collectionId = "test-id")
+
+        eventBus.publish(event)
+
+        assertThat(document().toJson()).contains("test-id")
     }
 
     @Test

@@ -14,6 +14,7 @@ import com.boclips.eventbus.domain.video.Video
 import com.boclips.eventbus.domain.video.VideoId
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
 import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
+import com.boclips.eventbus.events.collection.CollectionInteractedWith
 import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
@@ -93,6 +94,22 @@ object TestFactories {
             .videoId(videoId)
             .subtype(subtype)
             .payload(payload)
+            .userId(user.id)
+            .url(url)
+            .build()
+    }
+
+    fun createCollectionInteractedWith(
+        timestamp: ZonedDateTime = ZonedDateTime.now(),
+        collectionId: String = "collection-default-id",
+        subtype: String = "default-subtype",
+        user: User = createUser(),
+        url: String? = "https://example.com"
+    ): CollectionInteractedWith {
+        return CollectionInteractedWith.builder()
+            .timestamp(Date.from(timestamp.toInstant()))
+            .collectionId(collectionId)
+            .subtype(subtype)
             .userId(user.id)
             .url(url)
             .build()

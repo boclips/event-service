@@ -1,6 +1,7 @@
 package com.boclips.event.service.domain
 
 import com.boclips.event.service.testsupport.TestFactories
+import com.boclips.event.service.testsupport.TestFactories.createCollectionInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createPageRendered
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
@@ -188,6 +189,26 @@ class EventSerializerTest {
         val document = EventSerializer.convertCollectionAgeRangeChanged(event)
 
         assertThat(document["rangeMax"]).isNull()
+    }
+
+    @Test
+    fun convertCollectionInteractedWith() {
+        val event = createCollectionInteractedWith(
+            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC),
+            collectionId = "the-collection-id",
+            subtype = "collection-bookmarked",
+            user = createUser(userId = "user-id"),
+            url = "https://boclips.com/collections?q=hello"
+        )
+
+        val document = EventSerializer.convertCollectionInteractedWith(event)
+
+        assertThat(document["type"]).isEqualTo("COLLECTION_INTERACTED_WITH")
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+        assertThat(document["collectionId"]).isEqualTo("the-collection-id")
+        assertThat(document["subtype"]).isEqualTo("collection-bookmarked")
+        assertThat(document["userId"]).isEqualTo("user-id")
+        assertThat(document["url"]).isEqualTo("https://boclips.com/collections?q=hello")
     }
 
     @Test
