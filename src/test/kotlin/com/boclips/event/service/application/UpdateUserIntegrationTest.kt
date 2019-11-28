@@ -16,7 +16,7 @@ class UpdateUserIntegrationTest : AbstractSpringIntegrationTest() {
                 id = "some-org-id"
         )
         val user = TestFactories.createUser(
-                userId = "some-id",
+                id = "some-id",
                 isBoclipsEmployee = true,
                 organisation = organisation
         )
@@ -32,12 +32,12 @@ class UpdateUserIntegrationTest : AbstractSpringIntegrationTest() {
                 id = "some-org-id"
         )
         val userWithOrganisation = TestFactories.createUser(
-                userId = "some-id",
+                id = "some-id",
                 isBoclipsEmployee = true,
                 organisation = organisation
         )
         val userWithoutOrganisation = TestFactories.createUser(
-                userId = "some-id",
+                id = "some-id",
                 isBoclipsEmployee = true,
                 organisation = null
         )

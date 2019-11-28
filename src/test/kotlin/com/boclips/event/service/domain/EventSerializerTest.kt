@@ -2,33 +2,34 @@ package com.boclips.event.service.domain
 
 import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.event.service.testsupport.TestFactories.createCollectionInteractedWith
+import com.boclips.event.service.testsupport.TestFactories.createOrganisation
 import com.boclips.event.service.testsupport.TestFactories.createPageRendered
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
 import com.boclips.eventbus.events.collection.CollectionInteractionType
+import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.*
-import kotlin.collections.HashMap
+import java.util.Date
 
 class EventSerializerTest {
 
     @Test
     fun videosSearched() {
         val event = VideosSearched.builder()
-                .timestamp(Date.from(ZonedDateTime.parse("2018-05-31T13:45:59Z").toInstant()))
-                .userId("user-1")
-                .url("http://example.com/hello")
-                .pageIndex(5)
-                .pageSize(10)
-                .query("hello")
-                .pageVideoIds(listOf("v1", "v2"))
-                .totalResults(100)
-                .build()
+            .timestamp(Date.from(ZonedDateTime.parse("2018-05-31T13:45:59Z").toInstant()))
+            .userId("user-1")
+            .url("http://example.com/hello")
+            .pageIndex(5)
+            .pageSize(10)
+            .query("hello")
+            .pageVideoIds(listOf("v1", "v2"))
+            .totalResults(100)
+            .build()
 
         val document = EventSerializer.convertVideosSearched(videosSearched = event)
         assertThat(document["type"]).isEqualTo("VIDEOS_SEARCHED")
@@ -39,22 +40,33 @@ class EventSerializerTest {
         assertThat(document["pageSize"]).isEqualTo(10)
         assertThat(document["totalResults"]).isEqualTo(100L)
         assertThat(document["pageVideoIds"]).asList().containsExactly("v1", "v2")
-        assertThat((document["timestamp"] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(ZonedDateTime.of(2018, 5, 31, 13, 45, 59, 0, ZoneOffset.UTC))
+        assertThat((document["timestamp"] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(
+            ZonedDateTime.of(
+                2018,
+                5,
+                31,
+                13,
+                45,
+                59,
+                0,
+                ZoneOffset.UTC
+            )
+        )
     }
 
     @Test
     fun videoSegmentPlayed() {
         val event = VideoSegmentPlayed.builder()
-                .timestamp(Date.from(ZonedDateTime.parse("2019-05-31T13:45:59Z").toInstant()))
-                .userId("user-1")
-                .url("http://example.com/video")
-                .playerId("playerId")
-                .segmentStartSeconds(10)
-                .segmentEndSeconds(20)
-                .videoIndex(10)
-                .videoId("123")
-                .playbackDevice("device-id")
-                .build()
+            .timestamp(Date.from(ZonedDateTime.parse("2019-05-31T13:45:59Z").toInstant()))
+            .userId("user-1")
+            .url("http://example.com/video")
+            .playerId("playerId")
+            .segmentStartSeconds(10)
+            .segmentEndSeconds(20)
+            .videoIndex(10)
+            .videoId("123")
+            .playbackDevice("device-id")
+            .build()
 
         val document = EventSerializer.convertVideoSegmentPlayed(videoSegmentPlayed = event)
         assertThat(document["type"]).isEqualTo("VIDEO_SEGMENT_PLAYED")
@@ -66,22 +78,33 @@ class EventSerializerTest {
         assertThat(document["videoIndex"]).isEqualTo(10)
         assertThat(document["videoId"]).isEqualTo("123")
         assertThat(document["playbackDevice"]).isEqualTo("device-id")
-        assertThat((document["timestamp"] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(ZonedDateTime.of(2019, 5, 31, 13, 45, 59, 0, ZoneOffset.UTC))
+        assertThat((document["timestamp"] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(
+            ZonedDateTime.of(
+                2019,
+                5,
+                31,
+                13,
+                45,
+                59,
+                0,
+                ZoneOffset.UTC
+            )
+        )
     }
 
     @Test
     fun videoPlayerInteractedWith() {
         val event = TestFactories.createVideoPlayerInteractedWith(
-                videoId = "video-id",
-                playerId = "player-id",
-                currentTime = 34,
-                subtype = "captions-on",
-                payload = mapOf<String, Any>(
-                        Pair("kind", "caption-kind"),
-                        Pair("language", "caption-language"),
-                        Pair("id", "caption-id"),
-                        Pair("label", "caption-label")
-                )
+            videoId = "video-id",
+            playerId = "player-id",
+            currentTime = 34,
+            subtype = "captions-on",
+            payload = mapOf<String, Any>(
+                Pair("kind", "caption-kind"),
+                Pair("language", "caption-language"),
+                Pair("id", "caption-id"),
+                Pair("label", "caption-label")
+            )
         )
 
         val document = EventSerializer.convertVideoPlayerInteractedWith(event)
@@ -162,7 +185,8 @@ class EventSerializerTest {
 
     @Test
     fun convertCollectionSubjectsChanged() {
-        val event = TestFactories.createCollectionSubjectsChanged(collectionId = "collection-id", subjects = setOf("Science"))
+        val event =
+            TestFactories.createCollectionSubjectsChanged(collectionId = "collection-id", subjects = setOf("Science"))
 
         val document = EventSerializer.convertCollectionSubjectsChanged(event)
 
@@ -173,7 +197,8 @@ class EventSerializerTest {
 
     @Test
     fun convertCollectionAgeRangeChanged() {
-        val event = TestFactories.createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = 19)
+        val event =
+            TestFactories.createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = 19)
 
         val document = EventSerializer.convertCollectionAgeRangeChanged(event)
 
@@ -185,7 +210,8 @@ class EventSerializerTest {
 
     @Test
     fun convertCollectionAgeRangeChanged_whenRangeMaxNull() {
-        val event = TestFactories.createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = null)
+        val event =
+            TestFactories.createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = null)
 
         val document = EventSerializer.convertCollectionAgeRangeChanged(event)
 
@@ -198,7 +224,7 @@ class EventSerializerTest {
             timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC),
             collectionId = "the-collection-id",
             subtype = CollectionInteractionType.NAVIGATE_TO_COLLECTION_DETAILS,
-            user = createUser(userId = "user-id"),
+            user = createUser(id = "user-id"),
             url = "https://boclips.com/collections?q=hello"
         )
 
@@ -215,12 +241,12 @@ class EventSerializerTest {
     @Test
     fun convertVideoInteractedWith() {
         val event = createVideoInteractedWith(
-                timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC),
-                videoId = "the-video-id",
-                subtype = "copy-share-link",
-                payload = HashMap<String, Any>().apply { put("additional-field", "bunny") },
-                user = createUser(userId = "user-id"),
-                url = "https://boclips.com/videos?q=hello"
+            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC),
+            videoId = "the-video-id",
+            subtype = "copy-share-link",
+            payload = HashMap<String, Any>().apply { put("additional-field", "bunny") },
+            user = createUser(id = "user-id"),
+            url = "https://boclips.com/videos?q=hello"
         )
 
         val document = EventSerializer.convertVideoInteractedWith(event)
@@ -236,7 +262,11 @@ class EventSerializerTest {
 
     @Test
     fun convertPageRendered() {
-        val event = createPageRendered(userId = "my-test-id", url = "http://teachers.boclips.com/test/page?data=123", timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC))
+        val event = createPageRendered(
+            userId = "my-test-id",
+            url = "http://teachers.boclips.com/test/page?data=123",
+            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC)
+        )
 
         val document = EventSerializer.convertPageRendered(event)
 
@@ -244,6 +274,65 @@ class EventSerializerTest {
         assertThat(document["url"]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
         assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
         assertThat(document["type"]).isEqualTo("PAGE_RENDERED")
+    }
+
+    @Test
+    fun `convertUserExpired with no organisation`() {
+        val event = UserExpired.builder()
+            .user(createUser(id = "my-test-id"))
+            .timestamp(Date.from(ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC).toInstant()))
+            .build()
+
+        val document = EventSerializer.convertUserExpired(event)
+
+        assertThat(document["type"]).isEqualTo("USER_EXPIRED")
+        assertThat(document["userId"]).isEqualTo("my-test-id")
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+    }
+
+    @Test
+    fun `convertUserExpired with an organisation, no grandparent organisation`() {
+        val event = UserExpired.builder()
+            .user(createUser(id = "my-test-id", organisation = createOrganisation(id = "org-id", type = "SCHOOL")))
+            .timestamp(Date.from(ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC).toInstant()))
+            .build()
+
+        val document = EventSerializer.convertUserExpired(event)
+
+        assertThat(document["type"]).isEqualTo("USER_EXPIRED")
+        assertThat(document["userId"]).isEqualTo("my-test-id")
+        assertThat(document["organisationId"]).isEqualTo("org-id")
+        assertThat(document["organisationType"]).isEqualTo("SCHOOL")
+        assertThat(document["userId"]).isEqualTo("my-test-id")
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+    }
+
+    @Test
+    fun `convertUserExpired with an organisation, with grandparent organisation`() {
+        val event = UserExpired.builder()
+            .user(
+                createUser(
+                    id = "my-test-id",
+                    organisation = createOrganisation(
+                        id = "org-id",
+                        type = "SCHOOL",
+                        parent = createOrganisation(id = "grandparent-id", type = "DISTRICT")
+                    )
+                )
+            )
+            .timestamp(Date.from(ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC).toInstant()))
+            .build()
+
+        val document = EventSerializer.convertUserExpired(event)
+
+        assertThat(document["type"]).isEqualTo("USER_EXPIRED")
+        assertThat(document["userId"]).isEqualTo("my-test-id")
+        assertThat(document["organisationId"]).isEqualTo("org-id")
+        assertThat(document["organisationType"]).isEqualTo("SCHOOL")
+        assertThat(document["organisationParentId"]).isEqualTo("grandparent-id")
+        assertThat(document["organisationParentType"]).isEqualTo("DISTRICT")
+        assertThat(document["userId"]).isEqualTo("my-test-id")
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
     }
 }
 
