@@ -5,6 +5,7 @@ import com.boclips.event.service.testsupport.TestFactories.createCollectionInter
 import com.boclips.event.service.testsupport.TestFactories.createPageRendered
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
+import com.boclips.eventbus.events.collection.CollectionInteractionType
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
 import org.assertj.core.api.Assertions.assertThat
@@ -196,7 +197,7 @@ class EventSerializerTest {
         val event = createCollectionInteractedWith(
             timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC),
             collectionId = "the-collection-id",
-            subtype = "collection-bookmarked",
+            subtype = CollectionInteractionType.NAVIGATE_TO_COLLECTION_DETAILS,
             user = createUser(userId = "user-id"),
             url = "https://boclips.com/collections?q=hello"
         )
@@ -206,7 +207,7 @@ class EventSerializerTest {
         assertThat(document["type"]).isEqualTo("COLLECTION_INTERACTED_WITH")
         assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
         assertThat(document["collectionId"]).isEqualTo("the-collection-id")
-        assertThat(document["subtype"]).isEqualTo("collection-bookmarked")
+        assertThat(document["subtype"]).isEqualTo("NAVIGATE_TO_COLLECTION_DETAILS")
         assertThat(document["userId"]).isEqualTo("user-id")
         assertThat(document["url"]).isEqualTo("https://boclips.com/collections?q=hello")
     }

@@ -104,6 +104,6 @@ object EventSerializer {
     fun convertCollectionInteractedWith(event: CollectionInteractedWith): Map<String, Any> {
         return convertUserEvent(event, "COLLECTION_INTERACTED_WITH") +
             ("collectionId" to event.collectionId) +
-            ("subtype" to event.subtype)
+            ("subtype" to event.subtype.toString())
     }
 }

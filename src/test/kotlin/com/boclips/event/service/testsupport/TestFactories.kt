@@ -12,6 +12,7 @@ import com.boclips.eventbus.domain.video.*
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
 import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
 import com.boclips.eventbus.events.collection.CollectionInteractedWith
+import com.boclips.eventbus.events.collection.CollectionInteractionType
 import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
@@ -101,7 +102,7 @@ object TestFactories {
     fun createCollectionInteractedWith(
         timestamp: ZonedDateTime = ZonedDateTime.now(),
         collectionId: String = "collection-default-id",
-        subtype: String = "default-subtype",
+        subtype: CollectionInteractionType = CollectionInteractionType.NAVIGATE_TO_COLLECTION_DETAILS,
         user: User = createUser(),
         url: String? = "https://example.com"
     ): CollectionInteractedWith {
