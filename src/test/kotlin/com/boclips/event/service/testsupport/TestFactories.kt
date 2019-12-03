@@ -29,8 +29,8 @@ import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
+import java.time.LocalDate
 import java.time.ZonedDateTime
-import java.util.Date
 
 object TestFactories {
 
@@ -42,11 +42,13 @@ object TestFactories {
         subjectNames: List<String> = emptyList(),
         ageRange: AgeRange = AgeRange(),
         durationSeconds: Int = 180,
-        type: VideoType? = null
+        ingestedOn: LocalDate = LocalDate.now(),
+        type: VideoType = VideoType.INSTRUCTIONAL
     ): Video {
         return Video
             .builder()
             .id(VideoId(id))
+            .ingestedOn(ingestedOn)
             .title(title)
             .contentPartner(ContentPartner.of(contentPartnerName))
             .playbackProviderType(playbackProviderType)
@@ -72,8 +74,8 @@ object TestFactories {
     ): Collection {
         return Collection.builder()
             .id(CollectionId(id))
-            .createdTime(Date.from(createdTime.toInstant()))
-            .updatedTime(Date.from(updatedTime.toInstant()))
+            .createdAt(createdTime)
+            .updatedAt(updatedTime)
             .title(title)
             .description(description)
             .subjects(subjects.map { Subject(SubjectId("$it-id"), it) })
@@ -94,7 +96,7 @@ object TestFactories {
         url: String? = "https://example.com"
     ): VideoInteractedWith {
         return VideoInteractedWith.builder()
-            .timestamp(Date.from(timestamp.toInstant()))
+            .timestamp(timestamp)
             .videoId(videoId)
             .subtype(subtype)
             .payload(payload)
@@ -111,7 +113,7 @@ object TestFactories {
         url: String? = "https://example.com"
     ): CollectionInteractedWith {
         return CollectionInteractedWith.builder()
-            .timestamp(Date.from(timestamp.toInstant()))
+            .timestamp(timestamp)
             .collectionId(collectionId)
             .subtype(subtype)
             .userId(user.id)
@@ -308,7 +310,7 @@ object TestFactories {
                     ages = ages
                 )
             )
-            .timestamp(Date.from(timestamp.toInstant()))
+            .timestamp(timestamp)
             .build()
     }
 
@@ -336,7 +338,7 @@ object TestFactories {
                     ages = ages
                 )
             )
-            .timestamp(Date.from(timestamp.toInstant()))
+            .timestamp(timestamp)
             .build()
     }
 
@@ -348,7 +350,7 @@ object TestFactories {
         return PageRendered.builder()
             .userId(userId)
             .url(url)
-            .timestamp(Date.from(timestamp.toInstant()))
+            .timestamp(timestamp)
             .build()
     }
 
@@ -360,8 +362,8 @@ object TestFactories {
     ): Order {
         return Order.builder()
             .id(id)
-            .dateCreated(Date.from(createdAt.toInstant()))
-            .dateUpdated(Date.from(updatedAt.toInstant()))
+            .createdAt(createdAt)
+            .updatedAt(updatedAt)
             .videoIds(videosIds.map { VideoId(it) })
             .build()
     }

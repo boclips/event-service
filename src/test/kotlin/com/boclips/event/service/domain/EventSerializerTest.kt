@@ -12,6 +12,7 @@ import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.Date
@@ -21,7 +22,7 @@ class EventSerializerTest {
     @Test
     fun videosSearched() {
         val event = VideosSearched.builder()
-            .timestamp(Date.from(ZonedDateTime.parse("2018-05-31T13:45:59Z").toInstant()))
+            .timestamp(ZonedDateTime.parse("2018-05-31T13:45:59Z"))
             .userId("user-1")
             .url("http://example.com/hello")
             .pageIndex(5)
@@ -57,7 +58,7 @@ class EventSerializerTest {
     @Test
     fun videoSegmentPlayed() {
         val event = VideoSegmentPlayed.builder()
-            .timestamp(Date.from(ZonedDateTime.parse("2019-05-31T13:45:59Z").toInstant()))
+            .timestamp(ZonedDateTime.parse("2019-05-31T13:45:59Z"))
             .userId("user-1")
             .url("http://example.com/video")
             .playerId("playerId")
@@ -221,7 +222,7 @@ class EventSerializerTest {
     @Test
     fun convertCollectionInteractedWith() {
         val event = createCollectionInteractedWith(
-            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC),
+            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC),
             collectionId = "the-collection-id",
             subtype = CollectionInteractionType.NAVIGATE_TO_COLLECTION_DETAILS,
             user = createUser(id = "user-id"),
@@ -231,7 +232,7 @@ class EventSerializerTest {
         val document = EventSerializer.convertCollectionInteractedWith(event)
 
         assertThat(document["type"]).isEqualTo("COLLECTION_INTERACTED_WITH")
-        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15.100Z").toInstant()))
         assertThat(document["collectionId"]).isEqualTo("the-collection-id")
         assertThat(document["subtype"]).isEqualTo("NAVIGATE_TO_COLLECTION_DETAILS")
         assertThat(document["userId"]).isEqualTo("user-id")
@@ -265,14 +266,14 @@ class EventSerializerTest {
         val event = createPageRendered(
             userId = "my-test-id",
             url = "http://teachers.boclips.com/test/page?data=123",
-            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC)
+            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC)
         )
 
         val document = EventSerializer.convertPageRendered(event)
 
         assertThat(document["userId"]).isEqualTo("my-test-id")
         assertThat(document["url"]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
-        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15.1Z").toInstant()))
         assertThat(document["type"]).isEqualTo("PAGE_RENDERED")
     }
 
@@ -280,7 +281,7 @@ class EventSerializerTest {
     fun `convertUserExpired with no organisation`() {
         val event = UserExpired.builder()
             .user(createUser(id = "my-test-id"))
-            .timestamp(Date.from(ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC).toInstant()))
+            .timestamp(ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC))
             .build()
 
         val document = EventSerializer.convertUserExpired(event)
@@ -294,7 +295,7 @@ class EventSerializerTest {
     fun `convertUserExpired with an organisation, no grandparent organisation`() {
         val event = UserExpired.builder()
             .user(createUser(id = "my-test-id", organisation = createOrganisation(id = "org-id", type = "SCHOOL")))
-            .timestamp(Date.from(ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC).toInstant()))
+            .timestamp(ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneId.of("UTC")))
             .build()
 
         val document = EventSerializer.convertUserExpired(event)
@@ -304,7 +305,7 @@ class EventSerializerTest {
         assertThat(document["organisationId"]).isEqualTo("org-id")
         assertThat(document["organisationType"]).isEqualTo("SCHOOL")
         assertThat(document["userId"]).isEqualTo("my-test-id")
-        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15.100Z").toInstant()))
     }
 
     @Test
@@ -320,7 +321,7 @@ class EventSerializerTest {
                     )
                 )
             )
-            .timestamp(Date.from(ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC).toInstant()))
+            .timestamp(ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC))
             .build()
 
         val document = EventSerializer.convertUserExpired(event)

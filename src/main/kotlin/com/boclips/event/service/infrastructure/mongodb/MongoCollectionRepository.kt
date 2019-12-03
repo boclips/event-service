@@ -29,8 +29,8 @@ class MongoCollectionRepository(private val mongoClient: MongoClient) : Collecti
                 videoIds = collection.videosIds.map { it.value },
                 ownerId = collection.ownerId.value,
                 bookmarks = collection.bookmarks.map { it.value },
-                createdTime = collection.createdTime,
-                updatedTime = collection.updatedTime,
+                createdTime = Date.from(collection.createdAt.toInstant()),
+                updatedTime = Date.from(collection.updatedAt.toInstant()),
                 isPublic = collection.isPublic,
                 isDeleted = false
         )

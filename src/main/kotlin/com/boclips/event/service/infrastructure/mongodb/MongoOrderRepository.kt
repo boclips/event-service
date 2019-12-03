@@ -20,8 +20,8 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
     override fun saveOrder(order: Order) {
         write(OrderDocument(
                 id = order.id,
-                createdAt = order.dateCreated,
-                updatedAt = order.dateUpdated,
+                createdAt = Date.from(order.createdAt.toInstant()),
+                updatedAt = Date.from(order.updatedAt.toInstant()),
                 videoIds = order.videoIds.map { it.value }
         ))
     }

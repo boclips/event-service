@@ -16,6 +16,7 @@ import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
+import java.util.*
 
 object EventSerializer {
 
@@ -95,7 +96,7 @@ object EventSerializer {
         return mapOf<String, Any>(
             "type" to type,
             "userId" to event.userId,
-            "timestamp" to event.timestamp,
+            "timestamp" to Date.from(event.timestamp.toInstant()),
             "url" to event.url
         )
     }
@@ -104,7 +105,7 @@ object EventSerializer {
         return mapOf<String, Any>(
             "type" to type,
             "userId" to event.user.id,
-            "timestamp" to event.timestamp,
+            "timestamp" to Date.from(event.timestamp.toInstant()),
             "url" to event.url
         )
     }
@@ -112,7 +113,7 @@ object EventSerializer {
     fun convertPageRendered(event: PageRendered): Map<String, Any> {
         return mapOf<String, Any>(
             "userId" to event.userId,
-            "timestamp" to event.timestamp,
+            "timestamp" to Date.from(event.timestamp.toInstant()),
             "url" to event.url,
             "type" to "PAGE_RENDERED"
         )

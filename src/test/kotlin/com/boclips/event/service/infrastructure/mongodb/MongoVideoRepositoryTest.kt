@@ -42,16 +42,6 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
-    fun `creating a video with type null`() {
-        videoRepository.saveVideo(createVideo(type = null))
-
-        val document = document()
-        assertThat(document.getString("type")).isNull()
-    }
-
-
-
-    @Test
     fun `updating a video`() {
         videoRepository.saveVideo(createVideo(id = "1234", title = "the title", contentPartnerName = "the content partner", subjectNames = emptyList(), ageRange = AgeRange()))
         videoRepository.saveVideo(createVideo(id = "1234", title = "the updated title", contentPartnerName = "the updated content partner", subjectNames = listOf("English"), ageRange = AgeRange(3, 7)))

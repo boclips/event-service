@@ -58,9 +58,9 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `saveUser saves createdAt`() {
-        userRepository.saveUser(createUserCreated(timestamp = ZonedDateTime.of(2019, 6, 8, 10, 12, 23, 100, ZoneOffset.UTC)))
+        userRepository.saveUser(createUserCreated(timestamp = ZonedDateTime.of(2019, 6, 8, 10, 12, 23, 100000000, ZoneOffset.UTC)))
 
-        assertThat(userDocument().getString("createdAt")).isEqualTo("2019-06-08T10:12:23Z")
+        assertThat(userDocument().getString("createdAt")).isEqualTo("2019-06-08T10:12:23.100Z")
     }
 
     @Test
@@ -117,10 +117,10 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `updateUser does not update createdAt`() {
-        userRepository.saveUser(createUserCreated(userId = "u1", timestamp = ZonedDateTime.of(2019, 6, 8, 10, 12, 23, 100, ZoneOffset.UTC)))
-        userRepository.updateUser(createUserUpdated(userId = "u1", timestamp = ZonedDateTime.of(2020, 6, 8, 10, 12, 23, 100, ZoneOffset.UTC)))
+        userRepository.saveUser(createUserCreated(userId = "u1", timestamp = ZonedDateTime.of(2019, 6, 8, 10, 12, 23, 100000000, ZoneOffset.UTC)))
+        userRepository.updateUser(createUserUpdated(userId = "u1", timestamp = ZonedDateTime.of(2020, 6, 8, 10, 12, 23, 200000000, ZoneOffset.UTC)))
 
-        assertThat(userDocument().getString("createdAt")).isEqualTo("2019-06-08T10:12:23Z")
+        assertThat(userDocument().getString("createdAt")).isEqualTo("2019-06-08T10:12:23.100Z")
     }
 
     fun userDocument() = document(MongoUserRepository.COLLECTION_NAME)
