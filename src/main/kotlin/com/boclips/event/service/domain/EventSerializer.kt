@@ -33,7 +33,6 @@ object EventSerializer {
         return convertUserEvent(videoSegmentPlayed, "VIDEO_SEGMENT_PLAYED") +
             ("segmentStartSeconds" to videoSegmentPlayed.segmentStartSeconds) +
             ("segmentEndSeconds" to videoSegmentPlayed.segmentEndSeconds) +
-            ("playerId" to videoSegmentPlayed.playerId) +
             ("videoIndex" to videoSegmentPlayed.videoIndex) +
             ("videoId" to videoSegmentPlayed.videoId) +
             ("playbackDevice" to videoSegmentPlayed.playbackDevice)
@@ -41,7 +40,6 @@ object EventSerializer {
 
     fun convertVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith): Map<String, Any> {
         return convertUserEvent(videoPlayerInteractedWith, "VIDEO_PLAYER_INTERACTED_WITH") +
-            ("playerId" to videoPlayerInteractedWith.playerId) +
             ("videoId" to videoPlayerInteractedWith.videoId) +
             ("currentTime" to videoPlayerInteractedWith.currentTime) +
             ("subtype" to videoPlayerInteractedWith.subtype) +

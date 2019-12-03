@@ -185,7 +185,6 @@ object TestFactories {
         segmentStartSeconds: Long = 5,
         videoId: String = "123",
         videoIndex: Int = 1,
-        playerId: String = "1",
         user: User = createUser()
     ): VideoSegmentPlayed {
         return VideoSegmentPlayed
@@ -194,7 +193,6 @@ object TestFactories {
             .segmentStartSeconds(segmentStartSeconds)
             .videoId(videoId)
             .videoIndex(videoIndex)
-            .playerId(playerId)
             .userId(user.id)
             .build()
     }
@@ -202,7 +200,6 @@ object TestFactories {
     fun createVideoPlayerInteractedWith(
         user: User = createUser(),
         videoId: String = "123",
-        playerId: String = "1",
         currentTime: Long = 55,
         subtype: String = "captions-on",
         payload: Map<String, Any> = mapOf(Pair("id", "caption-id"))
@@ -211,7 +208,6 @@ object TestFactories {
             .builder()
             .userId(user.id)
             .videoId(videoId)
-            .playerId(playerId)
             .currentTime(currentTime)
             .subtype(subtype)
             .payload(payload)

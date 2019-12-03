@@ -61,7 +61,6 @@ class EventSerializerTest {
             .timestamp(ZonedDateTime.parse("2019-05-31T13:45:59Z"))
             .userId("user-1")
             .url("http://example.com/video")
-            .playerId("playerId")
             .segmentStartSeconds(10)
             .segmentEndSeconds(20)
             .videoIndex(10)
@@ -73,7 +72,6 @@ class EventSerializerTest {
         assertThat(document["type"]).isEqualTo("VIDEO_SEGMENT_PLAYED")
         assertThat(document["userId"]).isEqualTo("user-1")
         assertThat(document["url"]).isEqualTo("http://example.com/video")
-        assertThat(document["playerId"]).isEqualTo("playerId")
         assertThat(document["segmentStartSeconds"]).isEqualTo(10L)
         assertThat(document["segmentEndSeconds"]).isEqualTo(20L)
         assertThat(document["videoIndex"]).isEqualTo(10)
@@ -97,7 +95,6 @@ class EventSerializerTest {
     fun videoPlayerInteractedWith() {
         val event = TestFactories.createVideoPlayerInteractedWith(
             videoId = "video-id",
-            playerId = "player-id",
             currentTime = 34,
             subtype = "captions-on",
             payload = mapOf<String, Any>(
@@ -111,7 +108,6 @@ class EventSerializerTest {
         val document = EventSerializer.convertVideoPlayerInteractedWith(event)
         assertThat(document["type"]).isEqualTo("VIDEO_PLAYER_INTERACTED_WITH")
         assertThat(document["userId"]).isEqualTo("user-1")
-        assertThat(document["playerId"]).isEqualTo("player-id")
         assertThat(document["videoId"]).isEqualTo("video-id")
         assertThat(document["currentTime"]).isEqualTo(34L)
         assertThat(document["subtype"]).isEqualTo("captions-on")
