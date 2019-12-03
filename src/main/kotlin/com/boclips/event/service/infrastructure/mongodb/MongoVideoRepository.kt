@@ -8,6 +8,7 @@ import mu.KLogging
 import org.bson.Document
 import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.getCollection
+import java.time.LocalDate
 
 class MongoVideoRepository(private val mongoClient: MongoClient) : VideoRepository {
     companion object: KLogging() {
@@ -17,6 +18,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
     override fun saveVideo(video: Video) {
         val document = VideoDocument(
                 id = video.id.value,
+                ingestedOn = video.ingestedOn,
                 title = video.title,
                 contentPartnerName = video.contentPartner.name,
                 playbackProviderType = video.playbackProviderType.name,
@@ -24,7 +26,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
                 ageRangeMin = video.ageRange.min,
                 ageRangeMax = video.ageRange.max,
                 durationSeconds = video.durationSeconds,
-                type = video.type?.name
+                type = video.type.name
         )
 
         write(document)
@@ -44,6 +46,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
 data class VideoDocument(
         @BsonId
         val id: String,
+        val ingestedOn: LocalDate,
         val title: String,
         val contentPartnerName: String,
         val playbackProviderType: String,

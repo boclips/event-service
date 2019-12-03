@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.LocalDate
 import com.boclips.event.service.testsupport.TestFactories.createVideo as createVideo
 
 class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
@@ -25,6 +26,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                 subjectNames = listOf("Maths"),
                 ageRange = AgeRange(5, 11),
                 type = VideoType.NEWS,
+                ingestedOn = LocalDate.ofYearDay(2019, 32),
                 durationSeconds = 60
         ))
 
@@ -38,7 +40,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getInteger("ageRangeMax")).isEqualTo(11)
         assertThat(document.getString("type")).isEqualTo("NEWS")
         assertThat(document.getInteger("durationSeconds")).isEqualTo(60)
-
+        assertThat(document.getDate("ingestedOn")).isEqualTo("2019-02-01")
     }
 
     @Test
