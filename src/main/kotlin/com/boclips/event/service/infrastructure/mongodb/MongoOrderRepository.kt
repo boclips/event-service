@@ -22,7 +22,8 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
                 id = order.id,
                 createdAt = Date.from(order.createdAt.toInstant()),
                 updatedAt = Date.from(order.updatedAt.toInstant()),
-                videoIds = order.videoIds.map { it.value }
+                customerOrganisationName = order.customerOrganisationName,
+                items = order.items.map { OrderItemDocument(videoId = it.videoId.value, priceGbp = it.priceGbp.toPlainString()) }
         ))
     }
 
@@ -42,5 +43,11 @@ data class OrderDocument(
         val id: String,
         val createdAt: Date,
         val updatedAt: Date,
-        val videoIds: List<String>
+        val customerOrganisationName: String,
+        val items: List<OrderItemDocument>
+)
+
+data class OrderItemDocument(
+        val videoId: String,
+        val priceGbp: String
 )

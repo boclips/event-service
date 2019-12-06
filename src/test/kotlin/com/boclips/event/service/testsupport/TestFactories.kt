@@ -22,6 +22,7 @@ import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.order.Order
+import com.boclips.eventbus.events.order.OrderItem
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
@@ -354,13 +355,15 @@ object TestFactories {
         id: String = "order-123",
         createdAt: ZonedDateTime = ZonedDateTime.now(),
         updatedAt: ZonedDateTime = ZonedDateTime.now(),
-        videosIds: List<String> = emptyList()
+        customerOrganisationName: String = "customer organisation name",
+        items: List<OrderItem> = emptyList()
     ): Order {
         return Order.builder()
             .id(id)
             .createdAt(createdAt)
             .updatedAt(updatedAt)
-            .videoIds(videosIds.map { VideoId(it) })
+            .customerOrganisationName(customerOrganisationName)
+            .items(items)
             .build()
     }
 

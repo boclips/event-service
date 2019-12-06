@@ -26,14 +26,14 @@ class UpdateOrderIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `update an order when one is updated`() {
-        val order = TestFactories.createOrder(id = "order-id", videosIds = emptyList())
+        val order = TestFactories.createOrder(id = "order-id", customerOrganisationName = "prev name")
         orderRepository.saveOrder(order)
-        val updatedOrder = TestFactories.createOrder(id = "order-id", videosIds = listOf("added-video-id"))
+        val updatedOrder = TestFactories.createOrder(id = "order-id", customerOrganisationName = "new name")
 
         eventBus.publish(OrderUpdated.builder().order(updatedOrder).build())
 
         assertThat(orderDocuments()).hasSize(1)
-        assertThat(orderDocuments().single().toJson()).contains("added-video-id")
+        assertThat(orderDocuments().single().toJson()).contains("new name")
     }
 
     private fun orderDocuments() = documents(MongoOrderRepository.COLLECTION_NAME)
