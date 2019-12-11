@@ -23,6 +23,7 @@ import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.order.Order
 import com.boclips.eventbus.events.order.OrderItem
+import com.boclips.eventbus.events.order.OrderStatus
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
@@ -353,6 +354,7 @@ object TestFactories {
 
     fun createOrder(
         id: String = "order-123",
+        status: OrderStatus? = OrderStatus.COMPLETED,
         createdAt: ZonedDateTime = ZonedDateTime.now(),
         updatedAt: ZonedDateTime = ZonedDateTime.now(),
         customerOrganisationName: String = "customer organisation name",
@@ -360,6 +362,7 @@ object TestFactories {
     ): Order {
         return Order.builder()
             .id(id)
+            .status(status)
             .createdAt(createdAt)
             .updatedAt(updatedAt)
             .customerOrganisationName(customerOrganisationName)

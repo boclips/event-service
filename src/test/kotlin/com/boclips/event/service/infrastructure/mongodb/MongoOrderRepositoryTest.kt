@@ -4,6 +4,7 @@ import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.eventbus.domain.video.VideoId
 import com.boclips.eventbus.events.order.OrderItem
+import com.boclips.eventbus.events.order.OrderStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
@@ -20,6 +21,7 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
     fun `creating a order`() {
         orderRepository.saveOrder(TestFactories.createOrder(
                 id = "123",
+                status = OrderStatus.COMPLETED,
                 createdAt = ZonedDateTime.parse("2019-10-01T00:00:00Z"),
                 updatedAt = ZonedDateTime.parse("2020-11-01T00:00:00Z"),
                 customerOrganisationName = "pearson",
@@ -30,10 +32,19 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
 
         val document = document()
         assertThat(document.getString("_id")).isEqualTo("123")
+        assertThat(document.getString("status")).isEqualTo("COMPLETED")
         assertThat(document.getDate("createdAt")).isEqualTo("2019-10-01T00:00:00Z")
         assertThat(document.getDate("updatedAt")).isEqualTo("2020-11-01T00:00:00Z")
         assertThat(document.getString("customerOrganisationName")).isEqualTo("pearson")
         assertThat(document.get("items", List::class.java).first()).isEqualTo(Document(mapOf("videoId" to "the-video-id", "priceGbp" to "10.50")))
+    }
+
+    @Test
+    fun `status is UNKNOWN when null in the event`() {
+        orderRepository.saveOrder(TestFactories.createOrder(status = null))
+
+        val document = document()
+        assertThat(document.getString("status")).isEqualTo("UNKNOWN")
     }
 
     @Test

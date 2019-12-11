@@ -20,6 +20,7 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
     override fun saveOrder(order: Order) {
         write(OrderDocument(
                 id = order.id,
+                status = order.status?.name ?: "UNKNOWN",
                 createdAt = Date.from(order.createdAt.toInstant()),
                 updatedAt = Date.from(order.updatedAt.toInstant()),
                 customerOrganisationName = order.customerOrganisationName,
@@ -41,6 +42,7 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
 data class OrderDocument(
         @BsonId
         val id: String,
+        val status: String,
         val createdAt: Date,
         val updatedAt: Date,
         val customerOrganisationName: String,
