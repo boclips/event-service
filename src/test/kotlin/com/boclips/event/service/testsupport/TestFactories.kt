@@ -9,8 +9,10 @@ import com.boclips.eventbus.domain.user.Organisation
 import com.boclips.eventbus.domain.user.User
 import com.boclips.eventbus.domain.user.UserId
 import com.boclips.eventbus.domain.video.ContentPartner
+import com.boclips.eventbus.domain.video.Dimensions
 import com.boclips.eventbus.domain.video.PlaybackProviderType
 import com.boclips.eventbus.domain.video.Video
+import com.boclips.eventbus.domain.video.VideoAsset
 import com.boclips.eventbus.domain.video.VideoId
 import com.boclips.eventbus.domain.video.VideoType
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
@@ -45,7 +47,9 @@ object TestFactories {
         ageRange: AgeRange = AgeRange(),
         durationSeconds: Int = 180,
         ingestedOn: LocalDate = LocalDate.now(),
-        type: VideoType = VideoType.INSTRUCTIONAL
+        type: VideoType = VideoType.INSTRUCTIONAL,
+        originalDimensions: Dimensions? = Dimensions(640, 480),
+        assets: List<VideoAsset>? = listOf()
     ): Video {
         return Video
             .builder()
@@ -58,6 +62,8 @@ object TestFactories {
             .ageRange(ageRange)
             .durationSeconds(durationSeconds)
             .type(type)
+            .originalDimensions(originalDimensions)
+            .assets(assets)
             .build()
     }
 

@@ -1,15 +1,17 @@
 package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
+import com.boclips.event.service.testsupport.TestFactories.createVideo
 import com.boclips.eventbus.domain.AgeRange
+import com.boclips.eventbus.domain.video.Dimensions
 import com.boclips.eventbus.domain.video.PlaybackProviderType
+import com.boclips.eventbus.domain.video.VideoAsset
 import com.boclips.eventbus.domain.video.VideoType
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
-import com.boclips.event.service.testsupport.TestFactories.createVideo as createVideo
 
 class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
@@ -18,7 +20,8 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `creating a video`() {
-        videoRepository.saveVideo(createVideo(
+        videoRepository.saveVideo(
+            createVideo(
                 id = "1234",
                 title = "the title",
                 contentPartnerName = "the content partner",
@@ -27,8 +30,19 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                 ageRange = AgeRange(5, 11),
                 type = VideoType.NEWS,
                 ingestedOn = LocalDate.ofYearDay(2019, 32),
-                durationSeconds = 60
-        ))
+                durationSeconds = 60,
+                originalDimensions = Dimensions(480, 320),
+                assets = listOf(
+                    VideoAsset
+                        .builder()
+                        .dimensions(Dimensions(420, 320))
+                        .sizeKb(1024)
+                        .id("my-id")
+                        .bitrateKbps(128)
+                        .build()
+                )
+            )
+        )
 
         val document = document()
         assertThat(document.getString("_id")).isEqualTo("1234")
@@ -40,13 +54,62 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getInteger("ageRangeMax")).isEqualTo(11)
         assertThat(document.getString("type")).isEqualTo("NEWS")
         assertThat(document.getInteger("durationSeconds")).isEqualTo(60)
-        assertThat(document.getDate("ingestedOn")).isEqualTo("2019-02-01")
+        assertThat(document.getString("ingestedOn")).isEqualTo("2019-02-01")
+        assertThat(document.getInteger("originalWidth")).isEqualTo(480)
+        assertThat(document.getInteger("originalHeight")).isEqualTo(320)
+        assertThat(document.getList("assets", Map::class.java)).hasSize(1)
+        assertThat(document.getList("assets", Map::class.java)[0]["id"]).isEqualTo("my-id")
+        assertThat(document.getList("assets", Map::class.java)[0]["width"]).isEqualTo(420)
+        assertThat(document.getList("assets", Map::class.java)[0]["height"]).isEqualTo(320)
+        assertThat(document.getList("assets", Map::class.java)[0]["bitrateKbps"]).isEqualTo(128)
+        assertThat(document.getList("assets", Map::class.java)[0]["sizeKb"]).isEqualTo(1024)
+    }
+
+    @Test
+    fun `creating a video when original dimensions are null`() {
+        videoRepository.saveVideo(
+            createVideo(
+                originalDimensions = null
+            )
+        )
+
+        val document = document()
+        assertThat(document.get("originalWidth")).isNull()
+        assertThat(document.get("originalHeight")).isNull()
+    }
+
+    @Test
+    fun `creating a video when assets are null`() {
+        videoRepository.saveVideo(
+            createVideo(
+                assets = null
+            )
+        )
+
+        val document = document()
+        assertThat(document.get("assets")).isNull()
     }
 
     @Test
     fun `updating a video`() {
-        videoRepository.saveVideo(createVideo(id = "1234", title = "the title", contentPartnerName = "the content partner", subjectNames = emptyList(), ageRange = AgeRange()))
-        videoRepository.saveVideo(createVideo(id = "1234", title = "the updated title", contentPartnerName = "the updated content partner", subjectNames = listOf("English"), ageRange = AgeRange(3, 7)))
+        videoRepository.saveVideo(
+            createVideo(
+                id = "1234",
+                title = "the title",
+                contentPartnerName = "the content partner",
+                subjectNames = emptyList(),
+                ageRange = AgeRange()
+            )
+        )
+        videoRepository.saveVideo(
+            createVideo(
+                id = "1234",
+                title = "the updated title",
+                contentPartnerName = "the updated content partner",
+                subjectNames = listOf("English"),
+                ageRange = AgeRange(3, 7)
+            )
+        )
 
         val document = document()
         assertThat(document.getString("_id")).isEqualTo("1234")
@@ -58,6 +121,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     private fun document(): Document {
-        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoVideoRepository.COLLECTION_NAME).find().toList().single()
+        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoVideoRepository.COLLECTION_NAME)
+            .find().toList().single()
     }
 }
