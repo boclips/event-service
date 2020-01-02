@@ -46,6 +46,7 @@ object TestFactories {
         subjectNames: List<String> = emptyList(),
         ageRange: AgeRange = AgeRange(),
         durationSeconds: Int = 180,
+        ingestedAt: ZonedDateTime? = ZonedDateTime.now(),
         ingestedOn: LocalDate = LocalDate.now(),
         type: VideoType = VideoType.INSTRUCTIONAL,
         originalDimensions: Dimensions? = Dimensions(640, 480),
@@ -54,6 +55,7 @@ object TestFactories {
         return Video
             .builder()
             .id(VideoId(id))
+            .ingestedAt(ingestedAt)
             .ingestedOn(ingestedOn)
             .title(title)
             .contentPartner(ContentPartner.of(contentPartnerName))

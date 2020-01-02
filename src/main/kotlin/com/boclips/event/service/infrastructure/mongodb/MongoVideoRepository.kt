@@ -9,6 +9,7 @@ import mu.KLogging
 import org.bson.Document
 import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.getCollection
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 class MongoVideoRepository(private val mongoClient: MongoClient) : VideoRepository {
     companion object : KLogging() {
@@ -18,6 +19,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
     override fun saveVideo(video: Video) {
         val document = VideoDocument(
             id = video.id.value,
+            ingestedAt = video.ingestedAt?.format(ISO_DATE_TIME),
             ingestedOn = video.ingestedOn.toString(),
             title = video.title,
             contentPartnerName = video.contentPartner.name,
@@ -63,6 +65,7 @@ data class VideoDocument(
     @BsonId
     val id: String,
     val ingestedOn: String,
+    val ingestedAt: String?,
     val title: String,
     val contentPartnerName: String,
     val playbackProviderType: String,

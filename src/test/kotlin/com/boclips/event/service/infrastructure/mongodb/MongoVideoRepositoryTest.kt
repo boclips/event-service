@@ -12,6 +12,8 @@ import org.bson.Document
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
@@ -29,6 +31,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                 subjectNames = listOf("Maths"),
                 ageRange = AgeRange(5, 11),
                 type = VideoType.NEWS,
+                ingestedAt = ZonedDateTime.of(2019, 11, 18, 12, 13, 14, 150000000, ZoneOffset.UTC),
                 ingestedOn = LocalDate.ofYearDay(2019, 32),
                 durationSeconds = 60,
                 originalDimensions = Dimensions(480, 320),
@@ -54,6 +57,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getInteger("ageRangeMax")).isEqualTo(11)
         assertThat(document.getString("type")).isEqualTo("NEWS")
         assertThat(document.getInteger("durationSeconds")).isEqualTo(60)
+        assertThat(document.getString("ingestedAt")).isEqualTo("2019-11-18T12:13:14.15Z")
         assertThat(document.getString("ingestedOn")).isEqualTo("2019-02-01")
         assertThat(document.getInteger("originalWidth")).isEqualTo(480)
         assertThat(document.getInteger("originalHeight")).isEqualTo(320)
@@ -63,6 +67,15 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getList("assets", Map::class.java)[0]["height"]).isEqualTo(320)
         assertThat(document.getList("assets", Map::class.java)[0]["bitrateKbps"]).isEqualTo(128)
         assertThat(document.getList("assets", Map::class.java)[0]["sizeKb"]).isEqualTo(1024)
+    }
+
+    @Test
+    fun `creating a video when ingestedAt is null`() {
+        videoRepository.saveVideo(createVideo(ingestedAt = null))
+
+        val document = document()
+
+        assertThat(document["ingestedAt"]).isNull()
     }
 
     @Test
