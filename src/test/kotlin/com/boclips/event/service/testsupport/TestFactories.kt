@@ -33,7 +33,6 @@ import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
-import java.time.LocalDate
 import java.time.ZonedDateTime
 
 object TestFactories {
@@ -47,7 +46,6 @@ object TestFactories {
         ageRange: AgeRange = AgeRange(),
         durationSeconds: Int = 180,
         ingestedAt: ZonedDateTime = ZonedDateTime.now(),
-        ingestedOn: LocalDate = LocalDate.now(),
         type: VideoType = VideoType.INSTRUCTIONAL,
         originalDimensions: Dimensions? = Dimensions(640, 480),
         assets: List<VideoAsset>? = listOf()
@@ -56,7 +54,6 @@ object TestFactories {
             .builder()
             .id(VideoId(id))
             .ingestedAt(ingestedAt)
-            .ingestedOn(ingestedOn)
             .title(title)
             .contentPartner(ContentPartner.of(contentPartnerName))
             .playbackProviderType(playbackProviderType)

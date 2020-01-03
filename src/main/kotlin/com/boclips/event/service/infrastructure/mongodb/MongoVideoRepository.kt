@@ -20,7 +20,6 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
         val document = VideoDocument(
             id = video.id.value,
             ingestedAt = video.ingestedAt.withFixedOffsetZone().format(ISO_DATE_TIME),
-            ingestedOn = video.ingestedOn.toString(),
             title = video.title,
             contentPartnerName = video.contentPartner.name,
             playbackProviderType = video.playbackProviderType.name,
@@ -64,7 +63,6 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
 data class VideoDocument(
     @BsonId
     val id: String,
-    val ingestedOn: String,
     val ingestedAt: String,
     val title: String,
     val contentPartnerName: String,
