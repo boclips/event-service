@@ -70,15 +70,6 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
-    fun `creating a video when ingestedAt is null`() {
-        videoRepository.saveVideo(createVideo(ingestedAt = null))
-
-        val document = document()
-
-        assertThat(document["ingestedAt"]).isNull()
-    }
-
-    @Test
     fun `creating a video when original dimensions are null`() {
         videoRepository.saveVideo(
             createVideo(

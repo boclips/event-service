@@ -46,7 +46,7 @@ object TestFactories {
         subjectNames: List<String> = emptyList(),
         ageRange: AgeRange = AgeRange(),
         durationSeconds: Int = 180,
-        ingestedAt: ZonedDateTime? = ZonedDateTime.now(),
+        ingestedAt: ZonedDateTime = ZonedDateTime.now(),
         ingestedOn: LocalDate = LocalDate.now(),
         type: VideoType = VideoType.INSTRUCTIONAL,
         originalDimensions: Dimensions? = Dimensions(640, 480),
