@@ -9,6 +9,7 @@ import com.boclips.event.service.testsupport.TestFactories.createCollectionInter
 import com.boclips.event.service.testsupport.TestFactories.createCollectionSubjectsChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionVisibilityChanged
 import com.boclips.event.service.testsupport.TestFactories.createPageRendered
+import com.boclips.event.service.testsupport.TestFactories.createResourcesSearched
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoAddedToCollection
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
@@ -134,6 +135,13 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         assertThat(document().toJson()).contains("http://teachers.boclips.com/my-videos")
     }
 
+    @Test
+    fun resourcesSearched() {
+        val event = createResourcesSearched()
+        // publish
+        // test if document contains it
+
+    }
     private fun document(): Document {
         return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoEventWriter.COLLECTION_NAME).find().toList().single()
     }
