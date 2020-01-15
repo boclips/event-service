@@ -1,6 +1,7 @@
 package com.boclips.event.service.testsupport
 
 import com.boclips.eventbus.domain.AgeRange
+import com.boclips.eventbus.domain.ResourceType
 import com.boclips.eventbus.domain.Subject
 import com.boclips.eventbus.domain.SubjectId
 import com.boclips.eventbus.domain.collection.Collection
@@ -27,6 +28,7 @@ import com.boclips.eventbus.events.order.Order
 import com.boclips.eventbus.events.order.OrderItem
 import com.boclips.eventbus.events.order.OrderStatus
 import com.boclips.eventbus.events.page.PageRendered
+import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
 import com.boclips.eventbus.events.video.VideoInteractedWith
@@ -355,6 +357,29 @@ object TestFactories {
             .url(url)
             .timestamp(timestamp)
             .build()
+    }
+
+    fun createResourcesSearched(
+        userId: String = "happy-user",
+        url: String = "http://bbc.co.uk",
+        query: String = "sharks",
+        resourceType: ResourceType = ResourceType.COLLECTION ,
+        pageIndex: Int = 1,
+        pageSize: Int = 20,
+        totalResults: Long = 400,
+        pageResourceIds: List<String> = listOf("id3", "id2"),
+        timestamp: ZonedDateTime = ZonedDateTime.now()
+    ): ResourcesSearched {
+        return ResourcesSearched.builder()
+            .userId(userId)
+            .url(url)
+            .query(query)
+            .resourceType(resourceType)
+            .pageIndex(pageIndex)
+            .pageSize(pageSize)
+            .totalResults(totalResults)
+            .pageResourceIds(pageResourceIds)
+            .timestamp(timestamp).build()
     }
 
     fun createOrder(

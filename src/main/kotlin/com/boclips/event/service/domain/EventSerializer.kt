@@ -11,6 +11,7 @@ import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
+import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
@@ -141,5 +142,15 @@ object EventSerializer {
             }
             return@let it + extra
         }
+    }
+
+    fun convertResourcesSearched(event: ResourcesSearched): Map<String, Any> {
+        return convertUserEvent(event, type = "RESOURCES_SEARCHED") +
+            ("query" to event.query) +
+            ("pageIndex" to event.pageIndex) +
+            ("pageSize" to event.pageSize) +
+            ("pageResourceIds" to event.pageResourceIds) +
+            ("totalResults" to event.totalResults) +
+            ("resourceType" to event.resourceType)
     }
 }

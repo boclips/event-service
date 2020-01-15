@@ -6,7 +6,9 @@ import com.boclips.event.service.testsupport.TestFactories.createOrganisation
 import com.boclips.event.service.testsupport.TestFactories.createPageRendered
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
+import com.boclips.eventbus.domain.ResourceType
 import com.boclips.eventbus.events.collection.CollectionInteractionType
+import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
@@ -330,6 +332,32 @@ class EventSerializerTest {
         assertThat(document["organisationParentType"]).isEqualTo("DISTRICT")
         assertThat(document["userId"]).isEqualTo("my-test-id")
         assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+    }
+
+    @Test
+    fun `convert resourcesSearched`() {
+        val event = ResourcesSearched.builder()
+            .userId("roman-user")
+            .url("www.marcus.it")
+            .query("nature")
+            .resourceType(ResourceType.COLLECTION)
+            .pageIndex(2)
+            .pageSize(7)
+            .totalResults(23)
+            .pageResourceIds(listOf("id-1","id-2"))
+            .timestamp(ZonedDateTime.of(2023, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC)).build()
+
+        val document = EventSerializer.convertResourcesSearched(event)
+        assertThat(document["type"]).isEqualTo("RESOURCES_SEARCHED")
+        assertThat(document["userId"]).isEqualTo("roman-user")
+        assertThat(document["url"]).isEqualTo("www.marcus.it")
+        assertThat(document["query"]).isEqualTo("nature")
+        assertThat(document["resourceType"]).isEqualTo(ResourceType.COLLECTION)
+        assertThat(document["pageIndex"]).isEqualTo(2)
+        assertThat(document["pageSize"]).isEqualTo(7)
+        assertThat(document["totalResults"]).isEqualTo(23L)
+        assertThat(document["pageResourceIds"]).asList().containsExactly("id-1", "id-2")
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2023-05-12T12:14:15Z").toInstant()))
     }
 }
 
