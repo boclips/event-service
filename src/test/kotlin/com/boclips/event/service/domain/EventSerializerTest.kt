@@ -7,6 +7,7 @@ import com.boclips.event.service.testsupport.TestFactories.createPageRendered
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
 import com.boclips.eventbus.domain.ResourceType
+import com.boclips.eventbus.events.base.AbstractEventWithUserId
 import com.boclips.eventbus.events.collection.CollectionInteractionType
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
@@ -20,6 +21,23 @@ import java.time.ZonedDateTime
 import java.util.Date
 
 class EventSerializerTest {
+
+    @Test
+    fun `converts EventWithUserId`() {
+        val event = AbstractEventWithUserId.builder()
+                .userId("user-id")
+                .overrideUserId("override-user-id")
+                .url("https://hello.com/world")
+                .build()
+
+        val document = EventSerializer.convertUserEvent(event = event, type = "VIDEO_SEGMENT_PLAYED")
+
+        assertThat(document["type"]).isEqualTo("VIDEO_SEGMENT_PLAYED")
+        assertThat(document["userId"]).isEqualTo("user-id")
+        assertThat(document["overrideUserId"]).isEqualTo("override-user-id")
+        assertThat(document["url"]).isEqualTo("https://hello.com/world")
+        assertThat(document["timestamp"]).isNotNull()
+    }
 
     @Test
     fun videosSearched() {

@@ -91,10 +91,11 @@ object EventSerializer {
         return convertUserEvent(event, type) + ("collectionId" to event.collectionId)
     }
 
-    private fun convertUserEvent(event: AbstractEventWithUserId, type: String): Map<String, Any> {
+    fun convertUserEvent(event: AbstractEventWithUserId, type: String): Map<String, Any> {
         return mapOf<String, Any>(
             "type" to type,
             "userId" to event.userId,
+            "overrideUserId" to event.overrideUserId,
             "timestamp" to Date.from(event.timestamp.toInstant()),
             "url" to event.url
         )
