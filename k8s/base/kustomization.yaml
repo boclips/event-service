@@ -6,11 +6,11 @@ resources:
 commonLabels:
   app: event-service
 commonAnnotations:
-  boclips-version: "1"
+  boclips-version: "2"
 images:
 - name: app
   newName: eu.gcr.io/boclips-prod/boclips/event-service
-  newTag: "1"
+  newTag: "2"
 patches:
 - path: spread-across-zones.yaml
   target:
