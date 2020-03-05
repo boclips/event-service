@@ -236,7 +236,7 @@ class EventSerializerTest {
     }
 
     @Test
-    fun convertCollectionInteractedWith() {
+    fun convertCollectionInteractedWith_NavigateToCollectionDetails() {
         val event = createCollectionInteractedWith(
             timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC),
             collectionId = "the-collection-id",
@@ -251,6 +251,26 @@ class EventSerializerTest {
         assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15.100Z").toInstant()))
         assertThat(document["collectionId"]).isEqualTo("the-collection-id")
         assertThat(document["subtype"]).isEqualTo("NAVIGATE_TO_COLLECTION_DETAILS")
+        assertThat(document["userId"]).isEqualTo("user-id")
+        assertThat(document["url"]).isEqualTo("https://boclips.com/collections?q=hello")
+    }
+
+    @Test
+    fun convertCollectionInteractedWith_VisitLessonGuide() {
+        val event = createCollectionInteractedWith(
+                timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC),
+                collectionId = "the-collection-id",
+                subtype = CollectionInteractionType.VISIT_LESSON_GUIDE,
+                user = createUser(id = "user-id"),
+                url = "https://boclips.com/collections?q=hello"
+        )
+
+        val document = EventSerializer.convertCollectionInteractedWith(event)
+
+        assertThat(document["type"]).isEqualTo("COLLECTION_INTERACTED_WITH")
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15.100Z").toInstant()))
+        assertThat(document["collectionId"]).isEqualTo("the-collection-id")
+        assertThat(document["subtype"]).isEqualTo("VISIT_LESSON_GUIDE")
         assertThat(document["userId"]).isEqualTo("user-id")
         assertThat(document["url"]).isEqualTo("https://boclips.com/collections?q=hello")
     }
