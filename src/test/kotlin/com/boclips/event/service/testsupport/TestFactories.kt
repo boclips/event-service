@@ -138,6 +138,7 @@ object TestFactories {
         email: String? = null,
         subjectNames: List<String> = emptyList(),
         ages: List<Int> = emptyList(),
+        role: String? = null,
         isBoclipsEmployee: Boolean = false
     ): User {
         return User.builder()
@@ -149,6 +150,7 @@ object TestFactories {
             .ages(ages)
             .isBoclipsEmployee(isBoclipsEmployee)
             .organisation(organisation)
+            .role(role)
             .build()
     }
 

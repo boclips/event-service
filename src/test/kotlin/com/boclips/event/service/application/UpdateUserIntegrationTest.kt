@@ -31,22 +31,24 @@ class UpdateUserIntegrationTest : AbstractSpringIntegrationTest() {
         val organisation = TestFactories.createOrganisation(
                 id = "some-org-id"
         )
-        val userWithOrganisation = TestFactories.createUser(
+        val userWithUpdatedInformation = TestFactories.createUser(
                 id = "some-id",
                 isBoclipsEmployee = true,
+                role = "OTHER",
                 organisation = organisation
         )
-        val userWithoutOrganisation = TestFactories.createUser(
+        val baseUser = TestFactories.createUser(
                 id = "some-id",
                 isBoclipsEmployee = true,
                 organisation = null
         )
 
-        eventBus.publish(UserCreated.builder().user(userWithoutOrganisation).build())
-        eventBus.publish(UserUpdated.builder().user(userWithOrganisation).build())
+        eventBus.publish(UserCreated.builder().user(baseUser).build())
+        eventBus.publish(UserUpdated.builder().user(userWithUpdatedInformation).build())
 
         assertThat(userDocuments()).hasSize(1)
         assertThat(userDocuments().first().get("organisation")).isNotNull
+        assertThat(userDocuments().first().get("role")).isEqualTo("OTHER")
     }
 
     fun userDocuments() = documents(MongoUserRepository.COLLECTION_NAME)
