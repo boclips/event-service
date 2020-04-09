@@ -9,6 +9,7 @@ import com.boclips.event.service.testsupport.TestFactories.createCollectionInter
 import com.boclips.event.service.testsupport.TestFactories.createCollectionSubjectsChanged
 import com.boclips.event.service.testsupport.TestFactories.createCollectionVisibilityChanged
 import com.boclips.event.service.testsupport.TestFactories.createPageRendered
+import com.boclips.event.service.testsupport.TestFactories.createPlatformInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createResourcesSearched
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoAddedToCollection
@@ -140,6 +141,14 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         val event = createResourcesSearched(query = "roman empire sharks")
         eventBus.publish(event)
         assertThat(document().toJson()).contains("roman empire sharks")
+    }
+
+    @Test
+    fun platformInteractedWith() {
+        val event = createPlatformInteractedWith(subtype = "REMOTE_LEARNING_BANNER_CLICKED")
+        eventBus.publish(event)
+        assertThat(document().toJson()).contains("PLATFORM_INTERACTED_WITH")
+        assertThat(document().toJson()).contains("REMOTE_LEARNING_BANNER_CLICKED")
     }
 
     private fun document(): Document {

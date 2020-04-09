@@ -8,6 +8,7 @@ import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
+import com.boclips.eventbus.events.platform.PlatformInteractedWith
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
@@ -71,5 +72,9 @@ class EventRepository(private val writer: EventWriter) {
 
     fun saveResourcesSearched(event: ResourcesSearched) {
         writer.write(EventSerializer.convertResourcesSearched(event))
+    }
+
+    fun savePlatformInteractedWith(event: PlatformInteractedWith) {
+        writer.write(EventSerializer.convertPlatformInteractedWith(event))
     }
 }

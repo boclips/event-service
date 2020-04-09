@@ -28,6 +28,7 @@ import com.boclips.eventbus.events.order.Order
 import com.boclips.eventbus.events.order.OrderItem
 import com.boclips.eventbus.events.order.OrderStatus
 import com.boclips.eventbus.events.page.PageRendered
+import com.boclips.eventbus.events.platform.PlatformInteractedWith
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
@@ -360,6 +361,22 @@ object TestFactories {
             .timestamp(timestamp)
             .build()
     }
+
+    fun createPlatformInteractedWith(
+            subtype: String,
+            userId: String = "user-12",
+            url: String = "http://bbc.co.uk",
+            timestamp: ZonedDateTime = ZonedDateTime.now()
+    ): PlatformInteractedWith {
+        return PlatformInteractedWith.builder()
+                .subtype(subtype)
+                .userId(userId)
+                .url(url)
+                .timestamp(timestamp)
+                .build()
+    }
+
+
 
     fun createResourcesSearched(
         userId: String = "happy-user",

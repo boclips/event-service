@@ -11,6 +11,7 @@ import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
+import com.boclips.eventbus.events.platform.PlatformInteractedWith
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
@@ -153,5 +154,10 @@ object EventSerializer {
             ("pageResourceIds" to event.pageResourceIds) +
             ("totalResults" to event.totalResults) +
             ("resourceType" to event.resourceType)
+    }
+
+    fun convertPlatformInteractedWith(event: PlatformInteractedWith): Map<String, Any> {
+        return convertUserEvent(event, type = "PLATFORM_INTERACTED_WITH") +
+            ("subtype" to event.subtype)
     }
 }

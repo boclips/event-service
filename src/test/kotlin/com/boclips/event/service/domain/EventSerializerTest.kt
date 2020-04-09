@@ -4,6 +4,7 @@ import com.boclips.event.service.testsupport.TestFactories
 import com.boclips.event.service.testsupport.TestFactories.createCollectionInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createOrganisation
 import com.boclips.event.service.testsupport.TestFactories.createPageRendered
+import com.boclips.event.service.testsupport.TestFactories.createPlatformInteractedWith
 import com.boclips.event.service.testsupport.TestFactories.createUser
 import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
 import com.boclips.eventbus.domain.ResourceType
@@ -311,6 +312,24 @@ class EventSerializerTest {
         assertThat(document["url"]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
         assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15.1Z").toInstant()))
         assertThat(document["type"]).isEqualTo("PAGE_RENDERED")
+    }
+
+    @Test
+    fun convertPlatformInteractedWith() {
+        val event = createPlatformInteractedWith(
+                subtype = "HELP_CLICKED",
+                userId = "my-test-id",
+                url = "http://teachers.boclips.com/test/page?data=123",
+                timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC)
+        )
+
+        val document = EventSerializer.convertPlatformInteractedWith(event)
+
+        assertThat(document["type"]).isEqualTo("PLATFORM_INTERACTED_WITH")
+        assertThat(document["subtype"]).isEqualTo("HELP_CLICKED")
+        assertThat(document["userId"]).isEqualTo("my-test-id")
+        assertThat(document["url"]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15.1Z").toInstant()))
     }
 
     @Test
