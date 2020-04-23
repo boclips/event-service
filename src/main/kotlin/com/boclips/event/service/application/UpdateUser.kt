@@ -9,11 +9,11 @@ class UpdateUser(private val userRepository: UserRepository) {
 
     @BoclipsEventListener
     fun userCreated(userCreated: UserCreated) {
-        userRepository.saveUser(userCreated)
+        userRepository.saveUser(userCreated.user)
     }
 
     @BoclipsEventListener
     fun userUpdated(userUpdated: UserUpdated) {
-        userRepository.updateUser(userUpdated)
+        userRepository.saveUser(userUpdated.user)
     }
 }

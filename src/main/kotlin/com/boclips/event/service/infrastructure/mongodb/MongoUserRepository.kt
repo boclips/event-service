@@ -3,57 +3,34 @@ package com.boclips.event.service.infrastructure.mongodb
 import com.boclips.event.service.domain.UserRepository
 import com.boclips.eventbus.domain.user.Organisation
 import com.boclips.eventbus.domain.user.User
-import com.boclips.eventbus.events.user.UserCreated
-import com.boclips.eventbus.events.user.UserUpdated
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.mongodb.MongoClient
 import org.bson.codecs.pojo.annotations.BsonId
-import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import org.litote.kmongo.save
-import org.litote.kmongo.set
-import org.litote.kmongo.setTo
 import java.time.ZoneOffset
 
 class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository {
 
-    override fun saveUser(event: UserCreated) {
+    override fun saveUser(user: User) {
 
-        val organisation = event.user.organisation?.let(this::organisationDocument)
+        val organisation = user.organisation?.let(this::organisationDocument)
 
         val document = UserDocument(
-            id = event.user.id,
-            firstName = event.user.profile.firstName,
-            lastName = event.user.profile.lastName,
-            email = event.user.email,
-            createdAt = event.timestamp.toInstant().atZone(ZoneOffset.UTC).toString(),
-            subjects = subjects(event.user),
-            ages = event.user.profile.ages,
+            id = user.id,
+            firstName = user.profile.firstName,
+            lastName = user.profile.lastName,
+            email = user.email,
+            createdAt = user.createdAt.toInstant().atZone(ZoneOffset.UTC).toString(),
+            subjects = subjects(user),
+            ages = user.profile.ages,
             organisation = organisation,
-            role = event.user.profile.role,
-            isBoclipsEmployee = event.user.isBoclipsEmployee,
-            profileSchool = event.user.profile.school?.let(this::organisationDocument)
+            role = user.profile.role,
+            isBoclipsEmployee = user.isBoclipsEmployee,
+            profileSchool = user.profile.school?.let(this::organisationDocument)
         )
 
         getCollection().save(document)
-    }
-
-    override fun updateUser(event: UserUpdated) {
-        val organisation = event.user.organisation?.let(this::organisationDocument)
-        getCollection()
-            .updateOne(
-                UserDocument::id eq event.user.id,
-                set(
-                    UserDocument::organisation setTo organisation,
-                    UserDocument::firstName setTo event.user.profile.firstName,
-                    UserDocument::lastName setTo event.user.profile.lastName,
-                    UserDocument::email setTo event.user.email,
-                    UserDocument::subjects setTo subjects(event.user),
-                    UserDocument::ages setTo event.user.profile.ages,
-                    UserDocument::role setTo event.user.profile.role,
-                    UserDocument::profileSchool setTo event.user.profile.school?.let(this::organisationDocument)
-                )
-            )
     }
 
     private fun subjects(user: User): List<String> {

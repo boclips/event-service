@@ -1,10 +1,7 @@
 package com.boclips.event.service.domain
 
-import com.boclips.eventbus.events.user.UserCreated
-import com.boclips.eventbus.events.user.UserUpdated
+import com.boclips.eventbus.domain.user.User
 
 interface UserRepository {
-    fun saveUser(event: UserCreated)
-
-    fun updateUser(event: UserUpdated)
+    fun saveUser(user: User)
 }
