@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.litote.kmongo.getCollection
 
 @SpringBootTest
 @ExtendWith(SpringExtension::class)
@@ -55,14 +56,14 @@ abstract class AbstractSpringIntegrationTest {
 
     }
 
-    fun documents(collection: String): List<Document> {
+    final inline fun <reified T : Any> documents(collection: String): List<T> {
         return mongoClient
                 .getDatabase(DatabaseConstants.DB_NAME)
-                .getCollection(collection)
+                .getCollection<T>(collection)
                 .find()
                 .toList()
     }
 
-    fun document(collection: String) = documents(collection).single()
+    final inline fun <reified T : Any> document(collection: String) = documents<T>(collection).single()
 
 }

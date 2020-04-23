@@ -3,7 +3,7 @@ package com.boclips.event.service.application
 import com.boclips.event.service.infrastructure.mongodb.DatabaseConstants
 import com.boclips.event.service.infrastructure.mongodb.MongoVideoRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.TestFactories.createVideo
+import com.boclips.event.service.testsupport.VideoFactory.createVideo
 import com.boclips.eventbus.events.video.VideoBroadcastRequested
 import com.boclips.eventbus.events.video.VideoCreated
 import com.boclips.eventbus.events.video.VideoUpdated

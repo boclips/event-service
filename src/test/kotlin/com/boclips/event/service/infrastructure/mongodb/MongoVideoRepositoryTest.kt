@@ -1,7 +1,7 @@
 package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.TestFactories.createVideo
+import com.boclips.event.service.testsupport.VideoFactory.createVideo
 import com.boclips.eventbus.domain.AgeRange
 import com.boclips.eventbus.domain.video.Dimensions
 import com.boclips.eventbus.domain.video.PlaybackProviderType

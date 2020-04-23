@@ -2,7 +2,7 @@ package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.domain.CollectionRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.TestFactories
+import com.boclips.event.service.testsupport.CollectionFactory.createCollection
 import com.boclips.eventbus.domain.AgeRange
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
@@ -18,7 +18,7 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `creating a collection`() {
-        collectionRepository.saveCollection(TestFactories.createCollection(
+        collectionRepository.saveCollection(createCollection(
                 id = "1234",
                 title = "collection title",
                 description = "collection description",
@@ -50,8 +50,8 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `updating a collection`() {
-        collectionRepository.saveCollection(TestFactories.createCollection(id = "1", title = "Old title"))
-        collectionRepository.saveCollection(TestFactories.createCollection(id = "1", title = "New title"))
+        collectionRepository.saveCollection(createCollection(id = "1", title = "Old title"))
+        collectionRepository.saveCollection(createCollection(id = "1", title = "New title"))
 
         val document = document()
         assertThat(document.getString("title")).isEqualTo("New title")
@@ -59,7 +59,7 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `marking a collection as deleted`() {
-        collectionRepository.saveCollection(TestFactories.createCollection(id = "1", title = "The title"))
+        collectionRepository.saveCollection(createCollection(id = "1", title = "The title"))
 
         collectionRepository.markDeleted("1")
 

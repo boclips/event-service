@@ -1,7 +1,7 @@
 package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.TestFactories
+import com.boclips.event.service.testsupport.OrderFactory.createOrder
 import com.boclips.eventbus.domain.video.VideoId
 import com.boclips.eventbus.events.order.OrderItem
 import com.boclips.eventbus.events.order.OrderStatus
@@ -19,7 +19,7 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `creating a order`() {
-        orderRepository.saveOrder(TestFactories.createOrder(
+        orderRepository.saveOrder(createOrder(
                 id = "123",
                 status = OrderStatus.COMPLETED,
                 createdAt = ZonedDateTime.parse("2019-10-01T00:00:00Z"),
@@ -41,7 +41,7 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `status is UNKNOWN when null in the event`() {
-        orderRepository.saveOrder(TestFactories.createOrder(status = null))
+        orderRepository.saveOrder(createOrder(status = null))
 
         val document = document()
         assertThat(document.getString("status")).isEqualTo("UNKNOWN")
@@ -49,8 +49,8 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `updating a order`() {
-        orderRepository.saveOrder(TestFactories.createOrder(id = "1234", updatedAt = ZonedDateTime.parse("2019-10-01T00:00:00Z")))
-        orderRepository.saveOrder(TestFactories.createOrder(id = "1234", updatedAt = ZonedDateTime.parse("2020-10-01T00:00:00Z")))
+        orderRepository.saveOrder(createOrder(id = "1234", updatedAt = ZonedDateTime.parse("2019-10-01T00:00:00Z")))
+        orderRepository.saveOrder(createOrder(id = "1234", updatedAt = ZonedDateTime.parse("2020-10-01T00:00:00Z")))
 
         val document = document()
         assertThat(document.getString("_id")).isEqualTo("1234")

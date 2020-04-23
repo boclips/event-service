@@ -1,12 +1,18 @@
 package com.boclips.event.service.domain
 
-import com.boclips.event.service.testsupport.TestFactories
-import com.boclips.event.service.testsupport.TestFactories.createCollectionInteractedWith
-import com.boclips.event.service.testsupport.TestFactories.createOrganisation
-import com.boclips.event.service.testsupport.TestFactories.createPageRendered
-import com.boclips.event.service.testsupport.TestFactories.createPlatformInteractedWith
-import com.boclips.event.service.testsupport.TestFactories.createUser
-import com.boclips.event.service.testsupport.TestFactories.createVideoInteractedWith
+import com.boclips.event.service.testsupport.EventFactory.createCollectionAgeRangeChanged
+import com.boclips.event.service.testsupport.EventFactory.createCollectionBookmarkChanged
+import com.boclips.event.service.testsupport.EventFactory.createCollectionInteractedWith
+import com.boclips.event.service.testsupport.EventFactory.createCollectionSubjectsChanged
+import com.boclips.event.service.testsupport.EventFactory.createCollectionVisibilityChanged
+import com.boclips.event.service.testsupport.EventFactory.createPageRendered
+import com.boclips.event.service.testsupport.EventFactory.createPlatformInteractedWith
+import com.boclips.event.service.testsupport.EventFactory.createVideoAddedToCollection
+import com.boclips.event.service.testsupport.EventFactory.createVideoInteractedWith
+import com.boclips.event.service.testsupport.EventFactory.createVideoPlayerInteractedWith
+import com.boclips.event.service.testsupport.EventFactory.createVideoRemovedFromCollection
+import com.boclips.event.service.testsupport.OrganisationFactory.createOrganisation
+import com.boclips.event.service.testsupport.UserFactory.createUser
 import com.boclips.eventbus.domain.ResourceType
 import com.boclips.eventbus.events.base.AbstractEventWithUserId
 import com.boclips.eventbus.events.collection.CollectionInteractionType
@@ -114,7 +120,7 @@ class EventSerializerTest {
 
     @Test
     fun videoPlayerInteractedWith() {
-        val event = TestFactories.createVideoPlayerInteractedWith(
+        val event = createVideoPlayerInteractedWith(
             videoId = "video-id",
             currentTime = 34,
             subtype = "captions-on",
@@ -137,7 +143,7 @@ class EventSerializerTest {
 
     @Test
     fun convertVideoAddedToCollection() {
-        val event = TestFactories.createVideoAddedToCollection(videoId = "video-id", collectionId = "collection-id")
+        val event = createVideoAddedToCollection(videoId = "video-id", collectionId = "collection-id")
 
         val document = EventSerializer.convertVideoAddedToCollection(event)
 
@@ -148,7 +154,7 @@ class EventSerializerTest {
 
     @Test
     fun convertVideoRemovedFromCollection() {
-        val event = TestFactories.createVideoRemovedFromCollection(videoId = "video-id", collectionId = "collection-id")
+        val event = createVideoRemovedFromCollection(videoId = "video-id", collectionId = "collection-id")
 
         val document = EventSerializer.convertVideoRemovedFromCollection(event)
 
@@ -159,7 +165,7 @@ class EventSerializerTest {
 
     @Test
     fun `convertCollectionBookmarkChanged bookmarking`() {
-        val event = TestFactories.createCollectionBookmarkChanged(collectionId = "collection-id", isBookmarked = true)
+        val event = createCollectionBookmarkChanged(collectionId = "collection-id", isBookmarked = true)
 
         val document = EventSerializer.convertCollectionBookmarkChanged(event)
 
@@ -170,7 +176,7 @@ class EventSerializerTest {
 
     @Test
     fun `convertCollectionBookmarkChanged unbookmarking`() {
-        val event = TestFactories.createCollectionBookmarkChanged(collectionId = "collection-id", isBookmarked = false)
+        val event = createCollectionBookmarkChanged(collectionId = "collection-id", isBookmarked = false)
 
         val document = EventSerializer.convertCollectionBookmarkChanged(event)
 
@@ -181,7 +187,7 @@ class EventSerializerTest {
 
     @Test
     fun `convertCollectionVisibilityChanged made public`() {
-        val event = TestFactories.createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = true)
+        val event = createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = true)
 
         val document = EventSerializer.convertCollectionVisibilityChanged(event)
 
@@ -192,7 +198,7 @@ class EventSerializerTest {
 
     @Test
     fun `convertCollectionVisibilityChanged made private`() {
-        val event = TestFactories.createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = false)
+        val event = createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = false)
 
         val document = EventSerializer.convertCollectionVisibilityChanged(event)
 
@@ -204,7 +210,7 @@ class EventSerializerTest {
     @Test
     fun convertCollectionSubjectsChanged() {
         val event =
-            TestFactories.createCollectionSubjectsChanged(collectionId = "collection-id", subjects = setOf("Science"))
+            createCollectionSubjectsChanged(collectionId = "collection-id", subjects = setOf("Science"))
 
         val document = EventSerializer.convertCollectionSubjectsChanged(event)
 
@@ -216,7 +222,7 @@ class EventSerializerTest {
     @Test
     fun convertCollectionAgeRangeChanged() {
         val event =
-            TestFactories.createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = 19)
+            createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = 19)
 
         val document = EventSerializer.convertCollectionAgeRangeChanged(event)
 
@@ -229,7 +235,7 @@ class EventSerializerTest {
     @Test
     fun convertCollectionAgeRangeChanged_whenRangeMaxNull() {
         val event =
-            TestFactories.createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = null)
+            createCollectionAgeRangeChanged(collectionId = "collection-1", rangeMin = 5, rangeMax = null)
 
         val document = EventSerializer.convertCollectionAgeRangeChanged(event)
 

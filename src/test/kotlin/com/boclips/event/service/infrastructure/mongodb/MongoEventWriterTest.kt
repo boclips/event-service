@@ -2,6 +2,7 @@ package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
+import org.bson.Document
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -18,5 +19,5 @@ class MongoEventWriterTest : AbstractSpringIntegrationTest() {
         assertThat(eventDocument()["query"]).isEqualTo("bla")
     }
 
-    fun eventDocument() = document(MongoEventWriter.COLLECTION_NAME)
+    fun eventDocument() = document<Document>(MongoEventWriter.COLLECTION_NAME)
 }

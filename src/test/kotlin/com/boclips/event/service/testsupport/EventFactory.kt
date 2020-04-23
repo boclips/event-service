@@ -1,21 +1,8 @@
 package com.boclips.event.service.testsupport
 
-import com.boclips.eventbus.domain.AgeRange
+import com.boclips.event.service.testsupport.UserFactory.createUser
 import com.boclips.eventbus.domain.ResourceType
-import com.boclips.eventbus.domain.Subject
-import com.boclips.eventbus.domain.SubjectId
-import com.boclips.eventbus.domain.collection.Collection
-import com.boclips.eventbus.domain.collection.CollectionId
-import com.boclips.eventbus.domain.user.Organisation
 import com.boclips.eventbus.domain.user.User
-import com.boclips.eventbus.domain.user.UserId
-import com.boclips.eventbus.domain.video.ContentPartner
-import com.boclips.eventbus.domain.video.Dimensions
-import com.boclips.eventbus.domain.video.PlaybackProviderType
-import com.boclips.eventbus.domain.video.Video
-import com.boclips.eventbus.domain.video.VideoAsset
-import com.boclips.eventbus.domain.video.VideoId
-import com.boclips.eventbus.domain.video.VideoType
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
 import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
 import com.boclips.eventbus.events.collection.CollectionInteractedWith
@@ -24,9 +11,6 @@ import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
 import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
 import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
-import com.boclips.eventbus.events.order.Order
-import com.boclips.eventbus.events.order.OrderItem
-import com.boclips.eventbus.events.order.OrderStatus
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
 import com.boclips.eventbus.events.resource.ResourcesSearched
@@ -36,67 +20,28 @@ import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
+import com.nhaarman.mockito_kotlin.times
 import java.time.ZonedDateTime
 
-object TestFactories {
+object EventFactory {
 
-    fun createVideo(
-        id: String = "",
-        title: String = "",
-        contentPartnerName: String = "",
-        playbackProviderType: PlaybackProviderType = PlaybackProviderType.KALTURA,
-        subjectNames: List<String> = emptyList(),
-        ageRange: AgeRange = AgeRange(),
-        durationSeconds: Int = 180,
-        ingestedAt: ZonedDateTime = ZonedDateTime.now(),
-        type: VideoType = VideoType.INSTRUCTIONAL,
-        originalDimensions: Dimensions? = Dimensions(640, 480),
-        assets: List<VideoAsset>? = listOf()
-    ): Video {
-        return Video
+    fun createUserCreated(
+        user: User = createUser(),
+        timestamp: ZonedDateTime = ZonedDateTime.now()
+    ): UserCreated {
+        return UserCreated
             .builder()
-            .id(VideoId(id))
-            .ingestedAt(ingestedAt)
-            .title(title)
-            .contentPartner(ContentPartner.of(contentPartnerName))
-            .playbackProviderType(playbackProviderType)
-            .subjects(subjectsFromNames(subjectNames))
-            .ageRange(ageRange)
-            .durationSeconds(durationSeconds)
-            .type(type)
-            .originalDimensions(originalDimensions)
-            .assets(assets)
+            .user(user)
+            .timestamp(timestamp)
             .build()
     }
 
-    fun createCollection(
-        id: String = "",
-        title: String = "",
-        description: String = "",
-        subjects: Set<String> = emptySet(),
-        ageRange: AgeRange = AgeRange(null, null),
-        videoIds: List<String> = emptyList(),
-        ownerId: String = "",
-        createdTime: ZonedDateTime = ZonedDateTime.now(),
-        updatedTime: ZonedDateTime = ZonedDateTime.now(),
-        bookmarks: List<String> = emptyList(),
-        isPublic: Boolean = true
-    ): Collection {
-        return Collection.builder()
-            .id(CollectionId(id))
-            .createdAt(createdTime)
-            .updatedAt(updatedTime)
-            .title(title)
-            .description(description)
-            .subjects(subjects.map { Subject(SubjectId("$it-id"), it) })
-            .ageRange(ageRange)
-            .videosIds(videoIds.map { VideoId(it) })
-            .ownerId(UserId(ownerId))
-            .bookmarks(bookmarks.map { UserId(it) })
-            .isPublic(isPublic)
+    fun createUserUpdated(user: User, timestamp: ZonedDateTime = ZonedDateTime.now()): UserUpdated {
+        return UserUpdated.builder()
+            .user(user)
+            .timestamp(timestamp)
             .build()
     }
-
     fun createVideoInteractedWith(
         timestamp: ZonedDateTime = ZonedDateTime.now(),
         videoId: String = "video-id",
@@ -128,49 +73,6 @@ object TestFactories {
             .subtype(subtype)
             .userId(user.id)
             .url(url)
-            .build()
-    }
-
-    fun createUser(
-        id: String = "user-1",
-        firstName: String? = null,
-        lastName: String? = null,
-        organisation: Organisation? = null,
-        email: String? = null,
-        subjectNames: List<String> = emptyList(),
-        ages: List<Int> = emptyList(),
-        role: String? = null,
-        isBoclipsEmployee: Boolean = false
-    ): User {
-        return User.builder()
-            .id(id)
-            .firstName(firstName)
-            .lastName(lastName)
-            .email(email)
-            .subjects(subjectsFromNames(subjectNames))
-            .ages(ages)
-            .isBoclipsEmployee(isBoclipsEmployee)
-            .organisation(organisation)
-            .role(role)
-            .build()
-    }
-
-    fun createOrganisation(
-        id: String = "organisation-id",
-        accountType: String = "DESIGN_PARTNER",
-        name: String = "organisation-name",
-        postcode: String = "post-code",
-        parent: Organisation? = null,
-        type: String = "API"
-    ): Organisation {
-        return Organisation
-            .builder()
-            .id(id)
-            .accountType(accountType)
-            .type(type)
-            .name(name)
-            .postcode(postcode)
-            .parent(parent)
             .build()
     }
 
@@ -294,62 +196,6 @@ object TestFactories {
             .build()
     }
 
-    fun createUserCreated(
-        userId: String = "user-id",
-        firstName: String = "first-name",
-        lastName: String = "last-name",
-        email: String = "email@example.com",
-        organisation: Organisation? = createOrganisation(),
-        isBoclipsEmployee: Boolean = false,
-        subjectNames: List<String> = emptyList(),
-        ages: List<Int> = emptyList(),
-        timestamp: ZonedDateTime = ZonedDateTime.now()
-    ): UserCreated {
-        return UserCreated.builder()
-            .user(
-                createUser(
-                    id = userId,
-                    firstName = firstName,
-                    lastName = lastName,
-                    email = email,
-                    organisation = organisation,
-                    isBoclipsEmployee = isBoclipsEmployee,
-                    subjectNames = subjectNames,
-                    ages = ages
-                )
-            )
-            .timestamp(timestamp)
-            .build()
-    }
-
-    fun createUserUpdated(
-        userId: String = "user-id",
-        firstName: String = "first-name",
-        lastName: String = "last-name",
-        email: String = "email@example.com",
-        organisation: Organisation? = createOrganisation(),
-        isBoclipsEmployee: Boolean = false,
-        subjectNames: List<String> = emptyList(),
-        ages: List<Int> = emptyList(),
-        timestamp: ZonedDateTime = ZonedDateTime.now()
-    ): UserUpdated {
-        return UserUpdated.builder()
-            .user(
-                createUser(
-                    id = userId,
-                    firstName = firstName,
-                    lastName = lastName,
-                    email = email,
-                    organisation = organisation,
-                    isBoclipsEmployee = isBoclipsEmployee,
-                    subjectNames = subjectNames,
-                    ages = ages
-                )
-            )
-            .timestamp(timestamp)
-            .build()
-    }
-
     fun createPageRendered(
         userId: String = "user-12",
         url: String = "http://bbc.co.uk",
@@ -363,17 +209,17 @@ object TestFactories {
     }
 
     fun createPlatformInteractedWith(
-            subtype: String,
-            userId: String = "user-12",
-            url: String = "http://bbc.co.uk",
-            timestamp: ZonedDateTime = ZonedDateTime.now()
+        subtype: String,
+        userId: String = "user-12",
+        url: String = "http://bbc.co.uk",
+        timestamp: ZonedDateTime = ZonedDateTime.now()
     ): PlatformInteractedWith {
         return PlatformInteractedWith.builder()
-                .subtype(subtype)
-                .userId(userId)
-                .url(url)
-                .timestamp(timestamp)
-                .build()
+            .subtype(subtype)
+            .userId(userId)
+            .url(url)
+            .timestamp(timestamp)
+            .build()
     }
 
 
@@ -399,33 +245,5 @@ object TestFactories {
             .totalResults(totalResults)
             .pageResourceIds(pageResourceIds)
             .timestamp(timestamp).build()
-    }
-
-    fun createOrder(
-        id: String = "order-123",
-        status: OrderStatus? = OrderStatus.COMPLETED,
-        createdAt: ZonedDateTime = ZonedDateTime.now(),
-        updatedAt: ZonedDateTime = ZonedDateTime.now(),
-        customerOrganisationName: String = "customer organisation name",
-        items: List<OrderItem> = emptyList()
-    ): Order {
-        return Order.builder()
-            .id(id)
-            .status(status)
-            .createdAt(createdAt)
-            .updatedAt(updatedAt)
-            .customerOrganisationName(customerOrganisationName)
-            .items(items)
-            .build()
-    }
-
-    private fun subjectsFromNames(subjectNames: List<String>): List<Subject> {
-        return subjectNames.map {
-            Subject
-                .builder()
-                .id(SubjectId("id-$it"))
-                .name(it)
-                .build()
-        }
     }
 }

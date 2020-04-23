@@ -4,14 +4,10 @@ import com.boclips.event.service.domain.CollectionRepository
 import com.boclips.event.service.infrastructure.mongodb.DatabaseConstants
 import com.boclips.event.service.infrastructure.mongodb.MongoCollectionRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.TestFactories.createCollection
-import com.boclips.event.service.testsupport.TestFactories.createVideo
+import com.boclips.event.service.testsupport.CollectionFactory.createCollection
 import com.boclips.eventbus.events.collection.CollectionCreated
 import com.boclips.eventbus.events.collection.CollectionDeleted
 import com.boclips.eventbus.events.collection.CollectionUpdated
-import com.boclips.eventbus.events.video.VideoBroadcastRequested
-import com.boclips.eventbus.events.video.VideoCreated
-import com.boclips.eventbus.events.video.VideoUpdated
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
