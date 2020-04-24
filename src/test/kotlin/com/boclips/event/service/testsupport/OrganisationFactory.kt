@@ -10,7 +10,9 @@ object OrganisationFactory {
         name: String = "organisation-name",
         postcode: String = "post-code",
         parent: Organisation? = null,
-        type: String = "API"
+        type: String = "API",
+        state: String? = null,
+        countryCode: String? = null
     ): Organisation {
         return Organisation
             .builder()
@@ -20,6 +22,8 @@ object OrganisationFactory {
             .name(name)
             .postcode(postcode)
             .parent(parent)
+                .state(state)
+                .countryCode(countryCode)
             .build()
     }
 

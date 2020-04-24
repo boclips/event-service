@@ -73,6 +73,15 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
         assertThat(userDocument().isBoclipsEmployee).isTrue()
     }
+    @Test
+    fun `saveUser saves state and countryCode`() {
+
+        val organisation = createOrganisation(state = "IL", countryCode = "USA")
+        userRepository.saveUser(createUser(organisation = organisation))
+
+        assertThat(userDocument().organisation!!.state).isEqualTo("IL")
+        assertThat(userDocument().organisation!!.countryCode).isEqualTo("USA")
+    }
 
     @Test
     fun `saveUser saves createdAt`() {
