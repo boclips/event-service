@@ -5,6 +5,7 @@ import com.boclips.event.service.infrastructure.mongodb.UserDocument
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.OrganisationFactory.createOrganisation
 import com.boclips.event.service.testsupport.UserFactory.createUser
+import com.boclips.eventbus.events.user.UserBroadcastRequested
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
 import org.assertj.core.api.Assertions.assertThat
@@ -47,6 +48,28 @@ class UpdateUserIntegrationTest : AbstractSpringIntegrationTest() {
         eventBus.publish(UserCreated.builder().user(baseUser).build())
         eventBus.publish(UserUpdated.builder().user(userWithUpdatedInformation).build())
 
+        assertThat(userDocuments()).hasSize(1)
+        assertThat(userDocuments().first().organisation).isNotNull
+    }
+
+    @Test
+    fun `update a user when user is broadcasted`() {
+        val organisation = createOrganisation(
+            id = "some-org-id"
+        )
+        val originalUser = createUser(
+            id = "some-id",
+            isBoclipsEmployee = true,
+            organisation = null
+        )
+        val userWithOrganisation = createUser(
+            id = "some-id",
+            isBoclipsEmployee = true,
+            organisation = organisation
+        )
+
+        eventBus.publish(UserCreated.builder().user(originalUser).build())
+        eventBus.publish(UserBroadcastRequested.builder().user(userWithOrganisation).build())
         assertThat(userDocuments()).hasSize(1)
         assertThat(userDocuments().first().organisation).isNotNull
     }
