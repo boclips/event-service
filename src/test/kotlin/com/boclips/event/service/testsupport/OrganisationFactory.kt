@@ -6,7 +6,6 @@ object OrganisationFactory {
 
     fun createOrganisation(
         id: String = "organisation-id",
-        accountType: String = "DESIGN_PARTNER",
         name: String = "organisation-name",
         postcode: String = "post-code",
         parent: Organisation? = null,
@@ -18,7 +17,6 @@ object OrganisationFactory {
         return Organisation
             .builder()
             .id(id)
-            .accountType(accountType)
             .type(type)
             .name(name)
             .postcode(postcode)

@@ -40,7 +40,6 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
     private fun organisationDocument(organisation: Organisation): OrganisationDocument {
         return OrganisationDocument(
             id = organisation.id,
-            accountType = organisation.accountType,
             type = organisation.type,
             name = organisation.name,
             postcode = organisation.postcode,
@@ -78,7 +77,6 @@ data class UserDocument(
 
 data class OrganisationDocument(
     val id: String,
-    val accountType: String,
     val name: String,
     val parent: OrganisationDocument?,
     val type: String,

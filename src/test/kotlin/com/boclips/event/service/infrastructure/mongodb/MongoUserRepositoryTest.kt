@@ -43,8 +43,7 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
                 organisation = createOrganisation(
                     id = "teachers",
                     type = "School",
-                    tags = setOf("DESIGN_PARTNER"),
-                    accountType = "Design Partner"
+                    tags = setOf("DESIGN_PARTNER")
                 )
             )
         )
@@ -52,7 +51,6 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(userDocument().organisation?.id).isEqualTo("teachers")
         assertThat(userDocument().organisation?.type).isEqualTo("School")
         assertThat(userDocument().organisation?.tags).containsExactly("DESIGN_PARTNER")
-        assertThat(userDocument().organisation?.accountType).isEqualTo("Design Partner")
     }
 
     @Test
