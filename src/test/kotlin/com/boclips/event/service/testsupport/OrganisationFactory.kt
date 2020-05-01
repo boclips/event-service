@@ -11,6 +11,7 @@ object OrganisationFactory {
         postcode: String = "post-code",
         parent: Organisation? = null,
         type: String = "API",
+        tags: Set<String> = emptySet(),
         state: String? = null,
         countryCode: String? = null
     ): Organisation {
@@ -21,6 +22,7 @@ object OrganisationFactory {
             .type(type)
             .name(name)
             .postcode(postcode)
+            .tags(tags)
             .parent(parent)
                 .state(state)
                 .countryCode(countryCode)

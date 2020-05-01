@@ -46,6 +46,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
             postcode = organisation.postcode,
             parent = organisation.parent?.let(this::organisationDocument),
             countryCode = organisation.countryCode,
+            tags = organisation.tags,
             state = organisation.state
         )
     }
@@ -81,6 +82,7 @@ data class OrganisationDocument(
     val name: String,
     val parent: OrganisationDocument?,
     val type: String,
+    val tags: Set<String>,
     val postcode: String?,
     val countryCode: String?,
     val state: String?
