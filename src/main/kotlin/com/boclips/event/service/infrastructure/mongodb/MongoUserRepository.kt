@@ -9,6 +9,8 @@ import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.getCollection
 import org.litote.kmongo.save
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository {
 
@@ -42,11 +44,13 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
             id = organisation.id,
             type = organisation.type,
             name = organisation.name,
-            postcode = organisation.postcode,
+            postcode = organisation.address.postcode,
             parent = organisation.parent?.let(this::organisationDocument),
-            countryCode = organisation.countryCode,
+            countryCode = organisation.address.countryCode,
             tags = organisation.tags,
-            state = organisation.state
+            state = organisation.address.state,
+            dealExpiresAt = organisation.deal.expiresAt?.format(ISO_DATE_TIME),
+            billing = organisation.deal.billing
         )
     }
 
@@ -83,5 +87,7 @@ data class OrganisationDocument(
     val tags: Set<String>,
     val postcode: String?,
     val countryCode: String?,
-    val state: String?
+    val state: String?,
+    val dealExpiresAt: String?,
+    val billing: Boolean
 )

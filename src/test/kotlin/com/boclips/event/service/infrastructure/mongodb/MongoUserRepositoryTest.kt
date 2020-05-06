@@ -1,9 +1,12 @@
 package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
+import com.boclips.event.service.testsupport.OrganisationFactory.createAddress
+import com.boclips.event.service.testsupport.OrganisationFactory.createDeal
 import com.boclips.event.service.testsupport.OrganisationFactory.createOrganisation
 import com.boclips.event.service.testsupport.UserFactory.createUser
 import com.boclips.event.service.testsupport.UserFactory.createUserProfile
+import com.boclips.eventbus.domain.user.Address
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -73,14 +76,31 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
         assertThat(userDocument().isBoclipsEmployee).isTrue()
     }
-    @Test
-    fun `saveUser saves state and countryCode`() {
 
-        val organisation = createOrganisation(state = "IL", countryCode = "USA")
+    @Test
+    fun `saveUser saves address`() {
+        val organisation = createOrganisation(address = createAddress(
+            state = "IL",
+            countryCode = "USA",
+            postCode = "abc123"
+        ))
         userRepository.saveUser(createUser(organisation = organisation))
 
         assertThat(userDocument().organisation!!.state).isEqualTo("IL")
         assertThat(userDocument().organisation!!.countryCode).isEqualTo("USA")
+        assertThat(userDocument().organisation!!.postcode).isEqualTo("abc123")
+    }
+
+    @Test
+    fun `saveUser saves deal`() {
+        val organisation = createOrganisation(deal = createDeal(
+            expiresAt = ZonedDateTime.parse("2020-05-29T00:00:00Z"),
+            billing = true
+        ))
+        userRepository.saveUser(createUser(organisation = organisation))
+
+        assertThat(userDocument().organisation!!.dealExpiresAt).isEqualTo("2020-05-29T00:00:00Z")
+        assertThat(userDocument().organisation!!.billing).isTrue()
     }
 
     @Test
