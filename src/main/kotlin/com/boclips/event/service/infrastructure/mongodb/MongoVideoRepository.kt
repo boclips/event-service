@@ -45,7 +45,9 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
     }
 
     private fun getCollection() =
-        mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<VideoDocument>(COLLECTION_NAME)
+        mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<VideoDocument>(
+            COLLECTION_NAME
+        )
 
     private fun convertVideoAssetToVideoAssetDocument(assets: List<VideoAsset>?): List<VideoAssetDocument>? {
         return assets?.map {

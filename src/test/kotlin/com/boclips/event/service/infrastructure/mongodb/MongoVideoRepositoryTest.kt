@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 

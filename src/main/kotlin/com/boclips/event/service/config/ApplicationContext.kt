@@ -11,7 +11,8 @@ class ApplicationContext(
     private val videoRepository: VideoRepository,
     private val collectionRepository: CollectionRepository,
     private val userRepository: UserRepository,
-    private val orderRepository: OrderRepository
+    private val orderRepository: OrderRepository,
+    private val channelRepository: ChannelRepository
 ) {
 
     @Bean
@@ -32,6 +33,11 @@ class ApplicationContext(
     @Bean
     fun updateCollection(): UpdateCollection {
         return UpdateCollection(collectionRepository)
+    }
+
+    @Bean
+    fun updateChannel(): UpdateChannel {
+        return UpdateChannel(channelRepository)
     }
 
     @Bean

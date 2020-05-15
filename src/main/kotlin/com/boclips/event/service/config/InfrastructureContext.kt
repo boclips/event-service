@@ -41,4 +41,8 @@ class InfrastructureContext(val mongoProperties: MongoProperties) {
         return MongoOrderRepository(mongoClient())
     }
 
+    @Bean
+    fun channelRepository(): ChannelRepository {
+        return MongoChannelRepository(mongoClient())
+    }
 }
