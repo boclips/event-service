@@ -29,7 +29,7 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
                 bookmarks = listOf("anotheruser@example.com"),
                 createdTime = ZonedDateTime.of(2019, 10, 15, 10, 11, 12, 0, ZoneOffset.UTC),
                 updatedTime = ZonedDateTime.of(2019, 11, 15, 10, 11, 12, 0, ZoneOffset.UTC),
-                isPublic = false
+                isDiscoverable = false
         ))
 
         val document = document()

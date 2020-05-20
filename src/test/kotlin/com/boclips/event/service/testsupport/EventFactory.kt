@@ -161,12 +161,13 @@ object EventFactory {
             .build()
     }
 
-    fun createCollectionVisibilityChanged(collectionId: String, isPublic: Boolean): CollectionVisibilityChanged {
+    fun createCollectionVisibilityChanged(collectionId: String, isDiscoverable: Boolean): CollectionVisibilityChanged {
         val user = createUser()
         return CollectionVisibilityChanged
             .builder()
             .collectionId(collectionId)
-            .isPublic(isPublic)
+            .isPublic(isDiscoverable)
+            .isDiscoverable(isDiscoverable)
             .userId(user.id)
             .build()
     }

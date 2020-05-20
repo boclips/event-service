@@ -187,24 +187,26 @@ class EventSerializerTest {
 
     @Test
     fun `convertCollectionVisibilityChanged made public`() {
-        val event = createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = true)
+        val event = createCollectionVisibilityChanged(collectionId = "collection-id", isDiscoverable = true)
 
         val document = EventSerializer.convertCollectionVisibilityChanged(event)
 
         assertThat(document["type"]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-id")
         assertThat(document["isPublic"]).isEqualTo(true)
+        assertThat(document["isDiscoverable"]).isEqualTo(true)
     }
 
     @Test
     fun `convertCollectionVisibilityChanged made private`() {
-        val event = createCollectionVisibilityChanged(collectionId = "collection-id", isPublic = false)
+        val event = createCollectionVisibilityChanged(collectionId = "collection-id", isDiscoverable = false)
 
         val document = EventSerializer.convertCollectionVisibilityChanged(event)
 
         assertThat(document["type"]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-id")
         assertThat(document["isPublic"]).isEqualTo(false)
+        assertThat(document["isDiscoverable"]).isEqualTo(false)
     }
 
     @Test

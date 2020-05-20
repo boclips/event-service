@@ -22,7 +22,7 @@ object CollectionFactory {
         createdTime: ZonedDateTime = ZonedDateTime.now(),
         updatedTime: ZonedDateTime = ZonedDateTime.now(),
         bookmarks: List<String> = emptyList(),
-        isPublic: Boolean = true
+        isDiscoverable: Boolean = true
     ): Collection {
         return Collection.builder()
             .id(CollectionId(id))
@@ -35,7 +35,8 @@ object CollectionFactory {
             .videosIds(videoIds.map { VideoId(it) })
             .ownerId(UserId(ownerId))
             .bookmarks(bookmarks.map { UserId(it) })
-            .isPublic(isPublic)
+            .isPublic(isDiscoverable)
+            .isDiscoverable(isDiscoverable)
             .build()
     }
 }

@@ -83,7 +83,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun collectionVisibilityChanged() {
-        val event = createCollectionVisibilityChanged(collectionId = "456", isPublic = false)
+        val event = createCollectionVisibilityChanged(collectionId = "456", isDiscoverable = false)
 
         eventBus.publish(event)
 

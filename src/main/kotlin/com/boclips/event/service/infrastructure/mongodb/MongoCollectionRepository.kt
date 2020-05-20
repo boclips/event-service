@@ -32,6 +32,7 @@ class MongoCollectionRepository(private val mongoClient: MongoClient) : Collecti
                 createdTime = Date.from(collection.createdAt.toInstant()),
                 updatedTime = Date.from(collection.updatedAt.toInstant()),
                 isPublic = collection.isPublic,
+                isDiscoverable = collection.isDiscoverable,
                 isDeleted = false
         )
 
@@ -69,5 +70,6 @@ data class CollectionDocument(
         val createdTime: Date,
         val updatedTime: Date,
         val isPublic: Boolean,
+        val isDiscoverable: Boolean,
         val isDeleted: Boolean
 )
