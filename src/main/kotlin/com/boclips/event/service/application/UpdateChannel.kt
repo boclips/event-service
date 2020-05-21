@@ -5,7 +5,6 @@ import com.boclips.eventbus.BoclipsEventListener
 import com.boclips.eventbus.domain.contentpartner.ContentPartner
 import com.boclips.eventbus.events.contentpartner.BroadcastChannelRequested
 import com.boclips.eventbus.events.contentpartner.ContentPartnerUpdated
-import com.boclips.eventbus.events.video.VideoBroadcastRequested
 
 class UpdateChannel(private val channelRepository: ChannelRepository) {
 
@@ -15,7 +14,7 @@ class UpdateChannel(private val channelRepository: ChannelRepository) {
     }
 
     @BoclipsEventListener
-    fun videoBroadcastRequested(event: BroadcastChannelRequested) {
+    fun broadcastChannelRequested(event: BroadcastChannelRequested) {
         save(event.channel)
     }
 

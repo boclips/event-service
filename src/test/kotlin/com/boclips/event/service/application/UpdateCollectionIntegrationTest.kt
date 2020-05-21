@@ -5,6 +5,7 @@ import com.boclips.event.service.infrastructure.mongodb.DatabaseConstants
 import com.boclips.event.service.infrastructure.mongodb.MongoCollectionRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.CollectionFactory.createCollection
+import com.boclips.eventbus.events.collection.CollectionBroadcastRequested
 import com.boclips.eventbus.events.collection.CollectionCreated
 import com.boclips.eventbus.events.collection.CollectionDeleted
 import com.boclips.eventbus.events.collection.CollectionUpdated
@@ -40,6 +41,20 @@ class UpdateCollectionIntegrationTest : AbstractSpringIntegrationTest() {
         )
 
         eventBus.publish(CollectionUpdated(collection))
+
+        assertThat(document().toJson()).contains("updated collection")
+    }
+
+    @Test
+    fun `collection broadcast received`() {
+        collectionRepository.saveCollection(createCollection(id = "collection-id", title = "collection title"))
+
+        val collection = createCollection(
+                id = "collection-id",
+                title = "updated collection title"
+        )
+
+        eventBus.publish(CollectionBroadcastRequested(collection))
 
         assertThat(document().toJson()).contains("updated collection")
     }
