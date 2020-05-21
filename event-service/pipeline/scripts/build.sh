@@ -12,4 +12,4 @@ cd source
 ./gradlew -Pversion="$version" clean event-service:build --rerun-tasks --no-daemon
 )
 
-cp -a source/* dist/
+cp -a source/event-service/* dist/
