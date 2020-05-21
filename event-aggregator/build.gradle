@@ -8,8 +8,18 @@ repositories {
 
 dependencies {
     implementation project(':event-infrastructure')
-    implementation 'org.scala-lang:scala-library:2.11.12'
-    testImplementation 'org.scalatest:scalatest_2.11:3.0.0'
+
+    implementation 'org.scala-lang:scala-library:2.12.11'
+    implementation "org.apache.spark:spark-core_2.12:2.4.1"
+    implementation "org.apache.spark:spark-sql_2.12:2.4.1"
+    implementation "org.mongodb.spark:mongo-spark-connector_2.12:2.4.0"
+    implementation "org.apache.commons:commons-math3:3.5"
+    implementation "com.google.cloud.bigdataoss:bigquery-connector:hadoop3-1.0.0"
+    implementation "com.google.cloud.bigdataoss:gcs-connector:hadoop3-2.0.0"
+    implementation "org.scalactic:scalactic_2.12:3.0.5"
+
+    testImplementation 'org.scalatest:scalatest_2.12:3.0.5'
+    testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0"
 }
 
 task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
