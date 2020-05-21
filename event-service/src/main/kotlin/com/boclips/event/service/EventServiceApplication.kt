@@ -9,5 +9,5 @@ import org.springframework.boot.runApplication
 class EventServiceApplication
 
 fun main(args: Array<String>) {
-	runApplication<EventServiceApplication>(*args)
+    runApplication<EventServiceApplication>(*args)
 }

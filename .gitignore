@@ -1,6 +1,12 @@
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
+event-aggregator/out/
+event-aggregator/build/
+event-infrastructure/out/
+event-infrastructure/build/
+event-service/out/
+event-service/build/
 
 ### STS ###
 .apt_generated
