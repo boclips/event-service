@@ -18,4 +18,4 @@ caches:
 - path: .gradle/
 
 run:
-  path: source/event-aggregator/pipeline/scripts/build.sh
+  path: source/event-service/pipeline/scripts/build.sh
