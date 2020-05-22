@@ -14,5 +14,8 @@ inputs:
 outputs:
 - name: dist
 
+caches:
+- path: .gradle/
+
 run:
-  path: source/event-aggregator/pipeline/scripts/build.sh
+  path: source/pipeline/scripts/build.sh

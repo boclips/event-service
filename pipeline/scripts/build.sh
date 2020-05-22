@@ -9,7 +9,7 @@ version=$(cat version/tag)
 
 (
 cd source
-./gradlew -Pversion="$version" clean event-aggregator:build --rerun-tasks --no-daemon
+./gradlew -Pversion="$version" clean event-service:build event-aggregator:build --rerun-tasks --no-daemon
 )
 
-cp -a source/event-aggregator/* dist/
+cp -a source/* dist/
