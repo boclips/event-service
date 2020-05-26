@@ -11,6 +11,8 @@ import de.flapdoodle.embed.mongo.{MongodExecutable, MongodStarter}
 import de.flapdoodle.embed.process.runtime.Network
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
+import org.bson.codecs.configuration.CodecRegistries
+import org.bson.codecs.pojo.PojoCodecProvider
 
 import scala.reflect.ClassTag
 
@@ -30,7 +32,12 @@ trait IntegrationTest extends Test {
 
       val serverAddress = ServerAddressHelper.createServerAddress(bindIp, port)
       val client = new MongoClient(serverAddress)
-      val db = client.getDatabase("test-database")
+      val db = client.getDatabase("test-database").withCodecRegistry(
+        CodecRegistries.fromRegistries(
+          MongoClient.getDefaultCodecRegistry,
+          CodecRegistries.fromProviders(PojoCodecProvider.builder.automatic(true).build()),
+        )
+      )
       val mongo = TestMongo(serverAddress, client, db)
 
       runTest[Some[TestMongo]]((session, mongo) => testMethod(session, mongo.get), Some(mongo))

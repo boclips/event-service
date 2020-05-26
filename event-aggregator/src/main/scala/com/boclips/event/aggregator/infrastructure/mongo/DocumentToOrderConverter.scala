@@ -3,17 +3,19 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.{Order, OrderId, OrderItem, VideoId}
-import org.bson.Document
+import com.order.OrderDocument
+
+import scala.collection.JavaConverters._
 
 object DocumentToOrderConverter {
 
-  def convert(document: Document): Order = {
+  def convert(document: OrderDocument): Order = {
     Order(
-      id = OrderId(document.getString("_id")),
-      createdAt = ZonedDateTime.ofInstant(document.getDate("createdAt").toInstant, ZoneOffset.UTC),
-      updatedAt = ZonedDateTime.ofInstant(document.getDate("updatedAt").toInstant, ZoneOffset.UTC),
-      customerOrganisationName = document.getString("customerOrganisationName"),
-      items = document.getList[Document]("items").map(item => OrderItem(videoId = VideoId(item.getString("videoId")), priceGbp = BigDecimal(item.getString("priceGbp"))))
+      id = OrderId(document.get_id()),
+      createdAt = ZonedDateTime.ofInstant(document.getCreatedAt.toInstant, ZoneOffset.UTC),
+      updatedAt = ZonedDateTime.ofInstant(document.getUpdatedAt.toInstant, ZoneOffset.UTC),
+      customerOrganisationName = document.getCustomerOrganisationName,
+      items = document.getItems.asScala.toList.map(item => OrderItem(videoId = VideoId(item.getVideoId), priceGbp = BigDecimal(item.getPriceGbp)))
     )
   }
 

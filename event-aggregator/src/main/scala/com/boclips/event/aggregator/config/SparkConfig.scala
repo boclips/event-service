@@ -23,6 +23,8 @@ class SparkConfig(
 
     spark
   }
+
+  def mongoConnectionDetails = inputConnectionDetails
 }
 
 object SparkConfig {

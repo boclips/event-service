@@ -20,8 +20,12 @@ import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader}
 import com.boclips.event.aggregator.presentation.formatters.{CollectionFormatter, DataVersionFormatter, VideoFormatter}
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableWriter}
+import com.mongodb.{MongoClient, MongoClientOptions, MongoClientURI, ServerAddress}
+import com.mongodb.spark.{MongoClientFactory, MongoConnector, MongoSpark}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
+import org.bson.codecs.configuration.{CodecRegistries, CodecRegistry}
+import org.bson.codecs.pojo.PojoCodecProvider
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.reflect.runtime.universe.TypeTag
@@ -32,11 +36,20 @@ object EventAggregatorApp {
     val sparkConfig: SparkConfig = SparkConfig()
     val session = sparkConfig.session
     val writer = new BigQueryTableWriter(session)
-    new EventAggregatorApp(session, writer).run()
+    val serverAddress = sparkConfig.mongoConnectionDetails.hosts.split(",").map(new ServerAddress(_)).toList
+    val mongoBuilder = mongoSparkBuilder(session, serverAddress)
+    new EventAggregatorApp(session, writer, mongoBuilder).run()
+  }
+
+  private def mongoSparkBuilder(session: SparkSession, serverAddresses: List[ServerAddress]) : MongoSpark.Builder = {
+    MongoSpark
+      .builder()
+      .sparkContext(session.sparkContext)
+      .connector(new MongoConnector(SpecialMongoClientFactory(serverAddresses)))
   }
 }
 
-class EventAggregatorApp(val session: SparkSession, val writer: TableWriter) {
+class EventAggregatorApp(val session: SparkSession, val writer: TableWriter, mongoBuilder: MongoSpark.Builder) {
 
   val log: Logger = LoggerFactory.getLogger(classOf[EventAggregatorApp])
 
@@ -46,7 +59,7 @@ class EventAggregatorApp(val session: SparkSession, val writer: TableWriter) {
   implicit val videos: RDD[Video] = new MongoVideoLoader(session).load()
   val collections: RDD[Collection] = new MongoCollectionLoader(session).load()
   val channels: RDD[Channel] = new MongoChannelLoader(session).load()
-  val orders: RDD[Order] = new MongoOrderLoader(session).load()
+  val orders: RDD[Order] = new MongoOrderLoader(session, mongoBuilder).load()
 
   val sessions: RDD[Session] = new SessionAssembler(events, users, "all data").assembleSessions()
   val playbacks: RDD[Playback] = new PlaybackAssembler(sessions, videos).assemblePlaybacks()
@@ -111,5 +124,18 @@ class EventAggregatorApp(val session: SparkSession, val writer: TableWriter) {
     log.info(name)
     session.sparkContext.setJobGroup(name, name)
   }
+}
 
+import scala.collection.JavaConverters._
+
+case class SpecialMongoClientFactory(serverAddresses: List[ServerAddress]) extends MongoClientFactory {
+  override def create(): MongoClient = {
+    val builder = new MongoClientOptions.Builder
+    val codecRegistry: CodecRegistry = CodecRegistries.fromRegistries(
+      MongoClient.getDefaultCodecRegistry,
+      CodecRegistries.fromProviders(PojoCodecProvider.builder.automatic(true).build()),
+    )
+    val options = builder.codecRegistry(codecRegistry).build()
+    new MongoClient(serverAddresses.asJava, options)
+  }
 }

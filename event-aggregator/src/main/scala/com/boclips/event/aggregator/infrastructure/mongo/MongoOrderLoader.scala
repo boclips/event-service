@@ -2,19 +2,27 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import com.boclips.event.aggregator.domain.model.Order
 import com.boclips.event.aggregator.domain.service.OrderLoader
-import com.mongodb.spark.MongoSpark
+import com.mongodb.{MongoClient, MongoClientOptions, MongoClientURI, ServerAddress}
 import com.mongodb.spark.config.ReadConfig
+import com.mongodb.spark.{MongoClientFactory, MongoConnector, MongoSpark}
+import com.order.OrderDocument
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.storage.StorageLevel
+import org.bson.codecs.configuration.CodecRegistry
 
-class MongoOrderLoader(private val session: SparkSession) extends OrderLoader {
+class MongoOrderLoader(private val session: SparkSession, mongoSpark: MongoSpark.Builder) extends OrderLoader {
 
   override def load(): RDD[Order] = {
-    val readConfig = ReadConfig.create(session).copy(collectionName = "orders")
+    val readConfig = ReadConfig
+      .create(session)
+      .copy(collectionName = "orders")
 
-    MongoSpark.load(session.sparkContext, readConfig)
-      .filter(_.getString("status") == "COMPLETED")
+    mongoSpark
+      .readConfig(readConfig)
+      .build()
+      .toRDD[OrderDocument]()
+      .filter(_.getStatus == "COMPLETED")
       .map(DocumentToOrderConverter.convert)
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Orders")

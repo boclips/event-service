@@ -1,15 +1,18 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import java.time.{ZoneOffset, ZonedDateTime}
+import java.time.{Instant, ZoneOffset, ZonedDateTime}
+import java.util.Date
 
 import com.boclips.event.aggregator.domain.model.{OrderId, OrderItem, VideoId}
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.createOrderDocument
+import com.order.{OrderDocument, OrderItemDocument}
+
+import scala.collection.JavaConverters._
 
 class DocumentToOrderConverterTest extends Test {
 
   it should "convert id" in {
-    val document = createOrderDocument(id = "the-order-id")
+    val document = OrderDocument.sample()._id("the-order-id").build()
 
     val order = DocumentToOrderConverter.convert(document)
 
@@ -17,7 +20,7 @@ class DocumentToOrderConverterTest extends Test {
   }
 
   it should "convert creation date" in {
-    val document = createOrderDocument(createdAt = ZonedDateTime.parse("2019-10-11T05:11:15Z"))
+    val document = OrderDocument.sample().createdAt(Date.from(Instant.parse("2019-10-11T05:11:15Z"))).build()
 
     val order = DocumentToOrderConverter.convert(document)
 
@@ -25,7 +28,7 @@ class DocumentToOrderConverterTest extends Test {
   }
 
   it should "convert update date" in {
-    val document = createOrderDocument(updatedAt = ZonedDateTime.parse("2020-10-11T05:11:15Z"))
+    val document = OrderDocument.sample().updatedAt(Date.from(Instant.parse("2020-10-11T05:11:15Z"))).build()
 
     val order = DocumentToOrderConverter.convert(document)
 
@@ -33,7 +36,13 @@ class DocumentToOrderConverterTest extends Test {
   }
 
   it should "convert video items" in {
-    val document = createOrderDocument(items = List(OrderItem(videoId = VideoId("the-video-id"), priceGbp = BigDecimal("10.10"))))
+    val document = OrderDocument.sample()
+      .items(
+        List(
+          OrderItemDocument.sample.videoId("the-video-id").priceGbp("10.10").build()
+        ).asJava
+      )
+      .build()
 
     val order = DocumentToOrderConverter.convert(document)
 
@@ -41,7 +50,7 @@ class DocumentToOrderConverterTest extends Test {
   }
 
   it should "convert customer organisation name" in {
-    val document = createOrderDocument(customerOrganisationName = "customer org")
+    val document = OrderDocument.sample().customerOrganisationName("customer org").build()
 
     val order = DocumentToOrderConverter.convert(document)
 

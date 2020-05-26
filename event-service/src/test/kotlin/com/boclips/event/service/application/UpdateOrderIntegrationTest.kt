@@ -2,11 +2,11 @@ package com.boclips.event.service.application
 
 import com.boclips.event.service.domain.OrderRepository
 import com.boclips.event.service.infrastructure.mongodb.MongoOrderRepository
-import com.boclips.event.service.infrastructure.mongodb.OrderDocument
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.OrderFactory.createOrder
 import com.boclips.eventbus.events.order.OrderCreated
 import com.boclips.eventbus.events.order.OrderUpdated
+import com.order.OrderDocument
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
