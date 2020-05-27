@@ -7,7 +7,7 @@ import org.apache.spark.sql.SparkSession
 
 class TestVideoLoader(private val videos: Seq[Video])(implicit spark: SparkSession) extends VideoLoader {
 
-  override def load(): RDD[Video] = {
+  override def load()(implicit session: SparkSession): RDD[Video] = {
     spark.sparkContext.parallelize(videos)
   }
 }

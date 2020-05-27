@@ -8,11 +8,10 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.storage.StorageLevel
 
-class MongoChannelLoader(private val session: SparkSession) extends ChannelLoader {
-  override def load(): RDD[Channel] = {
-    val readConfig = ReadConfig.create(session).copy(collectionName = "channels")
-
-    MongoSpark.load(session.sparkContext, readConfig)
+class MongoChannelLoader(private val mongoClient: SparkMongoClient) extends ChannelLoader {
+  override def load()(implicit session: SparkSession): RDD[Channel] = {
+    mongoClient
+      .collectionRDD("channels")
       .map(DocumentToChannelConverter.convert)
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Channels")

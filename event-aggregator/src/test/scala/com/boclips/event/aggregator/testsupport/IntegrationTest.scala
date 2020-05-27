@@ -1,10 +1,8 @@
 package com.boclips.event.aggregator.testsupport
 
-import com.boclips.event.aggregator.config.SparkConfig
-import com.boclips.event.aggregator.infrastructure.mongo.MongoConnectionDetails
-import com.mongodb.client.MongoDatabase
+import com.boclips.event.aggregator.config.{MongoConfig, SparkConfig}
+import com.boclips.event.aggregator.infrastructure.mongo.SparkMongoClient
 import com.mongodb.internal.connection.ServerAddressHelper
-import com.mongodb.{MongoClient, ServerAddress}
 import de.flapdoodle.embed.mongo.config.{MongodConfigBuilder, Net}
 import de.flapdoodle.embed.mongo.distribution.Version
 import de.flapdoodle.embed.mongo.{MongodExecutable, MongodStarter}
@@ -16,7 +14,7 @@ import scala.reflect.ClassTag
 
 trait IntegrationTest extends Test {
 
-  def mongoSparkTest(testMethod: (SparkSession, TestMongo) => Any): Unit = {
+  def mongoSparkTest(testMethod: (SparkSession, SparkMongoClient) => Any): Unit = {
     val starter = MongodStarter.getDefaultInstance
 
     val bindIp = "localhost"
@@ -29,26 +27,25 @@ trait IntegrationTest extends Test {
       mongodExecutable.start
 
       val serverAddress = ServerAddressHelper.createServerAddress(bindIp, port)
-      val client = new MongoClient(serverAddress)
-      val db = client.getDatabase("test-database")
-      val mongo = TestMongo(serverAddress, client, db)
+      val mongo = new SparkMongoClient(MongoConfig(
+        serverAddresses = serverAddress :: Nil,
+        replicaSetName = None,
+        databaseName = "test-database",
+        ssl = false,
+      ))
 
-      runTest[Some[TestMongo]]((session, mongo) => testMethod(session, mongo.get), Some(mongo))
+      runTest[Some[SparkMongoClient]]((session, mongo) => testMethod(session, mongo.get), Some(mongo))
     } finally {
       if (mongodExecutable != null) mongodExecutable.stop()
     }
   }
 
-  def runTest[TMongoOption <: Option[TestMongo]](testMethod: (SparkSession, TMongoOption) => Any, mongo: TMongoOption): Unit = {
+  def runTest[TMongoOption <: Option[SparkMongoClient]](testMethod: (SparkSession, TMongoOption) => Any, mongo: TMongoOption): Unit = {
 
     var sparkSession: SparkSession = null
 
     try {
-      val collection = mongo.map { m =>
-        m collection "events"
-      }.getOrElse(MongoConnectionDetails("", ""))
-
-      sparkSession = new SparkConfig(collection, "keyfile.json", 4).session
+      sparkSession = new SparkConfig("keyfile.json", 4).session
 
       testMethod(sparkSession, mongo)
     } finally {
@@ -57,16 +54,10 @@ trait IntegrationTest extends Test {
   }
 
   def sparkTest(testMethod: SparkSession => Any): Unit = {
-    runTest[Option[TestMongo]]((session, _) => testMethod(session), None)
+    runTest[Option[SparkMongoClient]]((session, _) => testMethod(session), None)
   }
 
   def rdd[T: ClassTag](items: T*)(implicit session: SparkSession): RDD[T] = session.sparkContext.parallelize(items)
 
   def emptyRdd()(implicit session: SparkSession): RDD[Nothing] = rdd[Nothing]()
-}
-
-case class TestMongo(serverAddress: ServerAddress, client: MongoClient, db: MongoDatabase) {
-  def collection(collectionName: String): MongoConnectionDetails = {
-    MongoConnectionDetails(serverAddress.toString, db.getName)
-  }
 }

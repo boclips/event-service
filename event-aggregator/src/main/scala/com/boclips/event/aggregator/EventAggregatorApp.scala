@@ -2,7 +2,7 @@ package com.boclips.event.aggregator
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.config.SparkConfig
+import com.boclips.event.aggregator.config.{MongoConfig, SparkConfig}
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent}
 import com.boclips.event.aggregator.domain.service.Data
@@ -17,9 +17,10 @@ import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembl
 import com.boclips.event.aggregator.domain.service.user.UserWithRelatedDataAssembler
 import com.boclips.event.aggregator.domain.service.video.{VideoAssembler, VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
-import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader}
+import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoEventLoader, MongoOrderLoader, SparkMongoClient, MongoUserLoader, MongoVideoLoader}
 import com.boclips.event.aggregator.presentation.formatters.{CollectionFormatter, DataVersionFormatter, VideoFormatter}
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableWriter}
+import com.mongodb.ServerAddress
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.slf4j.{Logger, LoggerFactory}
@@ -30,23 +31,24 @@ object EventAggregatorApp {
 
   def main(args: Array[String]): Unit = {
     val sparkConfig: SparkConfig = SparkConfig()
-    val session = sparkConfig.session
+    implicit val session: SparkSession = sparkConfig.session
     val writer = new BigQueryTableWriter(session)
-    new EventAggregatorApp(session, writer).run()
+    val mongoSparkProvider = new SparkMongoClient(MongoConfig())
+    new EventAggregatorApp(writer, mongoSparkProvider).run()
   }
 }
 
-class EventAggregatorApp(val session: SparkSession, val writer: TableWriter) {
+class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoClient)(implicit val session: SparkSession) {
 
   val log: Logger = LoggerFactory.getLogger(classOf[EventAggregatorApp])
 
-  val userLoader = new MongoUserLoader(session)
-  val events: RDD[Event] = new MongoEventLoader(session, userLoader.loadBoclipsEmployees).load
+  val userLoader = new MongoUserLoader(mongoClient)
+  val events: RDD[Event] = new MongoEventLoader(mongoClient, userLoader.loadBoclipsEmployees).load
   val users: RDD[User] = userLoader.loadAllUsers
-  implicit val videos: RDD[Video] = new MongoVideoLoader(session).load()
-  val collections: RDD[Collection] = new MongoCollectionLoader(session).load()
-  val channels: RDD[Channel] = new MongoChannelLoader(session).load()
-  val orders: RDD[Order] = new MongoOrderLoader(session).load()
+  implicit val videos: RDD[Video] = new MongoVideoLoader(mongoClient).load()(session)
+  val collections: RDD[Collection] = new MongoCollectionLoader(mongoClient).load()(session)
+  val channels: RDD[Channel] = new MongoChannelLoader(mongoClient).load()
+  val orders: RDD[Order] = new MongoOrderLoader(mongoClient).load()(session)
 
   val sessions: RDD[Session] = new SessionAssembler(events, users, "all data").assembleSessions()
   val playbacks: RDD[Playback] = new PlaybackAssembler(sessions, videos).assemblePlaybacks()
@@ -73,7 +75,7 @@ class EventAggregatorApp(val session: SparkSession, val writer: TableWriter) {
 
     logProcessingStart(s"Updating collections")
     val collectionImpressions = CollectionSearchResultImpressionAssembler(searches)
-    val collectionInteractions: RDD[CollectionInteractedWithEvent] =  CollectionInteractionEventAssembler(events)
+    val collectionInteractions: RDD[CollectionInteractedWithEvent] = CollectionInteractionEventAssembler(events)
     val collectionsWithRelatedData = CollectionAssembler.assembleCollectionsWithRelatedData(collections, collectionImpressions, collectionInteractions)
     writeTable(collectionsWithRelatedData, "collections")(CollectionFormatter, implicitly)
 
@@ -111,5 +113,7 @@ class EventAggregatorApp(val session: SparkSession, val writer: TableWriter) {
     log.info(name)
     session.sparkContext.setJobGroup(name, name)
   }
-
 }
+
+
+

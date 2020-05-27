@@ -5,9 +5,9 @@ import com.boclips.event.aggregator.domain.service.EventLoader
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 
-class TestEventLoader(private val events: Seq[Event])(implicit spark: SparkSession) extends EventLoader {
+class TestEventLoader(private val events: Seq[Event]) extends EventLoader {
 
-  override def load(): RDD[Event] = {
-    spark.sparkContext.parallelize(events)
+  override def load()(implicit session: SparkSession): RDD[Event] = {
+    session.sparkContext.parallelize(events)
   }
 }
