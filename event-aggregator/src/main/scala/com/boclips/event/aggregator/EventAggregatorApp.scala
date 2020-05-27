@@ -7,7 +7,6 @@ import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent}
 import com.boclips.event.aggregator.domain.service.Data
 import com.boclips.event.aggregator.domain.service.collection.{CollectionAssembler, CollectionInteractionEventAssembler, CollectionSearchResultImpressionAssembler}
-import com.boclips.event.aggregator.domain.service.contentpartners.ContentPartnerAssembler
 import com.boclips.event.aggregator.domain.service.navigation.PagesRenderedAssembler
 import com.boclips.event.aggregator.domain.service.okr.OkrService
 import com.boclips.event.aggregator.domain.service.playback.PlaybackAssembler
@@ -67,10 +66,6 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     val videoInteractions = VideoInteractionAssembler(events)
     val videosWithRelatedData = VideoAssembler.assembleVideosWithRelatedData(videos, playbacks, orders, channels, impressions, videoInteractions)
     writeTable(videosWithRelatedData, "videos")(VideoFormatter, implicitly)
-
-    logProcessingStart(s"Updating content partners")
-    val contentPartners = ContentPartnerAssembler(videos)
-    writeTable(contentPartners, "content_partners")
 
     logProcessingStart(s"Updating collections")
     val collectionImpressions = CollectionSearchResultImpressionAssembler(searches)

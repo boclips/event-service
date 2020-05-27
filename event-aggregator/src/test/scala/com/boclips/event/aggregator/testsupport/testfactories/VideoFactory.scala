@@ -113,16 +113,4 @@ object VideoFactory {
       valueGbp = valueGbp
     )
   }
-
-
-  def createContentPartner
-  (
-    name: String = "the name",
-    playbackProvider: String = "KALTURA",
-  ): ContentPartner = {
-    ContentPartner(
-      name = name,
-      playbackProvider = playbackProvider,
-    )
-  }
 }
