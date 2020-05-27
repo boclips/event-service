@@ -44,10 +44,10 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
   val userLoader = new MongoUserLoader(mongoClient)
   val events: RDD[Event] = new MongoEventLoader(mongoClient, userLoader.loadBoclipsEmployees).load
   val users: RDD[User] = userLoader.loadAllUsers
-  implicit val videos: RDD[Video] = new MongoVideoLoader(mongoClient).load()(session)
-  val collections: RDD[Collection] = new MongoCollectionLoader(mongoClient).load()(session)
+  val videos: RDD[Video] = new MongoVideoLoader(mongoClient).load()
+  val collections: RDD[Collection] = new MongoCollectionLoader(mongoClient).load()
   val channels: RDD[Channel] = new MongoChannelLoader(mongoClient).load()
-  val orders: RDD[Order] = new MongoOrderLoader(mongoClient).load()(session)
+  val orders: RDD[Order] = new MongoOrderLoader(mongoClient).load()
 
   val sessions: RDD[Session] = new SessionAssembler(events, users, "all data").assembleSessions()
   val playbacks: RDD[Playback] = new PlaybackAssembler(sessions, videos).assemblePlaybacks()
