@@ -20,7 +20,6 @@ import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoEventLoader, MongoOrderLoader, SparkMongoClient, MongoUserLoader, MongoVideoLoader}
 import com.boclips.event.aggregator.presentation.formatters.{CollectionFormatter, DataVersionFormatter, VideoFormatter}
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableWriter}
-import com.mongodb.ServerAddress
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.slf4j.{Logger, LoggerFactory}

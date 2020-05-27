@@ -1,4 +1,4 @@
 FROM openjdk:8-jre-slim
-COPY event-aggregator*.jar /opt/app.jar
+COPY build/libs/*.jar /opt/
 WORKDIR /opt
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-cp", "/opt/*", "com.boclips.event.aggregator.EventAggregatorApp"]
