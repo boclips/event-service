@@ -4,14 +4,16 @@ import com.mongodb.ServerAddress
 
 object MongoConfig {
   def apply(): MongoConfig = {
-    val serverAddresses = env("MONGO_HOST").split(",").map(new ServerAddress(_)).toList
-    val replicaSetName = env("MONGO_REPLICA_SET")
-    val databaseName = env("MONGO_INPUT_DATABASE")
     MongoConfig(
-      serverAddresses = serverAddresses,
-      replicaSetName = Some(replicaSetName),
-      databaseName = databaseName,
+      serverAddresses = env("MONGO_HOSTS").split(",").map(new ServerAddress(_)).toList,
+      replicaSetName = Some(env("MONGO_REPLICA_SET")),
+      database = env("MONGO_DATABASE"),
       ssl = true,
+      credentials = Some(MongoCredentials(
+        authenticationDatabase = env("MONGO_AUTHENTICATION_DATABASE"),
+        username = env("MONGO_USERNAME"),
+        password = env("MONGO_PASSWORD"),
+      ))
     )
   }
 
@@ -27,6 +29,13 @@ object MongoConfig {
 case class MongoConfig(
                         serverAddresses: List[ServerAddress],
                         replicaSetName: Option[String],
-                        databaseName: String,
+                        database: String,
                         ssl: Boolean,
+                        credentials: Option[MongoCredentials],
                       )
+
+case class MongoCredentials(
+                        authenticationDatabase: String,
+                        username: String,
+                        password: String,
+                           )

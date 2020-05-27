@@ -30,8 +30,9 @@ trait IntegrationTest extends Test {
       val mongo = new SparkMongoClient(MongoConfig(
         serverAddresses = serverAddress :: Nil,
         replicaSetName = None,
-        databaseName = "test-database",
+        database = "test-database",
         ssl = false,
+        credentials = None,
       ))
 
       runTest[Some[SparkMongoClient]]((session, mongo) => testMethod(session, mongo.get), Some(mongo))
