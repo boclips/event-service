@@ -56,7 +56,6 @@ object VideoFormatter extends SingleRowFormatter[VideoWithRelatedData] {
     val highestResolutionAsset = video.largestAsset()
 
     json.addProperty("id", video.id.value)
-    json.addProperty("contentPartner", video.contentPartner)
     json.addDateTimeProperty("ingestedAt", video.ingestedAt)
 
     val storageCharges = video.storageCharges(to = LocalDate.now()).map(StorageChargeFormatter.formatRow)

@@ -36,7 +36,6 @@ class VideoFormatterTest extends Test {
     val jsonObjects = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
 
     jsonObjects.get("id").getAsString shouldBe "the-id"
-    jsonObjects.get("contentPartner").getAsString shouldBe "AP"
     jsonObjects.get("playbackProvider").getAsString shouldBe "YOUTUBE"
     jsonObjects.getStringList("ages") shouldBe List("05", "06")
   }
