@@ -35,7 +35,6 @@ object CollectionFactory {
             .videosIds(videoIds.map { VideoId(it) })
             .ownerId(UserId(ownerId))
             .bookmarks(bookmarks.map { UserId(it) })
-            .isPublic(isDiscoverable)
             .isDiscoverable(isDiscoverable)
             .build()
     }

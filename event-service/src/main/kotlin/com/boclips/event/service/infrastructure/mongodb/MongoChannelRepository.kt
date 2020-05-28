@@ -10,7 +10,7 @@ import com.boclips.eventbus.domain.contentpartner.ChannelIngestDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelMarketingDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelPedagogyDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelTopLevelDetails
-import com.boclips.eventbus.domain.contentpartner.ContentPartner
+import com.boclips.eventbus.domain.contentpartner.Channel
 import com.mongodb.MongoClient
 import mu.KLogging
 import org.litote.kmongo.getCollection
@@ -21,7 +21,7 @@ class MongoChannelRepository(private val mongoClient: MongoClient) : ChannelRepo
         const val COLLECTION_NAME = "channels"
     }
 
-    override fun save(channel: ContentPartner) {
+    override fun save(channel: Channel) {
         try {
             mongoClient
                 .getDatabase(DatabaseConstants.DB_NAME)
@@ -33,7 +33,7 @@ class MongoChannelRepository(private val mongoClient: MongoClient) : ChannelRepo
     }
 }
 
-fun ContentPartner.toDocument(): ChannelDocument =
+fun Channel.toDocument(): ChannelDocument =
     ChannelDocument.builder()
         ._id(id.value)
         .name(name)

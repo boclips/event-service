@@ -1,7 +1,7 @@
 package com.boclips.event.service.domain
 
-import com.boclips.eventbus.domain.contentpartner.ContentPartner
+import com.boclips.eventbus.domain.contentpartner.Channel
 
 interface ChannelRepository {
-    fun save(channel: ContentPartner)
+    fun save(channel: Channel)
 }

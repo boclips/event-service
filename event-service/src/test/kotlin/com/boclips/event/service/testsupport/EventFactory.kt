@@ -166,7 +166,6 @@ object EventFactory {
         return CollectionVisibilityChanged
             .builder()
             .collectionId(collectionId)
-            .isPublic(isDiscoverable)
             .isDiscoverable(isDiscoverable)
             .userId(user.id)
             .build()

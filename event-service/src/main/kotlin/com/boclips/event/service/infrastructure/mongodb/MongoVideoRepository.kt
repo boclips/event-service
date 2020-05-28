@@ -10,6 +10,7 @@ import com.mongodb.client.model.ReplaceOptions
 import mu.KLogging
 import org.bson.Document
 import org.litote.kmongo.getCollection
+import java.time.format.DateTimeFormatter.ISO_DATE
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 class MongoVideoRepository(private val mongoClient: MongoClient) : VideoRepository {
@@ -21,8 +22,9 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
         val document = VideoDocument.builder()
             ._id(video.id.value)
             .ingestedAt(video.ingestedAt.withFixedOffsetZone().format(ISO_DATE_TIME))
+            .releasedOn(video.releasedOn.format(ISO_DATE))
             .title(video.title)
-            .contentPartnerName(video.contentPartner.name)
+            .channelId(video.channelId.value)
             .playbackProviderType(video.playbackProviderType.name)
             .subjects(video.subjects.map { it.name }.toSet())
             .ageRangeMin(video.ageRange.min)

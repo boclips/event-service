@@ -193,7 +193,6 @@ class EventSerializerTest {
 
         assertThat(document["type"]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-id")
-        assertThat(document["isPublic"]).isEqualTo(true)
         assertThat(document["isDiscoverable"]).isEqualTo(true)
     }
 
@@ -205,7 +204,6 @@ class EventSerializerTest {
 
         assertThat(document["type"]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
         assertThat(document["collectionId"]).isEqualTo("collection-id")
-        assertThat(document["isPublic"]).isEqualTo(false)
         assertThat(document["isDiscoverable"]).isEqualTo(false)
     }
 

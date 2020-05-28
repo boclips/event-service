@@ -2,7 +2,7 @@ package com.boclips.event.service.application
 
 import com.boclips.event.service.domain.ChannelRepository
 import com.boclips.eventbus.BoclipsEventListener
-import com.boclips.eventbus.domain.contentpartner.ContentPartner
+import com.boclips.eventbus.domain.contentpartner.Channel
 import com.boclips.eventbus.events.contentpartner.BroadcastChannelRequested
 import com.boclips.eventbus.events.contentpartner.ContentPartnerUpdated
 
@@ -18,7 +18,7 @@ class UpdateChannel(private val channelRepository: ChannelRepository) {
         save(event.channel)
     }
 
-    private fun save(channel: ContentPartner) {
+    private fun save(channel: Channel) {
         channelRepository.save(channel)
     }
 }

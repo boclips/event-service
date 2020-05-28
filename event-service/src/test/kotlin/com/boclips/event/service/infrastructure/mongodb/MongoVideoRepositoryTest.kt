@@ -1,5 +1,6 @@
 package com.boclips.event.service.infrastructure.mongodb
 
+import com.boclips.event.infrastructure.video.VideoDocument
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.VideoFactory.createVideo
 import com.boclips.eventbus.domain.AgeRange
@@ -8,9 +9,9 @@ import com.boclips.eventbus.domain.video.PlaybackProviderType
 import com.boclips.eventbus.domain.video.VideoAsset
 import com.boclips.eventbus.domain.video.VideoType
 import org.assertj.core.api.Assertions.assertThat
-import org.bson.Document
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
@@ -25,12 +26,13 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
             createVideo(
                 id = "1234",
                 title = "the title",
-                contentPartnerName = "the content partner",
+                channelId = "channel id",
                 playbackProviderType = PlaybackProviderType.YOUTUBE,
                 subjectNames = listOf("Maths"),
                 ageRange = AgeRange(5, 11),
                 type = VideoType.NEWS,
                 ingestedAt = ZonedDateTime.of(2019, 11, 18, 12, 13, 14, 150000000, ZoneOffset.UTC),
+                releasedOn = LocalDate.of(1939, 9, 1),
                 durationSeconds = 60,
                 originalDimensions = Dimensions(480, 320),
                 assets = listOf(
@@ -46,24 +48,25 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = document()
-        assertThat(document.getString("_id")).isEqualTo("1234")
-        assertThat(document.getString("title")).isEqualTo("the title")
-        assertThat(document.getString("contentPartnerName")).isEqualTo("the content partner")
-        assertThat(document.getString("playbackProviderType")).isEqualTo("YOUTUBE")
-        assertThat(document.getList("subjects", String::class.java)).containsExactly("Maths")
-        assertThat(document.getInteger("ageRangeMin")).isEqualTo(5)
-        assertThat(document.getInteger("ageRangeMax")).isEqualTo(11)
-        assertThat(document.getString("type")).isEqualTo("NEWS")
-        assertThat(document.getInteger("durationSeconds")).isEqualTo(60)
-        assertThat(document.getString("ingestedAt")).isEqualTo("2019-11-18T12:13:14.15Z")
-        assertThat(document.getInteger("originalWidth")).isEqualTo(480)
-        assertThat(document.getInteger("originalHeight")).isEqualTo(320)
-        assertThat(document.getList("assets", Map::class.java)).hasSize(1)
-        assertThat(document.getList("assets", Map::class.java)[0]["id"]).isEqualTo("my-id")
-        assertThat(document.getList("assets", Map::class.java)[0]["width"]).isEqualTo(420)
-        assertThat(document.getList("assets", Map::class.java)[0]["height"]).isEqualTo(320)
-        assertThat(document.getList("assets", Map::class.java)[0]["bitrateKbps"]).isEqualTo(128)
-        assertThat(document.getList("assets", Map::class.java)[0]["sizeKb"]).isEqualTo(1024)
+        assertThat(document._id).isEqualTo("1234")
+        assertThat(document.title).isEqualTo("the title")
+        assertThat(document.channelId).isEqualTo("channel id")
+        assertThat(document.playbackProviderType).isEqualTo("YOUTUBE")
+        assertThat(document.subjects).containsExactly("Maths")
+        assertThat(document.ageRangeMin).isEqualTo(5)
+        assertThat(document.ageRangeMax).isEqualTo(11)
+        assertThat(document.type).isEqualTo("NEWS")
+        assertThat(document.durationSeconds).isEqualTo(60)
+        assertThat(document.ingestedAt).isEqualTo("2019-11-18T12:13:14.15Z")
+        assertThat(document.releasedOn).isEqualTo("1939-09-01")
+        assertThat(document.originalWidth).isEqualTo(480)
+        assertThat(document.originalHeight).isEqualTo(320)
+        assertThat(document.assets).hasSize(1)
+        assertThat(document.assets.first().id).isEqualTo("my-id")
+        assertThat(document.assets.first().width).isEqualTo(420)
+        assertThat(document.assets.first().height).isEqualTo(320)
+        assertThat(document.assets.first().bitrateKbps).isEqualTo(128)
+        assertThat(document.assets.first().sizeKb).isEqualTo(1024)
     }
 
     @Test
@@ -75,8 +78,8 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = document()
-        assertThat(document.get("originalWidth")).isNull()
-        assertThat(document.get("originalHeight")).isNull()
+        assertThat(document.originalWidth as Int?).isNull()
+        assertThat(document.originalHeight as Int?).isNull()
     }
 
     @Test
@@ -88,7 +91,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = document()
-        assertThat(document.get("assets")).isNull()
+        assertThat(document.assets).isNull()
     }
 
     @Test
@@ -97,7 +100,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
             createVideo(
                 id = "1234",
                 title = "the title",
-                contentPartnerName = "the content partner",
+                channelId = "the channel id",
                 subjectNames = emptyList(),
                 ageRange = AgeRange()
             )
@@ -106,23 +109,23 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
             createVideo(
                 id = "1234",
                 title = "the updated title",
-                contentPartnerName = "the updated content partner",
+                channelId = "the updated channel id",
                 subjectNames = listOf("English"),
                 ageRange = AgeRange(3, 7)
             )
         )
 
         val document = document()
-        assertThat(document.getString("_id")).isEqualTo("1234")
-        assertThat(document.getString("title")).isEqualTo("the updated title")
-        assertThat(document.getString("contentPartnerName")).isEqualTo("the updated content partner")
-        assertThat(document.getList("subjects", String::class.java)).containsExactly("English")
-        assertThat(document.getInteger("ageRangeMin")).isEqualTo(3)
-        assertThat(document.getInteger("ageRangeMax")).isEqualTo(7)
+        assertThat(document._id).isEqualTo("1234")
+        assertThat(document.title).isEqualTo("the updated title")
+        assertThat(document.channelId).isEqualTo("the updated channel id")
+        assertThat(document.subjects).containsExactly("English")
+        assertThat(document.ageRangeMin).isEqualTo(3)
+        assertThat(document.ageRangeMax).isEqualTo(7)
     }
 
-    private fun document(): Document {
-        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoVideoRepository.COLLECTION_NAME)
+    private fun document(): VideoDocument {
+        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<VideoDocument>(MongoVideoRepository.COLLECTION_NAME, VideoDocument::class.java)
             .find().toList().single()
     }
 }

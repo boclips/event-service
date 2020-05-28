@@ -15,10 +15,11 @@ public class VideoDocument {
     private String _id;
     @NonNull
     private String ingestedAt;
+    private String releasedOn;
     @NonNull
     private String title;
     @NonNull
-    private String contentPartnerName;
+    private String channelId;
     @NonNull
     private String playbackProviderType;
     @NonNull
@@ -37,7 +38,7 @@ public class VideoDocument {
                 ._id("video-id")
                 .ingestedAt("2020-05-26T17:10:40+00:00")
                 .title("video title")
-                .contentPartnerName("content partner name")
+                .channelId("channel id")
                 .playbackProviderType("providertype")
                 .subjects(Collections.singleton("subject"))
                 .ageRangeMin(5)

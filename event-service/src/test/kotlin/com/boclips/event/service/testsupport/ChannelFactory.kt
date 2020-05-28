@@ -6,8 +6,8 @@ import com.boclips.eventbus.domain.contentpartner.ChannelIngestDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelMarketingDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelPedagogyDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelTopLevelDetails
-import com.boclips.eventbus.domain.contentpartner.ContentPartner
-import com.boclips.eventbus.domain.contentpartner.ContentPartnerId
+import com.boclips.eventbus.domain.contentpartner.Channel
+import com.boclips.eventbus.domain.contentpartner.ChannelId
 import java.time.Period
 import java.util.Locale
 
@@ -19,11 +19,10 @@ object ChannelFactory {
         pedagogy: ChannelPedagogyDetails = createChannelPedagogyDetails(),
         ingest: ChannelIngestDetails = createChannelIngestDetails(),
         marketing: ChannelMarketingDetails = createChannelMarketingDetails()
-    ): ContentPartner =
-        ContentPartner.builder()
-            .id(ContentPartnerId.builder().value(id).build())
+    ): Channel =
+        Channel.builder()
+            .id(ChannelId.builder().value(id).build())
             .name(name)
-            .ageRange(AgeRange.builder().min(null).max(null).build())
             .details(details)
             .pedagogy(pedagogy)
             .ingest(ingest)

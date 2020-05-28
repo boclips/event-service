@@ -18,7 +18,7 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
         val video = createVideo(
             id = "video-id",
             title = "new video",
-            contentPartnerName = "content partner"
+            channelId = "channel id"
         )
 
         eventBus.publish(VideoCreated(video))
@@ -31,7 +31,7 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
         val video = createVideo(
             id = "video-id",
             title = "the title",
-            contentPartnerName = "content partner"
+            channelId = "channel id"
         )
 
         eventBus.publish(VideoUpdated(video))
@@ -44,7 +44,7 @@ class UpdateVideoIntegrationTest : AbstractSpringIntegrationTest() {
         val video = createVideo(
             id = "video-id",
             title = "the title",
-            contentPartnerName = "content partner"
+            channelId = "channel id"
         )
 
         eventBus.publish(VideoBroadcastRequested(video))

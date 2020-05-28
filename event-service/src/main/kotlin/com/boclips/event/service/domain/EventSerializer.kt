@@ -74,7 +74,7 @@ object EventSerializer {
 
     fun convertCollectionVisibilityChanged(event: CollectionVisibilityChanged): Map<String, Any> {
         return convertCollectionEvent(event, "COLLECTION_VISIBILITY_CHANGED") +
-            ("isPublic" to event.isPublic) + ("isDiscoverable" to event.isDiscoverable)
+            ("isDiscoverable" to event.isDiscoverable)
     }
 
     fun convertCollectionSubjectsChanged(event: CollectionSubjectsChanged): Map<String, Any> {
