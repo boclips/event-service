@@ -147,7 +147,7 @@ class VideoFormatterTest extends Test {
     jsonObject.getInt("originalHeight") shouldBe 0
   }
 
-  it should "write width and height of the largest asset" in {
+  it should "write dimensions and size of the largest asset" in {
     val video = createVideo(assets = List(
       createVideoAsset(dimensions = Dimensions(480, 360), sizeKb = 1024),
       createVideoAsset(dimensions = Dimensions(1024, 860), sizeKb = 2048)
@@ -157,15 +157,17 @@ class VideoFormatterTest extends Test {
 
     jsonObject.getInt("assetWidth") shouldBe 1024
     jsonObject.getInt("assetHeight") shouldBe 860
+    jsonObject.getInt("assetSizeKb") shouldBe 2048
   }
 
-  it should "write width and height of the largest asset as -1 when no assets" in {
+  it should "write dimensions and size of the largest asset as 0 when no assets" in {
     val video = createVideo(assets = List())
 
     val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
 
     jsonObject.getInt("assetWidth") shouldBe 0
     jsonObject.getInt("assetHeight") shouldBe 0
+    jsonObject.getInt("assetSizeKb") shouldBe 0
   }
 
   it should "write nested storage charges" in {
