@@ -8,7 +8,8 @@ object VideoFactory {
 
   def createVideo(
                    id: String = "123",
-                   ingestedAt: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+                   releasedOn: LocalDate = LocalDate.now(),
+                   ingestedAt: ZonedDateTime = ZonedDateTime.now(),
                    title: String = "title",
                    channelId: String = "channel id",
                    contentType: Option[String] = None,
@@ -21,6 +22,7 @@ object VideoFactory {
                  ): Video = {
     Video(
       id = VideoId(id),
+      releasedOn = releasedOn,
       ingestedAt = ingestedAt,
       title = title,
       contentType = contentType,

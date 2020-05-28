@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import java.time.{Duration, Period, ZonedDateTime}
+import java.time.{Duration, LocalDate, Period, ZonedDateTime}
 import java.util.Locale
 
 import com.boclips.event.aggregator.domain.model._
@@ -103,8 +103,11 @@ class VideoFormatterTest extends Test {
     jsonObject.get("type").getAsString shouldBe "UNKNOWN"
   }
 
-  it should "write ingestion timestamp" in {
-    val video = createVideo(ingestedAt = ZonedDateTime.parse("2018-11-12T12:14:16.7Z[UTC]"))
+  it should "write release and ingestion time info" in {
+    val video = createVideo(
+      releasedOn = LocalDate.parse("2016-10-02"),
+      ingestedAt = ZonedDateTime.parse("2018-11-12T12:14:16.7Z[UTC]")
+    )
 
     val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
 

@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import java.time.{Duration, ZonedDateTime}
+import java.time.{Duration, LocalDate, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument}
@@ -18,6 +18,7 @@ object DocumentToVideoConverter {
       contentType = Option(document.getType),
       subjects = document.getSubjects.asScala.map(name => Subject(name)).toList,
       duration = Duration.ofSeconds(document.getDurationSeconds.toLong),
+      releasedOn = LocalDate.parse(document.getReleasedOn),
       ingestedAt = ZonedDateTime.parse(document.getIngestedAt),
       assets = document.getAssets match {
         case null => List()

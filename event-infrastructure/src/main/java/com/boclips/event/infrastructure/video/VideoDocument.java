@@ -39,6 +39,7 @@ public class VideoDocument implements Serializable {
         return VideoDocument.builder()
                 ._id("video-id")
                 .ingestedAt("2020-05-26T17:10:40+00:00")
+                .releasedOn("2020-05-26")
                 .title("video title")
                 .channelId("channel id")
                 .playbackProviderType("providertype")

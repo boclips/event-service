@@ -11,6 +11,7 @@ case class VideoId(value: String) extends Ordered[VideoId] {
 
 case class Video(
                   id: VideoId,
+                  releasedOn: LocalDate,
                   ingestedAt: ZonedDateTime,
                   title: String,
                   channelId: ChannelId,
