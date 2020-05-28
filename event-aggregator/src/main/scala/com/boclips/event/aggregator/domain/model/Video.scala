@@ -13,7 +13,7 @@ case class Video(
                   id: VideoId,
                   ingestedAt: ZonedDateTime,
                   title: String,
-                  contentPartner: String,
+                  channelId: ChannelId,
                   playbackProvider: String,
                   subjects: List[Subject],
                   contentType: Option[String],
@@ -42,7 +42,7 @@ case class Video(
   private def storageCharges(from: LocalDate, to: LocalDate, monthlyCostGbp: Double): List[VideoStorageCharge] = {
     if (from.withDayOfMonth(1) == to.withDayOfMonth(1)) {
       val cost = (to.getDayOfMonth - from.getDayOfMonth + 1.0) / from.lengthOfMonth() * monthlyCostGbp
-      VideoStorageCharge(id, contentPartner, from, to, cost) :: Nil
+      VideoStorageCharge(id, from, to, cost) :: Nil
     } else {
       val lastDayOfFirstMonth = from.withDayOfMonth(from.lengthOfMonth())
       val firstDayOfNextMonth = lastDayOfFirstMonth.plusDays(1)

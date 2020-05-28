@@ -1,12 +1,12 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideoDocument
+import com.boclips.event.infrastructure.video.VideoDocument
 
 class MongoVideoLoaderIntegrationTest extends IntegrationTest {
   "load" should "read videos" in mongoSparkTest { (spark, mongo) =>
-    val collection = mongo collection "videos"
-    collection insertOne createVideoDocument()
+    val collection = mongo.collection[VideoDocument]("videos")
+    collection insertOne VideoDocument.sample().build()
 
     val videos = new MongoVideoLoader(mongo).load()(spark).collect()
 

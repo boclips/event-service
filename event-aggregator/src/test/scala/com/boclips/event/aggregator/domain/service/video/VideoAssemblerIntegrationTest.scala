@@ -14,8 +14,8 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
 
   it should "include relevant order items in videos" in sparkTest { implicit spark =>
     val videos = rdd(
-      createVideo(id = "v1", contentPartner = "channel 1"),
-      createVideo(id = "v2", contentPartner = "channel 2"),
+      createVideo(id = "v1", channelId = "channel-1"),
+      createVideo(id = "v2", channelId = "channel-2"),
     )
 
     val playbacks = rdd(
@@ -33,9 +33,9 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
     )
 
     val channels = rdd(
-      createChannel(id = "channel-1", name = "channel 1"),
-      createChannel(id = "channel-2", name = "channel 2"),
-      createChannel(id = "channel-3", name = "channel 3")
+      createChannel(id = "channel-1"),
+      createChannel(id = "channel-2"),
+      createChannel(id = "channel-3"),
     )
 
     val impressions = rdd(

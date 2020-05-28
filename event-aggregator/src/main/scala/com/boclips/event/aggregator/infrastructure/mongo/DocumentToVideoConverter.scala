@@ -3,37 +3,46 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.{Duration, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model._
-import org.bson.Document
+import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument}
+
+import scala.collection.JavaConverters._
 
 object DocumentToVideoConverter {
 
-  def convert(document: Document): Video = {
+  def convert(document: VideoDocument): Video = {
     Video(
-      id = VideoId(document.getString("_id")),
-      title = document.getString("title"),
-      contentPartner = document.getString("contentPartnerName"),
-      playbackProvider = document.getString("playbackProviderType"),
-      contentType = Option(document.getString("type")),
-      subjects = document.getList[String]("subjects").map(name => Subject(name)),
-      duration = Duration.ofSeconds(document.getInteger("durationSeconds").toLong),
-      ingestedAt = ZonedDateTime.parse(document.getString("ingestedAt")),
-      assets = document.getList[Document]("assets") match {
+      id = VideoId(document.get_id()),
+      title = document.getTitle,
+      channelId = ChannelId(document.getChannelId),
+      playbackProvider = document.getPlaybackProviderType,
+      contentType = Option(document.getType),
+      subjects = document.getSubjects.asScala.map(name => Subject(name)).toList,
+      duration = Duration.ofSeconds(document.getDurationSeconds.toLong),
+      ingestedAt = ZonedDateTime.parse(document.getIngestedAt),
+      assets = document.getAssets match {
         case null => List()
-        case assetDocuments => assetDocuments.map(convertAsset)
+        case assetDocuments => assetDocuments.asScala.map(convertAsset).toList
       },
-      originalDimensions = (document.getInteger("originalWidth"), document.getInteger("originalHeight")) match {
+      originalDimensions = (document.getOriginalWidth, document.getOriginalHeight) match {
         case (null, null) => None
         case (width, height) => Some(Dimensions(width, height))
       },
-      ageRange = AgeRange(document.getIntOption("ageRangeMin"), document.getIntOption("ageRangeMax"))
+      ageRange = AgeRange(integerOption(document.getAgeRangeMin), integerOption(document.getAgeRangeMax)),
     )
   }
 
-  private def convertAsset(document: Document): VideoAsset = {
+  private def integerOption(x: java.lang.Integer): Option[Int] = {
+    x match {
+      case null => None
+      case _ => Some(x)
+    }
+  }
+
+  private def convertAsset(document: VideoAssetDocument): VideoAsset = {
     VideoAsset(
-      sizeKb = document.getInteger("sizeKb"),
-      bitrateKbps = document.getInteger("bitrateKbps"),
-      dimensions = Dimensions(document.getInteger("width"), document.getInteger("height"))
+      sizeKb = document.getSizeKb,
+      bitrateKbps = document.getBitrateKbps,
+      dimensions = Dimensions(document.getWidth, document.getHeight)
     )
   }
 }

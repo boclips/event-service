@@ -1,15 +1,16 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.time.{Duration, ZonedDateTime}
+import java.util.Collections.{singleton, singletonList}
 
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideoAssetDocument, createVideoDocument}
+import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument}
 
 class DocumentToVideoConverterTest extends Test {
 
   it should "convert the id" in {
-    val document = createVideoDocument(videoId = "the id")
+    val document = VideoDocument.sample()._id("the id").build()
 
     val video = DocumentToVideoConverter convert document
 
@@ -17,80 +18,80 @@ class DocumentToVideoConverterTest extends Test {
   }
 
   it should "convert the title" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(title = "the title")
+    val video = DocumentToVideoConverter convert VideoDocument.sample().title("the title").build()
 
     video.title shouldBe "the title"
   }
 
-  it should "convert the content partner name" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(contentPartnerName = "the content partner")
+  it should "convert channel id" in {
+    val video = DocumentToVideoConverter convert VideoDocument.sample().channelId("channel-id").build()
 
-    video.contentPartner shouldBe "the content partner"
+    video.channelId.value shouldBe "channel-id"
   }
 
   it should "convert the playback provider type" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(playbackProvider = "YOUTUBE")
+    val video = DocumentToVideoConverter convert VideoDocument.sample().playbackProviderType("YOUTUBE").build()
 
     video.playbackProvider shouldBe "YOUTUBE"
   }
 
   it should "convert the subjects" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(subjects = List("Maths"))
+    val video = DocumentToVideoConverter convert VideoDocument.sample().subjects(singleton("Maths")).build()
 
     video.subjects shouldBe List(Subject("Maths"))
   }
 
   it should "convert the age range" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(ageRange = AgeRange(Some(5), Some(15)))
+    val video = DocumentToVideoConverter convert VideoDocument.sample().ageRangeMin(5).ageRangeMax(15).build()
 
     video.ageRange shouldBe AgeRange(Some(5), Some(15))
   }
 
   it should "be able to handle open age ranges" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(ageRange = AgeRange(None, None))
+    val video = DocumentToVideoConverter convert VideoDocument.sample().ageRangeMin(null).ageRangeMax(null).build()
 
     video.ageRange shouldBe AgeRange(None, None)
   }
 
   it should "convert duration" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(durationSeconds = 100)
+    val video = DocumentToVideoConverter convert VideoDocument.sample().durationSeconds(100).build()
 
     video.duration shouldBe Duration.ofSeconds(100)
   }
 
   it should "convert content type when set" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(contentType = Some("NEWS"))
+    val video = DocumentToVideoConverter convert VideoDocument.sample().`type`("NEWS").build()
 
     video.contentType shouldBe Some("NEWS")
   }
 
   it should "convert content type when not set" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(contentType = None)
+    val video = DocumentToVideoConverter convert VideoDocument.sample().`type`(null).build()
 
     video.contentType shouldBe None
   }
 
   it should "convert ingestion timestamp" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(ingestedAt = ZonedDateTime.parse("2020-02-01T12:13:14.15Z[UTC]"))
+    val video = DocumentToVideoConverter convert VideoDocument.sample().ingestedAt("2020-02-01T12:13:14.15Z[UTC]").build()
 
     video.ingestedAt shouldBe ZonedDateTime.parse("2020-02-01T12:13:14.15Z[UTC]")
   }
 
   it should "convert original dimensions" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(originalWidth = Some(1280), originalHeight = Some(720))
+    val video = DocumentToVideoConverter convert VideoDocument.sample().originalWidth(1280).originalHeight(720).build()
 
     video.originalDimensions should contain(Dimensions(1280, 720))
   }
 
   it should "handle missing original dimensions" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(originalWidth = None, originalHeight = None)
+    val video = DocumentToVideoConverter convert VideoDocument.sample().originalWidth(null).originalHeight(null).build()
 
     video.originalDimensions shouldBe empty
   }
 
   it should "convert assets" in {
-    val assetDocument = createVideoAssetDocument(id = "the-id", width = 480, height = 320, sizeKb = 1024, bitrateKbps = 100)
-    val videoDocument = createVideoDocument(assets = Some(List(assetDocument)))
+    val assetDocument = VideoAssetDocument.sample().id("the-id").width(480).height(320).sizeKb(1024).bitrateKbps(100).build()
+    val videoDocument = VideoDocument.sample().assets(singletonList(assetDocument)).build()
     val video = DocumentToVideoConverter convert videoDocument
 
     video.assets should have size 1
@@ -98,7 +99,7 @@ class DocumentToVideoConverterTest extends Test {
   }
 
   it should "handle missing assets" in {
-    val video = DocumentToVideoConverter convert createVideoDocument(assets = None)
+    val video = DocumentToVideoConverter convert VideoDocument.sample().assets(null).build()
 
     video.assets shouldBe empty
   }

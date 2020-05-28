@@ -27,8 +27,8 @@ object VideoAssembler {
       .setName("Order items by video ID")
 
     val channelsByVideoId =
-      videos.keyBy(_.contentPartner)
-        .join(channels.keyBy(_.name))
+      videos.keyBy(_.channelId)
+        .join(channels.keyBy(_.id))
         .values
         .map { case (video, channel) => (video.id, channel) }
 

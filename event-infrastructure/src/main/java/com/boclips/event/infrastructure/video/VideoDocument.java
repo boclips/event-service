@@ -2,6 +2,7 @@ package com.boclips.event.infrastructure.video;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,8 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VideoDocument {
+
+public class VideoDocument implements Serializable {
     @NonNull
     private String _id;
     @NonNull

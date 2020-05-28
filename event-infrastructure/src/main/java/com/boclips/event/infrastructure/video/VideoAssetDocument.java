@@ -2,11 +2,13 @@ package com.boclips.event.infrastructure.video;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VideoAssetDocument {
+public class VideoAssetDocument implements Serializable {
     @NonNull
     private String id;
     @NonNull

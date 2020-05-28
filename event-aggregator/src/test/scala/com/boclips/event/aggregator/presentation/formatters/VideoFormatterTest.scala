@@ -27,7 +27,6 @@ class VideoFormatterTest extends Test {
   it should "set all the necessary fields" in {
     val video = createVideo(
       id = "the-id",
-      contentPartner = "AP",
       playbackProvider = "YOUTUBE",
       subjects = List("Maths"),
       ageRange = AgeRange(Some(5), Some(6))
@@ -203,7 +202,7 @@ class VideoFormatterTest extends Test {
   }
 
   it should "write nested channels" in {
-    val video = createVideo(contentPartner = "cool channel")
+    val video = createVideo()
     val channel = createChannel(
       id = "my-channel-id",
       name = "cool channel",
