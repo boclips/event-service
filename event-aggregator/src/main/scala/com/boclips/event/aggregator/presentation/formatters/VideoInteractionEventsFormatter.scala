@@ -8,7 +8,7 @@ import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.JsonObject
 
-object VideoInteractionEventsFormatter extends SingleRowFormatter[VideoInteractedWithEvent]{
+object VideoInteractionEventsFormatter extends SingleRowFormatter[VideoInteractedWithEvent] {
   override def writeRow(event: VideoInteractedWithEvent, json: JsonObject): Unit = {
     json.addProperty("timestamp", event.timestamp.format(ISO_OFFSET_DATE_TIME))
     json.addProperty("userId", event.userId.value)

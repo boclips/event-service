@@ -36,8 +36,8 @@ class UpdateCollectionIntegrationTest : AbstractSpringIntegrationTest() {
         collectionRepository.saveCollection(createCollection(id = "collection-id", title = "collection title"))
 
         val collection = createCollection(
-                id = "collection-id",
-                title = "updated collection title"
+            id = "collection-id",
+            title = "updated collection title"
         )
 
         eventBus.publish(CollectionUpdated(collection))
@@ -50,8 +50,8 @@ class UpdateCollectionIntegrationTest : AbstractSpringIntegrationTest() {
         collectionRepository.saveCollection(createCollection(id = "collection-id", title = "collection title"))
 
         val collection = createCollection(
-                id = "collection-id",
-                title = "updated collection title"
+            id = "collection-id",
+            title = "updated collection title"
         )
 
         eventBus.publish(CollectionBroadcastRequested(collection))
@@ -63,10 +63,12 @@ class UpdateCollectionIntegrationTest : AbstractSpringIntegrationTest() {
     fun `collection deleted`() {
         collectionRepository.saveCollection(createCollection(id = "collection-id", title = "collection title"))
 
-        eventBus.publish(CollectionDeleted.builder()
+        eventBus.publish(
+            CollectionDeleted.builder()
                 .userId("user@example.com")
                 .collectionId("collection-id")
-                .build())
+                .build()
+        )
 
         assertThat(document().toJson()).contains("\"deleted\": true")
     }

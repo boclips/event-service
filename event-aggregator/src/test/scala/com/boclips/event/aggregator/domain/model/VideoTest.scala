@@ -39,7 +39,7 @@ class VideoTest extends Test {
     )
 
     val charges = video.storageCharges(to = LocalDate.parse("2020-05-10"))
-        .sortBy(_.periodStart.toEpochDay)
+      .sortBy(_.periodStart.toEpochDay)
 
     charges should have length 4
     charges(0).periodStart shouldBe LocalDate.parse("2020-02-15")

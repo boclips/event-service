@@ -1,4 +1,4 @@
-package com.order;
+package com.boclips.event.infrastructure.order;
 
 import lombok.*;
 
@@ -24,7 +24,7 @@ public final class OrderDocument {
     @NonNull
     private List<OrderItemDocument> items;
 
-    public static OrderDocument.OrderDocumentBuilder sample() {
+    public static OrderDocumentBuilder sample() {
         return OrderDocument.builder()
                 ._id("order-id")
                 .status("my status")

@@ -4,7 +4,6 @@ import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.{API_ORGANISATION, UserId}
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createOrganisationDocument, createUserDocument}
 
 class DocumentToUserConverterTest extends Test {
@@ -124,7 +123,7 @@ class DocumentToUserConverterTest extends Test {
 
     val user = DocumentToUserConverter convert userDocument
 
-    user.organisation.get.tags should contain only("tag")
+    user.organisation.get.tags should contain only ("tag")
   }
 
   it should "handle organisation billing when populated" in {

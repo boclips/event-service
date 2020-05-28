@@ -1,5 +1,6 @@
 package com.boclips.event.service.infrastructure.mongodb
 
+import com.boclips.event.infrastructure.channel.ChannelDocument
 import com.boclips.event.service.domain.ChannelRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.ChannelFactory.createChannel
@@ -26,13 +27,13 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         channelRepository.save(createChannel(id = id, name = "My simple channel!"))
 
         val created = getSingleDocument()
-        assertThat(created.id).isEqualTo(id)
+        assertThat(created._id).isEqualTo(id)
         assertThat(created.name).isEqualTo("My simple channel!")
 
         channelRepository.save(createChannel(id = id, name = "My new name"))
 
         val updated = getSingleDocument()
-        assertThat(updated.id).isEqualTo(id)
+        assertThat(updated._id).isEqualTo(id)
         assertThat(updated.name).isEqualTo("My new name")
     }
 
@@ -54,7 +55,7 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = getSingleDocument()
-        assertThat(document.id).isEqualTo(id)
+        assertThat(document._id).isEqualTo(id)
         val details = document.details
         assertThat(details.contentTypes).containsExactlyInAnyOrder("NEWS", "INSTRUCTIONAL")
         assertThat(details.contentCategories).containsExactlyInAnyOrder("Training", "Learning", "Animation")
@@ -78,7 +79,7 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = getSingleDocument()
-        assertThat(document.id).isEqualTo(id)
+        assertThat(document._id).isEqualTo(id)
         val ingest = document.ingest
         assertThat(ingest.type).isEqualTo("MRSS")
         assertThat(ingest.deliveryFrequency).isEqualTo("P2M")
@@ -112,8 +113,8 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = getSingleDocument()
-        assertThat(document.id).isEqualTo(id)
-        val pedagogy = document.pedagogy;
+        assertThat(document._id).isEqualTo(id)
+        val pedagogy = document.pedagogy
         assertThat(pedagogy.subjectNames)
             .containsExactlyInAnyOrder("subject 1", "subject 2")
         assertThat(pedagogy.ageRangeMin).isEqualTo(8)
@@ -140,8 +141,8 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = getSingleDocument()
-        assertThat(document.id)
-        val marketing = document.marketing;
+        assertThat(document._id)
+        val marketing = document.marketing
         assertThat(marketing.status).isEqualTo("My status")
         assertThat(marketing.oneLineIntro).isEqualTo("One line intro")
         assertThat(marketing.logos).containsExactlyInAnyOrder(

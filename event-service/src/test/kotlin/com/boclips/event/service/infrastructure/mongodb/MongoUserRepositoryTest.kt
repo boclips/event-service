@@ -1,12 +1,12 @@
 package com.boclips.event.service.infrastructure.mongodb
 
+import com.boclips.event.infrastructure.user.UserDocument
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.OrganisationFactory.createAddress
 import com.boclips.event.service.testsupport.OrganisationFactory.createDeal
 import com.boclips.event.service.testsupport.OrganisationFactory.createOrganisation
 import com.boclips.event.service.testsupport.UserFactory.createUser
 import com.boclips.event.service.testsupport.UserFactory.createUserProfile
-import com.boclips.eventbus.domain.user.Address
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -67,7 +67,7 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     fun `saveUser saves user id`() {
         userRepository.saveUser(createUser(id = "u1"))
 
-        assertThat(userDocument().id).isEqualTo("u1")
+        assertThat(userDocument()._id).isEqualTo("u1")
     }
 
     @Test
@@ -79,11 +79,13 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `saveUser saves address`() {
-        val organisation = createOrganisation(address = createAddress(
-            state = "IL",
-            countryCode = "USA",
-            postCode = "abc123"
-        ))
+        val organisation = createOrganisation(
+            address = createAddress(
+                state = "IL",
+                countryCode = "USA",
+                postCode = "abc123"
+            )
+        )
         userRepository.saveUser(createUser(organisation = organisation))
 
         assertThat(userDocument().organisation!!.state).isEqualTo("IL")
@@ -93,10 +95,12 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `saveUser saves deal`() {
-        val organisation = createOrganisation(deal = createDeal(
-            expiresAt = ZonedDateTime.parse("2020-05-29T00:00:00Z"),
-            billing = true
-        ))
+        val organisation = createOrganisation(
+            deal = createDeal(
+                expiresAt = ZonedDateTime.parse("2020-05-29T00:00:00Z"),
+                billing = true
+            )
+        )
         userRepository.saveUser(createUser(organisation = organisation))
 
         assertThat(userDocument().organisation!!.dealExpiresAt).isEqualTo("2020-05-29T00:00:00Z")
@@ -106,7 +110,8 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     @Test
     fun `saveUser saves createdAt`() {
         userRepository.saveUser(
-            createUser(createdAt = ZonedDateTime.of(
+            createUser(
+                createdAt = ZonedDateTime.of(
                     2019,
                     6,
                     8,

@@ -6,7 +6,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.cre
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoInteractedWithEvent
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem}
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
-import com.boclips.event.aggregator.testsupport.testfactories.{ChannelFactory, SearchFactory}
+import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.createVideoSearchResultImpression
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
 
@@ -62,7 +62,7 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
     videosWithRelatedData.head.video.id shouldBe VideoId("v1")
     videosWithRelatedData.head.playbacks should have size 2
     videosWithRelatedData.head.orders should have size 2
-    videosWithRelatedData.head.channel.map(_.id) should contain (ChannelId("channel-1"))
+    videosWithRelatedData.head.channel.map(_.id) should contain(ChannelId("channel-1"))
     videosWithRelatedData.head.interactions should have size 2
 
     val v1Orders = videosWithRelatedData.head.orders.sortBy(_.order.id.value)

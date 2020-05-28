@@ -52,8 +52,8 @@ object Schema {
         case _ => StringFieldType
       }
     }
-    else if(value.isNumber) FloatFieldType
-    else if(value.isBoolean) BooleanFieldType
+    else if (value.isNumber) FloatFieldType
+    else if (value.isBoolean) BooleanFieldType
     else throw new RuntimeException(s"Cannot determine schema type for field value $value")
   }
 

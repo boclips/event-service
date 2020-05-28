@@ -3,8 +3,8 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.temporal.ChronoUnit
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.{CollectionId, DeviceId, Query, Url, UserId, VideoId}
 import com.boclips.event.aggregator.domain.model.events._
+import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchEventDocument
@@ -221,7 +221,7 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document)
 
     event.timestamp shouldBe ZonedDateTime.parse("2020-01-10T12:13:14Z")
-    event.url should contain (Url.parse("http://teachers.boclips.com/apage"))
+    event.url should contain(Url.parse("http://teachers.boclips.com/apage"))
     event.userId shouldBe UserId("user")
     event.asInstanceOf[CollectionSearchedEvent].pageIndex shouldBe 1
     event.asInstanceOf[CollectionSearchedEvent].pageSize shouldBe 20
@@ -247,7 +247,6 @@ class DocumentToEventConverterTest extends Test {
     event.asInstanceOf[VideoInteractedWithEvent].videoId shouldBe VideoId("666")
     event.asInstanceOf[VideoInteractedWithEvent].subtype shouldBe Some("HAD_FUN_WITH_VIDEO")
   }
-
 
 
   "convert other events" should "convert user id" in {

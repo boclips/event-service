@@ -130,7 +130,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
-    fun pageRendered(){
+    fun pageRendered() {
         val event = createPageRendered(url = "http://teachers.boclips.com/my-videos")
         eventBus.publish(event)
         assertThat(document().toJson()).contains("http://teachers.boclips.com/my-videos")
@@ -152,7 +152,7 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
     }
 
     private fun document(): Document {
-        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoEventWriter.COLLECTION_NAME).find().toList().single()
+        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoEventWriter.COLLECTION_NAME).find()
+            .toList().single()
     }
-
 }

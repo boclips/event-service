@@ -28,8 +28,8 @@ class UserWithRelatedDataTest extends Test {
     val userWithStatus = UserWithRelatedData.from(user, playbacks = List(), referredPlaybacks = List(), searches = List(), sessions = List(), monthsActive = List(YearMonth.of(2020, JANUARY)), today)
 
     userWithStatus.monthlyActiveStatus should have size 2
-    userWithStatus.monthlyActiveStatus should contain (UserActiveStatus(month = YearMonth.of(2020, JANUARY), isActive = true))
-    userWithStatus.monthlyActiveStatus should contain (UserActiveStatus(month = YearMonth.of(2020, FEBRUARY), isActive = true))
+    userWithStatus.monthlyActiveStatus should contain(UserActiveStatus(month = YearMonth.of(2020, JANUARY), isActive = true))
+    userWithStatus.monthlyActiveStatus should contain(UserActiveStatus(month = YearMonth.of(2020, FEBRUARY), isActive = true))
   }
 
   it should "mark user as not active when there have been over 60 days since playback" in {
@@ -39,8 +39,8 @@ class UserWithRelatedDataTest extends Test {
     val userWithStatus = UserWithRelatedData.from(user, playbacks = List(), referredPlaybacks = List(), searches = List(), sessions = List(), monthsActive = List(YearMonth.of(2019, NOVEMBER)), today)
 
     userWithStatus.monthlyActiveStatus should have size 4
-    userWithStatus.monthlyActiveStatus should contain (UserActiveStatus(month = YearMonth.of(2020, JANUARY), isActive = true))
-    userWithStatus.monthlyActiveStatus should contain (UserActiveStatus(month = YearMonth.of(2020, FEBRUARY), isActive = false))
+    userWithStatus.monthlyActiveStatus should contain(UserActiveStatus(month = YearMonth.of(2020, JANUARY), isActive = true))
+    userWithStatus.monthlyActiveStatus should contain(UserActiveStatus(month = YearMonth.of(2020, FEBRUARY), isActive = false))
   }
 
 }

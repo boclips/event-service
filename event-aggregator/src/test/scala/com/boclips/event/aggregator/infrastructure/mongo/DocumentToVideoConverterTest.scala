@@ -1,10 +1,9 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import java.time.{Duration, LocalDate, ZonedDateTime}
+import java.time.{Duration, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.{AgeRange, Dimensions, Subject, VideoAsset, VideoId}
+import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideoAssetDocument, createVideoDocument}
 
 class DocumentToVideoConverterTest extends Test {

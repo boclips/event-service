@@ -2,7 +2,7 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import com.boclips.event.aggregator.domain.model.Order
 import com.boclips.event.aggregator.domain.service.OrderLoader
-import com.order.OrderDocument
+import com.boclips.event.infrastructure.order.OrderDocument
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.storage.StorageLevel

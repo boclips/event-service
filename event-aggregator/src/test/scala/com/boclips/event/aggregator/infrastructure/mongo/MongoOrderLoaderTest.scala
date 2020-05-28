@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.order.OrderDocument
+import com.boclips.event.infrastructure.order.OrderDocument
 import org.apache.spark.sql.SparkSession
 
 class MongoOrderLoaderTest extends IntegrationTest {

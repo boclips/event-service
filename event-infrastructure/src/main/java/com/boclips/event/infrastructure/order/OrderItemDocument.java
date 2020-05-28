@@ -1,4 +1,4 @@
-package com.order;
+package com.boclips.event.infrastructure.order;
 
 import lombok.*;
 

@@ -19,7 +19,7 @@ object SessionFormatter extends SingleRowFormatter[Session] {
       val eventJson = new JsonObject
       eventJson.addProperty("id", UUID.randomUUID().toString)
       eventJson.addProperty("timestamp", event.timestamp.format(ISO_OFFSET_DATE_TIME))
-      eventJson.addProperty("typeName",event.typeName)
+      eventJson.addProperty("typeName", event.typeName)
       eventJson.addProperty("subtype", event.subtype.getOrElse(""))
       eventJson.addProperty("urlHost", event.url.map(_.host))
       eventJson.addProperty("urlPath", event.url.map(_.path))
@@ -27,6 +27,6 @@ object SessionFormatter extends SingleRowFormatter[Session] {
 
       eventJson
     })
-    json.addJsonArrayProperty("events",sessionEventsJson)
+    json.addJsonArrayProperty("events", sessionEventsJson)
   }
 }

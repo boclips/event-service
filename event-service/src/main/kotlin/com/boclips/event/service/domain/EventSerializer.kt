@@ -18,7 +18,7 @@ import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
-import java.util.*
+import java.util.Date
 
 object EventSerializer {
 

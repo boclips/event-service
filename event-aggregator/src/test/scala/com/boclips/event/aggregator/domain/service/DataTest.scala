@@ -3,8 +3,8 @@ package com.boclips.event.aggregator.domain.service
 import com.boclips.event.aggregator.domain.model.events.{Event, EventConstants}
 import com.boclips.event.aggregator.domain.model.{API_ORGANISATION, SCHOOL_ORGANISATION, User, Video}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
+import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
 
 class DataTest extends IntegrationTest {
 

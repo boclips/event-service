@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.ZonedDateTime
 import java.util
 
-import com.boclips.event.aggregator.domain.model.{Deal, Organisation, OrganisationType, User, UserId}
+import com.boclips.event.aggregator.domain.model._
 import org.bson.Document
 
 import scala.collection.JavaConverters._
@@ -31,8 +31,8 @@ object DocumentToUserConverter {
   private def convertOrganisation(organisationDocument: Option[util.Map[String, Object]]): Option[Organisation] = organisationDocument.map(document => {
 
     val tags: Set[String] = Option(document.get("tags").asInstanceOf[util.List[String]])
-        .map(_.asScala.toSet)
-        .getOrElse(Set[String]())
+      .map(_.asScala.toSet)
+      .getOrElse(Set[String]())
 
     Organisation(
       name = document.get("name").toString,
@@ -45,6 +45,7 @@ object DocumentToUserConverter {
       deal = Deal(
         billing = document.get("billing").asInstanceOf[Boolean],
       ),
-    )}
+    )
+  }
   )
 }

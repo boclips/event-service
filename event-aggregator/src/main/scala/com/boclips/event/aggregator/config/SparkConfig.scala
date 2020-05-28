@@ -23,9 +23,6 @@ class SparkConfig(
 }
 
 
-
-
-
 object SparkConfig {
   val PROJECT_ID = "boclips-prod"
 

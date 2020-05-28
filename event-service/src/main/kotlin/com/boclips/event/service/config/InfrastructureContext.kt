@@ -1,7 +1,17 @@
 package com.boclips.event.service.config
 
-import com.boclips.event.service.domain.*
-import com.boclips.event.service.infrastructure.mongodb.*
+import com.boclips.event.service.domain.ChannelRepository
+import com.boclips.event.service.domain.CollectionRepository
+import com.boclips.event.service.domain.EventWriter
+import com.boclips.event.service.domain.OrderRepository
+import com.boclips.event.service.domain.UserRepository
+import com.boclips.event.service.domain.VideoRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoChannelRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoCollectionRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoEventWriter
+import com.boclips.event.service.infrastructure.mongodb.MongoOrderRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoUserRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoVideoRepository
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import org.litote.kmongo.KMongo

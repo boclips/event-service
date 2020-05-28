@@ -58,7 +58,7 @@ class EventRepository(private val writer: EventWriter) {
         writer.write(EventSerializer.convertVideoInteractedWith(event))
     }
 
-    fun savePageRendered(event: PageRendered){
+    fun savePageRendered(event: PageRendered) {
         writer.write(EventSerializer.convertPageRendered(event))
     }
 

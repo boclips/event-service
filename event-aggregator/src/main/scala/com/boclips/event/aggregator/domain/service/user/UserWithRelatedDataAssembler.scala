@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.domain.service.user
 import java.time.{LocalDate, YearMonth}
 
 import com.boclips.event.aggregator._
-import com.boclips.event.aggregator.domain.model.{Playback, Search, Session, User, UserId, UserWithRelatedData}
+import com.boclips.event.aggregator.domain.model._
 import org.apache.spark.rdd.RDD
 
 object UserWithRelatedDataAssembler {

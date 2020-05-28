@@ -5,7 +5,7 @@ import com.boclips.event.aggregator.presentation.formatters.CollectionSearchResu
 
 case class CollectionSearchResultImpression(collectionId: CollectionId, search: SearchRequest, interaction: Boolean)
 
-object CollectionSearchResultImpression{
+object CollectionSearchResultImpression {
   implicit val formatter: RowFormatter[CollectionSearchResultImpression] = CollectionSearchResultImpressionFormatter
 }
 

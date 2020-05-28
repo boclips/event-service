@@ -22,7 +22,7 @@ object SearchFormatter extends SingleRowFormatter[Search] {
     json.addProperty("videoSecondsPlayed", interactions.videosPlayed.map(_.secondsPlayed).sum)
     json.addProperty("totalResults", response.totalResults)
     json.addProperty("minResults", response.minResults)
-    json.addProperty("collectionResultsCount",response.collectionResults.size)
+    json.addProperty("collectionResultsCount", response.collectionResults.size)
     json.addProperty("interactionCount", videoInteractionCount + collectionInteractionCount)
     json.addProperty("videoInteractionCount", videoInteractionCount)
     json.addProperty("collectionInteractionCount", collectionInteractionCount)

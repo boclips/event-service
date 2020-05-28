@@ -104,12 +104,12 @@ class PlaybackFormatterTest extends Test {
 
   it should "write pct of video duration watched" in {
     val json = PlaybackFormatter.formatRow(createPlayback(secondsWatched = 120, videoDuration = Duration.ofMinutes(3)))
-    json.get("percentageOfVideoDurationWatched").getAsDouble shouldBe  0.66 +-0.01
+    json.get("percentageOfVideoDurationWatched").getAsDouble shouldBe 0.66 +- 0.01
 
   }
   it should "write pct of video duration zero when duration is zero" in {
     val json = PlaybackFormatter.formatRow(createPlayback(secondsWatched = 120, videoDuration = Duration.ofSeconds(0)))
-    json.get("percentageOfVideoDurationWatched").getAsDouble shouldBe  0
+    json.get("percentageOfVideoDurationWatched").getAsDouble shouldBe 0
   }
 
   it should "write payable flag when playback is payable" in {

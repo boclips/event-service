@@ -10,16 +10,16 @@ case class OrderId(value: String) extends Ordered[OrderId] {
 }
 
 case class OrderItem(
-                    videoId: VideoId,
-                    priceGbp: BigDecimal
+                      videoId: VideoId,
+                      priceGbp: BigDecimal
                     )
 
 case class Order(
-                id: OrderId,
-                createdAt: ZonedDateTime,
-                updatedAt: ZonedDateTime,
-                customerOrganisationName: String,
-                items: List[OrderItem]
+                  id: OrderId,
+                  createdAt: ZonedDateTime,
+                  updatedAt: ZonedDateTime,
+                  customerOrganisationName: String,
+                  items: List[OrderItem]
                 )
 
 case class VideoItemWithOrder(item: OrderItem, order: Order)

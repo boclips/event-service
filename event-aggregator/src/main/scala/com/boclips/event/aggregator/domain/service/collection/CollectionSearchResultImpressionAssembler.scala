@@ -7,12 +7,12 @@ object CollectionSearchResultImpressionAssembler {
 
   def apply(searches: RDD[Search]): RDD[CollectionSearchResultImpression] = {
     searches.flatMap(search =>
-      search.response.collectionResults.map( result =>
-      CollectionSearchResultImpression(collectionId = result.collectionId,
-        search = search.request,
-        interaction = result.interaction
+      search.response.collectionResults.map(result =>
+        CollectionSearchResultImpression(collectionId = result.collectionId,
+          search = search.request,
+          interaction = result.interaction
+        )
       )
-    )
     )
   }
 }

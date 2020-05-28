@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.domain.service.search
 import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.{CollectionId, Query, Url, UserId, VideoId}
+import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory._
 import com.boclips.event.aggregator.testsupport.testfactories.SessionFactory.createSession
@@ -158,7 +158,7 @@ class SessionSearchAssemblerTest extends Test {
     val searches = new SessionSearchAssembler() assembleSearchesInSession events
 
     searches should have size 1
-    searches.head.request.urlParamsKeys shouldBe Set("age_range","duration","q","page","test")
+    searches.head.request.urlParamsKeys shouldBe Set("age_range", "duration", "q", "page", "test")
   }
 
   it should "include collection impressions" in {

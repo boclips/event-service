@@ -34,7 +34,7 @@ case class Data(
     users
       .filter(user => user.organisation match {
         case Some(organisation) => organisation.`type` == SCHOOL_ORGANISATION
-        case None =>  true
+        case None => true
       })
       .setName("Users (school only)")
       .persist(StorageLevel.MEMORY_AND_DISK)

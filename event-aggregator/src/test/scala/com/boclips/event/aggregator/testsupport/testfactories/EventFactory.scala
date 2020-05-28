@@ -3,8 +3,8 @@ package com.boclips.event.aggregator.testsupport.testfactories
 import java.time.{ZoneOffset, ZonedDateTime}
 import java.util.{Date, UUID}
 
-import com.boclips.event.aggregator.domain.model.events._
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.events._
 import org.bson.Document
 import org.bson.types.ObjectId
 

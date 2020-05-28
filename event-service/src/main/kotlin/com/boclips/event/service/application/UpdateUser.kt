@@ -1,4 +1,5 @@
 package com.boclips.event.service.application
+
 import com.boclips.event.service.domain.UserRepository
 import com.boclips.eventbus.BoclipsEventListener
 import com.boclips.eventbus.events.user.UserBroadcastRequested
@@ -18,7 +19,7 @@ class UpdateUser(private val userRepository: UserRepository) {
     }
 
     @BoclipsEventListener
-    fun userBroadcasted(userBroadcastRequested: UserBroadcastRequested){
+    fun userBroadcasted(userBroadcastRequested: UserBroadcastRequested) {
         userRepository.saveUser(userBroadcastRequested.user)
     }
 }

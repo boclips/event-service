@@ -29,7 +29,7 @@ object PlaybackFormatter extends SingleRowFormatter[Playback] {
     json.addProperty("refererId", playback.refererId.map(_.value).orNull)
     json.addProperty("id", playback.id)
     json.addProperty("playbackId", playback.id)
-    json.addProperty("durationSeconds",  durationSeconds)
+    json.addProperty("durationSeconds", durationSeconds)
     json.addProperty("urlPath", url.map(_.path))
     json.addProperty("urlHost", url.map(_.host))
     json.addProperty("isShare", playback.isShare)

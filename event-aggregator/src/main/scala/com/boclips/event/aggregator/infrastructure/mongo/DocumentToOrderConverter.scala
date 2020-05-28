@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.{Order, OrderId, OrderItem, VideoId}
-import com.order.OrderDocument
+import com.boclips.event.infrastructure.order.OrderDocument
 
 import scala.collection.JavaConverters._
 

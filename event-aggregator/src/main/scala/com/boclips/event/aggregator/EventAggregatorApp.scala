@@ -16,7 +16,7 @@ import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembl
 import com.boclips.event.aggregator.domain.service.user.UserWithRelatedDataAssembler
 import com.boclips.event.aggregator.domain.service.video.{VideoAssembler, VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
-import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoEventLoader, MongoOrderLoader, SparkMongoClient, MongoUserLoader, MongoVideoLoader}
+import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
 import com.boclips.event.aggregator.presentation.formatters.{CollectionFormatter, DataVersionFormatter, VideoFormatter}
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableWriter}
 import org.apache.spark.rdd.RDD

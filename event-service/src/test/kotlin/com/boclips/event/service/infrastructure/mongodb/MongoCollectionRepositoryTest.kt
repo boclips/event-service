@@ -18,7 +18,8 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `creating a collection`() {
-        collectionRepository.saveCollection(createCollection(
+        collectionRepository.saveCollection(
+            createCollection(
                 id = "1234",
                 title = "collection title",
                 description = "collection description",
@@ -30,7 +31,8 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
                 createdTime = ZonedDateTime.of(2019, 10, 15, 10, 11, 12, 0, ZoneOffset.UTC),
                 updatedTime = ZonedDateTime.of(2019, 11, 15, 10, 11, 12, 0, ZoneOffset.UTC),
                 isDiscoverable = false
-        ))
+            )
+        )
 
         val document = document()
         assertThat(document.getString("_id")).isEqualTo("1234")
@@ -44,7 +46,7 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getList("bookmarks", String::class.java)).containsExactly("anotheruser@example.com")
         assertThat(document.getDate("createdTime")).isEqualTo("2019-10-15T10:11:12Z")
         assertThat(document.getDate("updatedTime")).isEqualTo("2019-11-15T10:11:12Z")
-        assertThat(document.getBoolean("public")).isEqualTo(false)
+        assertThat(document.getBoolean("discoverable")).isEqualTo(false)
         assertThat(document.getBoolean("deleted")).isEqualTo(false)
     }
 
@@ -69,6 +71,7 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     private fun document(): Document {
-        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoCollectionRepository.COLLECTION_NAME).find().toList().single()
+        return mongoClient.getDatabase(DatabaseConstants.DB_NAME)
+            .getCollection(MongoCollectionRepository.COLLECTION_NAME).find().toList().single()
     }
 }

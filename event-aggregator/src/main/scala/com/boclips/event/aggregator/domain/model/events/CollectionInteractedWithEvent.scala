@@ -13,9 +13,9 @@ case class CollectionInteractedWithEvent(
                                           subtype: Option[String],
                                           url: Option[Url],
                                           query: Option[Query]
-                                     ) extends Event {
-    override val deviceId: Option[DeviceId] = None
-    override val typeName: String = EventConstants.COLLECTION_INTERACTED_WITH
+                                        ) extends Event {
+  override val deviceId: Option[DeviceId] = None
+  override val typeName: String = EventConstants.COLLECTION_INTERACTED_WITH
 }
 
 object CollectionInteractedWithEvent {

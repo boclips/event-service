@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.{AgeRange, Collection, CollectionId, UserId, VideoId}
+import com.boclips.event.aggregator.domain.model._
 import org.bson.Document
 
 object DocumentToCollectionConverter {

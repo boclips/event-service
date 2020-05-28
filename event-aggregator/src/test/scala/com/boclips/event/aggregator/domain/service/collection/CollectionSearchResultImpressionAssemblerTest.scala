@@ -2,7 +2,7 @@ package com.boclips.event.aggregator.domain.service.collection
 
 import com.boclips.event.aggregator.domain.model.{CollectionId, CollectionImpression}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchResponse, createSearch}
+import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchResponse}
 
 
 class CollectionSearchResultImpressionAssemblerTest extends IntegrationTest {
@@ -19,7 +19,7 @@ class CollectionSearchResultImpressionAssemblerTest extends IntegrationTest {
     val impressions = CollectionSearchResultImpressionAssembler(searches).collect().toList
 
     impressions should have size 3
-    impressions.map(_.interaction) shouldBe List(true,false,true)
+    impressions.map(_.interaction) shouldBe List(true, false, true)
 
   }
 }

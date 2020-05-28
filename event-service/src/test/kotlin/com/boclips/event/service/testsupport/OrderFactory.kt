@@ -7,7 +7,6 @@ import java.time.ZonedDateTime
 
 object OrderFactory {
 
-
     fun createOrder(
         id: String = "order-123",
         status: OrderStatus? = OrderStatus.COMPLETED,

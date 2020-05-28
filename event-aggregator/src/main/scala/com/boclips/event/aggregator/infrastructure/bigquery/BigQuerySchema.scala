@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.bigquery
 
-import com.boclips.event.aggregator.presentation.formatters.schema.{BooleanFieldType, BytesFieldType, DateFieldType, DatetimeFieldType, FieldMode, FieldType, FloatFieldType, IntegerFieldType, NullableFieldMode, RecordFieldType, RepeatedFieldMode, RequiredFieldMode, Schema, SchemaField, StringFieldType, StructFieldType, TimeFieldType, TimestampFieldType}
+import com.boclips.event.aggregator.presentation.formatters.schema._
 import com.google.cloud.hadoop.io.bigquery.output.{BigQueryTableFieldSchema, BigQueryTableSchema}
 
 import scala.collection.JavaConverters._

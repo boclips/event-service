@@ -29,7 +29,7 @@ object ExampleInstance {
   }
 
   private def createOrNoneToStopInfiniteRecursion(tpe: universe.Type, dependentTypes: List[universe.Type]): Option[_] = {
-    if(dependentTypes.count(t => t == tpe) > MAX_RECURSION_DEPTH) {
+    if (dependentTypes.count(t => t == tpe) > MAX_RECURSION_DEPTH) {
       None
     } else {
       Some(create(tpe, dependentTypes))
@@ -57,7 +57,6 @@ object ExampleInstance {
       case e: Throwable => throw new UnsupportedOperationException(s"Error instantiating ${tpe.typeSymbol} with args $args", e)
     }
   }
-
 
 
   private def explicitSchemaBase(tpe: universe.Type, dependentTypes: List[universe.Type]): Option[_] = {
@@ -120,13 +119,13 @@ object ExampleInstance {
     else if (tpe <:< typeOf[Iterable[_]]) {
       Some(createOrNoneToStopInfiniteRecursion(tpe.typeArgs.head, dependentTypes).toList)
     }
-    else if(tpe <:< typeOf[OrganisationType]) {
+    else if (tpe <:< typeOf[OrganisationType]) {
       Some(SCHOOL_ORGANISATION)
     }
-    else if(tpe =:= typeOf[UserOrAnonymous]) {
+    else if (tpe =:= typeOf[UserOrAnonymous]) {
       Some(create[User]())
     }
-    else if(tpe =:= typeOf[Event]) {
+    else if (tpe =:= typeOf[Event]) {
       Some(create[OtherEvent])
     }
     else {

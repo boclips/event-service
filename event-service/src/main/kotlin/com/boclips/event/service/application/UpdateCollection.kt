@@ -28,6 +28,4 @@ class UpdateCollection(private val collectionRepository: CollectionRepository) {
     fun collectionDeleted(event: CollectionDeleted) {
         collectionRepository.markDeleted(event.collectionId)
     }
-
-
 }

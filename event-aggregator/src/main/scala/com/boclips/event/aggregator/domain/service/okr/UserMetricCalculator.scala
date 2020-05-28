@@ -56,9 +56,9 @@ object UserMetricCalculator {
       .toList
       .sortBy(_._1.toEpochDay)
       .foldLeft[List[(LocalDate, Long)]](Nil) {
-      case (Nil, (date, registrations)) => (date, registrations) :: Nil
-      case ((prevDate, prevRegistrations) :: tail, (date, registrations)) => (date, prevRegistrations + registrations) :: (prevDate, prevRegistrations) :: tail
-    }
+        case (Nil, (date, registrations)) => (date, registrations) :: Nil
+        case ((prevDate, prevRegistrations) :: tail, (date, registrations)) => (date, prevRegistrations + registrations) :: (prevDate, prevRegistrations) :: tail
+      }
       .map {
         case (date, cummulativeRegistrations) => (date, UserTotals(date, cummulativeRegistrations))
       }

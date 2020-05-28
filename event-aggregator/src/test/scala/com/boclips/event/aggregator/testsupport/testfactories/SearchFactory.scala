@@ -10,13 +10,13 @@ import com.boclips.event.aggregator.testsupport.TestTimestamps.thisYearWhole
 object SearchFactory {
 
   def createSearchRequest(
-                    id: String = "id",
-                    userId: String = "userId",
-                    query: String = "query",
-                    timestamp: ZonedDateTime = ZonedDateTime.now(),
-                    url: Option[Url] = None,
-                    urlParamsKeys: Set[String] = Set(),
-                  ): SearchRequest = {
+                           id: String = "id",
+                           userId: String = "userId",
+                           query: String = "query",
+                           timestamp: ZonedDateTime = ZonedDateTime.now(),
+                           url: Option[Url] = None,
+                           urlParamsKeys: Set[String] = Set(),
+                         ): SearchRequest = {
     SearchRequest(
       id = id,
       timestamp = timestamp,
@@ -28,10 +28,10 @@ object SearchFactory {
   }
 
   def createSearchResponse(
-                    videoResults: Set[SearchImpression] = Set(),
-                    collectionResults: Set[CollectionImpression] = Set(),
-                    totalResults: Int = 777,
-                    minResults: Int = 50,
+                            videoResults: Set[SearchImpression] = Set(),
+                            collectionResults: Set[CollectionImpression] = Set(),
+                            totalResults: Int = 777,
+                            minResults: Int = 50,
                           ): SearchResponse = {
     SearchResponse(
       videoResults = videoResults,
@@ -42,9 +42,9 @@ object SearchFactory {
   }
 
   def createSearchInteractions(
-                    resultPagesSeen: Int = 1,
-                    videosPlayed: Iterable[SearchResultPlayback] = List(),
-                  ): SearchInteractions = {
+                                resultPagesSeen: Int = 1,
+                                videosPlayed: Iterable[SearchResultPlayback] = List(),
+                              ): SearchInteractions = {
     SearchInteractions(
       videosPlayed = videosPlayed,
       resultPagesSeen = resultPagesSeen,
@@ -52,9 +52,9 @@ object SearchFactory {
   }
 
   def createSearch(
-                  request: SearchRequest = createSearchRequest(),
-                  response: SearchResponse = createSearchResponse(),
-                  interactions: SearchInteractions = createSearchInteractions(),
+                    request: SearchRequest = createSearchRequest(),
+                    response: SearchResponse = createSearchResponse(),
+                    interactions: SearchInteractions = createSearchInteractions(),
                   ): Search = {
     Search(
       request = request,
@@ -72,10 +72,10 @@ object SearchFactory {
   }
 
   def createCollectionSearchResultImpression(
-                                         search: SearchRequest = createSearchRequest(),
-                                         collectionId: CollectionId  = CollectionId("c1"),
-                                         interaction: Boolean = false
-                                       ): CollectionSearchResultImpression = {
+                                              search: SearchRequest = createSearchRequest(),
+                                              collectionId: CollectionId = CollectionId("c1"),
+                                              interaction: Boolean = false
+                                            ): CollectionSearchResultImpression = {
     CollectionSearchResultImpression(collectionId = collectionId, search = search, interaction = interaction)
   }
 

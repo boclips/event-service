@@ -81,17 +81,17 @@ class PersistEvent(private val eventRepository: EventRepository) {
     }
 
     @BoclipsEventListener
-    fun pageRendered(event: PageRendered){
+    fun pageRendered(event: PageRendered) {
         eventRepository.savePageRendered(event)
     }
 
     @BoclipsEventListener
-    fun platformInteractedWith(event: PlatformInteractedWith){
+    fun platformInteractedWith(event: PlatformInteractedWith) {
         eventRepository.savePlatformInteractedWith(event)
     }
 
     @BoclipsEventListener
-    fun userExpired(event: UserExpired){
+    fun userExpired(event: UserExpired) {
         eventRepository.saveUserExpired(event)
     }
 }

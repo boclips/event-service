@@ -1,15 +1,14 @@
 package com.boclips.event.service.infrastructure.mongodb
 
+import com.boclips.event.infrastructure.user.OrganisationDocument
+import com.boclips.event.infrastructure.user.UserDocument
 import com.boclips.event.service.domain.UserRepository
 import com.boclips.eventbus.domain.user.Organisation
 import com.boclips.eventbus.domain.user.User
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.mongodb.MongoClient
-import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.getCollection
 import org.litote.kmongo.save
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository {
@@ -18,19 +17,19 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
 
         val organisation = user.organisation?.let(this::organisationDocument)
 
-        val document = UserDocument(
-            id = user.id,
-            firstName = user.profile.firstName,
-            lastName = user.profile.lastName,
-            email = user.email,
-            createdAt = user.createdAt.toInstant().atZone(ZoneOffset.UTC).toString(),
-            subjects = subjects(user),
-            ages = user.profile.ages,
-            organisation = organisation,
-            role = user.profile.role,
-            isBoclipsEmployee = user.isBoclipsEmployee,
-            profileSchool = user.profile.school?.let(this::organisationDocument)
-        )
+        val document = UserDocument.builder()
+            ._id(user.id)
+            .firstName(user.profile.firstName)
+            .lastName(user.profile.lastName)
+            .email(user.email)
+            .createdAt(user.createdAt.toInstant().atZone(ZoneOffset.UTC).toString())
+            .subjects(subjects(user))
+            .ages(user.profile.ages)
+            .organisation(organisation)
+            .role(user.profile.role)
+            .isBoclipsEmployee(user.isBoclipsEmployee)
+            .profileSchool(user.profile.school?.let(this::organisationDocument))
+            .build()
 
         getCollection().save(document)
     }
@@ -40,18 +39,18 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
     }
 
     private fun organisationDocument(organisation: Organisation): OrganisationDocument {
-        return OrganisationDocument(
-            id = organisation.id,
-            type = organisation.type,
-            name = organisation.name,
-            postcode = organisation.address.postcode,
-            parent = organisation.parent?.let(this::organisationDocument),
-            countryCode = organisation.address.countryCode,
-            tags = organisation.tags,
-            state = organisation.address.state,
-            dealExpiresAt = organisation.deal.expiresAt?.format(ISO_DATE_TIME),
-            billing = organisation.deal.billing
-        )
+        return OrganisationDocument.builder()
+            .id(organisation.id)
+            .type(organisation.type)
+            .name(organisation.name)
+            .postcode(organisation.address.postcode)
+            .parent(organisation.parent?.let(this::organisationDocument))
+            .countryCode(organisation.address.countryCode)
+            .tags(organisation.tags)
+            .state(organisation.address.state)
+            .dealExpiresAt(organisation.deal.expiresAt?.format(ISO_DATE_TIME))
+            .billing(organisation.deal.billing)
+            .build()
     }
 
     private fun getCollection() =
@@ -61,33 +60,3 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
         const val COLLECTION_NAME = "users"
     }
 }
-
-data class UserDocument(
-    @BsonId
-    val id: String,
-    val firstName: String?,
-    val lastName: String?,
-    val email: String?,
-    val subjects: List<String>,
-    val ages: List<Int>,
-    val createdAt: String,
-    val organisation: OrganisationDocument?,
-    val profileSchool: OrganisationDocument?,
-    val role: String?,
-    @param:JsonProperty("isBoclipsEmployee")
-    @get:JsonProperty("isBoclipsEmployee")
-    val isBoclipsEmployee: Boolean
-)
-
-data class OrganisationDocument(
-    val id: String,
-    val name: String,
-    val parent: OrganisationDocument?,
-    val type: String,
-    val tags: Set<String>,
-    val postcode: String?,
-    val countryCode: String?,
-    val state: String?,
-    val dealExpiresAt: String?,
-    val billing: Boolean
-)

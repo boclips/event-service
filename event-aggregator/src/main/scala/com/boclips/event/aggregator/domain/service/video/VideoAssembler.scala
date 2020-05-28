@@ -28,9 +28,9 @@ object VideoAssembler {
 
     val channelsByVideoId =
       videos.keyBy(_.contentPartner)
-      .join(channels.keyBy(_.name))
-      .values
-      .map { case (video, channel) => (video.id, channel) }
+        .join(channels.keyBy(_.name))
+        .values
+        .map { case (video, channel) => (video.id, channel) }
 
     val impressionsByVideoId: RDD[(VideoId, Iterable[VideoSearchResultImpression])] = impressions.keyBy(_.videoId)
       .groupByKey()

@@ -2,10 +2,10 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.{CollectionId, CollectionImpression, SearchImpression, Url, VideoId}
+import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.service.search.SearchResultPlayback
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createSearch, createSearchResponse, createSearchInteractions}
+import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchInteractions, createSearchRequest, createSearchResponse}
 
 class SearchFormatterTest extends Test {
 
@@ -92,14 +92,14 @@ class SearchFormatterTest extends Test {
 
   it should "write the URL host and path " in {
 
-    val json = SearchFormatter formatRow createSearch(request = createSearchRequest(query="aa", url = Some(Url.parse("http://example.com/a"))))
+    val json = SearchFormatter formatRow createSearch(request = createSearchRequest(query = "aa", url = Some(Url.parse("http://example.com/a"))))
     json.getString("urlHost") shouldBe "example.com"
     json.getString("urlPath") shouldBe "/a"
   }
   it should "url param keys" in {
 
-    val json = SearchFormatter formatRow createSearch(request = createSearchRequest(urlParamsKeys = Set("age_range","page","q")))
-    json.getStringList("urlParamKeys") shouldBe List("age_range","page","q")
+    val json = SearchFormatter formatRow createSearch(request = createSearchRequest(urlParamsKeys = Set("age_range", "page", "q")))
+    json.getStringList("urlParamKeys") shouldBe List("age_range", "page", "q")
   }
 
 }

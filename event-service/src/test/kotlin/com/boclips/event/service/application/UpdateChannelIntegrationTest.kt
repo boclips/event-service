@@ -1,6 +1,6 @@
 package com.boclips.event.service.application
 
-import com.boclips.event.service.infrastructure.mongodb.ChannelDocument
+import com.boclips.event.infrastructure.channel.ChannelDocument
 import com.boclips.event.service.infrastructure.mongodb.MongoChannelRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.ChannelFactory.createChannel
@@ -20,7 +20,7 @@ class UpdateChannelIntegrationTest : AbstractSpringIntegrationTest() {
         eventBus.publish(ContentPartnerUpdated(channel))
 
         val document = getSingleDocument()
-        assertThat(document.id).isEqualTo(channel.id.value)
+        assertThat(document._id).isEqualTo(channel.id.value)
         assertThat(document.name).isEqualTo(channel.name)
     }
 
@@ -34,7 +34,7 @@ class UpdateChannelIntegrationTest : AbstractSpringIntegrationTest() {
         eventBus.publish(BroadcastChannelRequested(channel))
 
         val document = getSingleDocument()
-        assertThat(document.id).isEqualTo(channel.id.value)
+        assertThat(document._id).isEqualTo(channel.id.value)
         assertThat(document.name).isEqualTo(channel.name)
     }
 

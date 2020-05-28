@@ -1,7 +1,7 @@
 package com.boclips.event.service.application
 
+import com.boclips.event.infrastructure.user.UserDocument
 import com.boclips.event.service.infrastructure.mongodb.MongoUserRepository
-import com.boclips.event.service.infrastructure.mongodb.UserDocument
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.OrganisationFactory.createOrganisation
 import com.boclips.event.service.testsupport.UserFactory.createUser

@@ -6,7 +6,9 @@ sealed class OrganisationType(val name: String) extends Serializable {
 }
 
 object API_ORGANISATION extends OrganisationType("API")
+
 object SCHOOL_ORGANISATION extends OrganisationType("SCHOOL")
+
 object DISTRICT_ORGANISATION extends OrganisationType("DISTRICT")
 
 object OrganisationType {

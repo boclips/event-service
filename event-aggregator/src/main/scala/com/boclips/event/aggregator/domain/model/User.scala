@@ -15,9 +15,11 @@ case class DeviceId(value: String) extends UserOrDeviceId
 
 sealed trait UserOrAnonymous {
   def isAnonymous: Boolean
+
   def isNotAnonymous: Boolean = !isAnonymous
 
   def asUser: User
+
   def asAnonymous: AnonymousUser
 }
 

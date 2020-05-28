@@ -5,7 +5,7 @@ import org.apache.spark.rdd.RDD
 
 class PagesRenderedAssembler(events: RDD[_ <: Event]) {
   def assemblePagesRendered(): RDD[PageRenderedEvent] = {
-    events.flatMap{
+    events.flatMap {
       case event: PageRenderedEvent => Some(event)
       case _ => None
     }

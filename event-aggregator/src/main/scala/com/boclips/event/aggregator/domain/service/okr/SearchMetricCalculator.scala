@@ -29,5 +29,6 @@ object SearchMetricCalculator {
     }
       .collect().toList
   }
+
   def mean(xs: Iterable[Double]): Double = if (xs.nonEmpty) xs.sum / xs.size else 0.0
 }

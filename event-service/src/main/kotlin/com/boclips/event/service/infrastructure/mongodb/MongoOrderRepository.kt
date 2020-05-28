@@ -1,11 +1,11 @@
 package com.boclips.event.service.infrastructure.mongodb
 
+import com.boclips.event.infrastructure.order.OrderDocument
+import com.boclips.event.infrastructure.order.OrderItemDocument
 import com.boclips.event.service.domain.OrderRepository
 import com.boclips.eventbus.events.order.Order
 import com.mongodb.MongoClient
 import com.mongodb.client.model.ReplaceOptions
-import com.order.OrderDocument
-import com.order.OrderItemDocument
 import mu.KLogging
 import org.bson.Document
 import org.litote.kmongo.getCollection

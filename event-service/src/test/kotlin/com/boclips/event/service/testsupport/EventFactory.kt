@@ -20,7 +20,6 @@ import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
-import com.nhaarman.mockito_kotlin.times
 import java.time.ZonedDateTime
 
 object EventFactory {
@@ -42,6 +41,7 @@ object EventFactory {
             .timestamp(timestamp)
             .build()
     }
+
     fun createVideoInteractedWith(
         timestamp: ZonedDateTime = ZonedDateTime.now(),
         videoId: String = "video-id",
@@ -223,13 +223,11 @@ object EventFactory {
             .build()
     }
 
-
-
     fun createResourcesSearched(
         userId: String = "happy-user",
         url: String = "http://bbc.co.uk",
         query: String = "sharks",
-        resourceType: ResourceType = ResourceType.COLLECTION ,
+        resourceType: ResourceType = ResourceType.COLLECTION,
         pageIndex: Int = 1,
         pageSize: Int = 20,
         totalResults: Long = 400,

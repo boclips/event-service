@@ -8,21 +8,21 @@ import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{cre
 
 class CollectionAssemblerTest extends IntegrationTest {
 
-  it should "relevant collection items" in sparkTest{implicit spark =>
+  it should "relevant collection items" in sparkTest { implicit spark =>
 
-    val collections  = rdd(
+    val collections = rdd(
       createCollection(id = "c1"),
       createCollection(id = "c2"),
     )
 
     val impressions = rdd(
-      createCollectionSearchResultImpression(collectionId = CollectionId("c1"), search = createSearchRequest(query = "math"),interaction = true),
+      createCollectionSearchResultImpression(collectionId = CollectionId("c1"), search = createSearchRequest(query = "math"), interaction = true),
       createCollectionSearchResultImpression(collectionId = CollectionId("c1"), search = createSearchRequest(query = "coronavirus"), interaction = false)
     )
 
     val interactions = rdd(
-      createCollectionInteractedWithEvent(collectionId = "c1",subtype = Some("VISIT_LESSON_GUIDE")),
-      createCollectionInteractedWithEvent(collectionId = "c1",subtype = Some("NAVIGATE_TO_COLLECTION_DETAILS")),
+      createCollectionInteractedWithEvent(collectionId = "c1", subtype = Some("VISIT_LESSON_GUIDE")),
+      createCollectionInteractedWithEvent(collectionId = "c1", subtype = Some("NAVIGATE_TO_COLLECTION_DETAILS")),
     )
 
     val collectionsWithRelatedData = CollectionAssembler.assembleCollectionsWithRelatedData(
@@ -41,21 +41,21 @@ class CollectionAssemblerTest extends IntegrationTest {
 
   }
 
-  it should "aggregate collection interactions" in sparkTest{implicit spark =>
+  it should "aggregate collection interactions" in sparkTest { implicit spark =>
 
-    val collections  = rdd(
+    val collections = rdd(
       createCollection(id = "c1"),
       createCollection(id = "c2"),
     )
 
     val impressions = rdd(
-      createCollectionSearchResultImpression(collectionId = CollectionId("c1"), search = createSearchRequest(query = "math"),interaction = true),
+      createCollectionSearchResultImpression(collectionId = CollectionId("c1"), search = createSearchRequest(query = "math"), interaction = true),
       createCollectionSearchResultImpression(collectionId = CollectionId("c1"), search = createSearchRequest(query = "coronavirus"), interaction = false)
     )
 
     val interactions = rdd(
-      createCollectionInteractedWithEvent(collectionId = "c1",subtype = Some("VISIT_LESSON_GUIDE")),
-      createCollectionInteractedWithEvent(collectionId = "c1",subtype = Some("NAVIGATE_TO_COLLECTION_DETAILS")),
+      createCollectionInteractedWithEvent(collectionId = "c1", subtype = Some("VISIT_LESSON_GUIDE")),
+      createCollectionInteractedWithEvent(collectionId = "c1", subtype = Some("NAVIGATE_TO_COLLECTION_DETAILS")),
     )
 
     val collectionsWithRelatedData = CollectionAssembler.assembleCollectionsWithRelatedData(

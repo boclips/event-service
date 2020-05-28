@@ -1,7 +1,5 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import java.time.ZoneOffset
-
 import com.boclips.event.aggregator.domain.model.QueryScore
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.JsonObject

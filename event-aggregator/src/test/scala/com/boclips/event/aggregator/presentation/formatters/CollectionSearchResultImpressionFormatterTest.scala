@@ -8,7 +8,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory._
 
 class CollectionSearchResultImpressionFormatterTest extends Test {
   it should "write timestamp" in {
-    val impression:CollectionSearchResultImpression = {
+    val impression: CollectionSearchResultImpression = {
       createCollectionSearchResultImpression(search = createSearchRequest(timestamp = ZonedDateTime.of(2012, 4, 23, 18, 25, 43, 511000000, ZoneOffset.UTC)))
     }
 

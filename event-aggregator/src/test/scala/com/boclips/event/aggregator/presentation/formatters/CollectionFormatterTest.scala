@@ -13,7 +13,6 @@ class CollectionFormatterTest extends Test {
     val collection = createCollection(id = "col-id")
 
 
-
     val json = CollectionFormatter formatRow CollectionWithRelatedData(collection, List(), List())
 
     json.get("id").getAsString shouldBe "col-id"
@@ -93,18 +92,18 @@ class CollectionFormatterTest extends Test {
 
   it should "write deletion flag" in {
     CollectionFormatter.formatRow(CollectionWithRelatedData(createCollection(deleted = true), List(), List())).getBool("deleted") shouldBe true
-    CollectionFormatter.formatRow(CollectionWithRelatedData(createCollection(deleted = false),List(), List())).getBool("deleted") shouldBe false
+    CollectionFormatter.formatRow(CollectionWithRelatedData(createCollection(deleted = false), List(), List())).getBool("deleted") shouldBe false
   }
 
   it should "write public flag" in {
-    CollectionFormatter.formatRow(CollectionWithRelatedData(createCollection(public = true), List(),List())).getBool("public") shouldBe true
+    CollectionFormatter.formatRow(CollectionWithRelatedData(createCollection(public = true), List(), List())).getBool("public") shouldBe true
     CollectionFormatter.formatRow(CollectionWithRelatedData(createCollection(public = false), List(), List())).getBool("public") shouldBe false
   }
 
   it should "write collection interactions" in {
     val collection = createCollection()
     val interaction = createCollectionInteractedWithEvent()
-    val json = CollectionFormatter formatRow CollectionWithRelatedData(collection, List(),List(interaction))
+    val json = CollectionFormatter formatRow CollectionWithRelatedData(collection, List(), List(interaction))
 
     json.getAsJsonArray("interactions").size shouldBe 1
 

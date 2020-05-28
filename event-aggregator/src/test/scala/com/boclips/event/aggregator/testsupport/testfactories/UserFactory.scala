@@ -68,7 +68,7 @@ object UserFactory {
   }
 
   def createDeal(
-                billing:Boolean = false
+                  billing: Boolean = false
                 ): Deal = {
     Deal(
       billing = billing

@@ -5,17 +5,16 @@ import java.util
 import com.boclips.event.aggregator.config.{MongoConfig, MongoCredentials}
 import com.mongodb.client.MongoCollection
 import com.mongodb.spark.DefaultHelper.DefaultsTo
-
-import scala.collection.JavaConverters._
-import com.mongodb.{MongoClient, MongoClientOptions, MongoCredential, ServerAddress}
-import com.mongodb.spark.{MongoClientFactory, MongoConnector, MongoSpark}
 import com.mongodb.spark.config.ReadConfig
 import com.mongodb.spark.rdd.MongoRDD
+import com.mongodb.spark.{MongoClientFactory, MongoConnector, MongoSpark}
+import com.mongodb.{MongoClient, MongoClientOptions, MongoCredential}
 import org.apache.spark.sql.SparkSession
 import org.bson.Document
 import org.bson.codecs.configuration.{CodecRegistries, CodecRegistry}
 import org.bson.codecs.pojo.PojoCodecProvider
 
+import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
 class SparkMongoClient(config: MongoConfig) {
@@ -34,7 +33,7 @@ class SparkMongoClient(config: MongoConfig) {
       .toRDD()
   }
 
-  def collection[TDocument : ClassTag](collectionName: String)(implicit e: TDocument DefaultsTo Document): MongoCollection[TDocument] = {
+  def collection[TDocument: ClassTag](collectionName: String)(implicit e: TDocument DefaultsTo Document): MongoCollection[TDocument] = {
     val classTag = implicitly[reflect.ClassTag[TDocument]]
     val documentClass = classTag.runtimeClass.asInstanceOf[Class[TDocument]]
     clientFactory().create().getDatabase(config.database).getCollection(collectionName, documentClass)
@@ -43,7 +42,7 @@ class SparkMongoClient(config: MongoConfig) {
   private def clientFactory(): MongoClientFactory = CustomCodecMongoClientFactory(config)
 }
 
-private [mongo] case class CustomCodecMongoClientFactory(config: MongoConfig) extends MongoClientFactory {
+private[mongo] case class CustomCodecMongoClientFactory(config: MongoConfig) extends MongoClientFactory {
   override def create(): MongoClient = {
     val codecRegistry: CodecRegistry = CodecRegistries.fromRegistries(
       MongoClient.getDefaultCodecRegistry,

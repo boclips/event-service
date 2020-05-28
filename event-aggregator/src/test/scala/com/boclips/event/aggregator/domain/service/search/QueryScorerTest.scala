@@ -4,7 +4,7 @@ import java.time.{Month, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.Monthly
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory
-import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchRequest, createSearchInteractions}
+import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchInteractions, createSearchRequest}
 import com.boclips.event.aggregator.testsupport.{IntegrationTest, TestTimestamps}
 
 class QueryScorerTest extends IntegrationTest {

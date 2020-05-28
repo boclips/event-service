@@ -36,11 +36,11 @@ case class Video(
   }
 
   def storageCharges(to: LocalDate): List[VideoStorageCharge] = {
-    if(assets.isEmpty) Nil else storageCharges(ingestedAt.toLocalDate, to, monthlyStorageCostGbp())
+    if (assets.isEmpty) Nil else storageCharges(ingestedAt.toLocalDate, to, monthlyStorageCostGbp())
   }
 
   private def storageCharges(from: LocalDate, to: LocalDate, monthlyCostGbp: Double): List[VideoStorageCharge] = {
-    if(from.withDayOfMonth(1) == to.withDayOfMonth(1)) {
+    if (from.withDayOfMonth(1) == to.withDayOfMonth(1)) {
       val cost = (to.getDayOfMonth - from.getDayOfMonth + 1.0) / from.lengthOfMonth() * monthlyCostGbp
       VideoStorageCharge(id, contentPartner, from, to, cost) :: Nil
     } else {

@@ -6,21 +6,22 @@ import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchRequest}
-import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory, UserFactory}
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createDeal, createOrganisation, createUser}
+import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory}
 
 class UserFormatterTest extends Test {
 
   implicit class UserExtensions(val user: User) {
     def withNested(
-                          status: List[UserActiveStatus] = Nil,
-                          playbacks: List[Playback] = Nil,
-                          referredPlaybacks: List[Playback] = Nil,
-                          searches: List[Search] = Nil,
-                          sessions: List[Session] = Nil,
-                        ): UserWithRelatedData = UserWithRelatedData(user, status, playbacks, referredPlaybacks, searches, sessions)
+                    status: List[UserActiveStatus] = Nil,
+                    playbacks: List[Playback] = Nil,
+                    referredPlaybacks: List[Playback] = Nil,
+                    searches: List[Search] = Nil,
+                    sessions: List[Session] = Nil,
+                  ): UserWithRelatedData = UserWithRelatedData(user, status, playbacks, referredPlaybacks, searches, sessions)
 
   }
+
   implicit def user2userWithRelatedData(user: User): UserWithRelatedData = user.withNested()
 
   it should "write user id" in {
@@ -166,12 +167,12 @@ class UserFormatterTest extends Test {
   }
 
   it should "write users playbacks" in {
-    val json = UserFormatter formatRow createUser().withNested(playbacks = List(createPlayback(id =  "pb-1"), createPlayback(id =  "pb-2")))
+    val json = UserFormatter formatRow createUser().withNested(playbacks = List(createPlayback(id = "pb-1"), createPlayback(id = "pb-2")))
     json.getAsJsonArray("playbacks") should have size 2
   }
 
   it should "write users referred playbacks" in {
-    val json = UserFormatter formatRow createUser().withNested(referredPlaybacks = List(createPlayback(id =  "pb-1"), createPlayback(id =  "pb-2")))
+    val json = UserFormatter formatRow createUser().withNested(referredPlaybacks = List(createPlayback(id = "pb-1"), createPlayback(id = "pb-2")))
     json.getAsJsonArray("referredPlaybacks") should have size 2
   }
 
@@ -185,7 +186,7 @@ class UserFormatterTest extends Test {
 
   it should "write users sessions" in {
     val json = UserFormatter formatRow createUser().withNested(sessions = List(SessionFactory.createSession(events = List(EventFactory.createCollectionInteractedWithEvent(), EventFactory.createPageRenderedEvent())),
-     ))
+    ))
     json.getAsJsonArray("sessions") should have size 1
 
   }

@@ -10,6 +10,6 @@ class HealthEndpointIntegrationTest : AbstractSpringIntegrationTest() {
     @Test
     fun `health returns 200 OK for unauthenticated requests`() {
         mockMvc.perform(get("/actuator/health"))
-                .andExpect(status().isOk)
+            .andExpect(status().isOk)
     }
 }

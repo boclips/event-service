@@ -14,5 +14,4 @@ object SubjectFactory {
                 .build()
         }
     }
-
 }

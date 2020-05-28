@@ -2,12 +2,12 @@ package com.boclips.event.aggregator.domain.service.okr
 
 import java.time.Month._
 
-import com.boclips.event.aggregator.domain.model.{Monthly, User}
 import com.boclips.event.aggregator.domain.model.events.VideosSearchedEvent
-import com.boclips.event.aggregator.testsupport.TestTimestamps.{oneDayThis, thisYearIn, thisYearWhole}
+import com.boclips.event.aggregator.domain.model.{Monthly, User}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
+import com.boclips.event.aggregator.testsupport.TestTimestamps.{oneDayThis, thisYearIn, thisYearWhole}
+import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser
-import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
 import org.apache.spark.rdd.RDD
 
 class UserMetricCalculatorTest extends IntegrationTest {

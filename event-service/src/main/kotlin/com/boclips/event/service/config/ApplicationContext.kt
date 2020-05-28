@@ -1,7 +1,17 @@
 package com.boclips.event.service.config
 
-import com.boclips.event.service.application.*
-import com.boclips.event.service.domain.*
+import com.boclips.event.service.application.PersistEvent
+import com.boclips.event.service.application.UpdateChannel
+import com.boclips.event.service.application.UpdateCollection
+import com.boclips.event.service.application.UpdateOrder
+import com.boclips.event.service.application.UpdateUser
+import com.boclips.event.service.application.UpdateVideo
+import com.boclips.event.service.domain.ChannelRepository
+import com.boclips.event.service.domain.CollectionRepository
+import com.boclips.event.service.domain.EventRepository
+import com.boclips.event.service.domain.OrderRepository
+import com.boclips.event.service.domain.UserRepository
+import com.boclips.event.service.domain.VideoRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -44,5 +54,4 @@ class ApplicationContext(
     fun updateOrder(): UpdateOrder {
         return UpdateOrder(orderRepository)
     }
-
 }

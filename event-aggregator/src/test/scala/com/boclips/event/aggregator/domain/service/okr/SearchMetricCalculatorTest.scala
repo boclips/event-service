@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.domain.service.okr
 import com.boclips.event.aggregator.domain.model.{Monthly, Search, VideoId}
 import com.boclips.event.aggregator.domain.service.search.SearchResultPlayback
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createSearch, createSearchInteractions}
+import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchInteractions, createSearchRequest}
 import org.apache.spark.rdd.RDD
 
 class SearchMetricCalculatorTest extends IntegrationTest {

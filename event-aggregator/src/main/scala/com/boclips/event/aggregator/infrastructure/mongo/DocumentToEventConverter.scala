@@ -2,14 +2,15 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.{CollectionId, DeviceId, Query, Url, UserId, VideoId}
-import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, CollectionSearchedEvent, Event, EventConstants, OtherEvent, PageRenderedEvent, VideoAddedToCollectionEvent, VideoInteractedWithEvent, VideoSegmentPlayedEvent, VideosSearchedEvent}
+import com.boclips.event.aggregator.domain.model.events._
+import com.boclips.event.aggregator.domain.model._
 import org.bson.Document
 
 object DocumentToEventConverter {
 
   implicit class DocumentExtensions(event: Document) {
     def url: Option[Url] = Option(event.getString("url")).map(Url.parse)
+
     def queryFromUrl: Option[Query] = url.flatMap(_.param("q")).map(Query)
   }
 
@@ -18,8 +19,8 @@ object DocumentToEventConverter {
     val eventType = event.getString("type")
     eventType match {
       case EventConstants.SEARCH | EventConstants.VIDEOS_SEARCHED => convertSearchEvent(event)
-      case EventConstants.RESOURCES_SEARCHED  => convertCollectionsSearched(event)
-      case EventConstants.PLAYBACK| EventConstants.VIDEO_SEGMENT_PLAYED => convertVideoSegmentPlayedEvent(event)
+      case EventConstants.RESOURCES_SEARCHED => convertCollectionsSearched(event)
+      case EventConstants.PLAYBACK | EventConstants.VIDEO_SEGMENT_PLAYED => convertVideoSegmentPlayedEvent(event)
       case EventConstants.VIDEO_INTERACTED_WITH => convertVideoInteractedWithEvent(event)
       case EventConstants.VIDEO_ADDED_TO_COLLECTION => convertVideoAddedToCollectionEvent(event)
       case EventConstants.PAGE_RENDERED => convertPageRenderedEvent(event)
@@ -43,7 +44,7 @@ object DocumentToEventConverter {
       document.getString("videoId")
     })
 
-    if(videoId.value == null) {
+    if (videoId.value == null) {
       convertOtherEvent(document, "OTHER_PLAYBACK")
     } else {
       VideoSegmentPlayedEvent(
@@ -136,6 +137,7 @@ object DocumentToEventConverter {
       query = document.queryFromUrl
     )
   }
+
   def convertPageRenderedEvent(document: Document): PageRenderedEvent = {
     val timestamp = ZonedDateTime.ofInstant(document.getDate("timestamp").toInstant, ZoneOffset.UTC)
     PageRenderedEvent(

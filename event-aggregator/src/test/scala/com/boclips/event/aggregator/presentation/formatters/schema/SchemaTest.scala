@@ -2,9 +2,9 @@ package com.boclips.event.aggregator.presentation.formatters.schema
 
 import java.time.{LocalDate, ZonedDateTime}
 
+import com.boclips.event.aggregator.presentation.formatters._
 import com.boclips.event.aggregator.testsupport.Test
 import com.google.gson.{JsonNull, JsonObject, JsonPrimitive}
-import com.boclips.event.aggregator.presentation.formatters._
 
 class SchemaTest extends Test {
 

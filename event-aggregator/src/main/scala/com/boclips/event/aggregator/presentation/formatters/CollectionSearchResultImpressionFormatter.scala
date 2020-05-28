@@ -7,7 +7,7 @@ import com.boclips.event.aggregator.domain.model.CollectionSearchResultImpressio
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.JsonObject
 
-object CollectionSearchResultImpressionFormatter extends SingleRowFormatter[CollectionSearchResultImpression]{
+object CollectionSearchResultImpressionFormatter extends SingleRowFormatter[CollectionSearchResultImpression] {
   override def writeRow(impression: CollectionSearchResultImpression, json: JsonObject): Unit = {
     json.addProperty("timestamp", impression.search.timestamp.format(ISO_OFFSET_DATE_TIME))
     json.addProperty("collectionId", impression.collectionId.value)
@@ -16,8 +16,8 @@ object CollectionSearchResultImpressionFormatter extends SingleRowFormatter[Coll
     json.addProperty("urlHost", impression.search.url.map(_.host))
     json.addProperty("urlPath", impression.search.url.map(_.path))
     json.addProperty("urlRawParams", impression.search.url.map(_.rawParams))
-    json.addProperty("id",UUID.randomUUID().toString)
-    json.addProperty("userId",impression.search.userId.value)
+    json.addProperty("id", UUID.randomUUID().toString)
+    json.addProperty("userId", impression.search.userId.value)
   }
 }
 

@@ -5,7 +5,7 @@ import java.util.Date
 
 import com.boclips.event.aggregator.domain.model.{OrderId, OrderItem, VideoId}
 import com.boclips.event.aggregator.testsupport.Test
-import com.order.{OrderDocument, OrderItemDocument}
+import com.boclips.event.infrastructure.order.{OrderDocument, OrderItemDocument}
 
 import scala.collection.JavaConverters._
 
