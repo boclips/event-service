@@ -34,6 +34,8 @@ public class CollectionDocument {
     @NonNull
     private Boolean discoverable;
     @NonNull
+    private Boolean createdForOwner;
+    @NonNull
     private Boolean deleted;
 
     public static CollectionDocumentBuilder sample() {
@@ -50,6 +52,7 @@ public class CollectionDocument {
                 .createdTime(new Date())
                 .updatedTime(new Date())
                 .discoverable(true)
+                .createdForOwner(true)
                 .deleted(false);
     }
 }

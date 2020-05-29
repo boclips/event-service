@@ -31,6 +31,7 @@ class MongoCollectionRepository(private val mongoClient: MongoClient) : Collecti
             .createdTime(Date.from(collection.createdAt.toInstant()))
             .updatedTime(Date.from(collection.updatedAt.toInstant()))
             .discoverable(collection.isDiscoverable)
+            .createdForOwner(collection.isDefault)
             .deleted(false)
             .build()
 
