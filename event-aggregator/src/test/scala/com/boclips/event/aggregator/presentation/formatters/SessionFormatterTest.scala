@@ -39,7 +39,7 @@ class SessionFormatterTest extends Test {
 
   it should "write id, userID, url host, path and params" in {
     val json = SessionFormatter formatRow SessionFactory.createSession(UserFactory.createUser(),
-      List(EventFactory.createPageRenderedEvent(userId= "id-666", url = "https://teachers.boclips.com/videos?age_range=9-11&page=1&q=unit%20test"))
+      List(EventFactory.createPageRenderedEvent(userId = "id-666", url = "https://teachers.boclips.com/videos?age_range=9-11&page=1&q=unit%20test"))
     )
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("id").getAsString should not be empty
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("urlHost").getAsString shouldBe "teachers.boclips.com"

@@ -3,9 +3,6 @@ package com.boclips.event.aggregator.testsupport.testfactories
 import java.time.ZonedDateTime
 
 import com.boclips.event.aggregator.domain.model._
-import org.bson.Document
-
-import scala.collection.JavaConverters._
 
 object UserFactory {
   def createDeal(

@@ -5,43 +5,53 @@ import java.util.Locale
 
 import com.boclips.event.aggregator.domain.model.ChannelId
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.{createChannelDetailsDocument, createChannelDocument, createChannelIngestDocument, createChannelMarketingDocument, createChannelPedagogyDocument}
+import com.boclips.event.infrastructure.channel._
+
+import scala.collection.JavaConverters._
 
 class DocumentToChannelConverterTest extends Test {
   it should "covert a full document" in {
-    val document = createChannelDocument(
-      id = "this-channel-id",
-      name = "this channel name",
-      details = createChannelDetailsDocument(
-        contentTypes = Some(List("STOCK", "NEWS")),
-        contentCategories = Some(List("My category")),
-        language = Some("fr-CA"),
-        hubspotId = Some("hubspot-id"),
-        contractId = Some("contract-id"),
-        awards = Some("Awards text"),
-        notes = Some("Notes text"),
-      ),
-      ingest = createChannelIngestDocument(
-        _type = "MANUAL",
-        deliveryFrequency = Some("P1M"),
-      ),
-      pedagogy = createChannelPedagogyDocument(
-        subjectNames = Some(List("ENGLISH", "MATH")),
-        ageRangeMin = Some(8),
-        ageRangeMax = Some(16),
-        bestForTags = Some(List("cool", "tag")),
-        curriculumAligned = Some("Curriculum text"),
-        educationalResources = Some("Educational resources text"),
-        transcriptProvided = Some(true),
-      ),
-      marketing = createChannelMarketingDocument(
-        status = Some("Status"),
-        oneLineIntro = Some("One line intro"),
-        logos = Some(List("http://logo1.com", "http://logo2.com")),
-        showreel = Some("http://showreel.com"),
-        sampleVideos = Some(List("http://video1.com", "http://video2.com")),
+    val document = ChannelDocument.sample
+      .id("this-channel-id")
+      .name("this channel name")
+      .details(
+        ChannelDetailsDocument.sample
+          .contentTypes(List("STOCK", "NEWS").asJava)
+          .contentCategories(List("My category").asJava)
+          .language("fr-CA")
+          .hubspotId("hubspot-id")
+          .contractId("contract-id")
+          .awards("Awards text")
+          .notes("Notes text")
+          .build()
       )
-    )
+      .ingest(
+        ChannelIngestDocument.sample
+          .`type`("MANUAL")
+          .deliveryFrequency("P1M")
+          .build()
+      )
+      .pedagogy(
+        ChannelPedagogyDocument.sample
+          .subjectNames(List("ENGLISH", "MATH").asJava)
+          .ageRangeMin(8)
+          .ageRangeMax(16)
+          .bestForTags(List("cool", "tag").asJava)
+          .curriculumAligned("Curriculum text")
+          .educationalResources("Educational resources text")
+          .transcriptProvided(true)
+          .build()
+      )
+      .marketing(
+        ChannelMarketingDocument.sample
+          .status("Status")
+          .oneLineIntro("One line intro")
+          .logos(List("http://logo1.com", "http://logo2.com").asJava)
+          .showreel("http://showreel.com")
+          .sampleVideos(List("http://video1.com", "http://video2.com").asJava)
+          .build()
+      )
+      .build()
 
     val channel = DocumentToChannelConverter convert document
 

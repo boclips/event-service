@@ -35,7 +35,7 @@ case class MongoConfig(
                       )
 
 case class MongoCredentials(
-                        authenticationDatabase: String,
-                        username: String,
-                        password: String,
+                             authenticationDatabase: String,
+                             username: String,
+                             password: String,
                            )

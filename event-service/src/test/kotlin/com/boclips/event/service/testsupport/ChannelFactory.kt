@@ -2,12 +2,12 @@ package com.boclips.event.service.testsupport
 
 import com.boclips.eventbus.domain.AgeRange
 import com.boclips.eventbus.domain.Subject
+import com.boclips.eventbus.domain.contentpartner.Channel
+import com.boclips.eventbus.domain.contentpartner.ChannelId
 import com.boclips.eventbus.domain.contentpartner.ChannelIngestDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelMarketingDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelPedagogyDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelTopLevelDetails
-import com.boclips.eventbus.domain.contentpartner.Channel
-import com.boclips.eventbus.domain.contentpartner.ChannelId
 import java.time.Period
 import java.util.Locale
 

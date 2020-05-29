@@ -3,8 +3,8 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.temporal.ChronoUnit
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.events._
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.events._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchEventDocument

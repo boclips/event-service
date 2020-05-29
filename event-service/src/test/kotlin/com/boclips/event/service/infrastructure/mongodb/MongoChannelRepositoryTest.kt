@@ -27,13 +27,13 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         channelRepository.save(createChannel(id = id, name = "My simple channel!"))
 
         val created = getSingleDocument()
-        assertThat(created._id).isEqualTo(id)
+        assertThat(created.id).isEqualTo(id)
         assertThat(created.name).isEqualTo("My simple channel!")
 
         channelRepository.save(createChannel(id = id, name = "My new name"))
 
         val updated = getSingleDocument()
-        assertThat(updated._id).isEqualTo(id)
+        assertThat(updated.id).isEqualTo(id)
         assertThat(updated.name).isEqualTo("My new name")
     }
 
@@ -55,7 +55,7 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = getSingleDocument()
-        assertThat(document._id).isEqualTo(id)
+        assertThat(document.id).isEqualTo(id)
         val details = document.details
         assertThat(details.contentTypes).containsExactlyInAnyOrder("NEWS", "INSTRUCTIONAL")
         assertThat(details.contentCategories).containsExactlyInAnyOrder("Training", "Learning", "Animation")
@@ -79,7 +79,7 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = getSingleDocument()
-        assertThat(document._id).isEqualTo(id)
+        assertThat(document.id).isEqualTo(id)
         val ingest = document.ingest
         assertThat(ingest.type).isEqualTo("MRSS")
         assertThat(ingest.deliveryFrequency).isEqualTo("P2M")
@@ -113,7 +113,7 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = getSingleDocument()
-        assertThat(document._id).isEqualTo(id)
+        assertThat(document.id).isEqualTo(id)
         val pedagogy = document.pedagogy
         assertThat(pedagogy.subjectNames)
             .containsExactlyInAnyOrder("subject 1", "subject 2")
@@ -141,7 +141,7 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = getSingleDocument()
-        assertThat(document._id)
+        assertThat(document.id)
         val marketing = document.marketing
         assertThat(marketing.status).isEqualTo("My status")
         assertThat(marketing.oneLineIntro).isEqualTo("One line intro")

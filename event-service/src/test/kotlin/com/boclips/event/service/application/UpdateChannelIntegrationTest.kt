@@ -20,7 +20,7 @@ class UpdateChannelIntegrationTest : AbstractSpringIntegrationTest() {
         eventBus.publish(ContentPartnerUpdated(channel))
 
         val document = getSingleDocument()
-        assertThat(document._id).isEqualTo(channel.id.value)
+        assertThat(document.id).isEqualTo(channel.id.value)
         assertThat(document.name).isEqualTo(channel.name)
     }
 
@@ -34,7 +34,7 @@ class UpdateChannelIntegrationTest : AbstractSpringIntegrationTest() {
         eventBus.publish(BroadcastChannelRequested(channel))
 
         val document = getSingleDocument()
-        assertThat(document._id).isEqualTo(channel.id.value)
+        assertThat(document.id).isEqualTo(channel.id.value)
         assertThat(document.name).isEqualTo(channel.name)
     }
 

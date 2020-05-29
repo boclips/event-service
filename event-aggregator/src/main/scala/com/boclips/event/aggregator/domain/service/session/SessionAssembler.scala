@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.domain.service.session
 
-import com.boclips.event.aggregator.domain.model.events.Event
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.events.Event
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 

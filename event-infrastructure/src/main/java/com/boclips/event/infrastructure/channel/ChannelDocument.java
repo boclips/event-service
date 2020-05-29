@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class ChannelDocument {
     @NonNull
-    private String _id;
+    private String id;
     @NonNull
     private String name;
     @NonNull
@@ -22,7 +22,7 @@ public class ChannelDocument {
 
     public static ChannelDocumentBuilder sample() {
         return ChannelDocument.builder()
-                ._id("channel-id")
+                .id("channel-id")
                 .name("channel name")
                 .details(ChannelDetailsDocument.sample().build())
                 .ingest(ChannelIngestDocument.sample().build())

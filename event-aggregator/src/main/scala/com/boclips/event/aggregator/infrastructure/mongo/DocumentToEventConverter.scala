@@ -2,8 +2,8 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.events._
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.events._
 import org.bson.Document
 
 object DocumentToEventConverter {

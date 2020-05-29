@@ -129,14 +129,16 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
     fun `video ids are used as document ids`() {
         videoRepository.saveVideo(createVideo(id = "v1"))
 
-        val rawDocument = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoVideoRepository.COLLECTION_NAME)
-            .find().toList().single()
+        val rawDocument =
+            mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoVideoRepository.COLLECTION_NAME)
+                .find().toList().single()
 
         assertThat(rawDocument.get("_id")).isEqualTo("v1")
     }
 
     private fun document(): VideoDocument {
-        return mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<VideoDocument>(MongoVideoRepository.COLLECTION_NAME, VideoDocument::class.java)
+        return mongoClient.getDatabase(DatabaseConstants.DB_NAME)
+            .getCollection<VideoDocument>(MongoVideoRepository.COLLECTION_NAME, VideoDocument::class.java)
             .find().toList().single()
     }
 }

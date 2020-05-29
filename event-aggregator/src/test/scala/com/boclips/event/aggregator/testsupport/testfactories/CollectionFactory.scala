@@ -1,12 +1,8 @@
 package com.boclips.event.aggregator.testsupport.testfactories
 
 import java.time.ZonedDateTime
-import java.util.Date
 
 import com.boclips.event.aggregator.domain.model._
-import org.bson.Document
-
-import scala.collection.JavaConverters._
 
 object CollectionFactory {
 

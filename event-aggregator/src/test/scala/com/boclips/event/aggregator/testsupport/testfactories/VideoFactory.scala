@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.testsupport.testfactories
 
-import java.time.{Duration, LocalDate, ZoneOffset, ZonedDateTime}
+import java.time.{Duration, LocalDate, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model._
 

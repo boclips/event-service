@@ -4,45 +4,47 @@ import java.time.Period
 import java.util.Locale
 
 import com.boclips.event.aggregator.domain.model._
-import org.bson.Document
+import com.boclips.event.infrastructure.channel.ChannelDocument
+
+import scala.collection.JavaConverters._
 
 object DocumentToChannelConverter {
-  def convert(document: Document): Channel = {
-    val details = document.getObject("details")
-    val ingest = document.getObject("ingest")
-    val pedagogy = document.getObject("pedagogy")
-    val marketing = document.getObject("marketing")
+  def convert(document: ChannelDocument): Channel = {
+    val details = document.getDetails
+    val ingest = document.getIngest
+    val pedagogy = document.getPedagogy
+    val marketing = document.getMarketing
     Channel(
-      id = ChannelId(document.getString("_id")),
-      name = document.getString("name"),
+      id = ChannelId(document.getId),
+      name = document.getName,
       details = ChannelDetails(
-        contentTypes = details.getListOption("contentTypes"),
-        contentCategories = details.getListOption("contentCategories"),
-        language = details.getStringOption("language").map(Locale.forLanguageTag),
-        hubspotId = details.getStringOption("hubspotId"),
-        contractId = details.getStringOption("contractId"),
-        awards = details.getStringOption("awards"),
-        notes = details.getStringOption("notes")
+        contentTypes = Option(details.getContentTypes.asScala.toList),
+        contentCategories = Option(details.getContentCategories.asScala.toList),
+        language = Option(details.getLanguage).map(Locale.forLanguageTag),
+        hubspotId = Option(details.getHubspotId),
+        contractId = Option(details.getContractId),
+        awards = Option(details.getAwards),
+        notes = Option(details.getNotes)
       ),
       ingest = ChannelIngest(
-        _type = ingest.getString("type"),
-        deliveryFrequency = ingest.getStringOption("deliveryFrequency").map(Period.parse)
+        _type = ingest.getType,
+        deliveryFrequency = Option(ingest.getDeliveryFrequency).map(Period.parse)
       ),
       pedagogy = ChannelPedagogy(
-        subjectNames = pedagogy.getListOption("subjectNames"),
-        ageRangeMin = pedagogy.getIntOption("ageRangeMin"),
-        ageRangeMax = pedagogy.getIntOption("ageRangeMax"),
-        bestForTags = pedagogy.getListOption("bestForTags"),
-        curriculumAligned = pedagogy.getStringOption("curriculumAligned"),
-        educationalResources = pedagogy.getStringOption("educationalResources"),
-        transcriptProvided = pedagogy.getBooleanOption("transcriptProvided")
+        subjectNames = Option(pedagogy.getSubjectNames).map(_.asScala.toList),
+        ageRangeMin = Option(pedagogy.getAgeRangeMin),
+        ageRangeMax = Option(pedagogy.getAgeRangeMax),
+        bestForTags = Option(pedagogy.getBestForTags).map(_.asScala.toList),
+        curriculumAligned = Option(pedagogy.getCurriculumAligned),
+        educationalResources = Option(pedagogy.getEducationalResources),
+        transcriptProvided = Option(pedagogy.getTranscriptProvided)
       ),
       marketing = ChannelMarketing(
-        status = marketing.getStringOption("status"),
-        oneLineIntro = marketing.getStringOption("oneLineIntro"),
-        logos = marketing.getListOption("logos"),
-        showreel = marketing.getStringOption("showreel"),
-        sampleVideos = marketing.getListOption("sampleVideos")
+        status = Option(marketing.getStatus),
+        oneLineIntro = Option(marketing.getOneLineIntro),
+        logos = Option(marketing.getLogos).map(_.asScala.toList),
+        showreel = Option(marketing.getShowreel),
+        sampleVideos = Option(marketing.getSampleVideos).map(_.asScala.toList)
       )
     )
   }

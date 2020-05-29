@@ -10,7 +10,6 @@ import com.mongodb.client.model.ReplaceOptions
 import mu.KLogging
 import org.bson.Document
 import org.litote.kmongo.getCollection
-import org.litote.kmongo.save
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 

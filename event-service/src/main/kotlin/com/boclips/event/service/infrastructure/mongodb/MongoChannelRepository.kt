@@ -6,15 +6,16 @@ import com.boclips.event.infrastructure.channel.ChannelIngestDocument
 import com.boclips.event.infrastructure.channel.ChannelMarketingDocument
 import com.boclips.event.infrastructure.channel.ChannelPedagogyDocument
 import com.boclips.event.service.domain.ChannelRepository
+import com.boclips.eventbus.domain.contentpartner.Channel
 import com.boclips.eventbus.domain.contentpartner.ChannelIngestDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelMarketingDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelPedagogyDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelTopLevelDetails
-import com.boclips.eventbus.domain.contentpartner.Channel
 import com.mongodb.MongoClient
+import com.mongodb.client.model.ReplaceOptions
 import mu.KLogging
+import org.bson.Document
 import org.litote.kmongo.getCollection
-import org.litote.kmongo.save
 
 class MongoChannelRepository(private val mongoClient: MongoClient) : ChannelRepository {
     companion object : KLogging() {
@@ -23,10 +24,15 @@ class MongoChannelRepository(private val mongoClient: MongoClient) : ChannelRepo
 
     override fun save(channel: Channel) {
         try {
+            val document = channel.toDocument()
             mongoClient
                 .getDatabase(DatabaseConstants.DB_NAME)
                 .getCollection<ChannelDocument>(COLLECTION_NAME)
-                .save(channel.toDocument())
+                .replaceOne(
+                    Document("_id", document.id),
+                    document,
+                    ReplaceOptions().upsert(true)
+                )
         } catch (e: Exception) {
             logger.error(e) { "Error writing channel with ID=${channel.id.value}" }
         }
@@ -35,7 +41,7 @@ class MongoChannelRepository(private val mongoClient: MongoClient) : ChannelRepo
 
 fun Channel.toDocument(): ChannelDocument =
     ChannelDocument.builder()
-        ._id(id.value)
+        .id(id.value)
         .name(name)
         .details(details.toDocument())
         .ingest(ingest.toDocument())
