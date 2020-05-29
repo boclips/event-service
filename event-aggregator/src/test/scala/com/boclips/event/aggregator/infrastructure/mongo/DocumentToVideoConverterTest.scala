@@ -10,7 +10,7 @@ import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument
 class DocumentToVideoConverterTest extends Test {
 
   it should "convert the id" in {
-    val document = VideoDocument.sample()._id("the id").build()
+    val document = VideoDocument.sample().id("the id").build()
 
     val video = DocumentToVideoConverter convert document
 

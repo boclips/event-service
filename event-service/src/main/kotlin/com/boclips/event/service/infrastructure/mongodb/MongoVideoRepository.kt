@@ -20,7 +20,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
 
     override fun saveVideo(video: Video) {
         val document = VideoDocument.builder()
-            ._id(video.id.value)
+            .id(video.id.value)
             .ingestedAt(video.ingestedAt.withFixedOffsetZone().format(ISO_DATE_TIME))
             .releasedOn(video.releasedOn.format(ISO_DATE))
             .title(video.title)
@@ -41,9 +41,9 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
 
     private fun write(document: VideoDocument) {
         try {
-            getCollection().replaceOne(Document("_id", document._id), document, ReplaceOptions().upsert(true))
+            getCollection().replaceOne(Document("_id", document.id), document, ReplaceOptions().upsert(true))
         } catch (e: Exception) {
-            logger.error(e) { "Error writing video ${document._id}" }
+            logger.error(e) { "Error writing video ${document.id}" }
         }
     }
 

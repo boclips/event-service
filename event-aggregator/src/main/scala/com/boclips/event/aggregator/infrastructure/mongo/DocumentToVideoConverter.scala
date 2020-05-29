@@ -11,7 +11,7 @@ object DocumentToVideoConverter {
 
   def convert(document: VideoDocument): Video = {
     Video(
-      id = VideoId(document.get_id()),
+      id = VideoId(document.getId()),
       title = document.getTitle,
       channelId = ChannelId(document.getChannelId),
       playbackProvider = document.getPlaybackProviderType,

@@ -48,7 +48,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = document()
-        assertThat(document._id).isEqualTo("1234")
+        assertThat(document.id).isEqualTo("1234")
         assertThat(document.title).isEqualTo("the title")
         assertThat(document.channelId).isEqualTo("channel id")
         assertThat(document.playbackProviderType).isEqualTo("YOUTUBE")
@@ -116,12 +116,22 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = document()
-        assertThat(document._id).isEqualTo("1234")
+        assertThat(document.id).isEqualTo("1234")
         assertThat(document.title).isEqualTo("the updated title")
         assertThat(document.channelId).isEqualTo("the updated channel id")
         assertThat(document.subjects).containsExactly("English")
         assertThat(document.ageRangeMin).isEqualTo(3)
         assertThat(document.ageRangeMax).isEqualTo(7)
+    }
+
+    @Test
+    fun `video ids are used as document ids`() {
+        videoRepository.saveVideo(createVideo(id = "v1"))
+
+        val rawDocument = mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection(MongoVideoRepository.COLLECTION_NAME)
+            .find().toList().single()
+
+        assertThat(rawDocument.get("_id")).isEqualTo("v1")
     }
 
     private fun document(): VideoDocument {

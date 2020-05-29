@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class VideoDocument implements Serializable {
     @NonNull
-    private String _id;
+    private String id;
     @NonNull
     private String ingestedAt;
     private String releasedOn;
@@ -37,7 +37,7 @@ public class VideoDocument implements Serializable {
 
     public static VideoDocumentBuilder sample() {
         return VideoDocument.builder()
-                ._id("video-id")
+                .id("video-id")
                 .ingestedAt("2020-05-26T17:10:40+00:00")
                 .releasedOn("2020-05-26")
                 .title("video title")
