@@ -37,13 +37,14 @@ class SessionFormatterTest extends Test {
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("subtype").getAsString shouldBe ""
   }
 
-  it should "write id, url host, path and params" in {
-    val json = SessionFormatter formatRow SessionFactory.createSession(UserFactory.createUser(id = "id-666"),
-      List(EventFactory.createPageRenderedEvent(url = "https://teachers.boclips.com/videos?age_range=9-11&page=1&q=unit%20test"))
+  it should "write id, userID, url host, path and params" in {
+    val json = SessionFormatter formatRow SessionFactory.createSession(UserFactory.createUser(),
+      List(EventFactory.createPageRenderedEvent(userId= "id-666", url = "https://teachers.boclips.com/videos?age_range=9-11&page=1&q=unit%20test"))
     )
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("id").getAsString should not be empty
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("urlHost").getAsString shouldBe "teachers.boclips.com"
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("urlPath").getAsString shouldBe "/videos"
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("urlParams").getAsString shouldBe "age_range=9-11&page=1&q=unit%20test"
+    json.getAsJsonArray("events").get(0).getAsJsonObject.get("userId").getAsString shouldBe "id-666"
   }
 }
