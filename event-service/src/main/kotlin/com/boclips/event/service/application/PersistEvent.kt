@@ -11,6 +11,7 @@ import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
+import com.boclips.eventbus.events.platform.PlatformInteractedWithAnonymously
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
@@ -88,6 +89,11 @@ class PersistEvent(private val eventRepository: EventRepository) {
     @BoclipsEventListener
     fun platformInteractedWith(event: PlatformInteractedWith) {
         eventRepository.savePlatformInteractedWith(event)
+    }
+
+    @BoclipsEventListener
+    fun platformInteractedWithAnonymously(event: PlatformInteractedWithAnonymously) {
+        eventRepository.savePlatformInteractedWithAnonymously(event)
     }
 
     @BoclipsEventListener

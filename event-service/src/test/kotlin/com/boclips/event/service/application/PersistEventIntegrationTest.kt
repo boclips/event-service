@@ -10,6 +10,7 @@ import com.boclips.event.service.testsupport.EventFactory.createCollectionSubjec
 import com.boclips.event.service.testsupport.EventFactory.createCollectionVisibilityChanged
 import com.boclips.event.service.testsupport.EventFactory.createPageRendered
 import com.boclips.event.service.testsupport.EventFactory.createPlatformInteractedWith
+import com.boclips.event.service.testsupport.EventFactory.createPlatformInteractedWithAnonymously
 import com.boclips.event.service.testsupport.EventFactory.createResourcesSearched
 import com.boclips.event.service.testsupport.EventFactory.createVideoAddedToCollection
 import com.boclips.event.service.testsupport.EventFactory.createVideoInteractedWith
@@ -149,6 +150,14 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         eventBus.publish(event)
         assertThat(document().toJson()).contains("PLATFORM_INTERACTED_WITH")
         assertThat(document().toJson()).contains("REMOTE_LEARNING_BANNER_CLICKED")
+    }
+
+    @Test
+    fun platformInteractedWithAnonymously() {
+        val event = createPlatformInteractedWithAnonymously(subtype = "ONBOARDING_PAGE_2_STARTED")
+        eventBus.publish(event)
+        assertThat(document().toJson()).contains("PLATFORM_INTERACTED_WITH")
+        assertThat(document().toJson()).contains("ONBOARDING_PAGE_2_STARTED")
     }
 
     private fun document(): Document {

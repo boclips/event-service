@@ -1,6 +1,7 @@
 package com.boclips.event.service.domain
 
 import com.boclips.eventbus.events.base.AbstractCollectionEvent
+import com.boclips.eventbus.events.base.AbstractEvent
 import com.boclips.eventbus.events.base.AbstractEventWithUser
 import com.boclips.eventbus.events.base.AbstractEventWithUserId
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
@@ -12,6 +13,7 @@ import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
+import com.boclips.eventbus.events.platform.PlatformInteractedWithAnonymously
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
@@ -102,6 +104,14 @@ object EventSerializer {
         )
     }
 
+    fun convertAnonymousEvent(event: AbstractEvent, type: String): Map<String, Any> {
+        return mapOf<String, Any>(
+            "type" to type,
+            "timestamp" to Date.from(event.timestamp.toInstant()),
+            "url" to event.url
+        )
+    }
+
     private fun convertUserEvent(event: AbstractEventWithUser, type: String): Map<String, Any> {
         return mapOf<String, Any>(
             "type" to type,
@@ -158,6 +168,11 @@ object EventSerializer {
 
     fun convertPlatformInteractedWith(event: PlatformInteractedWith): Map<String, Any> {
         return convertUserEvent(event, type = "PLATFORM_INTERACTED_WITH") +
+            ("subtype" to event.subtype)
+    }
+
+    fun convertPlatformInteractedWithAnonymously(event: PlatformInteractedWithAnonymously): Map<String, Any> {
+        return convertAnonymousEvent(event, type = "PLATFORM_INTERACTED_WITH") +
             ("subtype" to event.subtype)
     }
 }
