@@ -4,12 +4,16 @@ import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.{API_ORGANISATION, UserId}
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createOrganisationDocument, createUserDocument}
+import com.boclips.event.infrastructure.user.{OrganisationDocument, UserDocument}
+
+import scala.collection.JavaConverters._
 
 class DocumentToUserConverterTest extends Test {
 
   it should "convert the id" in {
-    val document = createUserDocument(id = "the id")
+    val document = UserDocument.sample
+      .id("the id")
+      .build()
 
     val user = DocumentToUserConverter convert document
 
@@ -17,7 +21,9 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert createdAt" in {
-    val document = createUserDocument(createdAt = "2018-09-11T13:49:06.368Z")
+    val document = UserDocument.sample
+      .createdAt("2018-09-11T13:49:06.368Z")
+      .build()
 
     val user = DocumentToUserConverter convert document
 
@@ -25,19 +31,12 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert isBoclipsEmployee when present" in {
-    val document1 = createUserDocument(isBoclipsEmployee = true, boclipsEmployee = null)
-    val document2 = createUserDocument(isBoclipsEmployee = false, boclipsEmployee = null)
-
-    val user1 = DocumentToUserConverter convert document1
-    val user2 = DocumentToUserConverter convert document2
-
-    user1.isBoclipsEmployee shouldBe true
-    user2.isBoclipsEmployee shouldBe false
-  }
-
-  it should "convert boclipsEmployee when present" in {
-    val document1 = createUserDocument(isBoclipsEmployee = null, boclipsEmployee = true)
-    val document2 = createUserDocument(isBoclipsEmployee = null, boclipsEmployee = false)
+    val document1 = UserDocument.sample
+      .boclipsEmployee(true)
+      .build()
+    val document2 = UserDocument.sample
+      .boclipsEmployee(false)
+      .build()
 
     val user1 = DocumentToUserConverter convert document1
     val user2 = DocumentToUserConverter convert document2
@@ -47,7 +46,9 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert organisation when null" in {
-    val document = createUserDocument(organisation = None)
+    val document = UserDocument.sample
+      .organisation(null)
+      .build()
 
     val user = DocumentToUserConverter convert document
 
@@ -55,10 +56,14 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert organisation when not null" in {
-    val document = createUserDocument(organisation = Some(createOrganisationDocument(
-      name = "the name",
-      typeName = "API",
-    )))
+    val document = UserDocument.sample
+      .organisation(
+        OrganisationDocument.sample
+          .name("the name")
+          .`type`("API")
+          .build()
+      )
+      .build()
 
     val user = DocumentToUserConverter convert document
 
@@ -68,9 +73,16 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert organisation parent when not null" in {
-    val document = createUserDocument(organisation = Some(createOrganisationDocument(
-      parent = Some(createOrganisationDocument(name = "parent organisation name"))
-    )))
+    val document = UserDocument.sample
+      .organisation(
+        OrganisationDocument.sample
+          .parent(OrganisationDocument.sample
+            .name("parent organisation name")
+            .build()
+          )
+          .build()
+      )
+      .build()
 
     val user = DocumentToUserConverter convert document
 
@@ -80,8 +92,13 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert organisation postcode when present" in {
-    val userDocument = createUserDocument(organisation = Some(createOrganisationDocument(
-      postcode = Some("SW115PF"))))
+    val userDocument = UserDocument.sample
+      .organisation(
+        OrganisationDocument.sample
+          .postcode("SW115PF")
+          .build()
+      )
+      .build()
 
     val user = DocumentToUserConverter convert userDocument
 
@@ -89,11 +106,13 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "handle null organisation postcode" in {
-    val userDocument = createUserDocument(
-      organisation = Some(createOrganisationDocument(
-        postcode = None
-      ))
-    )
+    val userDocument = UserDocument.sample
+      .organisation(
+        OrganisationDocument.sample
+          .postcode(null)
+          .build()
+      )
+      .build()
 
     val user = DocumentToUserConverter convert userDocument
 
@@ -101,12 +120,14 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert state and countryCode" in {
-    val userDocument = createUserDocument(
-      organisation = Some(createOrganisationDocument(
-        state = Some("OUR"),
-        countryCode = Some("GZ")
-      ))
-    )
+    val userDocument = UserDocument.sample
+      .organisation(
+        OrganisationDocument.sample
+          .state("OUR")
+          .countryCode("GZ")
+          .build()
+      )
+      .build()
 
     val user = DocumentToUserConverter convert userDocument
 
@@ -115,23 +136,27 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert organisation tags" in {
-    val userDocument = createUserDocument(
-      organisation = Some(createOrganisationDocument(
-        tags = Some(Set("tag"))
-      ))
-    )
+    val userDocument = UserDocument.sample
+      .organisation(
+        OrganisationDocument.sample
+          .tags(List("tag").asJava)
+          .build()
+      )
+      .build()
 
     val user = DocumentToUserConverter convert userDocument
 
-    user.organisation.get.tags should contain only ("tag")
+    user.organisation.get.tags should contain only "tag"
   }
 
   it should "handle organisation billing when populated" in {
-    val userDocument = createUserDocument(
-      organisation = Some(createOrganisationDocument(
-        billing = Some(true)
-      ))
-    )
+    val userDocument = UserDocument.sample
+      .organisation(
+        OrganisationDocument.sample
+          .billing(true)
+          .build()
+      )
+      .build()
 
     val user = DocumentToUserConverter convert userDocument
 
@@ -139,11 +164,14 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "default organisation billing to false when not specified" in {
-    val userDocument = createUserDocument(
-      organisation = Some(createOrganisationDocument(
-        billing = None
-      ))
-    )
+    val userDocument = UserDocument.sample
+      .organisation(
+        OrganisationDocument
+          .sample
+          .billing(null)
+          .build()
+      )
+      .build()
 
     val user = DocumentToUserConverter convert userDocument
 
@@ -151,12 +179,14 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "handle null state and countryCode" in {
-    val userDocument = createUserDocument(
-      organisation = Some(createOrganisationDocument(
-        state = None,
-        countryCode = None
-      ))
-    )
+    val userDocument = UserDocument.sample
+      .organisation(
+        OrganisationDocument.sample
+          .state(null)
+          .countryCode(null)
+          .build()
+      )
+      .build()
 
     val user = DocumentToUserConverter convert userDocument
 
@@ -165,7 +195,12 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert user details" in {
-    val document = createUserDocument(firstName = Some("Bob"), lastName = Some("Bobson"), email = Some("bob@email.com"), role = Some("TEACHER"))
+    val document = UserDocument.sample
+      .firstName("Bob")
+      .lastName("Bobson")
+      .email("bob@email.com")
+      .role("TEACHER")
+      .build()
 
     val user = DocumentToUserConverter convert document
 
@@ -176,7 +211,9 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert subjects" in {
-    val document = createUserDocument(subjects = Some(List("Bargaining 101", "Getting Space in the tube")))
+    val document = UserDocument.sample
+      .subjects(List("Bargaining 101", "Getting Space in the tube").asJava)
+      .build()
 
     val user = DocumentToUserConverter convert document
 
@@ -184,7 +221,9 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert handle null subjects" in {
-    val document = createUserDocument(subjects = None)
+    val document = UserDocument.sample
+      .subjects(null)
+      .build()
 
     val user = DocumentToUserConverter convert document
 
@@ -192,7 +231,9 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert ages" in {
-    val document = createUserDocument(ages = Some(List(7, 8)))
+    val document = UserDocument.sample
+      .ages(List(7, 8).map(_.asInstanceOf[Integer]).asJava)
+      .build()
 
     val user = DocumentToUserConverter convert document
 
@@ -200,7 +241,9 @@ class DocumentToUserConverterTest extends Test {
   }
 
   it should "convert handle null ages" in {
-    val document = createUserDocument(ages = None)
+    val document = UserDocument.sample
+      .ages(null)
+      .build()
 
     val user = DocumentToUserConverter convert document
 

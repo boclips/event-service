@@ -18,7 +18,7 @@ package object mongo {
       ZonedDateTime.ofInstant(document.getDate(property).toInstant, ZoneOffset.UTC)
     }
 
-    def getList[T](property: String): List[T] = {
+    def getScalaList[T](property: String): List[T] = {
       getListOption[T](property)
         .getOrElse(List())
     }

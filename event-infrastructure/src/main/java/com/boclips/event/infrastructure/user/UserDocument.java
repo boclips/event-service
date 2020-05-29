@@ -11,13 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDocument {
     @NonNull
-    private String _id;
+    private String id;
     private String firstName;
     private String lastName;
     private String email;
-    @NonNull
     private List<String> subjects;
-    @NonNull
     private List<Integer> ages;
     @NonNull
     private String createdAt;
@@ -25,20 +23,20 @@ public class UserDocument {
     private OrganisationDocument profileSchool;
     private String role;
     @NonNull
-    private Boolean isBoclipsEmployee;
+    private Boolean boclipsEmployee;
 
     public static UserDocument.UserDocumentBuilder sample() {
         return UserDocument.builder()
-                ._id("user-id")
+                .id("user-id")
                 .firstName("my first name")
                 .lastName("my last name")
                 .email("my@email.com")
                 .subjects(Collections.singletonList("SUBJECT1"))
                 .ages(Collections.singletonList(5))
-                .createdAt("2020-05-26T12:46:19+0000")
+                .createdAt("2020-05-28T16:18:17.945+01:00")
                 .organisation(OrganisationDocument.sample().build())
                 .profileSchool(OrganisationDocument.sample().build())
                 .role("my role")
-                .isBoclipsEmployee(true);
+                .boclipsEmployee(true);
     }
 }

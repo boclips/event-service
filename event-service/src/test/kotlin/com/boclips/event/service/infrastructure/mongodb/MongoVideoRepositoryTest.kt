@@ -9,6 +9,7 @@ import com.boclips.eventbus.domain.video.PlaybackProviderType
 import com.boclips.eventbus.domain.video.VideoAsset
 import com.boclips.eventbus.domain.video.VideoType
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
@@ -78,8 +79,8 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         val document = document()
-        assertThat(document.originalWidth as Int?).isNull()
-        assertThat(document.originalHeight as Int?).isNull()
+        assertNull(document.originalWidth)
+        assertNull(document.originalHeight)
     }
 
     @Test

@@ -6,6 +6,9 @@ import com.boclips.event.service.domain.UserRepository
 import com.boclips.eventbus.domain.user.Organisation
 import com.boclips.eventbus.domain.user.User
 import com.mongodb.MongoClient
+import com.mongodb.client.model.ReplaceOptions
+import mu.KLogging
+import org.bson.Document
 import org.litote.kmongo.getCollection
 import org.litote.kmongo.save
 import java.time.ZoneOffset
@@ -18,7 +21,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
         val organisation = user.organisation?.let(this::organisationDocument)
 
         val document = UserDocument.builder()
-            ._id(user.id)
+            .id(user.id)
             .firstName(user.profile.firstName)
             .lastName(user.profile.lastName)
             .email(user.email)
@@ -27,11 +30,19 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
             .ages(user.profile.ages)
             .organisation(organisation)
             .role(user.profile.role)
-            .isBoclipsEmployee(user.isBoclipsEmployee)
+            .boclipsEmployee(user.isBoclipsEmployee)
             .profileSchool(user.profile.school?.let(this::organisationDocument))
             .build()
 
-        getCollection().save(document)
+        write(document)
+    }
+
+    private fun write(document: UserDocument) {
+        try {
+            getCollection().replaceOne(Document("_id", document.id), document, ReplaceOptions().upsert(true))
+        } catch (e: Exception) {
+            logger.error(e) { "Error writing user ${document.id}" }
+        }
     }
 
     private fun subjects(user: User): List<String> {
@@ -46,7 +57,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
             .postcode(organisation.address.postcode)
             .parent(organisation.parent?.let(this::organisationDocument))
             .countryCode(organisation.address.countryCode)
-            .tags(organisation.tags)
+            .tags(organisation.tags.toList())
             .state(organisation.address.state)
             .dealExpiresAt(organisation.deal.expiresAt?.format(ISO_DATE_TIME))
             .billing(organisation.deal.billing)
@@ -56,7 +67,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
     private fun getCollection() =
         mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<UserDocument>(COLLECTION_NAME)
 
-    companion object {
+    companion object : KLogging() {
         const val COLLECTION_NAME = "users"
     }
 }

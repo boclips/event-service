@@ -85,7 +85,7 @@ object DocumentToEventConverter {
       query = Query(document.getString("query")),
       userId = UserId(document.getString("userId")),
       url = document.url,
-      collectionResults = document.getList[String]("pageResourceIds").map(CollectionId),
+      collectionResults = document.getScalaList[String]("pageResourceIds").map(CollectionId),
       pageIndex = document.getInteger("pageIndex"),
       pageSize = document.getInteger("pageSize"),
       totalResults = document.getLong("totalResults").toInt

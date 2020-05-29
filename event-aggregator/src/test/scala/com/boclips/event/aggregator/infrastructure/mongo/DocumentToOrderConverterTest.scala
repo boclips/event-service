@@ -12,7 +12,7 @@ import scala.collection.JavaConverters._
 class DocumentToOrderConverterTest extends Test {
 
   it should "convert id" in {
-    val document = OrderDocument.sample()._id("the-order-id").build()
+    val document = OrderDocument.sample().id("the-order-id").build()
 
     val order = DocumentToOrderConverter.convert(document)
 

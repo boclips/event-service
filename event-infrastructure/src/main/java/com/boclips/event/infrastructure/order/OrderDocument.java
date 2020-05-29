@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public final class OrderDocument {
     @NonNull
-    private String _id;
+    private String id;
     @NonNull
     private String status;
     @NonNull
@@ -26,7 +26,7 @@ public final class OrderDocument {
 
     public static OrderDocumentBuilder sample() {
         return OrderDocument.builder()
-                ._id("order-id")
+                .id("order-id")
                 .status("my status")
                 .createdAt(new Date())
                 .updatedAt(new Date())

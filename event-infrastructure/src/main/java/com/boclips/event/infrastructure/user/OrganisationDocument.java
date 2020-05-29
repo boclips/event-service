@@ -3,7 +3,7 @@ package com.boclips.event.infrastructure.user;
 import lombok.*;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
@@ -18,7 +18,7 @@ public class OrganisationDocument {
     @NonNull
     private String type;
     @NonNull
-    private Set<String> tags;
+    private List<String> tags;
     private String postcode;
     private String countryCode;
     private String state;
@@ -30,12 +30,12 @@ public class OrganisationDocument {
                 .id("organisation-id")
                 .name("organisation name")
                 .parent(null)
-                .type("type")
-                .tags(Collections.singleton("tag"))
+                .type("API")
+                .tags(Collections.singletonList("tag"))
                 .postcode("12345")
                 .countryCode("US")
                 .state("CA")
-                .dealExpiresAt("2020-05-26T12:46:19+0000")
+                .dealExpiresAt("2020-05-28T16:18:17.945+01:00")
                 .billing(true);
     }
 }

@@ -20,7 +20,7 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
     override fun saveOrder(order: Order) {
         write(
             OrderDocument.builder()
-                ._id(order.id)
+                .id(order.id)
                 .status(order.status?.name ?: "UNKNOWN")
                 .createdAt(Date.from(order.createdAt.toInstant()))
                 .updatedAt(Date.from(order.updatedAt.toInstant()))
@@ -39,9 +39,9 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
 
     private fun write(document: OrderDocument) {
         try {
-            getCollection().replaceOne(Document("_id", document._id), document, ReplaceOptions().upsert(true))
+            getCollection().replaceOne(Document("_id", document.id), document, ReplaceOptions().upsert(true))
         } catch (e: Exception) {
-            logger.error(e) { "Error writing order ${document._id}" }
+            logger.error(e) { "Error writing order ${document.id}" }
         }
     }
 
