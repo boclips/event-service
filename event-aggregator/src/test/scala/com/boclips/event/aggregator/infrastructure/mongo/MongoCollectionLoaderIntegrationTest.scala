@@ -1,13 +1,13 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.boclips.event.aggregator.testsupport.testfactories.CollectionFactory.createCollectionDocument
+import com.boclips.event.infrastructure.collection.CollectionDocument
 
 class MongoCollectionLoaderIntegrationTest extends IntegrationTest {
 
   "load" should "read collections" in mongoSparkTest { (spark, mongo) =>
-    val collection = mongo collection "collections"
-    collection insertOne createCollectionDocument()
+    val collection = mongo.collection[CollectionDocument]("collections")
+    collection insertOne CollectionDocument.sample.build()
 
     val collections = new MongoCollectionLoader(mongo).load()(spark).collect()
 

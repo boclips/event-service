@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CollectionDocument {
     @NonNull
-    private String _id;
+    private String id;
     @NonNull
     private String title;
     @NonNull
@@ -38,7 +38,7 @@ public class CollectionDocument {
 
     public static CollectionDocumentBuilder sample() {
         return CollectionDocument.builder()
-                ._id("collection-id")
+                .id("collection-id")
                 .title("collection title")
                 .description("collection description")
                 .subjects(Collections.singletonList("subject"))

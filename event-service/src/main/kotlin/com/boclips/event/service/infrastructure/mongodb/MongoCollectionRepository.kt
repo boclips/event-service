@@ -19,7 +19,7 @@ class MongoCollectionRepository(private val mongoClient: MongoClient) : Collecti
 
     override fun saveCollection(collection: Collection) {
         val document = CollectionDocument.builder()
-            ._id(collection.id.value)
+            .id(collection.id.value)
             .title(collection.title)
             .description(collection.description)
             .subjects(collection.subjects.map { it.name })
@@ -39,9 +39,9 @@ class MongoCollectionRepository(private val mongoClient: MongoClient) : Collecti
 
     private fun write(document: CollectionDocument) {
         try {
-            getCollection().replaceOne(Document("_id", document._id), document, ReplaceOptions().upsert(true))
+            getCollection().replaceOne(Document("_id", document.id), document, ReplaceOptions().upsert(true))
         } catch (e: Exception) {
-            logger.error(e) { "Error writing collection ${document._id}" }
+            logger.error(e) { "Error writing collection ${document.id}" }
         }
     }
 
