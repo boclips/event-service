@@ -30,6 +30,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
             .organisation(organisation)
             .role(user.profile.role)
             .boclipsEmployee(user.isBoclipsEmployee)
+                .hasOptedIntoMarketing(user.profile.hasOptedIntoMarketing)
             .profileSchool(user.profile.school?.let(this::organisationDocument))
             .build()
 

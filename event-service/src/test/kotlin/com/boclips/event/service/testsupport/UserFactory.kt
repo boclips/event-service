@@ -32,7 +32,8 @@ object UserFactory {
         subjectNames: List<String> = emptyList(),
         ages: List<Int> = emptyList(),
         role: String? = null,
-        school: Organisation? = null
+        school: Organisation? = null,
+        hasOptedIntoMarketing: Boolean? = null
     ): UserProfile {
         return UserProfile.builder()
             .firstName(firstName)
@@ -41,6 +42,7 @@ object UserFactory {
             .ages(ages)
             .school(school)
             .role(role)
+                .hasOptedIntoMarketing(hasOptedIntoMarketing)
             .build()
     }
 }

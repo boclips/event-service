@@ -25,7 +25,8 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
                 profile = createUserProfile(
                     firstName = "Dave",
                     lastName = "Davidson",
-                    school = createOrganisation(name = "the school")
+                    school = createOrganisation(name = "the school"),
+                        hasOptedIntoMarketing = true
                 ),
                 email = "dave@example.com",
                 organisation = createOrganisation(name = "the organisation")
@@ -37,6 +38,7 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(userDocument().email).isEqualTo("dave@example.com")
         assertThat(userDocument().organisation?.name).isEqualTo("the organisation")
         assertThat(userDocument().profileSchool?.name).isEqualTo("the school")
+        assertThat(userDocument().hasOptedIntoMarketing).isEqualTo(true)
     }
 
     @Test

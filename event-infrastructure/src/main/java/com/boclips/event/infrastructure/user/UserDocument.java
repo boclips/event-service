@@ -24,6 +24,7 @@ public class UserDocument {
     private String role;
     @NonNull
     private Boolean boclipsEmployee;
+    private Boolean hasOptedIntoMarketing;
 
     public static UserDocument.UserDocumentBuilder sample() {
         return UserDocument.builder()
@@ -37,6 +38,7 @@ public class UserDocument {
                 .organisation(OrganisationDocument.sample().build())
                 .profileSchool(OrganisationDocument.sample().build())
                 .role("my role")
-                .boclipsEmployee(true);
+                .boclipsEmployee(true)
+                .hasOptedIntoMarketing(false);
     }
 }
