@@ -32,13 +32,6 @@ object DocumentToVideoConverter {
     )
   }
 
-  private def integerOption(x: java.lang.Integer): Option[Int] = {
-    x match {
-      case null => None
-      case _ => Some(x)
-    }
-  }
-
   private def convertAsset(document: VideoAssetDocument): VideoAsset = {
     VideoAsset(
       sizeKb = document.getSizeKb,

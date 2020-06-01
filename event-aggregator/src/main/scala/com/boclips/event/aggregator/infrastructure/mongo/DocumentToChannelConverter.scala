@@ -18,8 +18,8 @@ object DocumentToChannelConverter {
       id = ChannelId(document.getId),
       name = document.getName,
       details = ChannelDetails(
-        contentTypes = Option(details.getContentTypes.asScala.toList),
-        contentCategories = Option(details.getContentCategories.asScala.toList),
+        contentTypes = Option(details.getContentTypes).map(_.asScala.toList),
+        contentCategories = Option(details.getContentCategories).map(_.asScala.toList),
         language = Option(details.getLanguage).map(Locale.forLanguageTag),
         hubspotId = Option(details.getHubspotId),
         contractId = Option(details.getContractId),
@@ -32,12 +32,12 @@ object DocumentToChannelConverter {
       ),
       pedagogy = ChannelPedagogy(
         subjectNames = Option(pedagogy.getSubjectNames).map(_.asScala.toList),
-        ageRangeMin = Option(pedagogy.getAgeRangeMin),
-        ageRangeMax = Option(pedagogy.getAgeRangeMax),
+        ageRangeMin = integerOption(pedagogy.getAgeRangeMin),
+        ageRangeMax = integerOption(pedagogy.getAgeRangeMax),
         bestForTags = Option(pedagogy.getBestForTags).map(_.asScala.toList),
         curriculumAligned = Option(pedagogy.getCurriculumAligned),
         educationalResources = Option(pedagogy.getEducationalResources),
-        transcriptProvided = Option(pedagogy.getTranscriptProvided)
+        transcriptProvided = booleanOption(pedagogy.getTranscriptProvided)
       ),
       marketing = ChannelMarketing(
         status = Option(marketing.getStatus),

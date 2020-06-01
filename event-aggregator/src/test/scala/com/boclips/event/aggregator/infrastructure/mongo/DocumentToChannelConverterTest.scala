@@ -83,4 +83,78 @@ class DocumentToChannelConverterTest extends Test {
     channel.marketing.showreel should contain("http://showreel.com")
     channel.marketing.sampleVideos should contain(List("http://video1.com", "http://video2.com"))
   }
+
+  it should "covert an as-null-as-possible document" in {
+    val document = ChannelDocument.sample
+      .id("this-channel-id")
+      .name("this channel name")
+      .details(
+        ChannelDetailsDocument.sample
+          .contentTypes(null)
+          .contentCategories(null)
+          .language(null)
+          .hubspotId(null)
+          .contractId(null)
+          .awards(null)
+          .notes(null)
+          .build()
+      )
+      .ingest(
+        ChannelIngestDocument.sample
+          .`type`("MANUAL")
+          .deliveryFrequency(null)
+          .build()
+      )
+      .pedagogy(
+        ChannelPedagogyDocument.sample
+          .subjectNames(null)
+          .ageRangeMin(null)
+          .ageRangeMax(null)
+          .bestForTags(null)
+          .curriculumAligned(null)
+          .educationalResources(null)
+          .transcriptProvided(null)
+          .build()
+      )
+      .marketing(
+        ChannelMarketingDocument.sample
+          .status(null)
+          .oneLineIntro(null)
+          .logos(null)
+          .showreel(null)
+          .sampleVideos(null)
+          .build()
+      )
+      .build()
+
+    val channel = DocumentToChannelConverter convert document
+
+    channel.id shouldBe ChannelId("this-channel-id")
+    channel.name shouldBe "this channel name"
+
+    channel.details.contentTypes shouldBe None
+    channel.details.contentCategories shouldBe None
+    channel.details.language shouldBe None
+    channel.details.hubspotId shouldBe None
+    channel.details.contractId shouldBe None
+    channel.details.awards shouldBe None
+    channel.details.notes shouldBe None
+
+    channel.ingest._type shouldBe "MANUAL"
+    channel.ingest.deliveryFrequency shouldBe None
+
+    channel.pedagogy.subjectNames shouldBe None
+    channel.pedagogy.ageRangeMin shouldBe None
+    channel.pedagogy.ageRangeMax shouldBe None
+    channel.pedagogy.bestForTags shouldBe None
+    channel.pedagogy.curriculumAligned shouldBe None
+    channel.pedagogy.educationalResources shouldBe None
+    channel.pedagogy.transcriptProvided shouldBe None
+
+    channel.marketing.status shouldBe None
+    channel.marketing.oneLineIntro shouldBe None
+    channel.marketing.logos shouldBe None
+    channel.marketing.showreel shouldBe None
+    channel.marketing.sampleVideos shouldBe None
+  }
 }

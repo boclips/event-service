@@ -41,4 +41,18 @@ package object mongo {
     }
   }
 
+
+  def integerOption(x: java.lang.Integer): Option[Int] = {
+    x match {
+      case null => None
+      case _ => Some(x)
+    }
+  }
+
+  def booleanOption(x: java.lang.Boolean): Option[Boolean] = {
+    x match {
+      case null => None
+      case _ => Some(x)
+    }
+  }
 }
