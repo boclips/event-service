@@ -14,7 +14,10 @@ class PlaybackAssembler(sessions: RDD[Session], videos: RDD[Video]) {
       case _ => None
     }.toSet
 
-    val idsOfVideosEverPlayed: RDD[VideoId] = sessions.flatMap(videosPlayedInSession).distinct()
+    val idsOfVideosEverPlayed: RDD[VideoId] = sessions.flatMap(videosPlayedInSession)
+      .distinct()
+      .persist(StorageLevel.MEMORY_AND_DISK)
+      .setName("Videos ever played")
 
     val durationSecondsByVideoId: Map[String, Int] = videos
       .keyBy(_.id)

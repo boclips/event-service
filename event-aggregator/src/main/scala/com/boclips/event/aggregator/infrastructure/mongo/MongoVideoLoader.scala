@@ -14,7 +14,7 @@ class MongoVideoLoader(private val mongoClient: SparkMongoClient) extends VideoL
       .collectionRDD[VideoDocument]("videos")
       .repartition(256)
       .map(DocumentToVideoConverter.convert)
-      .persist(StorageLevel.MEMORY_AND_DISK)
+      .persist(StorageLevel.DISK_ONLY)
       .setName("Videos")
   }
 
