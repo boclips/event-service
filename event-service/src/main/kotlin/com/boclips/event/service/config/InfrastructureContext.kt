@@ -2,12 +2,14 @@ package com.boclips.event.service.config
 
 import com.boclips.event.service.domain.ChannelRepository
 import com.boclips.event.service.domain.CollectionRepository
+import com.boclips.event.service.domain.ContractRepository
 import com.boclips.event.service.domain.EventWriter
 import com.boclips.event.service.domain.OrderRepository
 import com.boclips.event.service.domain.UserRepository
 import com.boclips.event.service.domain.VideoRepository
 import com.boclips.event.service.infrastructure.mongodb.MongoChannelRepository
 import com.boclips.event.service.infrastructure.mongodb.MongoCollectionRepository
+import com.boclips.event.service.infrastructure.mongodb.MongoContractRepository
 import com.boclips.event.service.infrastructure.mongodb.MongoEventWriter
 import com.boclips.event.service.infrastructure.mongodb.MongoOrderRepository
 import com.boclips.event.service.infrastructure.mongodb.MongoUserRepository
@@ -40,6 +42,10 @@ class InfrastructureContext(val mongoProperties: MongoProperties) {
     fun userRepository(): UserRepository {
         return MongoUserRepository(mongoClient())
     }
+
+    @Bean
+    fun contractRepository(): ContractRepository =
+        MongoContractRepository(mongoClient())
 
     @Bean
     fun collectionRepository(): CollectionRepository {
