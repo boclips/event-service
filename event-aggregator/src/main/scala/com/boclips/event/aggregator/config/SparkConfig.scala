@@ -9,6 +9,8 @@ class SparkConfig(
                  ) {
   lazy val session: SparkSession = {
     val spark = SparkSession.builder()
+      .config("spark.executor.memory", "1.5g")
+      .config("spark.driver.memory", "4g")
       .master(s"local[$numberLocalExecutors]")
       .appName("EventAggregator")
       .getOrCreate()
