@@ -13,7 +13,6 @@ import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
-import com.boclips.eventbus.events.platform.PlatformInteractedWithAnonymously
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
@@ -223,12 +222,12 @@ object EventFactory {
             .build()
     }
 
-    fun createPlatformInteractedWithAnonymously(
+    fun createPlatformInteractedWithAnonymous(
         subtype: String,
         url: String = "http://bbc.co.uk",
         timestamp: ZonedDateTime = ZonedDateTime.now()
-    ): PlatformInteractedWithAnonymously {
-        return PlatformInteractedWithAnonymously.builder()
+    ): PlatformInteractedWith {
+        return PlatformInteractedWith.builder()
             .subtype(subtype)
             .url(url)
             .timestamp(timestamp)

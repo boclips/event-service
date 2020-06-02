@@ -13,7 +13,6 @@ import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
-import com.boclips.eventbus.events.platform.PlatformInteractedWithAnonymously
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
@@ -167,12 +166,16 @@ object EventSerializer {
     }
 
     fun convertPlatformInteractedWith(event: PlatformInteractedWith): Map<String, Any> {
-        return convertUserEvent(event, type = "PLATFORM_INTERACTED_WITH") +
-            ("subtype" to event.subtype)
-    }
+        val convertedEvent = mapOf<String, Any>(
+            "type" to "PLATFORM_INTERACTED_WITH",
+            "timestamp" to Date.from(event.timestamp.toInstant()),
+            "url" to event.url,
+            "subtype" to event.subtype)
 
-    fun convertPlatformInteractedWithAnonymously(event: PlatformInteractedWithAnonymously): Map<String, Any> {
-        return convertAnonymousEvent(event, type = "PLATFORM_INTERACTED_WITH") +
-            ("subtype" to event.subtype)
+        if (event.userId != null) {
+            return convertedEvent + ("userId" to event.userId)
+        }
+
+        return convertedEvent
     }
 }

@@ -9,7 +9,6 @@ import com.boclips.eventbus.events.collection.VideoAddedToCollection
 import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
-import com.boclips.eventbus.events.platform.PlatformInteractedWithAnonymously
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
@@ -77,9 +76,5 @@ class EventRepository(private val writer: EventWriter) {
 
     fun savePlatformInteractedWith(event: PlatformInteractedWith) {
         writer.write(EventSerializer.convertPlatformInteractedWith(event))
-    }
-
-    fun savePlatformInteractedWithAnonymously(event: PlatformInteractedWithAnonymously) {
-        writer.write(EventSerializer.convertPlatformInteractedWithAnonymously(event))
     }
 }

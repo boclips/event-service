@@ -7,7 +7,7 @@ import com.boclips.event.service.testsupport.EventFactory.createCollectionSubjec
 import com.boclips.event.service.testsupport.EventFactory.createCollectionVisibilityChanged
 import com.boclips.event.service.testsupport.EventFactory.createPageRendered
 import com.boclips.event.service.testsupport.EventFactory.createPlatformInteractedWith
-import com.boclips.event.service.testsupport.EventFactory.createPlatformInteractedWithAnonymously
+import com.boclips.event.service.testsupport.EventFactory.createPlatformInteractedWithAnonymous
 import com.boclips.event.service.testsupport.EventFactory.createVideoAddedToCollection
 import com.boclips.event.service.testsupport.EventFactory.createVideoInteractedWith
 import com.boclips.event.service.testsupport.EventFactory.createVideoPlayerInteractedWith
@@ -356,14 +356,14 @@ class EventSerializerTest {
     }
 
     @Test
-    fun convertPlatformInteractedWithAnonymously() {
-        val event = createPlatformInteractedWithAnonymously(
+    fun convertAnonymousPlatformInteractedWith() {
+        val event = createPlatformInteractedWithAnonymous(
             subtype = "HELP_CLICKED",
             url = "http://teachers.boclips.com/test/page?data=123",
             timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC)
         )
 
-        val document = EventSerializer.convertPlatformInteractedWithAnonymously(event)
+        val document = EventSerializer.convertPlatformInteractedWith(event)
 
         assertThat(document["type"]).isEqualTo("PLATFORM_INTERACTED_WITH")
         assertThat(document["subtype"]).isEqualTo("HELP_CLICKED")
