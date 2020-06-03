@@ -19,6 +19,7 @@ class MongoUserLoader(private val mongoClient: SparkMongoClient) extends UserLoa
     mongoClient
       .collectionRDD[UserDocument]("users")
       .map(DocumentToUserConverter.convert)
+      .repartition(10)
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Users")
   }
