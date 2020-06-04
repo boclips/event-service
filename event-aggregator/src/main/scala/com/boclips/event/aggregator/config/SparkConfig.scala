@@ -1,6 +1,5 @@
 package com.boclips.event.aggregator.config
 
-import org.apache.hadoop.conf.Configuration
 import org.apache.spark.sql.SparkSession
 
 class SparkConfig(private val numberLocalExecutors: Int) {

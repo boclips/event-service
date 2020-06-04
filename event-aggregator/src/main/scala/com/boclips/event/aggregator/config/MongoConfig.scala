@@ -16,7 +16,6 @@ object MongoConfig {
       ))
     )
   }
-
 }
 
 case class MongoConfig(
