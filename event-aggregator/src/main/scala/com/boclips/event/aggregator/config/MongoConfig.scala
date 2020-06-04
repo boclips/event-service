@@ -5,25 +5,18 @@ import com.mongodb.ServerAddress
 object MongoConfig {
   def apply(): MongoConfig = {
     MongoConfig(
-      serverAddresses = env("MONGO_HOSTS").split(",").map(new ServerAddress(_)).toList,
-      replicaSetName = Some(env("MONGO_REPLICA_SET")),
-      database = env("MONGO_DATABASE"),
+      serverAddresses = Env("MONGO_HOSTS").split(",").map(new ServerAddress(_)).toList,
+      replicaSetName = Some(Env("MONGO_REPLICA_SET")),
+      database = Env("MONGO_DATABASE"),
       ssl = true,
       credentials = Some(MongoCredentials(
-        authenticationDatabase = env("MONGO_AUTHENTICATION_DATABASE"),
-        username = env("MONGO_USERNAME"),
-        password = env("MONGO_PASSWORD"),
+        authenticationDatabase = Env("MONGO_AUTHENTICATION_DATABASE"),
+        username = Env("MONGO_USERNAME"),
+        password = Env("MONGO_PASSWORD"),
       ))
     )
   }
 
-  private def env(name: String): String = {
-    val value = System.getenv(name)
-    if (value == null) {
-      throw new IllegalStateException(s"$name is not set")
-    }
-    value
-  }
 }
 
 case class MongoConfig(
