@@ -3,14 +3,17 @@ package com.boclips.event.aggregator.infrastructure.bigquery
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
+import com.boclips.event.aggregator.config.BigQueryConfig
 import com.boclips.event.aggregator.presentation.formatters.schema.{NullableFieldMode, Schema, SchemaField, StringFieldType}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.google.gson.JsonObject
+import org.scalatest.Ignore
 
+@Ignore
 class BigQueryTableWriterTest extends IntegrationTest {
 
   it should "write data in the table" in sparkTest { implicit spark =>
-    val writer = new BigQueryTableWriter(spark)
+    val writer = new BigQueryTableWriter(BigQueryConfig())
 
     val schema = Schema(SchemaField(
       fieldName = "fieldName",
