@@ -7,22 +7,24 @@ import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 import com.boclips.event.aggregator.config.{BigQueryConfig, Env}
 import com.boclips.event.aggregator.presentation.formatters.schema.{NullableFieldMode, Schema, SchemaField, StringFieldType}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.google.cloud.bigquery.QueryJobConfiguration
+import com.google.cloud.bigquery.{BigQueryOptions, Job, JobId, JobInfo, QueryJobConfiguration}
 import com.google.gson.JsonObject
-import com.google.cloud.bigquery.JobId
 import java.util.UUID
 
 import com.google.auth.oauth2.ServiceAccountCredentials
-import com.google.cloud.bigquery.JobInfo
-import com.google.cloud.bigquery.BigQueryOptions
+import org.scalatest.BeforeAndAfterEach
 
 import scala.collection.JavaConverters._
+import scala.util.Random
 
 
-class BigQueryTableWriterTest extends IntegrationTest {
+class BigQueryTableWriterTest extends IntegrationTest with BeforeAndAfterEach {
+
+  val config: BigQueryConfig = BigQueryConfig()
+
+  val tableName = s"test_table_${Random.nextInt(Int.MaxValue)}"
 
   it should "write data in the table" in sparkTest { implicit spark =>
-    val config = BigQueryConfig()
     val writer = new BigQueryTableWriter(config)
 
     val schema = Schema(SchemaField(
@@ -40,10 +42,22 @@ class BigQueryTableWriterTest extends IntegrationTest {
       row
     }
 
-    writer.writeTable(data, schema, "test_table")
+    writer.writeTable(data, schema, tableName)
 
+    val results = run(s"SELECT * FROM `${config.projectId}.${config.dataset}.$tableName`")
+      .getQueryResults()
+      .iterateAll().asScala.toList
+    results should have size 1
+    results.head.get("fieldName").getStringValue shouldBe uniqueValue
+  }
+
+  override def afterEach() {
+    run(s"DROP TABLE `${config.projectId}.${config.dataset}.$tableName`")
+  }
+
+  private def run(queryString: String): Job = {
     val queryConfig = QueryJobConfiguration
-      .newBuilder(s"SELECT * FROM `${config.projectId}.${config.dataset}.test_table`")
+      .newBuilder(queryString)
       .setUseLegacySql(false)
       .build()
     val jobId = JobId.of(UUID.randomUUID.toString)
@@ -54,12 +68,9 @@ class BigQueryTableWriterTest extends IntegrationTest {
       .build()
       .getService
     val queryJob = bigquery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build).waitFor()
-
     queryJob should not be null
     queryJob.getStatus.getError shouldBe null
-    val results = queryJob.getQueryResults().iterateAll().asScala.toList
-    results should have size 1
-    results.head.get("fieldName").getStringValue shouldBe uniqueValue
+    queryJob
   }
 
 }
