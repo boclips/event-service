@@ -2,7 +2,7 @@ package com.boclips.event.aggregator
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.config.{MongoConfig, SparkConfig}
+import com.boclips.event.aggregator.config.{BigQueryConfig, MongoConfig, SparkConfig}
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent}
 import com.boclips.event.aggregator.domain.service.Data
@@ -30,7 +30,7 @@ object EventAggregatorApp {
   def main(args: Array[String]): Unit = {
     val sparkConfig: SparkConfig = SparkConfig()
     implicit val session: SparkSession = sparkConfig.session
-    val writer = new BigQueryTableWriter(session)
+    val writer = new BigQueryTableWriter(BigQueryConfig())
     val mongoSparkProvider = new SparkMongoClient(MongoConfig())
     new EventAggregatorApp(writer, mongoSparkProvider).run()
   }
