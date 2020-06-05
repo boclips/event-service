@@ -41,12 +41,12 @@ class BigQueryTableWriter(private val config: BigQueryConfig) extends TableWrite
   private def setup(context: SparkContext): Configuration = {
     val conf = context.hadoopConfiguration
     conf.set("mapreduce.job.outputformat.class", classOf[IndirectBigQueryOutputFormat[_, _]].getName)
-    conf.set(BigQueryConfiguration.OUTPUT_TABLE_WRITE_DISPOSITION_KEY, "WRITE_TRUNCATE")
+    conf.set(BigQueryConfiguration.OUTPUT_TABLE_WRITE_DISPOSITION.getKey, "WRITE_TRUNCATE")
     conf.set("fs.AbstractFileSystem.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS")
     conf.set("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
     conf.set("fs.gs.project.id", config.projectId)
     conf.set("google.cloud.auth.service.account.enable", "true")
-    conf.set("google.cloud.auth.service.account.json.keyfile", config.serviceAccountKeyFile)
+    conf.set("google.cloud.auth.service.account.json.keyfile", config.serviceAccountKeyPath.toFile.getPath)
     conf
   }
 }

@@ -31,3 +31,6 @@ event-service/build/
 /nbdist/
 /.nb-gradle/
 .DS_Store
+
+big-query-service-account-key
+.env
