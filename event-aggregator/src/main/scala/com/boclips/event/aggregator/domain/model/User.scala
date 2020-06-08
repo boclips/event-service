@@ -33,7 +33,8 @@ case class User(
                  ages: List[Int],
                  createdAt: ZonedDateTime,
                  organisation: Option[Organisation],
-                 isBoclipsEmployee: Boolean
+                 isBoclipsEmployee: Boolean,
+                 hasOptedIntoMarketing: Option[Boolean]
                ) extends UserOrAnonymous {
   override def isAnonymous: Boolean = false
 

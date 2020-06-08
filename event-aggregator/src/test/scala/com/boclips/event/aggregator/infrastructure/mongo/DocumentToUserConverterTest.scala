@@ -45,6 +45,33 @@ class DocumentToUserConverterTest extends Test {
     user2.isBoclipsEmployee shouldBe false
   }
 
+  it should "convert hasOptedIntoMarketing when present" in {
+    val userDocument1 = UserDocument.sample
+      .hasOptedIntoMarketing(true)
+      .build()
+
+    val userDocument2 = UserDocument.sample
+      .hasOptedIntoMarketing(false)
+      .build()
+
+    val user1 = DocumentToUserConverter convert userDocument1
+    val user2 = DocumentToUserConverter convert userDocument2
+
+    user1.hasOptedIntoMarketing shouldBe Some(true)
+    user2.hasOptedIntoMarketing shouldBe Some(false)
+  }
+
+  it should "handle hasOptedIntoMarketing when not present" in {
+    val userDocument1 = UserDocument.sample
+      .hasOptedIntoMarketing(null)
+      .build()
+
+    val user1 = DocumentToUserConverter convert userDocument1
+
+    user1.hasOptedIntoMarketing shouldBe Some(false)
+
+  }
+
   it should "convert organisation when null" in {
     val document = UserDocument.sample
       .organisation(null)

@@ -27,6 +27,7 @@ object SimpleUserFormatter extends SingleRowFormatter[User] {
     json.addIntArrayProperty("ages", user.ages)
     json.addProperty("isBoclipsEmployee", user.isBoclipsEmployee)
     json.addDateProperty("creationDate", user.createdAt)
+    json.addProperty("hasOptedIntoMarketing", user.hasOptedIntoMarketing.getOrElse(false))
   }
 }
 

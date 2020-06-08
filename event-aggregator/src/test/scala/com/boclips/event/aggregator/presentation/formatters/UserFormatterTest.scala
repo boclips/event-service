@@ -50,6 +50,12 @@ class UserFormatterTest extends Test {
     json.get("organisationType").getAsString shouldBe "SCHOOL"
   }
 
+  it should "write  hasOptedIntoMarketing" in {
+    val json = UserFormatter formatRow createUser(hasOptedIntoMarketing = Some(true))
+
+    json.get("hasOptedIntoMarketing").getAsBoolean shouldBe true
+  }
+
   it should "write organisation type as SCHOOL when not known" in {
     val json = UserFormatter formatRow createUser(organisation = None)
 

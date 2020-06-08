@@ -39,6 +39,6 @@ public class UserDocument {
                 .profileSchool(OrganisationDocument.sample().build())
                 .role("my role")
                 .boclipsEmployee(true)
-                .hasOptedIntoMarketing(false);
+                .hasOptedIntoMarketing(null);
     }
 }

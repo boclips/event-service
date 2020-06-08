@@ -25,7 +25,8 @@ object DocumentToUserConverter {
         .getOrElse(Nil),
       createdAt = ZonedDateTime.parse(document.getCreatedAt),
       organisation = Option(document.getOrganisation).map(convertOrganisation),
-      isBoclipsEmployee = document.getBoclipsEmployee
+      isBoclipsEmployee = document.getBoclipsEmployee,
+      hasOptedIntoMarketing = Option(document.getHasOptedIntoMarketing),
     )
   }
 

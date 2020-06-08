@@ -45,7 +45,8 @@ object UserFactory {
                   ages: List[Int] = List(),
                   isBoclipsEmployee: Boolean = false,
                   organisation: Option[Organisation] = None,
-                  createdAt: ZonedDateTime = ZonedDateTime.now()
+                  createdAt: ZonedDateTime = ZonedDateTime.now(),
+                  hasOptedIntoMarketing: Option[Boolean] = None,
                 ): User = {
     User(
       id = UserId(id),
@@ -57,7 +58,8 @@ object UserFactory {
       ages = ages,
       createdAt = createdAt,
       isBoclipsEmployee = isBoclipsEmployee,
-      organisation = organisation
+      organisation = organisation,
+      hasOptedIntoMarketing = hasOptedIntoMarketing
     )
   }
 
