@@ -1,8 +1,10 @@
 package com.boclips.event.aggregator.domain.service.video
 
-import com.boclips.event.aggregator.domain.model.{ChannelId, OrderId, VideoId}
+import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
+import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoInteractedWithEvent
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem}
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
@@ -32,10 +34,19 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
       ))
     )
 
+    val basicChannelDetails = ExampleInstance.create[ChannelDetails]()
     val channels = rdd(
-      createChannel(id = "channel-1"),
+      createChannel(
+        id = "channel-1",
+        details = basicChannelDetails.copy(contractId = Some("contract-1"))
+      ),
       createChannel(id = "channel-2"),
-      createChannel(id = "channel-3"),
+      createChannel(id = "unused-channel"),
+    )
+
+    val contracts = rdd(
+      createFullContract(id = "contract-1"),
+      createFullContract(id = "unused-contract")
     )
 
     val impressions = rdd(
@@ -54,6 +65,7 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
       playbacks,
       orders,
       channels,
+      contracts,
       impressions,
       interactions
     ).collect().toList.sortBy(_.video.id.value)
@@ -63,6 +75,7 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
     videosWithRelatedData.head.playbacks should have size 2
     videosWithRelatedData.head.orders should have size 2
     videosWithRelatedData.head.channel.map(_.id) should contain(ChannelId("channel-1"))
+    videosWithRelatedData.head.contract.map(_.id) should contain(ContractId("contract-1"))
     videosWithRelatedData.head.interactions should have size 2
 
     val v1Orders = videosWithRelatedData.head.orders.sortBy(_.order.id.value)

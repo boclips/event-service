@@ -1,12 +1,13 @@
 package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.{Duration, LocalDate, Period, ZonedDateTime}
-import java.util.Locale
+import java.util.{Currency, Locale}
 
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
-import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
+import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
+import com.boclips.event.aggregator.testsupport.testfactories.{ContractFactory, EventFactory}
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem}
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createVideoSearchResultImpression}
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideo, createVideoAsset}
@@ -18,7 +19,7 @@ class VideoFormatterTest extends Test {
       subjects = List("maths", "physics")
     )
 
-    val json = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val json = VideoFormatter formatRow VideoWithRelatedData(video)
 
     json.get("subjects").getAsJsonArray should have size 2
     json.getAsJsonArray("subjects").get(0).getAsJsonObject.getString("name") shouldBe "maths"
@@ -32,7 +33,8 @@ class VideoFormatterTest extends Test {
       ageRange = AgeRange(Some(5), Some(6))
     )
 
-    val jsonObjects = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObjects = VideoFormatter formatRow VideoWithRelatedData(video)
+
 
     jsonObjects.get("id").getAsString shouldBe "the-id"
     jsonObjects.get("playbackProvider").getAsString shouldBe "YOUTUBE"
@@ -45,7 +47,7 @@ class VideoFormatterTest extends Test {
       ageRange = AgeRange(Some(17), None)
     )
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
     jsonObject.get("ages").getAsJsonArray should have size 3
   }
 
@@ -55,7 +57,7 @@ class VideoFormatterTest extends Test {
       ageRange = AgeRange(None, None)
     )
 
-    val jsonObjects = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObjects = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObjects.getStringList("ages") shouldBe List("UNKNOWN")
   }
@@ -65,7 +67,7 @@ class VideoFormatterTest extends Test {
       subjects = List()
     )
 
-    val jsonObjects = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObjects = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObjects.getAsJsonArray("subjects") should have size 1
     jsonObjects.getAsJsonArray("subjects").get(0).getAsJsonObject.getString("name") shouldBe "UNKNOWN"
@@ -74,7 +76,7 @@ class VideoFormatterTest extends Test {
   it should "write video duration" in {
     val video = createVideo(duration = Duration.ofMinutes(2))
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.get("durationSeconds").getAsInt shouldBe 120
   }
@@ -82,7 +84,7 @@ class VideoFormatterTest extends Test {
   it should "write video title" in {
     val video = createVideo(title = "Video title")
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.get("title").getAsString shouldBe "Video title"
   }
@@ -90,7 +92,7 @@ class VideoFormatterTest extends Test {
   it should "write contentType when known" in {
     val video = createVideo(contentType = Some("STOCK"))
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.get("type").getAsString shouldBe "STOCK"
   }
@@ -98,7 +100,7 @@ class VideoFormatterTest extends Test {
   it should "write contentType when not known" in {
     val video = createVideo(contentType = None)
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.get("type").getAsString shouldBe "UNKNOWN"
   }
@@ -109,7 +111,7 @@ class VideoFormatterTest extends Test {
       ingestedAt = ZonedDateTime.parse("2018-11-12T12:14:16.7Z[UTC]")
     )
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.get("ingestedAt").getAsString shouldBe "2018-11-12T12:14:16.7Z"
   }
@@ -117,7 +119,7 @@ class VideoFormatterTest extends Test {
   it should "write monthly storage cost in GBP" in {
     val video = createVideo(assets = List(createVideoAsset(sizeKb = 1000000)))
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.getDouble("monthlyStorageCostGbp") shouldBe 0.1
   }
@@ -125,7 +127,7 @@ class VideoFormatterTest extends Test {
   it should "write storage cost so far in GBP" in {
     val video = createVideo(assets = List(createVideoAsset(sizeKb = 1000000)), ingestedAt = ZonedDateTime.now().minusDays(365))
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.getDouble("storageCostSoFarGbp") shouldBe 1.2 +- 0.01
   }
@@ -133,7 +135,7 @@ class VideoFormatterTest extends Test {
   it should "write originalWidth & originHeight" in {
     val video = createVideo(originalDimensions = Some(Dimensions(480, 360)))
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.getInt("originalWidth") shouldBe 480
     jsonObject.getInt("originalHeight") shouldBe 360
@@ -142,7 +144,7 @@ class VideoFormatterTest extends Test {
   it should "write original width & height as 0 when no data" in {
     val video = createVideo(originalDimensions = None)
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.getInt("originalWidth") shouldBe 0
     jsonObject.getInt("originalHeight") shouldBe 0
@@ -154,7 +156,7 @@ class VideoFormatterTest extends Test {
       createVideoAsset(dimensions = Dimensions(1024, 860), sizeKb = 2048)
     ))
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.getInt("assetWidth") shouldBe 1024
     jsonObject.getInt("assetHeight") shouldBe 860
@@ -164,7 +166,7 @@ class VideoFormatterTest extends Test {
   it should "write dimensions and size of the largest asset as 0 when no assets" in {
     val video = createVideo(assets = List())
 
-    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val jsonObject = VideoFormatter formatRow VideoWithRelatedData(video)
 
     jsonObject.getInt("assetWidth") shouldBe 0
     jsonObject.getInt("assetHeight") shouldBe 0
@@ -176,7 +178,7 @@ class VideoFormatterTest extends Test {
       assets = List(createVideoAsset())
     )
 
-    val json = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List())
+    val json = VideoFormatter formatRow VideoWithRelatedData(video)
 
     json.get("storageCharges").getAsJsonArray should have size 1
   }
@@ -193,7 +195,7 @@ class VideoFormatterTest extends Test {
       ))
     )
 
-    val json = VideoFormatter formatRow VideoWithRelatedData(video, List(), orders, None, List(), List())
+    val json = VideoFormatter formatRow VideoWithRelatedData(video = video, orders = orders)
 
     val orderJson = json.get("orders").getAsJsonArray.get(0).getAsJsonObject
     orderJson.getString("id") should not be empty
@@ -204,7 +206,7 @@ class VideoFormatterTest extends Test {
     orderJson.getString("orderUpdatedAt") shouldBe "2010-10-21T00:00:00Z"
   }
 
-  it should "write nested channels" in {
+  it should "write nested channel" in {
     val video = createVideo()
     val channel = createChannel(
       id = "my-channel-id",
@@ -241,12 +243,8 @@ class VideoFormatterTest extends Test {
     )
 
     val json = VideoFormatter formatRow VideoWithRelatedData(
-      video,
-      Nil,
-      Nil,
-      Some(channel),
-      Nil,
-      Nil
+      video = video,
+      channel = Some(channel),
     )
 
     val channelJson = json.getAsJsonObject("channel")
@@ -279,6 +277,80 @@ class VideoFormatterTest extends Test {
     channelJson.getStringList("marketingSampleVideos") shouldBe List("http://sampleVideos.com")
   }
 
+  it should "write nested contract" in {
+    val video = createVideo()
+    val contract = createFullContract(
+      id = "my-contract-id",
+      channelName = "my channel name",
+      contractDocumentLink = "http://mysite.com",
+      contractIsRolling = false,
+      contractDates = ContractDates(
+        start = Some(LocalDate.ofYearDay(2008, 1)),
+        end = Some(LocalDate.ofYearDay(2021, 360))
+      ),
+      daysBeforeTerminationWarning = 300,
+      yearsForMaximumLicense = 1,
+      daysForSellOffPeriod = 101,
+      royaltySplit = ContractRoyaltySplit(
+        download = Some(18.1F),
+        streaming = Some(90F)
+      ),
+      minimumPriceDescription = "minimum price",
+      remittanceCurrency = Currency.getInstance("USD"),
+      restrictions = ContractRestrictions(
+        clientFacing = Some(List("client-facing")),
+        territory = Some("territory"),
+        licensing = Some("licensing"),
+        editing = Some("editing"),
+        marketing = Some("marketing"),
+        companies = Some("companies"),
+        payout = Some("payout"),
+        other = Some("other")
+      ),
+      costs = ContractCosts(
+        minimumGuarantee = List(100),
+        upfrontLicense = Some(50),
+        technicalFee = Some(88),
+        recoupable = Some(true)
+      )
+    )
+
+    val json = VideoFormatter formatRow VideoWithRelatedData(
+      video = video,
+      contract = Some(contract),
+    )
+
+    val contractJson = json.getAsJsonObject("contract")
+    contractJson.getString("id") shouldBe "my-contract-id"
+    contractJson.getString("channelName") shouldBe "my channel name"
+
+    contractJson.getString("contractDocumentLink") shouldBe "http://mysite.com"
+    contractJson.getBool("contractIsRolling") shouldBe false
+    contractJson.getString("contractStartDate") shouldBe "2008-01-01"
+    contractJson.getString("contractEndDate") shouldBe "2021-12-26"
+    contractJson.getInt("daysBeforeTerminationWarning") shouldBe 300
+    contractJson.getInt("yearsForMaximumLicense") shouldBe 1
+    contractJson.getInt("daysForSellOffPeriod") shouldBe 101
+    contractJson.getFloat("downloadRoyaltySplit") shouldBe 18.1F
+    contractJson.getFloat("streamingRoyaltySplit") shouldBe 90F
+    contractJson.getString("minimumPriceDescription") shouldBe "minimum price"
+    contractJson.getString("remittanceCurrency") shouldBe "USD"
+
+    contractJson.getStringList("clientFacingRestrictions") should contain ("client-facing")
+    contractJson.getString("territoryRestrictions") shouldBe "territory"
+    contractJson.getString("licensingRestrictions") shouldBe "licensing"
+    contractJson.getString("editingRestrictions") shouldBe "editing"
+    contractJson.getString("marketingRestrictions") shouldBe "marketing"
+    contractJson.getString("companiesRestrictions") shouldBe "companies"
+    contractJson.getString("payoutRestrictions") shouldBe "payout"
+    contractJson.getString("otherRestrictions") shouldBe "other"
+
+    contractJson.getBigDecimalList("minimumGuarantee") should contain (100)
+    contractJson.getBigDecimal("upfrontLicenseCost") shouldBe 50
+    contractJson.getBigDecimal("technicalFee") shouldBe 88
+    contractJson.getBool("recoupable") shouldBe true
+  }
+
   it should "write nested impressions" in {
     val video = createVideo()
     val impression = createVideoSearchResultImpression(
@@ -289,7 +361,10 @@ class VideoFormatterTest extends Test {
       interaction = true,
     )
 
-    val json = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(impression), List())
+    val json = VideoFormatter formatRow VideoWithRelatedData(
+      video = video,
+      impressions = List(impression)
+    )
 
     val impressionJson = json.get("impressions").getAsJsonArray.get(0).getAsJsonObject
     impressionJson.getString("timestamp") shouldBe "2020-10-20T10:11:12Z"
@@ -309,7 +384,10 @@ class VideoFormatterTest extends Test {
 
     )
 
-    val json = VideoFormatter formatRow VideoWithRelatedData(video, List(), List(), None, List(), List(interaction))
+    val json = VideoFormatter formatRow VideoWithRelatedData(
+      video = video,
+      interactions = List(interaction)
+    )
 
     val interactionsJson = json.get("interactions").getAsJsonArray.get(0).getAsJsonObject
     interactionsJson.getString("timestamp") shouldBe "2020-10-20T10:11:12Z"

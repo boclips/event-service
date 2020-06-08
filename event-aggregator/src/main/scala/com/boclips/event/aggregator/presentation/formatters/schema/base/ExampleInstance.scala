@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.presentation.formatters.schema.base
 
 import java.time._
-import java.util.Locale
+import java.util.{Currency, Locale}
 
 import com.boclips.event.aggregator.domain.model.events.{Event, OtherEvent}
 import com.boclips.event.aggregator.domain.model.{OrganisationType, SCHOOL_ORGANISATION, User, UserOrAnonymous}
@@ -110,6 +110,9 @@ object ExampleInstance {
     }
     else if (tpe =:= typeOf[Period]) {
       Some(Period.ofMonths(1))
+    }
+    else if (tpe =:= typeOf[Currency]) {
+      Some(Currency.getInstance("GBP"))
     }
     else if (tpe <:< typeOf[Map[_, _]]) {
       val key = ExampleInstance.create(tpe.typeArgs.head, dependentTypes)

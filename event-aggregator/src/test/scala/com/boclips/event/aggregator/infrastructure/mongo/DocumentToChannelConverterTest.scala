@@ -10,7 +10,7 @@ import com.boclips.event.infrastructure.channel._
 import scala.collection.JavaConverters._
 
 class DocumentToChannelConverterTest extends Test {
-  it should "covert a full document" in {
+  it should "convert a full document" in {
     val document = ChannelDocument.sample
       .id("this-channel-id")
       .name("this channel name")
@@ -84,7 +84,7 @@ class DocumentToChannelConverterTest extends Test {
     channel.marketing.sampleVideos should contain(List("http://video1.com", "http://video2.com"))
   }
 
-  it should "covert an as-null-as-possible document" in {
+  it should "convert an as-null-as-possible document" in {
     val document = ChannelDocument.sample
       .id("this-channel-id")
       .name("this channel name")

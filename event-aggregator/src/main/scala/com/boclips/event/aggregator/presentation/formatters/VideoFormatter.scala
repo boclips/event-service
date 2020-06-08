@@ -1,6 +1,7 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import java.time.LocalDate
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
+import java.time.{LocalDate, ZoneOffset}
 
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
@@ -49,10 +50,48 @@ object NestedChannelFormatter extends SingleRowFormatter[Channel] {
   }
 }
 
+object NestedContractFormatter extends SingleRowFormatter[Contract] {
+  override def writeRow(obj: Contract, json: JsonObject): Unit = {
+    json.addProperty("id", obj.id.value)
+    json.addProperty("channelName", obj.channelName)
+    json.addProperty("contractDocumentLink", obj.contractDocumentLink.orNull)
+    json.addProperty("contractIsRolling", obj.contractIsRolling.map(Boolean.box).orNull)
+    json.addDateProperty("contractStartDate", obj.contractDates.flatMap(_.start).orNull)
+    json.addDateProperty("contractEndDate", obj.contractDates.flatMap(_.end).orNull)
+    json.addProperty("daysBeforeTerminationWarning", obj.daysBeforeTerminationWarning.map(Int.box).orNull)
+    json.addProperty("yearsForMaximumLicense", obj.yearsForMaximumLicense.map(Int.box).orNull)
+    json.addProperty("daysForSellOffPeriod", obj.daysForSellOffPeriod.map(Int.box).orNull)
+    json.addProperty("downloadRoyaltySplit", obj.royaltySplit.flatMap(_.download).map(Float.box).orNull)
+    json.addProperty("streamingRoyaltySplit", obj.royaltySplit.flatMap(_.streaming).map(Float.box).orNull)
+    json.addProperty("minimumPriceDescription", obj.minimumPriceDescription.orNull)
+    json.addProperty("remittanceCurrency", obj.remittanceCurrency.map(_.toString).orNull)
+
+    obj.restrictions match {
+      case Some(restrictions) =>
+        json.addStringArrayProperty("clientFacingRestrictions", restrictions.clientFacing.orNull)
+        json.addProperty("territoryRestrictions", restrictions.territory.orNull)
+        json.addProperty("licensingRestrictions", restrictions.licensing.orNull)
+        json.addProperty("editingRestrictions", restrictions.editing.orNull)
+        json.addProperty("marketingRestrictions", restrictions.marketing.orNull)
+        json.addProperty("companiesRestrictions", restrictions.companies.orNull)
+        json.addProperty("payoutRestrictions", restrictions.payout.orNull)
+        json.addProperty("otherRestrictions", restrictions.other.orNull)
+      case None =>
+    }
+
+    val costs = obj.costs
+
+    json.addBigDecimalArrayProperty("minimumGuarantee", costs.minimumGuarantee)
+    json.addProperty("upfrontLicenseCost", costs.upfrontLicense.orNull)
+    json.addProperty("technicalFee", costs.technicalFee.orNull)
+    json.addProperty("recoupable", costs.recoupable.map(Boolean.box).orNull)
+  }
+}
+
 object VideoFormatter extends SingleRowFormatter[VideoWithRelatedData] {
   override def writeRow(obj: VideoWithRelatedData, json: JsonObject): Unit = {
 
-    val VideoWithRelatedData(video, playbacks, orders, channel, impressions, interactions) = obj
+    val VideoWithRelatedData(video, playbacks, orders, channel, contract, impressions, interactions) = obj
     val highestResolutionAsset = video.largestAsset()
 
     json.addProperty("id", video.id.value)
@@ -69,6 +108,9 @@ object VideoFormatter extends SingleRowFormatter[VideoWithRelatedData] {
 
     val channelJson: JsonObject = channel.map(NestedChannelFormatter.formatRow).orNull
     json.add("channel", channelJson)
+
+    val contractJson: JsonObject = contract.map(NestedContractFormatter.formatRow).orNull
+    json.add("contract", contractJson)
 
     val impressionsJson = impressions.map(o => VideoSearchResultImpressionFormatter.formatRow(o))
     json.addJsonArrayProperty(property = "impressions", impressionsJson)

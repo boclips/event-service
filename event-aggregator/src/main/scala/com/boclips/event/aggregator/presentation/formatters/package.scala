@@ -51,6 +51,10 @@ package object formatters {
       addArrayProperty[Int](property, items, new JsonPrimitive(_))
     }
 
+    def addBigDecimalArrayProperty(property: String, items: List[BigDecimal]): Unit = {
+      addArrayProperty[BigDecimal](property, items, new JsonPrimitive(_))
+    }
+
     def addJsonArrayProperty(property: String, items: List[JsonElement]): Unit = {
       addArrayProperty[JsonElement](property, items, identity)
     }
@@ -76,6 +80,14 @@ package object formatters {
       json.get(property).getAsDouble
     }
 
+    def getFloat(property: String): Float = {
+      json.get(property).getAsFloat
+    }
+
+    def getBigDecimal(property: String): BigDecimal = {
+      json.get(property).getAsBigDecimal
+    }
+
     def getInt(property: String): Int = {
       json.get(property).getAsInt
     }
@@ -86,6 +98,10 @@ package object formatters {
 
     def getObjectList(property: String): List[JsonObject] = {
       json.getAsJsonArray(property).asScala.map(_.getAsJsonObject).toList
+    }
+
+    def getBigDecimalList(property: String): List[BigDecimal] = {
+      json.getAsJsonArray(property).asScala.map(_.getAsBigDecimal).map(BigDecimal(_)).toList
     }
   }
 

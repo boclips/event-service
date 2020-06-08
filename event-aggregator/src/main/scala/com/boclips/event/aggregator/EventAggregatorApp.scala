@@ -16,7 +16,7 @@ import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembl
 import com.boclips.event.aggregator.domain.service.user.UserWithRelatedDataAssembler
 import com.boclips.event.aggregator.domain.service.video.{VideoAssembler, VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
-import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
+import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
 import com.boclips.event.aggregator.presentation.formatters.{CollectionFormatter, DataVersionFormatter, VideoFormatter}
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableWriter}
 import org.apache.spark.rdd.RDD
@@ -46,6 +46,7 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
   val videos: RDD[Video] = new MongoVideoLoader(mongoClient).load()
   val collections: RDD[Collection] = new MongoCollectionLoader(mongoClient).load()
   val channels: RDD[Channel] = new MongoChannelLoader(mongoClient).load()
+  val contracts: RDD[Contract] = new MongoContractLoader(mongoClient).load()
   val orders: RDD[Order] = new MongoOrderLoader(mongoClient).load()
 
   val sessions: RDD[Session] = new SessionAssembler(events, users, "all data").assembleSessions()
@@ -64,7 +65,9 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     logProcessingStart(s"Updating videos")
     val impressions = VideoSearchResultImpressionAssembler(searches)
     val videoInteractions = VideoInteractionAssembler(events)
-    val videosWithRelatedData = VideoAssembler.assembleVideosWithRelatedData(videos, playbacks, orders, channels, impressions, videoInteractions)
+    val videosWithRelatedData = VideoAssembler.assembleVideosWithRelatedData(
+      videos, playbacks, orders, channels, contracts, impressions, videoInteractions
+    )
     writeTable(videosWithRelatedData, "videos")(VideoFormatter, implicitly)
 
     logProcessingStart(s"Updating collections")
