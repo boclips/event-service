@@ -26,7 +26,7 @@ class SparkMongoClient(config: MongoConfig) {
 
     MongoSpark
       .builder()
-      .sparkContext(session.sparkContext)
+      .sparkSession(session)
       .connector(new MongoConnector(clientFactory()))
       .readConfig(ReadConfig.create(opts))
       .build()
