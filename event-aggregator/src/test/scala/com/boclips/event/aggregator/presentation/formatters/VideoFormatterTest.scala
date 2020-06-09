@@ -12,6 +12,8 @@ import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{crea
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createVideoSearchResultImpression}
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideo, createVideoAsset}
 
+import scala.collection.JavaConverters._
+
 
 class VideoFormatterTest extends Test {
   it should "write subjects" in {
@@ -308,7 +310,7 @@ class VideoFormatterTest extends Test {
         other = Some("other")
       ),
       costs = ContractCosts(
-        minimumGuarantee = List(100),
+        minimumGuarantee = List(100, 200, 300),
         upfrontLicense = Some(50),
         technicalFee = Some(88),
         recoupable = Some(true)
@@ -345,7 +347,10 @@ class VideoFormatterTest extends Test {
     contractJson.getString("payoutRestrictions") shouldBe "payout"
     contractJson.getString("otherRestrictions") shouldBe "other"
 
-    contractJson.getBigDecimalList("minimumGuarantee") should contain (100)
+    val minimumGuaranteesJson = contractJson.getAsJsonArray("minimumGuarantee")
+    minimumGuaranteesJson.asScala.map(_.getAsJsonObject.getInt("contractYear")) shouldBe List(1, 2, 3)
+    minimumGuaranteesJson.asScala.map(_.getAsJsonObject.getBigDecimal("amount")) shouldBe List(100, 200, 300)
+
     contractJson.getBigDecimal("upfrontLicenseCost") shouldBe 50
     contractJson.getBigDecimal("technicalFee") shouldBe 88
     contractJson.getBool("recoupable") shouldBe true

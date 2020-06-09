@@ -1,11 +1,10 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import java.time.format.DateTimeFormatter.ISO_DATE_TIME
-import java.time.{LocalDate, ZoneOffset}
+import java.time.LocalDate
 
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
-import com.google.gson.JsonObject
+import com.google.gson.{JsonArray, JsonElement, JsonObject}
 
 object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
   override def writeRow(obj: VideoItemWithOrder, json: JsonObject): Unit = {
@@ -81,7 +80,15 @@ object NestedContractFormatter extends SingleRowFormatter[Contract] {
 
     val costs = obj.costs
 
-    json.addBigDecimalArrayProperty("minimumGuarantee", costs.minimumGuarantee)
+    val minimumGuarantees = new JsonArray()
+    obj.costs.minimumGuarantee.zipWithIndex.foreach { case (mg: BigDecimal, index: Int) =>
+      val thisJson = new JsonObject()
+      thisJson.addProperty("amount", mg)
+      thisJson.addProperty("contractYear", index + 1)
+      minimumGuarantees.add(thisJson)
+    }
+    json.add("minimumGuarantee", minimumGuarantees)
+
     json.addProperty("upfrontLicenseCost", costs.upfrontLicense.orNull)
     json.addProperty("technicalFee", costs.technicalFee.orNull)
     json.addProperty("recoupable", costs.recoupable.map(Boolean.box).orNull)
