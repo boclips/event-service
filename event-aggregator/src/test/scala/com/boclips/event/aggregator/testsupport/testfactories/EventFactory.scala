@@ -220,6 +220,50 @@ object EventFactory {
     )
   }
 
+  def createPlatformInteractedWithEventDocument(
+                                               timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+                                               userId: String = "User-666",
+                                               subtype: String= "MODAL_CLICKED",
+                                               url: String = "http://test.com",
+                                               ): Document = {
+    val documentProperties = Map[String, Object](
+      ("type", "PLATFORM_INTERACTED_WITH"),
+      ("timestamp", Date.from(timestamp.toInstant)),
+      ("userId", userId),
+      ("subtype", subtype),
+      ("url", url)
+    )
+    new Document(documentProperties.asJava)
+  }
+
+  def createAnonymousPlatformInteractedWithEventDocument(
+                                                 timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+                                                 subtype: String= "MODAL_CLICKED",
+                                                 url: String = "http://test.com",
+                                               ): Document = {
+    val documentProperties = Map[String, Object](
+      ("type", "PLATFORM_INTERACTED_WITH"),
+      ("timestamp", Date.from(timestamp.toInstant)),
+      ("subtype", subtype),
+      ("url", url)
+    )
+    new Document(documentProperties.asJava)
+  }
+
+  def createPlatformInteractedWithEvent(
+                                         timestamp: ZonedDateTime = ZonedDateTime.now(),
+                                         userId: String = "uid-1",
+                                         subtype: Option[String] = Some("BANNER_CLICKED"),
+                                         url: String = "http://test.com",
+                                       ): PlatformInteractedWithEvent = {
+    PlatformInteractedWithEvent(
+      timestamp = timestamp,
+      userId = UserId(userId),
+      subtype = subtype,
+      url = Some(Url.parse(url))
+    )
+  }
+
   def createCollectionsSearchedEvent(
                                       timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
                                       userId: String = "userId",

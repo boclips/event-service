@@ -311,5 +311,36 @@ class DocumentToEventConverterTest extends Test {
     event.asInstanceOf[CollectionInteractedWithEvent].subtype shouldBe Some("NAVIGATE_TO_COLLECTION_DETAILS")
   }
 
+  "Transforming event document of type PLATFORM_INTERACTED_WITH" should "convert properties when present" in {
+    val timestamp = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS)
+    val document = EventFactory.createPlatformInteractedWithEventDocument(
+      timestamp = timestamp,
+      userId = "user-id",
+      subtype = "EXIT",
+      url = "https://teachers.boclips.com/videos?page=1&q=queries"
+    )
 
+    val event = DocumentToEventConverter.convert(document)
+    event.isInstanceOf[PlatformInteractedWithEvent] shouldBe true
+    event.asInstanceOf[PlatformInteractedWithEvent].timestamp shouldBe timestamp
+    event.asInstanceOf[PlatformInteractedWithEvent].userId shouldBe UserId("user-id")
+    event.asInstanceOf[PlatformInteractedWithEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=queries"))
+    event.asInstanceOf[PlatformInteractedWithEvent].subtype shouldBe Some("EXIT")
+  }
+
+  "Transforming event document of type PLATFORM_INTERACTED_WITH" should "convert properties when UserId not present" in {
+    val timestamp = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS)
+    val document = EventFactory.createAnonymousPlatformInteractedWithEventDocument(
+      timestamp = timestamp,
+      subtype = "EXIT",
+      url = "https://teachers.boclips.com/videos?page=1&q=queries"
+    )
+
+    val event = DocumentToEventConverter.convert(document)
+    event.isInstanceOf[PlatformInteractedWithEvent] shouldBe true
+    event.asInstanceOf[PlatformInteractedWithEvent].timestamp shouldBe timestamp
+    event.asInstanceOf[PlatformInteractedWithEvent].userId shouldBe EventConstants.anonymousUserId
+    event.asInstanceOf[PlatformInteractedWithEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=queries"))
+    event.asInstanceOf[PlatformInteractedWithEvent].subtype shouldBe Some("EXIT")
+  }
 }

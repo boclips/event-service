@@ -25,16 +25,14 @@ object DocumentToEventConverter {
       case EventConstants.VIDEO_ADDED_TO_COLLECTION => convertVideoAddedToCollectionEvent(event)
       case EventConstants.PAGE_RENDERED => convertPageRenderedEvent(event)
       case EventConstants.COLLECTION_INTERACTED_WITH => convertCollectionInteractedWithEvent(event)
+      case EventConstants.PLATFORM_INTERACTED_WITH => convertPlatformInteractedWithEvent(event)
       case _ => convertOtherEvent(event, eventType)
     }
   }
 
   def convertVideoSegmentPlayedEvent(document: Document): Event = {
     val url = document.url
-    val userId = document.getString("userId") match {
-      case null => EventConstants.anonymousUserId
-      case value => UserId(value)
-    }
+    val userId = convertUserOrAnonymous(document)
     val videoIndex = document.getInteger("videoIndex") match {
       case null => None
       case index => Some(index.toInt)
@@ -145,7 +143,24 @@ object DocumentToEventConverter {
       userId = UserId(document.getString("userId")),
       url = document.url
     )
-
   }
 
+  def convertPlatformInteractedWithEvent(document: Document): PlatformInteractedWithEvent = {
+    val userId = convertUserOrAnonymous(document)
+    val timestamp = ZonedDateTime.ofInstant(document.getDate("timestamp").toInstant, ZoneOffset.UTC)
+    PlatformInteractedWithEvent(
+      userId = userId,
+      timestamp = timestamp,
+      url = document.url,
+      subtype = document.getStringOption("subtype"),
+    )
+  }
+
+  def convertUserOrAnonymous(document: Document): UserId = {
+    val userId = document.get("userId") match {
+      case null => EventConstants.anonymousUserId
+      case value => UserId(value.toString)
+    }
+    userId
+  }
 }
