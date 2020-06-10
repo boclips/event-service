@@ -4,10 +4,10 @@ import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.config.{BigQueryConfig, MongoConfig, SparkConfig}
 import com.boclips.event.aggregator.domain.model._
-import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent}
+import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent, PlatformInteractedWithEvent}
 import com.boclips.event.aggregator.domain.service.Data
 import com.boclips.event.aggregator.domain.service.collection.{CollectionAssembler, CollectionInteractionEventAssembler, CollectionSearchResultImpressionAssembler}
-import com.boclips.event.aggregator.domain.service.navigation.PagesRenderedAssembler
+import com.boclips.event.aggregator.domain.service.navigation.{PagesRenderedAssembler, PlatformInteractedWithEventAssembler}
 import com.boclips.event.aggregator.domain.service.okr.OkrService
 import com.boclips.event.aggregator.domain.service.playback.PlaybackAssembler
 import com.boclips.event.aggregator.domain.service.search.{QueryScorer, SearchAssembler}
@@ -96,6 +96,11 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     logProcessingStart(s"Updating user navigation")
     val pagesRendered: RDD[PageRenderedEvent] = new PagesRenderedAssembler(events).assemblePagesRendered()
     writeTable(pagesRendered, "user_navigation")
+
+    logProcessingStart(s"Updating Platform Generic Interactions")
+    val platformInteractedWithEvents : RDD[PlatformInteractedWithEvent] = new PlatformInteractedWithEventAssembler(events).assemblePlatformInteractedWithEvents()
+    writeTable(platformInteractedWithEvents, "platform_interacted_with_events")
+
 
     logProcessingStart(s"Updating collection interaction")
     val collectionInteractionEvents: RDD[CollectionInteractedWithEvent] = CollectionInteractionEventAssembler(events)
