@@ -1,7 +1,7 @@
 package com.boclips.event.service.domain
 
+import com.boclips.event.infrastructure.EventFields
 import com.boclips.eventbus.events.base.AbstractCollectionEvent
-import com.boclips.eventbus.events.base.AbstractEvent
 import com.boclips.eventbus.events.base.AbstractEventWithUser
 import com.boclips.eventbus.events.base.AbstractEventWithUserId
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
@@ -38,7 +38,7 @@ object EventSerializer {
             ("segmentEndSeconds" to videoSegmentPlayed.segmentEndSeconds) +
             ("videoIndex" to videoSegmentPlayed.videoIndex) +
             ("videoId" to videoSegmentPlayed.videoId) +
-            ("playbackDevice" to videoSegmentPlayed.playbackDevice)
+            (EventFields.DEVICE_ID to (videoSegmentPlayed.deviceId ?: videoSegmentPlayed.playbackDevice))
     }
 
     fun convertVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith): Map<String, Any> {
@@ -97,15 +97,8 @@ object EventSerializer {
         return mapOf<String, Any>(
             "type" to type,
             "userId" to event.userId,
-            "overrideUserId" to event.overrideUserId,
-            "timestamp" to Date.from(event.timestamp.toInstant()),
-            "url" to event.url
-        )
-    }
-
-    fun convertAnonymousEvent(event: AbstractEvent, type: String): Map<String, Any> {
-        return mapOf<String, Any>(
-            "type" to type,
+            EventFields.EXTERNAL_USER_ID to (event.externalUserId ?: event.overrideUserId),
+            EventFields.DEVICE_ID to event.deviceId,
             "timestamp" to Date.from(event.timestamp.toInstant()),
             "url" to event.url
         )

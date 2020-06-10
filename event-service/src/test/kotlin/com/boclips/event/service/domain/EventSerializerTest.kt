@@ -34,7 +34,8 @@ class EventSerializerTest {
     fun `converts EventWithUserId`() {
         val event = AbstractEventWithUserId.builder()
             .userId("user-id")
-            .overrideUserId("override-user-id")
+            .externalUserId("external-user-id")
+            .deviceId("device-id")
             .url("https://hello.com/world")
             .build()
 
@@ -42,7 +43,8 @@ class EventSerializerTest {
 
         assertThat(document["type"]).isEqualTo("VIDEO_SEGMENT_PLAYED")
         assertThat(document["userId"]).isEqualTo("user-id")
-        assertThat(document["overrideUserId"]).isEqualTo("override-user-id")
+        assertThat(document["externalUserId"]).isEqualTo("external-user-id")
+        assertThat(document["deviceId"]).isEqualTo("device-id")
         assertThat(document["url"]).isEqualTo("https://hello.com/world")
         assertThat(document["timestamp"]).isNotNull()
     }
@@ -93,7 +95,7 @@ class EventSerializerTest {
             .segmentEndSeconds(20)
             .videoIndex(10)
             .videoId("123")
-            .playbackDevice("device-id")
+            .deviceId("device-id")
             .build()
 
         val document = EventSerializer.convertVideoSegmentPlayed(videoSegmentPlayed = event)
@@ -104,7 +106,7 @@ class EventSerializerTest {
         assertThat(document["segmentEndSeconds"]).isEqualTo(20L)
         assertThat(document["videoIndex"]).isEqualTo(10)
         assertThat(document["videoId"]).isEqualTo("123")
-        assertThat(document["playbackDevice"]).isEqualTo("device-id")
+        assertThat(document["deviceId"]).isEqualTo("device-id")
         assertThat((document["timestamp"] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(
             ZonedDateTime.of(
                 2019,

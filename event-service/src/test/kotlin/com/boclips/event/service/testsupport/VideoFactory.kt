@@ -40,6 +40,7 @@ object VideoFactory {
             .ageRange(ageRange)
             .durationSeconds(durationSeconds)
             .type(type)
+            .types(listOf(type))
             .originalDimensions(originalDimensions)
             .assets(assets)
             .build()
