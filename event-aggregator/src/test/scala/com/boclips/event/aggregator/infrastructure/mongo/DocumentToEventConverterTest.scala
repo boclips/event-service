@@ -12,7 +12,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.creat
 class DocumentToEventConverterTest extends Test {
 
   "transforming SEARCH event" should "convert documents with type 'SEARCH'" in {
-    val document = createVideosSearchEventDocument(eventType = "SEARCH")
+    val document = createVideosSearchEventDocument()
 
     val event = DocumentToEventConverter.convert(document)
 
@@ -102,7 +102,7 @@ class DocumentToEventConverterTest extends Test {
   }
 
   it should "convert playback device when exists" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(playbackDevice = Some("device"))
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(deviceId = Some("device"))
 
     val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
 
@@ -110,7 +110,7 @@ class DocumentToEventConverterTest extends Test {
   }
 
   it should "skip playback device when does not exist" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(playbackDevice = None)
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(deviceId = None)
 
     val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
 
@@ -125,16 +125,8 @@ class DocumentToEventConverterTest extends Test {
     event.userId should be(UserId("the user"))
   }
 
-  it should "convert assetId" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(assetId = "the asset", videoId = null)
-
-    val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
-
-    event.videoId should be(VideoId("the asset"))
-  }
-
   it should "convert videoId" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(videoId = "the asset", assetId = null)
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(videoId = "the asset")
 
     val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
 
@@ -196,14 +188,6 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
 
     event.secondsWatched should be(10)
-  }
-
-  it should "convert documents with type 'PLAYBACK'" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(eventType = "PLAYBACK")
-
-    val event = DocumentToEventConverter.convert(document)
-
-    event.isInstanceOf[VideoSegmentPlayedEvent] should be(true)
   }
 
   "transforming collection search events" should "convert documents with type RESOURCES_SEARCHED" in {

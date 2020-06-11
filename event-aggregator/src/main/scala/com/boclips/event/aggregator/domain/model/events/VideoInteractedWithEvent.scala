@@ -3,6 +3,7 @@ package com.boclips.event.aggregator.domain.model.events
 import java.time.ZonedDateTime
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.infrastructure.EventFields
 
 case class VideoInteractedWithEvent(
                                      timestamp: ZonedDateTime,
@@ -13,5 +14,5 @@ case class VideoInteractedWithEvent(
                                      subtype: Option[String],
                                    ) extends Event {
   override val deviceId: Option[DeviceId] = None
-  override val typeName: String = EventConstants.VIDEO_INTERACTED_WITH
+  override val typeName: String = EventFields.Type.VIDEO_INTERACTED_WITH
 }

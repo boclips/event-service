@@ -3,6 +3,7 @@ package com.boclips.event.aggregator.domain.model.events
 import java.time.ZonedDateTime
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.infrastructure.EventFields
 
 case class VideoAddedToCollectionEvent(
                                         timestamp: ZonedDateTime,
@@ -13,6 +14,6 @@ case class VideoAddedToCollectionEvent(
 
                                       ) extends Event {
   override val deviceId: Option[DeviceId] = None
-  override val typeName: String = EventConstants.VIDEO_ADDED_TO_COLLECTION
+  override val typeName: String = EventFields.Type.VIDEO_ADDED_TO_COLLECTION
   override val subtype: Option[String] = None
 }

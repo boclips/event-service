@@ -5,6 +5,7 @@ import java.time.{ZoneOffset, ZonedDateTime}
 import com.boclips.event.aggregator.domain.model.events.EventConstants
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory, UserFactory}
+import com.boclips.event.infrastructure.EventFields
 
 class SessionFormatterTest extends Test {
 
@@ -25,7 +26,7 @@ class SessionFormatterTest extends Test {
       List(EventFactory.createVideoInteractedWithEvent(timestamp = ZonedDateTime.of(2017, 3, 23, 18, 25, 41, 511000000, ZoneOffset.UTC),
         subtype = Some("VIDEO_LINK_COPIED"))))
     json.getAsJsonArray("events") should have size 1
-    json.getAsJsonArray("events").get(0).getAsJsonObject.get("typeName").getAsString shouldBe EventConstants.VIDEO_INTERACTED_WITH
+    json.getAsJsonArray("events").get(0).getAsJsonObject.get("typeName").getAsString shouldBe EventFields.Type.VIDEO_INTERACTED_WITH
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("subtype").getAsString shouldBe "VIDEO_LINK_COPIED"
   }
 
@@ -33,7 +34,7 @@ class SessionFormatterTest extends Test {
     val json = SessionFormatter formatRow SessionFactory.createSession(UserFactory.createUser(id = "id-667"),
       List(EventFactory.createVideosSearchedEvent(timestamp = ZonedDateTime.of(2017, 3, 23, 18, 25, 41, 511000000, ZoneOffset.UTC))))
     json.getAsJsonArray("events") should have size 1
-    json.getAsJsonArray("events").get(0).getAsJsonObject.get("typeName").getAsString shouldBe EventConstants.VIDEOS_SEARCHED
+    json.getAsJsonArray("events").get(0).getAsJsonObject.get("typeName").getAsString shouldBe EventFields.Type.VIDEOS_SEARCHED
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("subtype").getAsString shouldBe ""
   }
 

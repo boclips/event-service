@@ -3,6 +3,7 @@ package com.boclips.event.aggregator.domain.model.events
 import java.time.ZonedDateTime
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.infrastructure.EventFields
 
 case class VideoSegmentPlayedEvent
 (
@@ -17,6 +18,6 @@ case class VideoSegmentPlayedEvent
   refererId: Option[UserId],
   secondsWatched: Int
 ) extends Event {
-  override val typeName: String = EventConstants.VIDEO_SEGMENT_PLAYED
+  override val typeName: String = EventFields.Type.VIDEO_SEGMENT_PLAYED
   override val subtype: Option[String] = None
 }

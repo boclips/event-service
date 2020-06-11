@@ -5,6 +5,7 @@ import java.util.{Date, UUID}
 
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.events._
+import com.boclips.event.infrastructure.EventFields
 import org.bson.Document
 import org.bson.types.ObjectId
 
@@ -73,30 +74,27 @@ object EventFactory {
                                              id: String = "5cded765a22ace42b322a49e",
                                              userId: String = "userId",
                                              url: String = "http://example.com",
-                                             assetId: String = "assetId",
-                                             videoId: String = null,
+                                             videoId: String = "videoId",
                                              videoIndex: Option[Int] = None,
                                              timestamp: ZonedDateTime = ZonedDateTime.now(),
                                              segmentStartSeconds: Long = 0,
                                              segmentEndSeconds: Long = 10,
                                              videoDurationSeconds: Long = 300,
-                                             playbackDevice: Option[String] = None,
-                                             eventType: String = "VIDEO_SEGMENT_PLAYED"
+                                             deviceId: Option[String] = None,
                                            ): Document = {
 
     val properties = Map[String, Object](
       ("_id", new ObjectId(id)),
-      ("type", eventType),
+      ("type", EventFields.Type.VIDEO_SEGMENT_PLAYED),
       ("userId", userId),
       ("url", url),
-      ("assetId", assetId),
       ("videoId", videoId),
       ("timestamp", Date.from(timestamp.toInstant)),
       ("segmentStartSeconds", Long.box(segmentStartSeconds)),
       ("segmentEndSeconds", Long.box(segmentEndSeconds)),
       ("videoDurationSeconds", Long.box(videoDurationSeconds))
     ) ++ (videoIndex.map(index => ("videoIndex", Int.box(index)))
-      ++ playbackDevice.map(device => ("playbackDevice", device)))
+      ++ deviceId.map(device => ("deviceId", device)))
 
     new Document(properties.asJava)
   }
@@ -132,12 +130,11 @@ object EventFactory {
                                       query: String = "query",
                                       page: java.lang.Integer = 1,
                                       timestamp: ZonedDateTime = ZonedDateTime.now(),
-                                      eventType: String = "VIDEOS_SEARCHED",
                                       pageVideoIds: List[String] = List("id1", "id2"),
                                       totalResults: Long = 6669
                                      ): Document = {
     new Document(Map[String, Object](
-      ("type", eventType),
+      ("type", EventFields.Type.VIDEOS_SEARCHED),
       ("pageVideoIds", pageVideoIds.asJava),
       ("userId", userId),
       ("query", query),
