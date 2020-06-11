@@ -13,7 +13,6 @@ import scala.collection.JavaConverters._
 
 object EventFactory {
 
-
   def createVideoAddedToCollectionEvent(
                                          timestamp: ZonedDateTime = ZonedDateTime.now(),
                                          userId: String = "user666",
@@ -27,9 +26,7 @@ object EventFactory {
       videoId = VideoId(videoId),
       query = query.map(Query)
     )
-
   }
-
 
   def createPageRenderedDocument(
                                   timestamp: ZonedDateTime = ZonedDateTime.now(),
@@ -37,10 +34,10 @@ object EventFactory {
                                   url: String = "the/url",
                                 ): Document = {
     val properties = Map[String, Object](
-      ("type", "PAGE_RENDERED"),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("userId", userId),
-      ("url", url),
+      (EventFields.TYPE, "PAGE_RENDERED"),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.USER_ID, userId),
+      (EventFields.URL, url),
     )
     new Document(properties.asJava)
   }
@@ -64,9 +61,9 @@ object EventFactory {
                                   ): Document = {
 
     new Document(Map[String, Object](
-      ("type", eventType),
-      ("userId", userId),
-      ("timestamp", Date.from(timestamp.toInstant))
+      (EventFields.TYPE, eventType),
+      (EventFields.USER_ID, userId),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant))
     ).asJava)
   }
 
@@ -79,22 +76,20 @@ object EventFactory {
                                              timestamp: ZonedDateTime = ZonedDateTime.now(),
                                              segmentStartSeconds: Long = 0,
                                              segmentEndSeconds: Long = 10,
-                                             videoDurationSeconds: Long = 300,
                                              deviceId: Option[String] = None,
                                            ): Document = {
 
     val properties = Map[String, Object](
       ("_id", new ObjectId(id)),
-      ("type", EventFields.Type.VIDEO_SEGMENT_PLAYED),
-      ("userId", userId),
-      ("url", url),
-      ("videoId", videoId),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("segmentStartSeconds", Long.box(segmentStartSeconds)),
-      ("segmentEndSeconds", Long.box(segmentEndSeconds)),
-      ("videoDurationSeconds", Long.box(videoDurationSeconds))
-    ) ++ (videoIndex.map(index => ("videoIndex", Int.box(index)))
-      ++ deviceId.map(device => ("deviceId", device)))
+      (EventFields.TYPE, EventFields.Type.VIDEO_SEGMENT_PLAYED),
+      (EventFields.USER_ID, userId),
+      (EventFields.URL, url),
+      (EventFields.VIDEO_ID, videoId),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.PLAYBACK_SEGMENT_START_SECONDS, Long.box(segmentStartSeconds)),
+      (EventFields.PLAYBACK_SEGMENT_END_SECONDS, Long.box(segmentEndSeconds)),
+    ) ++ (videoIndex.map(index => (EventFields.PLAYBACK_VIDEO_INDEX, Int.box(index)))
+      ++ deviceId.map(device => (EventFields.DEVICE_ID, device)))
 
     new Document(properties.asJava)
   }
@@ -134,13 +129,13 @@ object EventFactory {
                                       totalResults: Long = 6669
                                      ): Document = {
     new Document(Map[String, Object](
-      ("type", EventFields.Type.VIDEOS_SEARCHED),
-      ("pageVideoIds", pageVideoIds.asJava),
-      ("userId", userId),
-      ("query", query),
-      ("pageIndex", page),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("totalResults", Long.box(totalResults))
+      (EventFields.TYPE, EventFields.Type.VIDEOS_SEARCHED),
+      (EventFields.SEARCH_RESULTS_PAGE_VIDEO_IDS, pageVideoIds.asJava),
+      (EventFields.USER_ID, userId),
+      (EventFields.SEARCH_QUERY, query),
+      (EventFields.SEARCH_RESULTS_PAGE_INDEX, page),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.SEARCH_RESULTS_TOTAL, Long.box(totalResults))
     ).asJava)
   }
 
@@ -171,9 +166,9 @@ object EventFactory {
                                         activatedUsers: Long = 50
                                       ): Document = {
     val properties = Map[String, Object](
-      ("type", "USER_ACTIVATED"),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("userId", userId),
+      (EventFields.TYPE, "USER_ACTIVATED"),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.USER_ID, userId),
       ("totalUsers", Long.box(totalUsers)),
       ("activatedUsers", Long.box(activatedUsers))
     )
@@ -189,12 +184,12 @@ object EventFactory {
                                               subtype: String = "VIDEO_STARED_AT"
                                             ): Document = {
     val properties = Map[String, Object](
-      ("type", "VIDEO_INTERACTED_WITH"),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("userId", userId),
-      ("url", url),
-      ("videoId", videoId),
-      ("subtype", subtype),
+      (EventFields.TYPE, EventFields.Type.VIDEO_INTERACTED_WITH),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.USER_ID, userId),
+      (EventFields.URL, url),
+      (EventFields.VIDEO_ID, videoId),
+      (EventFields.SUBTYPE, subtype),
     )
     new Document(properties.asJava)
   }
@@ -224,11 +219,11 @@ object EventFactory {
                                                url: String = "http://test.com",
                                                ): Document = {
     val documentProperties = Map[String, Object](
-      ("type", "PLATFORM_INTERACTED_WITH"),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("userId", userId),
-      ("subtype", subtype),
-      ("url", url)
+      (EventFields.TYPE, "PLATFORM_INTERACTED_WITH"),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.USER_ID, userId),
+      (EventFields.SUBTYPE, subtype),
+      (EventFields.URL, url)
     )
     new Document(documentProperties.asJava)
   }
@@ -239,10 +234,10 @@ object EventFactory {
                                                  url: String = "http://test.com",
                                                ): Document = {
     val documentProperties = Map[String, Object](
-      ("type", "PLATFORM_INTERACTED_WITH"),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("subtype", subtype),
-      ("url", url)
+      (EventFields.TYPE, "PLATFORM_INTERACTED_WITH"),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.SUBTYPE, subtype),
+      (EventFields.URL, url)
     )
     new Document(documentProperties.asJava)
   }
@@ -294,16 +289,16 @@ object EventFactory {
                                               totalResults: Long = 100
                                             ): Document = {
     new Document(Map[String, Object](
-      ("type", "RESOURCES_SEARCHED"),
-      ("resourceType", "COLLECTION"),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("userId", userId),
-      ("url", url),
-      ("query", query),
-      ("pageIndex", Int.box(pageIndex)),
-      ("pageSize", Int.box(pageSize)),
-      ("pageResourceIds", collectionIds.asJava),
-      ("totalResults", Long.box(totalResults)),
+      (EventFields.TYPE, EventFields.Type.RESOURCES_SEARCHED),
+      (EventFields.SEARCH_RESOURCE_TYPE, "COLLECTION"),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.USER_ID, userId),
+      (EventFields.URL, url),
+      (EventFields.SEARCH_QUERY, query),
+      (EventFields.SEARCH_RESULTS_PAGE_INDEX, Int.box(pageIndex)),
+      (EventFields.SEARCH_RESULTS_PAGE_SIZE, Int.box(pageSize)),
+      (EventFields.SEARCH_RESULTS_PAGE_RESOURCE_IDS, collectionIds.asJava),
+      (EventFields.SEARCH_RESULTS_TOTAL, Long.box(totalResults)),
     ).asJava)
   }
 
@@ -331,12 +326,12 @@ object EventFactory {
                                                    collectionId: String = "1234",
                                                    subtype: String = ""): Document = {
     val properties = Map[String, Object](
-      ("type", "COLLECTION_INTERACTED_WITH"),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("userId", userId),
-      ("url", url),
-      ("collectionId", collectionId),
-      ("subtype", subtype)
+      (EventFields.TYPE, EventFields.Type.COLLECTION_INTERACTED_WITH),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.USER_ID, userId),
+      (EventFields.URL, url),
+      (EventFields.COLLECTION_ID, collectionId),
+      (EventFields.SUBTYPE, subtype),
     )
     new Document(properties.asJava)
 
@@ -350,11 +345,11 @@ object EventFactory {
                                             videoId: String = "videoId"
                                           ): Document = {
     val properties = Map[String, Object](
-      ("type", "VIDEO_ADDED_TO_COLLECTION"),
-      ("timestamp", Date.from(timestamp.toInstant)),
-      ("userId", userId),
-      ("url", url),
-      ("videoId", videoId)
+      (EventFields.TYPE, EventFields.Type.VIDEO_ADDED_TO_COLLECTION),
+      (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
+      (EventFields.USER_ID, userId),
+      (EventFields.URL, url),
+      (EventFields.VIDEO_ID, videoId)
     )
     new Document(properties.asJava)
   }
