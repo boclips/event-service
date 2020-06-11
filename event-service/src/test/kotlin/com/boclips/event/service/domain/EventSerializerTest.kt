@@ -1,5 +1,35 @@
 package com.boclips.event.service.domain
 
+import com.boclips.event.infrastructure.EventFields.COLLECTION_AGE_RANGE_CHANGED_RANGE_MAX
+import com.boclips.event.infrastructure.EventFields.COLLECTION_AGE_RANGE_CHANGED_RANGE_MIN
+import com.boclips.event.infrastructure.EventFields.COLLECTION_BOOKMARK_CHANGED_IS_BOOKMARKED
+import com.boclips.event.infrastructure.EventFields.COLLECTION_ID
+import com.boclips.event.infrastructure.EventFields.COLLECTION_SUBJECTS_CHANGED_SUBJECTS
+import com.boclips.event.infrastructure.EventFields.COLLECTION_VISIBILITY_CHANGED_IS_DISCOVERABLE
+import com.boclips.event.infrastructure.EventFields.DEVICE_ID
+import com.boclips.event.infrastructure.EventFields.EXTERNAL_USER_ID
+import com.boclips.event.infrastructure.EventFields.ORGANISATION_ID
+import com.boclips.event.infrastructure.EventFields.ORGANISATION_PARENT_ID
+import com.boclips.event.infrastructure.EventFields.ORGANISATION_PARENT_TYPE
+import com.boclips.event.infrastructure.EventFields.ORGANISATION_TYPE
+import com.boclips.event.infrastructure.EventFields.PAYLOAD
+import com.boclips.event.infrastructure.EventFields.PLAYBACK_SEGMENT_END_SECONDS
+import com.boclips.event.infrastructure.EventFields.PLAYBACK_SEGMENT_START_SECONDS
+import com.boclips.event.infrastructure.EventFields.PLAYBACK_VIDEO_INDEX
+import com.boclips.event.infrastructure.EventFields.PLAYER_INTERACTED_WITH_CURRENT_TIME
+import com.boclips.event.infrastructure.EventFields.SEARCH_QUERY
+import com.boclips.event.infrastructure.EventFields.SEARCH_RESOURCE_TYPE
+import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_INDEX
+import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_RESOURCE_IDS
+import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_SIZE
+import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_VIDEO_IDS
+import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_TOTAL
+import com.boclips.event.infrastructure.EventFields.SUBTYPE
+import com.boclips.event.infrastructure.EventFields.TIMESTAMP
+import com.boclips.event.infrastructure.EventFields.TYPE
+import com.boclips.event.infrastructure.EventFields.URL
+import com.boclips.event.infrastructure.EventFields.USER_ID
+import com.boclips.event.infrastructure.EventFields.VIDEO_ID
 import com.boclips.event.service.testsupport.EventFactory.createCollectionAgeRangeChanged
 import com.boclips.event.service.testsupport.EventFactory.createCollectionBookmarkChanged
 import com.boclips.event.service.testsupport.EventFactory.createCollectionInteractedWith
@@ -41,12 +71,12 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertUserEvent(event = event, type = "VIDEO_SEGMENT_PLAYED")
 
-        assertThat(document["type"]).isEqualTo("VIDEO_SEGMENT_PLAYED")
-        assertThat(document["userId"]).isEqualTo("user-id")
-        assertThat(document["externalUserId"]).isEqualTo("external-user-id")
-        assertThat(document["deviceId"]).isEqualTo("device-id")
-        assertThat(document["url"]).isEqualTo("https://hello.com/world")
-        assertThat(document["timestamp"]).isNotNull()
+        assertThat(document[TYPE]).isEqualTo("VIDEO_SEGMENT_PLAYED")
+        assertThat(document[USER_ID]).isEqualTo("user-id")
+        assertThat(document[EXTERNAL_USER_ID]).isEqualTo("external-user-id")
+        assertThat(document[DEVICE_ID]).isEqualTo("device-id")
+        assertThat(document[URL]).isEqualTo("https://hello.com/world")
+        assertThat(document[TIMESTAMP]).isNotNull()
     }
 
     @Test
@@ -63,15 +93,15 @@ class EventSerializerTest {
             .build()
 
         val document = EventSerializer.convertVideosSearched(videosSearched = event)
-        assertThat(document["type"]).isEqualTo("VIDEOS_SEARCHED")
-        assertThat(document["userId"]).isEqualTo("user-1")
-        assertThat(document["url"]).isEqualTo("http://example.com/hello")
-        assertThat(document["query"]).isEqualTo("hello")
-        assertThat(document["pageIndex"]).isEqualTo(5)
-        assertThat(document["pageSize"]).isEqualTo(10)
-        assertThat(document["totalResults"]).isEqualTo(100L)
-        assertThat(document["pageVideoIds"]).asList().containsExactly("v1", "v2")
-        assertThat((document["timestamp"] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(
+        assertThat(document[TYPE]).isEqualTo("VIDEOS_SEARCHED")
+        assertThat(document[USER_ID]).isEqualTo("user-1")
+        assertThat(document[URL]).isEqualTo("http://example.com/hello")
+        assertThat(document[SEARCH_QUERY]).isEqualTo("hello")
+        assertThat(document[SEARCH_RESULTS_PAGE_INDEX]).isEqualTo(5)
+        assertThat(document[SEARCH_RESULTS_PAGE_SIZE]).isEqualTo(10)
+        assertThat(document[SEARCH_RESULTS_TOTAL]).isEqualTo(100L)
+        assertThat(document[SEARCH_RESULTS_PAGE_VIDEO_IDS]).asList().containsExactly("v1", "v2")
+        assertThat((document[TIMESTAMP] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(
             ZonedDateTime.of(
                 2018,
                 5,
@@ -99,15 +129,15 @@ class EventSerializerTest {
             .build()
 
         val document = EventSerializer.convertVideoSegmentPlayed(videoSegmentPlayed = event)
-        assertThat(document["type"]).isEqualTo("VIDEO_SEGMENT_PLAYED")
-        assertThat(document["userId"]).isEqualTo("user-1")
-        assertThat(document["url"]).isEqualTo("http://example.com/video")
-        assertThat(document["segmentStartSeconds"]).isEqualTo(10L)
-        assertThat(document["segmentEndSeconds"]).isEqualTo(20L)
-        assertThat(document["videoIndex"]).isEqualTo(10)
-        assertThat(document["videoId"]).isEqualTo("123")
-        assertThat(document["deviceId"]).isEqualTo("device-id")
-        assertThat((document["timestamp"] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(
+        assertThat(document[TYPE]).isEqualTo("VIDEO_SEGMENT_PLAYED")
+        assertThat(document[USER_ID]).isEqualTo("user-1")
+        assertThat(document[URL]).isEqualTo("http://example.com/video")
+        assertThat(document[PLAYBACK_SEGMENT_START_SECONDS]).isEqualTo(10L)
+        assertThat(document[PLAYBACK_SEGMENT_END_SECONDS]).isEqualTo(20L)
+        assertThat(document[PLAYBACK_VIDEO_INDEX]).isEqualTo(10)
+        assertThat(document[VIDEO_ID]).isEqualTo("123")
+        assertThat(document[DEVICE_ID]).isEqualTo("device-id")
+        assertThat((document[TIMESTAMP] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(
             ZonedDateTime.of(
                 2019,
                 5,
@@ -136,12 +166,12 @@ class EventSerializerTest {
         )
 
         val document = EventSerializer.convertVideoPlayerInteractedWith(event)
-        assertThat(document["type"]).isEqualTo("VIDEO_PLAYER_INTERACTED_WITH")
-        assertThat(document["userId"]).isEqualTo("user-1")
-        assertThat(document["videoId"]).isEqualTo("video-id")
-        assertThat(document["currentTime"]).isEqualTo(34L)
-        assertThat(document["subtype"]).isEqualTo("captions-on")
-        assertThat(document["payload"]).isEqualTo(event.payload)
+        assertThat(document[TYPE]).isEqualTo("VIDEO_PLAYER_INTERACTED_WITH")
+        assertThat(document[USER_ID]).isEqualTo("user-1")
+        assertThat(document[VIDEO_ID]).isEqualTo("video-id")
+        assertThat(document[PLAYER_INTERACTED_WITH_CURRENT_TIME]).isEqualTo(34L)
+        assertThat(document[SUBTYPE]).isEqualTo("captions-on")
+        assertThat(document[PAYLOAD]).isEqualTo(event.payload)
     }
 
     @Test
@@ -150,9 +180,9 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertVideoAddedToCollection(event)
 
-        assertThat(document["type"]).isEqualTo("VIDEO_ADDED_TO_COLLECTION")
-        assertThat(document["videoId"]).isEqualTo("video-id")
-        assertThat(document["collectionId"]).isEqualTo("collection-id")
+        assertThat(document[TYPE]).isEqualTo("VIDEO_ADDED_TO_COLLECTION")
+        assertThat(document[VIDEO_ID]).isEqualTo("video-id")
+        assertThat(document[COLLECTION_ID]).isEqualTo("collection-id")
     }
 
     @Test
@@ -161,9 +191,9 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertVideoRemovedFromCollection(event)
 
-        assertThat(document["type"]).isEqualTo("VIDEO_REMOVED_FROM_COLLECTION")
-        assertThat(document["videoId"]).isEqualTo("video-id")
-        assertThat(document["collectionId"]).isEqualTo("collection-id")
+        assertThat(document[TYPE]).isEqualTo("VIDEO_REMOVED_FROM_COLLECTION")
+        assertThat(document[VIDEO_ID]).isEqualTo("video-id")
+        assertThat(document[COLLECTION_ID]).isEqualTo("collection-id")
     }
 
     @Test
@@ -172,9 +202,9 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertCollectionBookmarkChanged(event)
 
-        assertThat(document["type"]).isEqualTo("COLLECTION_BOOKMARK_CHANGED")
-        assertThat(document["collectionId"]).isEqualTo("collection-id")
-        assertThat(document["isBookmarked"]).isEqualTo(true)
+        assertThat(document[TYPE]).isEqualTo("COLLECTION_BOOKMARK_CHANGED")
+        assertThat(document[COLLECTION_ID]).isEqualTo("collection-id")
+        assertThat(document[COLLECTION_BOOKMARK_CHANGED_IS_BOOKMARKED]).isEqualTo(true)
     }
 
     @Test
@@ -183,9 +213,9 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertCollectionBookmarkChanged(event)
 
-        assertThat(document["type"]).isEqualTo("COLLECTION_BOOKMARK_CHANGED")
-        assertThat(document["collectionId"]).isEqualTo("collection-id")
-        assertThat(document["isBookmarked"]).isEqualTo(false)
+        assertThat(document[TYPE]).isEqualTo("COLLECTION_BOOKMARK_CHANGED")
+        assertThat(document[COLLECTION_ID]).isEqualTo("collection-id")
+        assertThat(document[COLLECTION_BOOKMARK_CHANGED_IS_BOOKMARKED]).isEqualTo(false)
     }
 
     @Test
@@ -194,9 +224,9 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertCollectionVisibilityChanged(event)
 
-        assertThat(document["type"]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
-        assertThat(document["collectionId"]).isEqualTo("collection-id")
-        assertThat(document["isDiscoverable"]).isEqualTo(true)
+        assertThat(document[TYPE]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
+        assertThat(document[COLLECTION_ID]).isEqualTo("collection-id")
+        assertThat(document[COLLECTION_VISIBILITY_CHANGED_IS_DISCOVERABLE]).isEqualTo(true)
     }
 
     @Test
@@ -205,9 +235,9 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertCollectionVisibilityChanged(event)
 
-        assertThat(document["type"]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
-        assertThat(document["collectionId"]).isEqualTo("collection-id")
-        assertThat(document["isDiscoverable"]).isEqualTo(false)
+        assertThat(document[TYPE]).isEqualTo("COLLECTION_VISIBILITY_CHANGED")
+        assertThat(document[COLLECTION_ID]).isEqualTo("collection-id")
+        assertThat(document[COLLECTION_VISIBILITY_CHANGED_IS_DISCOVERABLE]).isEqualTo(false)
     }
 
     @Test
@@ -217,9 +247,9 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertCollectionSubjectsChanged(event)
 
-        assertThat(document["type"]).isEqualTo("COLLECTION_SUBJECTS_CHANGED")
-        assertThat(document["collectionId"]).isEqualTo("collection-id")
-        assertThat(document["subjects"]).asList().containsExactly("Science")
+        assertThat(document[TYPE]).isEqualTo("COLLECTION_SUBJECTS_CHANGED")
+        assertThat(document[COLLECTION_ID]).isEqualTo("collection-id")
+        assertThat(document[COLLECTION_SUBJECTS_CHANGED_SUBJECTS]).asList().containsExactly("Science")
     }
 
     @Test
@@ -229,10 +259,10 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertCollectionAgeRangeChanged(event)
 
-        assertThat(document["type"]).isEqualTo("COLLECTION_AGE_RANGE_CHANGED")
-        assertThat(document["collectionId"]).isEqualTo("collection-1")
-        assertThat(document["rangeMin"]).isEqualTo(5)
-        assertThat(document["rangeMax"]).isEqualTo(19)
+        assertThat(document[TYPE]).isEqualTo("COLLECTION_AGE_RANGE_CHANGED")
+        assertThat(document[COLLECTION_ID]).isEqualTo("collection-1")
+        assertThat(document[COLLECTION_AGE_RANGE_CHANGED_RANGE_MIN]).isEqualTo(5)
+        assertThat(document[COLLECTION_AGE_RANGE_CHANGED_RANGE_MAX]).isEqualTo(19)
     }
 
     @Test
@@ -242,7 +272,7 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertCollectionAgeRangeChanged(event)
 
-        assertThat(document["rangeMax"]).isNull()
+        assertThat(document[COLLECTION_AGE_RANGE_CHANGED_RANGE_MAX]).isNull()
     }
 
     @Test
@@ -257,16 +287,16 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertCollectionInteractedWith(event)
 
-        assertThat(document["type"]).isEqualTo("COLLECTION_INTERACTED_WITH")
-        assertThat(document["timestamp"]).isEqualTo(
+        assertThat(document[TYPE]).isEqualTo("COLLECTION_INTERACTED_WITH")
+        assertThat(document[TIMESTAMP]).isEqualTo(
             Date.from(
                 ZonedDateTime.parse("2019-05-12T12:14:15.100Z").toInstant()
             )
         )
-        assertThat(document["collectionId"]).isEqualTo("the-collection-id")
-        assertThat(document["subtype"]).isEqualTo("NAVIGATE_TO_COLLECTION_DETAILS")
-        assertThat(document["userId"]).isEqualTo("user-id")
-        assertThat(document["url"]).isEqualTo("https://boclips.com/collections?q=hello")
+        assertThat(document[COLLECTION_ID]).isEqualTo("the-collection-id")
+        assertThat(document[SUBTYPE]).isEqualTo("NAVIGATE_TO_COLLECTION_DETAILS")
+        assertThat(document[USER_ID]).isEqualTo("user-id")
+        assertThat(document[URL]).isEqualTo("https://boclips.com/collections?q=hello")
     }
 
     @Test
@@ -281,16 +311,16 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertCollectionInteractedWith(event)
 
-        assertThat(document["type"]).isEqualTo("COLLECTION_INTERACTED_WITH")
-        assertThat(document["timestamp"]).isEqualTo(
+        assertThat(document[TYPE]).isEqualTo("COLLECTION_INTERACTED_WITH")
+        assertThat(document[TIMESTAMP]).isEqualTo(
             Date.from(
                 ZonedDateTime.parse("2019-05-12T12:14:15.100Z").toInstant()
             )
         )
-        assertThat(document["collectionId"]).isEqualTo("the-collection-id")
-        assertThat(document["subtype"]).isEqualTo("VISIT_LESSON_GUIDE")
-        assertThat(document["userId"]).isEqualTo("user-id")
-        assertThat(document["url"]).isEqualTo("https://boclips.com/collections?q=hello")
+        assertThat(document[COLLECTION_ID]).isEqualTo("the-collection-id")
+        assertThat(document[SUBTYPE]).isEqualTo("VISIT_LESSON_GUIDE")
+        assertThat(document[USER_ID]).isEqualTo("user-id")
+        assertThat(document[URL]).isEqualTo("https://boclips.com/collections?q=hello")
     }
 
     @Test
@@ -306,13 +336,13 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertVideoInteractedWith(event)
 
-        assertThat(document["type"]).isEqualTo("VIDEO_INTERACTED_WITH")
-        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
-        assertThat(document["videoId"]).isEqualTo("the-video-id")
-        assertThat(document["subtype"]).isEqualTo("copy-share-link")
-        assertThat(document["payload"]).isEqualTo(mapOf("additional-field" to "bunny"))
-        assertThat(document["userId"]).isEqualTo("user-id")
-        assertThat(document["url"]).isEqualTo("https://boclips.com/videos?q=hello")
+        assertThat(document[TYPE]).isEqualTo("VIDEO_INTERACTED_WITH")
+        assertThat(document[TIMESTAMP]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+        assertThat(document[VIDEO_ID]).isEqualTo("the-video-id")
+        assertThat(document[SUBTYPE]).isEqualTo("copy-share-link")
+        assertThat(document[PAYLOAD]).isEqualTo(mapOf("additional-field" to "bunny"))
+        assertThat(document[USER_ID]).isEqualTo("user-id")
+        assertThat(document[URL]).isEqualTo("https://boclips.com/videos?q=hello")
     }
 
     @Test
@@ -325,14 +355,14 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertPageRendered(event)
 
-        assertThat(document["userId"]).isEqualTo("my-test-id")
-        assertThat(document["url"]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
-        assertThat(document["timestamp"]).isEqualTo(
+        assertThat(document[USER_ID]).isEqualTo("my-test-id")
+        assertThat(document[URL]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document[TIMESTAMP]).isEqualTo(
             Date.from(
                 ZonedDateTime.parse("2019-05-12T12:14:15.1Z").toInstant()
             )
         )
-        assertThat(document["type"]).isEqualTo("PAGE_RENDERED")
+        assertThat(document[TYPE]).isEqualTo("PAGE_RENDERED")
     }
 
     @Test
@@ -346,11 +376,11 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertPlatformInteractedWith(event)
 
-        assertThat(document["type"]).isEqualTo("PLATFORM_INTERACTED_WITH")
-        assertThat(document["subtype"]).isEqualTo("HELP_CLICKED")
-        assertThat(document["userId"]).isEqualTo("my-test-id")
-        assertThat(document["url"]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
-        assertThat(document["timestamp"]).isEqualTo(
+        assertThat(document[TYPE]).isEqualTo("PLATFORM_INTERACTED_WITH")
+        assertThat(document[SUBTYPE]).isEqualTo("HELP_CLICKED")
+        assertThat(document[USER_ID]).isEqualTo("my-test-id")
+        assertThat(document[URL]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document[TIMESTAMP]).isEqualTo(
             Date.from(
                 ZonedDateTime.parse("2019-05-12T12:14:15.1Z").toInstant()
             )
@@ -367,10 +397,10 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertPlatformInteractedWith(event)
 
-        assertThat(document["type"]).isEqualTo("PLATFORM_INTERACTED_WITH")
-        assertThat(document["subtype"]).isEqualTo("HELP_CLICKED")
-        assertThat(document["url"]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
-        assertThat(document["timestamp"]).isEqualTo(
+        assertThat(document[TYPE]).isEqualTo("PLATFORM_INTERACTED_WITH")
+        assertThat(document[SUBTYPE]).isEqualTo("HELP_CLICKED")
+        assertThat(document[URL]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document[TIMESTAMP]).isEqualTo(
             Date.from(
                 ZonedDateTime.parse("2019-05-12T12:14:15.1Z").toInstant()
             )
@@ -386,9 +416,9 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertUserExpired(event)
 
-        assertThat(document["type"]).isEqualTo("USER_EXPIRED")
-        assertThat(document["userId"]).isEqualTo("my-test-id")
-        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+        assertThat(document[TYPE]).isEqualTo("USER_EXPIRED")
+        assertThat(document[USER_ID]).isEqualTo("my-test-id")
+        assertThat(document[TIMESTAMP]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
     }
 
     @Test
@@ -400,12 +430,11 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertUserExpired(event)
 
-        assertThat(document["type"]).isEqualTo("USER_EXPIRED")
-        assertThat(document["userId"]).isEqualTo("my-test-id")
-        assertThat(document["organisationId"]).isEqualTo("org-id")
-        assertThat(document["organisationType"]).isEqualTo("SCHOOL")
-        assertThat(document["userId"]).isEqualTo("my-test-id")
-        assertThat(document["timestamp"]).isEqualTo(
+        assertThat(document[TYPE]).isEqualTo("USER_EXPIRED")
+        assertThat(document[USER_ID]).isEqualTo("my-test-id")
+        assertThat(document[ORGANISATION_ID]).isEqualTo("org-id")
+        assertThat(document[ORGANISATION_TYPE]).isEqualTo("SCHOOL")
+        assertThat(document[TIMESTAMP]).isEqualTo(
             Date.from(
                 ZonedDateTime.parse("2019-05-12T12:14:15.100Z").toInstant()
             )
@@ -430,14 +459,13 @@ class EventSerializerTest {
 
         val document = EventSerializer.convertUserExpired(event)
 
-        assertThat(document["type"]).isEqualTo("USER_EXPIRED")
-        assertThat(document["userId"]).isEqualTo("my-test-id")
-        assertThat(document["organisationId"]).isEqualTo("org-id")
-        assertThat(document["organisationType"]).isEqualTo("SCHOOL")
-        assertThat(document["organisationParentId"]).isEqualTo("grandparent-id")
-        assertThat(document["organisationParentType"]).isEqualTo("DISTRICT")
-        assertThat(document["userId"]).isEqualTo("my-test-id")
-        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
+        assertThat(document[TYPE]).isEqualTo("USER_EXPIRED")
+        assertThat(document[USER_ID]).isEqualTo("my-test-id")
+        assertThat(document[ORGANISATION_ID]).isEqualTo("org-id")
+        assertThat(document[ORGANISATION_TYPE]).isEqualTo("SCHOOL")
+        assertThat(document[ORGANISATION_PARENT_ID]).isEqualTo("grandparent-id")
+        assertThat(document[ORGANISATION_PARENT_TYPE]).isEqualTo("DISTRICT")
+        assertThat(document[TIMESTAMP]).isEqualTo(Date.from(ZonedDateTime.parse("2019-05-12T12:14:15Z").toInstant()))
     }
 
     @Test
@@ -454,16 +482,16 @@ class EventSerializerTest {
             .timestamp(ZonedDateTime.of(2023, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC)).build()
 
         val document = EventSerializer.convertResourcesSearched(event)
-        assertThat(document["type"]).isEqualTo("RESOURCES_SEARCHED")
-        assertThat(document["userId"]).isEqualTo("roman-user")
-        assertThat(document["url"]).isEqualTo("www.marcus.it")
-        assertThat(document["query"]).isEqualTo("nature")
-        assertThat(document["resourceType"]).isEqualTo(ResourceType.COLLECTION)
-        assertThat(document["pageIndex"]).isEqualTo(2)
-        assertThat(document["pageSize"]).isEqualTo(7)
-        assertThat(document["totalResults"]).isEqualTo(23L)
-        assertThat(document["pageResourceIds"]).asList().containsExactly("id-1", "id-2")
-        assertThat(document["timestamp"]).isEqualTo(Date.from(ZonedDateTime.parse("2023-05-12T12:14:15Z").toInstant()))
+        assertThat(document[TYPE]).isEqualTo("RESOURCES_SEARCHED")
+        assertThat(document[USER_ID]).isEqualTo("roman-user")
+        assertThat(document[URL]).isEqualTo("www.marcus.it")
+        assertThat(document[SEARCH_QUERY]).isEqualTo("nature")
+        assertThat(document[SEARCH_RESOURCE_TYPE]).isEqualTo(ResourceType.COLLECTION)
+        assertThat(document[SEARCH_RESULTS_PAGE_INDEX]).isEqualTo(2)
+        assertThat(document[SEARCH_RESULTS_PAGE_SIZE]).isEqualTo(7)
+        assertThat(document[SEARCH_RESULTS_TOTAL]).isEqualTo(23L)
+        assertThat(document[SEARCH_RESULTS_PAGE_RESOURCE_IDS]).asList().containsExactly("id-1", "id-2")
+        assertThat(document[TIMESTAMP]).isEqualTo(Date.from(ZonedDateTime.parse("2023-05-12T12:14:15Z").toInstant()))
     }
 }
 
