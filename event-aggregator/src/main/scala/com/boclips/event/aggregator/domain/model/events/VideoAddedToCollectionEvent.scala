@@ -7,7 +7,7 @@ import com.boclips.event.infrastructure.EventFields
 
 case class VideoAddedToCollectionEvent(
                                         timestamp: ZonedDateTime,
-                                        userId: UserId,
+                                        userId: Option[UserId],
                                         videoId: VideoId,
                                         url: Option[Url],
                                         query: Option[Query]

@@ -1,6 +1,5 @@
 package com.boclips.event.aggregator.domain.service.session
 
-import com.boclips.event.aggregator.domain.model.events.EventConstants
 import com.boclips.event.aggregator.domain.model.{DeviceId, User, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.{createVideoSegmentPlayedEvent, createVideosSearchedEvent}
@@ -15,8 +14,8 @@ class SessionAssemblerIntegrationTest extends IntegrationTest {
 
     val events = rdd(
       createVideosSearchedEvent(userId = "user-1"),
-      createVideoSegmentPlayedEvent(userId = EventConstants.anonymousUserId.value, playbackDevice = Some("device-1")),
-      createVideoSegmentPlayedEvent(userId = "user-1"),
+      createVideoSegmentPlayedEvent(userId = None, playbackDevice = Some("device-1")),
+      createVideoSegmentPlayedEvent(userId = Some("user-1")),
     )
 
     val sessions = new SessionAssembler(events, users, "").assembleSessions().collect()

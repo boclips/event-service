@@ -82,7 +82,10 @@ object UserMetricCalculator {
 
   private def userActivityByTimePeriod(timePeriodDuration: TimePeriodDuration)(implicit events: RDD[_ <: Event]): RDD[UserActivityInTimePeriod] = {
     events
-      .map(event => ActiveUserInTimePeriod(event.userId, timePeriodDuration.dateRangeOf(event.timestamp)))
+      .flatMap(event => event.userId match {
+        case Some(userId) => ActiveUserInTimePeriod(userId, timePeriodDuration.dateRangeOf(event.timestamp)) :: Nil
+        case None => Nil
+      })
       .distinct()
       .groupBy(activeUser => activeUser.userId)
       .values

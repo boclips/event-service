@@ -9,7 +9,7 @@ case class VideoSegmentPlayedEvent
 (
   id: String,
   timestamp: ZonedDateTime,
-  userId: UserId,
+  userId: Option[UserId],
   query: Option[Query],
   url: Option[Url],
   videoId: VideoId,

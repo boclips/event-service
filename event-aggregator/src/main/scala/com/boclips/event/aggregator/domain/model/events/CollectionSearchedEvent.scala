@@ -7,7 +7,7 @@ import com.boclips.event.aggregator.domain.model._
 case class CollectionSearchedEvent
 (
   timestamp: ZonedDateTime,
-  userId: UserId,
+  userId: Option[UserId],
   query: Query,
   url: Option[Url],
   collectionResults: Iterable[CollectionId],

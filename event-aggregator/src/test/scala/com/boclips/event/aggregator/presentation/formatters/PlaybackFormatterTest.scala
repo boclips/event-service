@@ -24,7 +24,7 @@ class PlaybackFormatterTest extends Test {
   it should "write anonymous user id when user is anonymous" in {
     val json = PlaybackFormatter.formatRow(createPlayback(user = createAnonymousUser()))
 
-    json.getString("userId") shouldBe "anonymousUser"
+    json.getString("userId") shouldBe "UNKNOWN"
   }
 
   it should "write user when not anonymous" in {

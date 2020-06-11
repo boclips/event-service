@@ -6,7 +6,7 @@ import com.boclips.event.aggregator.domain.model.{DeviceId, Url, UserId, UserOrD
 
 trait Event {
   val timestamp: ZonedDateTime
-  val userId: UserId
+  val userId: Option[UserId]
   val deviceId: Option[DeviceId]
   val url: Option[Url]
   val typeName: String
@@ -16,8 +16,8 @@ trait Event {
 object Event {
   def uniqueUserOrDeviceId(event: Event): UserOrDeviceId = {
     event.userId match {
-      case EventConstants.anonymousUserId => event.deviceId.getOrElse(DeviceId("UNKNOWN"))
-      case _ => event.userId
+      case Some(userId) => userId
+      case None => event.deviceId.getOrElse(DeviceId("UNKNOWN"))
     }
   }
 }

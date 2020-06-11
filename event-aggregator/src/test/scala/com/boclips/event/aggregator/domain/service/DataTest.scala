@@ -45,7 +45,7 @@ class DataTest extends IntegrationTest {
   }
 
   it should "keep events by anonymous users" in sparkTest { implicit spark =>
-    val events = rdd(EventFactory.createVideoSegmentPlayedEvent(userId = EventConstants.anonymousUserId.value))
+    val events = rdd(EventFactory.createVideoSegmentPlayedEvent(userId = None))
     val users = rdd[User]()
     val videos = rdd[Video]()
     val data = Data(events, users, videos, "")

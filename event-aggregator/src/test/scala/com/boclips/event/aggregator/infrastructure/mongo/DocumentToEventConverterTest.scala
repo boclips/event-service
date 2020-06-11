@@ -33,7 +33,7 @@ class DocumentToEventConverterTest extends Test {
 
     val event = DocumentToEventConverter convert document
 
-    event.userId should be(UserId("user"))
+    event.userId should contain (UserId("user"))
   }
 
   it should "convert query" in {
@@ -122,7 +122,7 @@ class DocumentToEventConverterTest extends Test {
 
     val event = DocumentToEventConverter convert document
 
-    event.userId should be(UserId("the user"))
+    event.userId should contain(UserId("the user"))
   }
 
   it should "convert videoId" in {
@@ -206,7 +206,7 @@ class DocumentToEventConverterTest extends Test {
 
     event.timestamp shouldBe ZonedDateTime.parse("2020-01-10T12:13:14Z")
     event.url should contain(Url.parse("http://teachers.boclips.com/apage"))
-    event.userId shouldBe UserId("user")
+    event.userId should contain(UserId("user"))
     event.asInstanceOf[CollectionSearchedEvent].pageIndex shouldBe 1
     event.asInstanceOf[CollectionSearchedEvent].pageSize shouldBe 20
     event.asInstanceOf[CollectionSearchedEvent].totalResults shouldBe 1000
@@ -226,7 +226,7 @@ class DocumentToEventConverterTest extends Test {
 
     event.isInstanceOf[VideoInteractedWithEvent] shouldBe true
     event.asInstanceOf[VideoInteractedWithEvent].timestamp shouldBe date
-    event.asInstanceOf[VideoInteractedWithEvent].userId shouldBe UserId("user1")
+    event.asInstanceOf[VideoInteractedWithEvent].userId should contain(UserId("user1"))
     event.asInstanceOf[VideoInteractedWithEvent].query shouldBe Some(Query("antagonist"))
     event.asInstanceOf[VideoInteractedWithEvent].videoId shouldBe VideoId("666")
     event.asInstanceOf[VideoInteractedWithEvent].subtype shouldBe Some("HAD_FUN_WITH_VIDEO")
@@ -238,7 +238,7 @@ class DocumentToEventConverterTest extends Test {
 
     val event = DocumentToEventConverter.convert(document).asInstanceOf[OtherEvent]
 
-    event.userId should be(UserId("user id"))
+    event.userId should contain(UserId("user id"))
   }
 
   "transforming documents with type VIDEO_ADDED_TO_COLLECTION" should "convert obligatory properties" in {
@@ -253,7 +253,7 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[VideoAddedToCollectionEvent] shouldBe true
     event.asInstanceOf[VideoAddedToCollectionEvent].timestamp shouldBe date
-    event.asInstanceOf[VideoAddedToCollectionEvent].userId shouldBe UserId("user1")
+    event.asInstanceOf[VideoAddedToCollectionEvent].userId should contain(UserId("user1"))
     event.asInstanceOf[VideoAddedToCollectionEvent].query shouldBe Some(Query("fractions"))
     event.asInstanceOf[VideoAddedToCollectionEvent].videoId shouldBe VideoId("videoId")
 
@@ -270,7 +270,7 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[PageRenderedEvent] shouldBe true
     event.asInstanceOf[PageRenderedEvent].timestamp shouldBe timestamp
-    event.asInstanceOf[PageRenderedEvent].userId shouldBe UserId("renderer-user")
+    event.asInstanceOf[PageRenderedEvent].userId should contain(UserId("renderer-user"))
     event.asInstanceOf[PageRenderedEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=fractions"))
   }
 
@@ -288,7 +288,7 @@ class DocumentToEventConverterTest extends Test {
 
     event.isInstanceOf[CollectionInteractedWithEvent] shouldBe true
     event.asInstanceOf[CollectionInteractedWithEvent].timestamp shouldBe timestamp
-    event.asInstanceOf[CollectionInteractedWithEvent].userId shouldBe UserId("collection-user")
+    event.asInstanceOf[CollectionInteractedWithEvent].userId should contain(UserId("collection-user"))
     event.asInstanceOf[CollectionInteractedWithEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=fractions"))
     event.asInstanceOf[CollectionInteractedWithEvent].collectionId shouldBe CollectionId("collection-id")
     event.asInstanceOf[CollectionInteractedWithEvent].query shouldBe Some(Query("fractions"))
@@ -307,7 +307,7 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[PlatformInteractedWithEvent] shouldBe true
     event.asInstanceOf[PlatformInteractedWithEvent].timestamp shouldBe timestamp
-    event.asInstanceOf[PlatformInteractedWithEvent].userId shouldBe UserId("user-id")
+    event.asInstanceOf[PlatformInteractedWithEvent].userId should contain(UserId("user-id"))
     event.asInstanceOf[PlatformInteractedWithEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=queries"))
     event.asInstanceOf[PlatformInteractedWithEvent].subtype shouldBe Some("EXIT")
   }
@@ -323,7 +323,7 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[PlatformInteractedWithEvent] shouldBe true
     event.asInstanceOf[PlatformInteractedWithEvent].timestamp shouldBe timestamp
-    event.asInstanceOf[PlatformInteractedWithEvent].userId shouldBe EventConstants.anonymousUserId
+    event.asInstanceOf[PlatformInteractedWithEvent].userId shouldBe None
     event.asInstanceOf[PlatformInteractedWithEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=queries"))
     event.asInstanceOf[PlatformInteractedWithEvent].subtype shouldBe Some("EXIT")
   }

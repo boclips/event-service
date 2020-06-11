@@ -9,7 +9,7 @@ import com.boclips.event.infrastructure.EventFields
 
 case class CollectionInteractedWithEvent(
                                           timestamp: ZonedDateTime,
-                                          userId: UserId,
+                                          userId: Option[UserId],
                                           collectionId: CollectionId,
                                           subtype: Option[String],
                                           url: Option[Url],

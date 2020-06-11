@@ -1,6 +1,5 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import com.boclips.event.aggregator.domain.model.events.EventConstants
 import com.boclips.event.aggregator.domain.model.{AnonymousUser, Playback, User}
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.{JsonNull, JsonObject}
@@ -17,12 +16,12 @@ object PlaybackFormatter extends SingleRowFormatter[Playback] {
     val url = playback.url
 
     val userId = playback.user match {
-      case u: User => u.id
-      case _: AnonymousUser => EventConstants.anonymousUserId
+      case u: User => Some(u.id.value)
+      case _: AnonymousUser => None
     }
 
     json.addDateTimeProperty("timestamp", playback.timestamp)
-    json.addProperty("userId", userId.value)
+    json.addProperty("userId", userId)
     json.addProperty("videoId", playback.videoId.value)
     json.addProperty("secondsWatched", playback.secondsWatched)
     json.addProperty("percentageOfVideoDurationWatched", percentageWatched)

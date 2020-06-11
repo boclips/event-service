@@ -10,10 +10,10 @@ class PlaybackMetricCalculatorTest extends IntegrationTest {
 
   "calculateMetrics" should "calculate total and median of seconds watched" in sparkTest { implicit spark =>
     implicit val events: RDD[VideoSegmentPlayedEvent] = rdd(
-      EventFactory.createVideoSegmentPlayedEvent(userId = "aly", secondsWatched = 30),
-      EventFactory.createVideoSegmentPlayedEvent(userId = "aly", secondsWatched = 20),
-      EventFactory.createVideoSegmentPlayedEvent(userId = "ben", secondsWatched = 5),
-      EventFactory.createVideoSegmentPlayedEvent(userId = "cal", secondsWatched = 5)
+      EventFactory.createVideoSegmentPlayedEvent(userId = Some("aly"), secondsWatched = 30),
+      EventFactory.createVideoSegmentPlayedEvent(userId = Some("aly"), secondsWatched = 20),
+      EventFactory.createVideoSegmentPlayedEvent(userId = Some("ben"), secondsWatched = 5),
+      EventFactory.createVideoSegmentPlayedEvent(userId = Some("cal"), secondsWatched = 5)
     )
 
     val metrics = PlaybackMetricCalculator calculateMetrics Monthly()

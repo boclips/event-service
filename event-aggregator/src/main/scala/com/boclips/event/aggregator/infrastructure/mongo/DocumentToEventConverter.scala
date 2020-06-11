@@ -13,6 +13,10 @@ object DocumentToEventConverter {
     def url: Option[Url] = Option(event.getString(EventFields.URL)).map(Url.parse)
 
     def queryFromUrl: Option[Query] = url.flatMap(_.param("q")).map(Query)
+
+    def userId: Option[UserId] = Option(event.getString(EventFields.USER_ID))
+      .filter(_ != EventConstants.anonymousUserId.value)
+      .map(UserId)
   }
 
 
@@ -33,7 +37,7 @@ object DocumentToEventConverter {
 
   def convertVideoSegmentPlayedEvent(document: Document): Event = {
     val url = document.url
-    val userId = convertUserOrAnonymous(document)
+    val userId = document.userId
     val videoIndex = document.getInteger(EventFields.PLAYBACK_VIDEO_INDEX) match {
       case null => None
       case index => Some(index.toInt)
@@ -66,7 +70,7 @@ object DocumentToEventConverter {
     } else {
       VideosSearchedEvent(
         timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
-        userId = UserId(document.getString(EventFields.USER_ID)),
+        userIdPresent = document.userId.getOrElse(throw new IllegalStateException(s"No user id for search: ${document.get("_id")}")),
         query = Query(query),
         url = document.url,
         videoResults = document.getListOption[String](EventFields.SEARCH_RESULTS_PAGE_VIDEO_IDS).map(_.map(VideoId)),
@@ -80,7 +84,7 @@ object DocumentToEventConverter {
     CollectionSearchedEvent(
       timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
       query = Query(document.getString(EventFields.SEARCH_QUERY)),
-      userId = UserId(document.getString(EventFields.USER_ID)),
+      userId = document.userId,
       url = document.url,
       collectionResults = document.getScalaList[String](EventFields.SEARCH_RESULTS_PAGE_RESOURCE_IDS).map(CollectionId),
       pageIndex = document.getInteger(EventFields.SEARCH_RESULTS_PAGE_INDEX),
@@ -92,7 +96,7 @@ object DocumentToEventConverter {
 
   def convertOtherEvent(document: Document, eventType: String) = OtherEvent(
     timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
-    userId = UserId(document.getString(EventFields.USER_ID)),
+    userId = document.userId,
     typeName = eventType
   )
 
@@ -102,7 +106,7 @@ object DocumentToEventConverter {
     VideoInteractedWithEvent(
       url = url,
       timestamp = timestamp,
-      userId = UserId(document.getString(EventFields.USER_ID)),
+      userId = document.userId,
       videoId = VideoId(document.getString(EventFields.VIDEO_ID)),
       query = document.queryFromUrl,
       subtype = document.getStringOption(EventFields.SUBTYPE)
@@ -116,7 +120,7 @@ object DocumentToEventConverter {
     CollectionInteractedWithEvent(
       url = url,
       timestamp = timestamp,
-      userId = UserId(document.getString(EventFields.USER_ID)),
+      userId = document.userId,
       query = document.queryFromUrl,
       subtype = document.getStringOption(EventFields.SUBTYPE),
       collectionId = CollectionId(document.getString(EventFields.COLLECTION_ID))
@@ -128,7 +132,7 @@ object DocumentToEventConverter {
     val timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC)
     VideoAddedToCollectionEvent(
       timestamp = timestamp,
-      userId = UserId(document.getString(EventFields.USER_ID)),
+      userId = document.userId,
       videoId = VideoId(document.getString(EventFields.VIDEO_ID)),
       url = document.url,
       query = document.queryFromUrl
@@ -139,13 +143,13 @@ object DocumentToEventConverter {
     val timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC)
     PageRenderedEvent(
       timestamp = timestamp,
-      userId = UserId(document.getString(EventFields.USER_ID)),
+      userId = document.userId,
       url = document.url
     )
   }
 
   def convertPlatformInteractedWithEvent(document: Document): PlatformInteractedWithEvent = {
-    val userId = convertUserOrAnonymous(document)
+    val userId = document.userId
     val timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC)
     PlatformInteractedWithEvent(
       userId = userId,
@@ -153,13 +157,5 @@ object DocumentToEventConverter {
       url = document.url,
       subtype = document.getStringOption(EventFields.SUBTYPE),
     )
-  }
-
-  def convertUserOrAnonymous(document: Document): UserId = {
-    val userId = document.get(EventFields.USER_ID) match {
-      case null => EventConstants.anonymousUserId
-      case value => UserId(value.toString)
-    }
-    userId
   }
 }

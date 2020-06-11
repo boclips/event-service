@@ -21,7 +21,7 @@ object EventFactory {
                                        ): VideoAddedToCollectionEvent = {
     VideoAddedToCollectionEvent(
       timestamp = timestamp,
-      userId = UserId(userId),
+      userId = Some(UserId(userId)),
       url = None,
       videoId = VideoId(videoId),
       query = query.map(Query)
@@ -48,7 +48,7 @@ object EventFactory {
                                url: String = "http://test.com"): PageRenderedEvent = {
     PageRenderedEvent(
       timestamp = timestamp,
-      userId = UserId(userId),
+      userId = Some(UserId(userId)),
       url = Some(Url.parse(url))
     )
 
@@ -97,7 +97,7 @@ object EventFactory {
   def createVideoSegmentPlayedEvent(
                                      id: String = UUID.randomUUID().toString,
                                      timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-                                     userId: String = "userId",
+                                     userId: Option[String] = Some("userId"),
                                      videoId: String = "videoId",
                                      url: Url = Url.parse("http://example.com/"),
                                      query: Option[String] = None,
@@ -109,7 +109,7 @@ object EventFactory {
     VideoSegmentPlayedEvent(
       id = id,
       timestamp = timestamp,
-      userId = UserId(userId),
+      userId = userId.map(UserId),
       url = Option(url),
       query = query.map(Query),
       refererId = refererId.map(UserId),
@@ -150,7 +150,7 @@ object EventFactory {
                                ): VideosSearchedEvent = {
     VideosSearchedEvent(
       timestamp = timestamp,
-      userId = UserId(userId),
+      userIdPresent = UserId(userId),
       url = Some(url),
       query = Query(query),
       videoResults = videoResults.map(_.map(VideoId)),
@@ -205,7 +205,7 @@ object EventFactory {
     VideoInteractedWithEvent(
       timestamp = timestamp,
       url = Some(Url.parse(url)),
-      userId = UserId(userId),
+      userId = Some(UserId(userId)),
       videoId = VideoId(videoId),
       query = query.map(Query),
       subtype = subtype,
@@ -250,7 +250,7 @@ object EventFactory {
                                        ): PlatformInteractedWithEvent = {
     PlatformInteractedWithEvent(
       timestamp = timestamp,
-      userId = UserId(userId),
+      userId = Some(UserId(userId)),
       subtype = subtype,
       url = Some(Url.parse(url))
     )
@@ -268,7 +268,7 @@ object EventFactory {
 
     CollectionSearchedEvent(
       timestamp = timestamp,
-      userId = UserId(userId),
+      userId = Some(UserId(userId)),
       url = None,
       query = Query(query),
       collectionResults = collectionResults.map(CollectionId),
@@ -310,7 +310,7 @@ object EventFactory {
                                           url: String = "http://test.com"): CollectionInteractedWithEvent = {
     CollectionInteractedWithEvent(
       timestamp = timestamp,
-      userId = UserId(userId),
+      userId = Some(UserId(userId)),
       collectionId = CollectionId(collectionId),
       query = query.map(Query),
       subtype = subtype,
@@ -342,7 +342,7 @@ object EventFactory {
                                             timestamp: ZonedDateTime = ZonedDateTime.now(),
                                             userId: String = "user666",
                                             url: String = "the/url",
-                                            videoId: String = "videoId"
+                                            videoId: String = "video-id"
                                           ): Document = {
     val properties = Map[String, Object](
       (EventFields.TYPE, EventFields.Type.VIDEO_ADDED_TO_COLLECTION),

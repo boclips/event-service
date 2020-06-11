@@ -10,7 +10,7 @@ import com.boclips.event.infrastructure.EventFields
 case class PageRenderedEvent
 (
   timestamp: ZonedDateTime,
-  userId: UserId,
+  userId: Option[UserId],
   url: Option[Url],
 ) extends Event {
   override val deviceId: Option[DeviceId] = None

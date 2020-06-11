@@ -8,7 +8,7 @@ case class OtherEvent
 (
   timestamp: ZonedDateTime,
   typeName: String,
-  userId: UserId
+  userId: Option[UserId],
 ) extends Event {
 
   override val deviceId: Option[DeviceId] = None

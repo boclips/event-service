@@ -8,7 +8,7 @@ import com.boclips.event.aggregator.presentation.formatters.PlatformInteractedWi
 import com.boclips.event.infrastructure.EventFields
 
 case class PlatformInteractedWithEvent(
-                                        userId: UserId,
+                                        userId: Option[UserId],
                                         timestamp: ZonedDateTime,
                                         url: Option[Url],
                                         subtype: Option[String],

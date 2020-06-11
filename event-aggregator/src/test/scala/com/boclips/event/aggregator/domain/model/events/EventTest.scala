@@ -7,19 +7,31 @@ import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 class EventTest extends Test {
 
   "uniqueUserOrDeviceId" should "return user id when not anonymous" in {
-    val uniqueId = Event.uniqueUserOrDeviceId(EventFactory.createVideoSegmentPlayedEvent(userId = "bob"))
+    val event = EventFactory.createVideoSegmentPlayedEvent(userId = Some("bob"))
+
+    val uniqueId = Event.uniqueUserOrDeviceId(event)
 
     uniqueId shouldBe UserId("bob")
   }
 
-  it should "return device id when user was anonymous" in {
-    val uniqueId = Event.uniqueUserOrDeviceId(EventFactory.createVideoSegmentPlayedEvent(userId = EventConstants.anonymousUserId.value, playbackDevice = Some("device")))
+  it should "return device id when user id is not known" in {
+    val event = EventFactory.createVideoSegmentPlayedEvent(
+      userId = None,
+      playbackDevice = Some("device")
+    )
+
+    val uniqueId = Event.uniqueUserOrDeviceId(event)
 
     uniqueId shouldBe DeviceId("device")
   }
 
   it should "fall back to anonymous user id when user is anonymous and no playback device" in {
-    val uniqueId = Event.uniqueUserOrDeviceId(EventFactory.createVideoSegmentPlayedEvent(userId = EventConstants.anonymousUserId.value, playbackDevice = None))
+    val event = EventFactory.createVideoSegmentPlayedEvent(
+      userId = None,
+      playbackDevice = None
+    )
+
+    val uniqueId = Event.uniqueUserOrDeviceId(event)
 
     uniqueId shouldBe DeviceId("UNKNOWN")
   }
