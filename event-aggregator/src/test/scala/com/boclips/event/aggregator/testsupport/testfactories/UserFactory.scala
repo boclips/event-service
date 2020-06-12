@@ -5,6 +5,25 @@ import java.time.ZonedDateTime
 import com.boclips.event.aggregator.domain.model._
 
 object UserFactory {
+
+  def createBoclipsUserIdentity(
+                                 userId: String = "the-user-id",
+                                 deviceId: Option[DeviceId] = None,
+                               ): BoclipsUserIdentity = {
+    BoclipsUserIdentity(
+      id = UserId(userId),
+      deviceId = deviceId,
+    )
+  }
+
+  def createAnonymousUserIdentity(
+                                 deviceId: Option[String] = None,
+                                 ): AnonymousUserIdentity = {
+    AnonymousUserIdentity(
+      deviceId = deviceId.map(DeviceId),
+    )
+  }
+
   def createDeal(
                   billing: Boolean = false
                 ): Deal = {
@@ -64,7 +83,7 @@ object UserFactory {
   }
 
   def createAnonymousUser(
-                           deviceId: DeviceId = DeviceId("device-id"),
+                           deviceId: Option[DeviceId] = None,
                          ): AnonymousUser = {
     AnonymousUser(
       deviceId = deviceId,

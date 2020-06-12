@@ -5,13 +5,37 @@ import java.time.{LocalDate, YearMonth, ZonedDateTime}
 import com.boclips.event.aggregator.presentation.RowFormatter
 import com.boclips.event.aggregator.presentation.formatters.UserFormatter
 
-sealed trait UserOrDeviceId
+sealed trait UserIdentity {
+  def boclipsId: Option[UserId]
+  def deviceId: Option[DeviceId]
 
-case class UserId(value: String) extends Ordered[UserId] with UserOrDeviceId {
+  def mostSpecificIdentifier: UniqueUserIdentifier
+}
+
+case class BoclipsUserIdentity(
+                                id: UserId,
+                                deviceId: Option[DeviceId]
+                              ) extends UserIdentity {
+  override def boclipsId: Option[UserId] = Some(id)
+
+  override def mostSpecificIdentifier: UniqueUserIdentifier = id
+}
+
+case class AnonymousUserIdentity(
+                                deviceId: Option[DeviceId]
+                                ) extends UserIdentity {
+  override def boclipsId: Option[UserId] = None
+
+  override def mostSpecificIdentifier: UniqueUserIdentifier = deviceId.getOrElse(DeviceId("UNKNOWN DEVICE"))
+}
+
+sealed trait UniqueUserIdentifier
+
+case class UserId(value: String) extends Ordered[UserId] with UniqueUserIdentifier {
   override def compare(that: UserId): Int = value.compare(that.value)
 }
 
-case class DeviceId(value: String) extends UserOrDeviceId
+case class DeviceId(value: String) extends UniqueUserIdentifier
 
 sealed trait UserOrAnonymous {
   def isAnonymous: Boolean
@@ -44,7 +68,7 @@ case class User(
 }
 
 case class AnonymousUser(
-                          deviceId: DeviceId
+                          deviceId: Option[DeviceId]
                         ) extends UserOrAnonymous {
   override def isAnonymous: Boolean = true
 

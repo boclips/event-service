@@ -18,7 +18,7 @@ object SessionFormatter extends SingleRowFormatter[Session] {
     val sessionEventsJson = obj.events.map(event => {
       val eventJson = new JsonObject
       eventJson.addProperty("id", UUID.randomUUID().toString)
-      eventJson.addProperty("userId", event.userId.map(_.value))
+      eventJson.addProperty("userId", event.userIdentity.boclipsId.map(_.value))
       eventJson.addProperty("timestamp", event.timestamp.format(ISO_OFFSET_DATE_TIME))
       eventJson.addProperty("typeName", event.typeName)
       eventJson.addProperty("subtype", event.subtype.getOrElse(""))

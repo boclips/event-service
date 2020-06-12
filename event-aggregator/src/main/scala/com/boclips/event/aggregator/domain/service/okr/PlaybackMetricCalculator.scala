@@ -22,9 +22,10 @@ object PlaybackMetricCalculator {
 
   private def totalPlaybackSecondsByUser(timePeriodDuration: TimePeriodDuration)(implicit events: RDD[_ <: Event]): RDD[(DateRange, Iterable[Long])] = {
     events
+      .filter(_.userIdentity.boclipsId.isDefined)
       .flatMap {
-        case e: VideoSegmentPlayedEvent => Some(((timePeriodDuration.dateRangeOf(e.timestamp), e.userId), e.secondsWatched.toLong))
-        case otherEvent => Some(((timePeriodDuration.dateRangeOf(otherEvent.timestamp), otherEvent.userId), 0L))
+        case e: VideoSegmentPlayedEvent => Some(((timePeriodDuration.dateRangeOf(e.timestamp), e.userIdentity), e.secondsWatched.toLong))
+        case otherEvent => Some(((timePeriodDuration.dateRangeOf(otherEvent.timestamp), otherEvent.userIdentity.boclipsId.get), 0L))
       }
       .groupByKey()
       .mapValues(_.sum)

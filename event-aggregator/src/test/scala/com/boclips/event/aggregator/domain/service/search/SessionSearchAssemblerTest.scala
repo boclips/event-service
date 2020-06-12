@@ -7,6 +7,8 @@ import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory._
 import com.boclips.event.aggregator.testsupport.testfactories.SessionFactory.createSession
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 //noinspection RedundantDefaultArgument
 class SessionSearchAssemblerTest extends Test {
@@ -14,8 +16,8 @@ class SessionSearchAssemblerTest extends Test {
   "aggregateSearchEvents" should "create one high level event for search events with the same query" in {
     val timestamp = ZonedDateTime.now(UTC)
     val events = createSession(events = List(
-      createVideosSearchedEvent(userId = "user id", query = "the query", timestamp = timestamp.plusMinutes(1)),
-      createVideosSearchedEvent(userId = "user id", query = "the query", timestamp = timestamp)
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("user id"), query = "the query", timestamp = timestamp.plusMinutes(1)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("user id"), query = "the query", timestamp = timestamp)
     ))
 
     val highLevelEvents = new SessionSearchAssembler() assembleSearchesInSession events

@@ -4,7 +4,7 @@ import java.time._
 import java.util.{Currency, Locale}
 
 import com.boclips.event.aggregator.domain.model.events.{Event, OtherEvent}
-import com.boclips.event.aggregator.domain.model.{OrganisationType, SCHOOL_ORGANISATION, User, UserOrAnonymous}
+import com.boclips.event.aggregator.domain.model.{BoclipsUserIdentity, OrganisationType, SCHOOL_ORGANISATION, User, UserIdentity, UserOrAnonymous}
 
 import scala.reflect.runtime.universe
 import scala.reflect.runtime.universe._
@@ -24,7 +24,7 @@ object ExampleInstance {
         schemaBaseOfClass(tpe, cls, dependantTypes)
       )
     } catch {
-      case e: Throwable => throw new UnsupportedOperationException(s"Error creating an example instance of $tpe", e)
+      case e: Throwable => throw new UnsupportedOperationException(s"Error creating an example instance of $tpe. If it's an abstract type, it may have to be registered at the bottom of this file.", e)
     }
   }
 
@@ -130,6 +130,9 @@ object ExampleInstance {
     }
     else if (tpe =:= typeOf[Event]) {
       Some(create[OtherEvent])
+    }
+    else if (tpe =:= typeOf[UserIdentity]) {
+      Some(create[BoclipsUserIdentity]())
     }
     else {
       None

@@ -4,6 +4,7 @@ import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.events.EventConstants
 import com.boclips.event.aggregator.testsupport.Test
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory, UserFactory}
 import com.boclips.event.infrastructure.EventFields
 
@@ -40,7 +41,10 @@ class SessionFormatterTest extends Test {
 
   it should "write id, userID, url host, path and params" in {
     val json = SessionFormatter formatRow SessionFactory.createSession(UserFactory.createUser(),
-      List(EventFactory.createPageRenderedEvent(userId = "id-666", url = "https://teachers.boclips.com/videos?age_range=9-11&page=1&q=unit%20test"))
+      List(EventFactory.createPageRenderedEvent(
+        userIdentity = createBoclipsUserIdentity("id-666"),
+        url = "https://teachers.boclips.com/videos?age_range=9-11&page=1&q=unit%20test"
+      ))
     )
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("id").getAsString should not be empty
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("urlHost").getAsString shouldBe "teachers.boclips.com"

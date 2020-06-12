@@ -2,11 +2,12 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoInteractedWithEvent
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 class VideoInteractionEventsFormatterTest extends Test {
   it should "format video interaction event" in {
     val json = VideoInteractionEventsFormatter formatRow createVideoInteractedWithEvent(
-      userId = "user-id",
+      userIdentity = createBoclipsUserIdentity("user-id"),
       videoId = "video-id",
       subtype = Some("HAVE_FUN_WITH_VIDEO"),
       query = Some("apple"),

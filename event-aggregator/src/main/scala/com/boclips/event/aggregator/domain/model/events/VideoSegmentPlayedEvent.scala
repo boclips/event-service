@@ -9,12 +9,11 @@ case class VideoSegmentPlayedEvent
 (
   id: String,
   timestamp: ZonedDateTime,
-  userId: Option[UserId],
+  userIdentity: UserIdentity,
   query: Option[Query],
   url: Option[Url],
   videoId: VideoId,
   videoIndex: Option[Int],
-  deviceId: Option[DeviceId],
   refererId: Option[UserId],
   secondsWatched: Int
 ) extends Event {

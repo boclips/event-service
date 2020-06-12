@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.domain.service.session
 import com.boclips.event.aggregator.domain.model.{DeviceId, User, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.{createVideoSegmentPlayedEvent, createVideosSearchedEvent}
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity, createUser}
 
 class SessionAssemblerIntegrationTest extends IntegrationTest {
 
@@ -13,9 +13,9 @@ class SessionAssemblerIntegrationTest extends IntegrationTest {
     )
 
     val events = rdd(
-      createVideosSearchedEvent(userId = "user-1"),
-      createVideoSegmentPlayedEvent(userId = None, playbackDevice = Some("device-1")),
-      createVideoSegmentPlayedEvent(userId = Some("user-1")),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("user-1")),
+      createVideoSegmentPlayedEvent(userIdentity = createAnonymousUserIdentity(deviceId = Some("device-1"))),
+      createVideoSegmentPlayedEvent(userIdentity = createBoclipsUserIdentity("user-1")),
     )
 
     val sessions = new SessionAssembler(events, users, "").assembleSessions().collect()
@@ -24,7 +24,7 @@ class SessionAssemblerIntegrationTest extends IntegrationTest {
 
     val anonymousUserSession :: loggedInUserSession :: _ = sessions
 
-    anonymousUserSession.user.asAnonymous.deviceId shouldBe DeviceId("device-1")
+    anonymousUserSession.user.asAnonymous.deviceId shouldBe Some(DeviceId("device-1"))
     anonymousUserSession.events should have length 1
 
     loggedInUserSession.user.asUser.id shouldBe UserId("user-1")
@@ -35,12 +35,12 @@ class SessionAssemblerIntegrationTest extends IntegrationTest {
     val users = rdd[User]()
 
     val events = rdd(
-      createVideosSearchedEvent(userId = "user-1"),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("user-1")),
     )
 
     val session = new SessionAssembler(events, users, "").assembleSessions().collect().head
 
-    session.user.asAnonymous.deviceId shouldBe DeviceId("user-1")
+    session.user.asAnonymous.deviceId shouldBe Some(DeviceId("user-1"))
   }
 
 }

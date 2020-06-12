@@ -3,13 +3,15 @@ package com.boclips.event.aggregator.domain.service
 import com.boclips.event.aggregator.domain.model.events.{Event, EventConstants}
 import com.boclips.event.aggregator.domain.model.{API_ORGANISATION, SCHOOL_ORGANISATION, User, Video}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
+import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity}
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
 import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
 
 class DataTest extends IntegrationTest {
 
   "teachersAppFilter" should "keep events of users with SCHOOL organisation" in sparkTest { implicit spark =>
-    val events = rdd(EventFactory.createVideosSearchedEvent(userId = "schoolUserId"))
+    val events = rdd(EventFactory.createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("schoolUserId")))
     val users = rdd(UserFactory.createUser(id = "schoolUserId", organisation = Some(UserFactory.createOrganisation(typeName = SCHOOL_ORGANISATION))))
     val videos = rdd[Video]()
     val data = Data(events, users, videos, "")
@@ -21,7 +23,7 @@ class DataTest extends IntegrationTest {
   }
 
   it should "filter out events of users with API organisations" in sparkTest { implicit spark =>
-    val events = rdd(EventFactory.createVideosSearchedEvent(userId = "apiUserId"))
+    val events = rdd(EventFactory.createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("apiUserId")))
     val users = rdd(UserFactory.createUser(id = "apiUserId", organisation = Some(UserFactory.createOrganisation(typeName = API_ORGANISATION))))
     val videos = rdd[Video]()
     val data = Data(events, users, videos, "")
@@ -33,7 +35,7 @@ class DataTest extends IntegrationTest {
   }
 
   it should "keep events with no user organisation" in sparkTest { implicit spark =>
-    val events = rdd(EventFactory.createVideosSearchedEvent(userId = "aUserId"))
+    val events = rdd(EventFactory.createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("aUserId")))
     val users = rdd(UserFactory.createUser(id = "aUserId", organisation = None))
     val videos = rdd[Video]()
     val data = Data(events, users, videos, "")
@@ -45,7 +47,9 @@ class DataTest extends IntegrationTest {
   }
 
   it should "keep events by anonymous users" in sparkTest { implicit spark =>
-    val events = rdd(EventFactory.createVideoSegmentPlayedEvent(userId = None))
+    val events = rdd(
+      createVideoSegmentPlayedEvent(userIdentity = createAnonymousUserIdentity())
+    )
     val users = rdd[User]()
     val videos = rdd[Video]()
     val data = Data(events, users, videos, "")

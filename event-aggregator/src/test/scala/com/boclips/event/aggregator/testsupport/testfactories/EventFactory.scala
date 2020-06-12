@@ -5,6 +5,7 @@ import java.util.{Date, UUID}
 
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.events._
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.infrastructure.EventFields
 import org.bson.Document
 import org.bson.types.ObjectId
@@ -15,13 +16,13 @@ object EventFactory {
 
   def createVideoAddedToCollectionEvent(
                                          timestamp: ZonedDateTime = ZonedDateTime.now(),
-                                         userId: String = "user666",
+                                         userIdentity: BoclipsUserIdentity = createBoclipsUserIdentity(),
                                          videoId: String = "videoId",
                                          query: Option[String] = None
                                        ): VideoAddedToCollectionEvent = {
     VideoAddedToCollectionEvent(
       timestamp = timestamp,
-      userId = Some(UserId(userId)),
+      userIdentity = userIdentity,
       url = None,
       videoId = VideoId(videoId),
       query = query.map(Query)
@@ -44,11 +45,11 @@ object EventFactory {
 
   def createPageRenderedEvent(
                                timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-                               userId: String = "userId",
+                               userIdentity: UserIdentity = createBoclipsUserIdentity(),
                                url: String = "http://test.com"): PageRenderedEvent = {
     PageRenderedEvent(
       timestamp = timestamp,
-      userId = Some(UserId(userId)),
+      userIdentity = userIdentity,
       url = Some(Url.parse(url))
     )
 
@@ -97,24 +98,22 @@ object EventFactory {
   def createVideoSegmentPlayedEvent(
                                      id: String = UUID.randomUUID().toString,
                                      timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-                                     userId: Option[String] = Some("userId"),
+                                     userIdentity: UserIdentity = createBoclipsUserIdentity(),
                                      videoId: String = "videoId",
                                      url: Url = Url.parse("http://example.com/"),
                                      query: Option[String] = None,
                                      refererId: Option[String] = None,
                                      videoIndex: Option[Int] = None,
-                                     playbackDevice: Option[String] = None,
                                      secondsWatched: Int = 10
                                    ): VideoSegmentPlayedEvent = {
     VideoSegmentPlayedEvent(
       id = id,
       timestamp = timestamp,
-      userId = userId.map(UserId),
+      userIdentity = userIdentity,
       url = Option(url),
       query = query.map(Query),
       refererId = refererId.map(UserId),
       videoId = VideoId(videoId),
-      deviceId = playbackDevice.map(DeviceId),
       videoIndex = videoIndex,
       secondsWatched = secondsWatched
     )
@@ -141,7 +140,7 @@ object EventFactory {
 
   def createVideosSearchedEvent(
                                  timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-                                 userId: String = "userId",
+                                 userIdentity: BoclipsUserIdentity = createBoclipsUserIdentity(),
                                  query: String = "query",
                                  videoResults: Option[Iterable[String]] = None,
                                  pageIndex: Int = 0,
@@ -150,7 +149,7 @@ object EventFactory {
                                ): VideosSearchedEvent = {
     VideosSearchedEvent(
       timestamp = timestamp,
-      userIdPresent = UserId(userId),
+      userIdentity = userIdentity,
       url = Some(url),
       query = Query(query),
       videoResults = videoResults.map(_.map(VideoId)),
@@ -196,7 +195,7 @@ object EventFactory {
 
   def createVideoInteractedWithEvent(
                                       timestamp: ZonedDateTime = ZonedDateTime.now(),
-                                      userId: String = "userId",
+                                      userIdentity: UserIdentity = createBoclipsUserIdentity(),
                                       videoId: String = "videoId",
                                       query: Option[String] = None,
                                       subtype: Option[String] = Some("VIDEO_STARED_AT"),
@@ -205,7 +204,7 @@ object EventFactory {
     VideoInteractedWithEvent(
       timestamp = timestamp,
       url = Some(Url.parse(url)),
-      userId = Some(UserId(userId)),
+      userIdentity = userIdentity,
       videoId = VideoId(videoId),
       query = query.map(Query),
       subtype = subtype,
@@ -244,13 +243,13 @@ object EventFactory {
 
   def createPlatformInteractedWithEvent(
                                          timestamp: ZonedDateTime = ZonedDateTime.now(),
-                                         userId: String = "uid-1",
+                                         userIdentity: UserIdentity = createBoclipsUserIdentity(),
                                          subtype: Option[String] = Some("BANNER_CLICKED"),
                                          url: String = "http://test.com",
                                        ): PlatformInteractedWithEvent = {
     PlatformInteractedWithEvent(
       timestamp = timestamp,
-      userId = Some(UserId(userId)),
+      userIdentity = userIdentity,
       subtype = subtype,
       url = Some(Url.parse(url))
     )
@@ -258,7 +257,7 @@ object EventFactory {
 
   def createCollectionsSearchedEvent(
                                       timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-                                      userId: String = "userId",
+                                      userIdentity: UserIdentity = createBoclipsUserIdentity(),
                                       query: String = "query",
                                       collectionResults: Iterable[String] = None,
                                       pageIndex: Int = 0,
@@ -268,7 +267,7 @@ object EventFactory {
 
     CollectionSearchedEvent(
       timestamp = timestamp,
-      userId = Some(UserId(userId)),
+      userIdentity = userIdentity,
       url = None,
       query = Query(query),
       collectionResults = collectionResults.map(CollectionId),
@@ -303,14 +302,14 @@ object EventFactory {
   }
 
   def createCollectionInteractedWithEvent(timestamp: ZonedDateTime = ZonedDateTime.now(),
-                                          userId: String = "userId",
+                                          userIdentity: UserIdentity = createBoclipsUserIdentity(),
                                           collectionId: String = "collectionId",
                                           query: Option[String] = None,
                                           subtype: Option[String] = None,
                                           url: String = "http://test.com"): CollectionInteractedWithEvent = {
     CollectionInteractedWithEvent(
       timestamp = timestamp,
-      userId = Some(UserId(userId)),
+      userIdentity = userIdentity,
       collectionId = CollectionId(collectionId),
       query = query.map(Query),
       subtype = subtype,

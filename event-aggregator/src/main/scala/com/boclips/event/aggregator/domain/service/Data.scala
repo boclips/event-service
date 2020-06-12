@@ -22,7 +22,7 @@ case class Data(
   private def schoolEvents(schoolUsers: RDD[User]): RDD[_ <: Event] = {
     val anonymous = UserId("anonymous")
     events
-      .keyBy(_.userId.getOrElse(anonymous))
+      .keyBy(_.userIdentity.boclipsId.getOrElse(anonymous))
       .leftOuterJoin(schoolUsers.keyBy(_.id))
       .flatMap {
         case (`anonymous`, (event, _)) => Some(event)

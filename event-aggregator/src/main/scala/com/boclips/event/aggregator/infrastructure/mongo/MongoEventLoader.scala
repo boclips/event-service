@@ -18,7 +18,7 @@ class MongoEventLoader(
     mongoClient
       .collectionRDD("events")
       .map(DocumentToEventConverter.convert)
-      .filter(event => event.userId.isEmpty || !boclipsEmployeeIds.contains(event.userId.get.value))
+      .filter(event => event.userIdentity.boclipsId.isEmpty || !boclipsEmployeeIds.contains(event.userIdentity.boclipsId.get.value))
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Events")
   }

@@ -37,7 +37,7 @@ class PlaybackTest extends Test {
 
   it should "be true when referer is not known but user is anonymous" in {
     val playback = createPlayback(
-      user = AnonymousUser(deviceId = DeviceId("device-id")),
+      user = AnonymousUser(deviceId = Some(DeviceId("device-id"))),
       refererId = None
     )
 

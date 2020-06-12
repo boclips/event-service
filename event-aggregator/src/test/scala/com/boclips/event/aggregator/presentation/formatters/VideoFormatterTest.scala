@@ -7,9 +7,10 @@ import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
 import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
-import com.boclips.event.aggregator.testsupport.testfactories.{ContractFactory, EventFactory}
+import com.boclips.event.aggregator.testsupport.testfactories.{ContractFactory, EventFactory, UserFactory}
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem}
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createVideoSearchResultImpression}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideo, createVideoAsset}
 
 import scala.collection.JavaConverters._
@@ -384,7 +385,7 @@ class VideoFormatterTest extends Test {
       videoId = "23",
       timestamp = ZonedDateTime.parse("2020-10-20T10:11:12Z"),
       query = Some("maths"),
-      userId = "user-id",
+      userIdentity = createBoclipsUserIdentity("user-id"),
       subtype = Some("COOL-EVENT"),
 
     )

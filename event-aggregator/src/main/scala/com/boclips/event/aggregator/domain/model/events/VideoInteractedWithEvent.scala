@@ -7,12 +7,11 @@ import com.boclips.event.infrastructure.EventFields
 
 case class VideoInteractedWithEvent(
                                      timestamp: ZonedDateTime,
-                                     userId: Option[UserId],
+                                     userIdentity: UserIdentity,
                                      videoId: VideoId,
                                      url: Option[Url],
                                      query: Option[Query],
                                      subtype: Option[String],
                                    ) extends Event {
-  override val deviceId: Option[DeviceId] = None
   override val typeName: String = EventFields.Type.VIDEO_INTERACTED_WITH
 }

@@ -41,8 +41,9 @@ object UserMetricCalculator {
 
   def countActiveUsers(fromInclusive: LocalDate, toExclusive: LocalDate)(implicit events: RDD[_ <: Event]): Long = {
     events
+      .filter(_.userIdentity.boclipsId.isDefined)
       .filter(event => event.timestamp.isBefore(toExclusive.atStartOfDay(ZoneOffset.UTC)) && !event.timestamp.isBefore(fromInclusive.atStartOfDay(ZoneOffset.UTC)))
-      .groupBy(event => event.userId)
+      .groupBy(event => event.userIdentity.boclipsId.get)
       .values
       .map(userEvents => if (userEvents.nonEmpty) 1 else 0)
       .sum()
@@ -82,7 +83,7 @@ object UserMetricCalculator {
 
   private def userActivityByTimePeriod(timePeriodDuration: TimePeriodDuration)(implicit events: RDD[_ <: Event]): RDD[UserActivityInTimePeriod] = {
     events
-      .flatMap(event => event.userId match {
+      .flatMap(event => event.userIdentity.boclipsId match {
         case Some(userId) => ActiveUserInTimePeriod(userId, timePeriodDuration.dateRangeOf(event.timestamp)) :: Nil
         case None => Nil
       })

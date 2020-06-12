@@ -6,21 +6,22 @@ import com.boclips.event.aggregator.domain.model.events.VideosSearchedEvent
 import com.boclips.event.aggregator.domain.model.{Monthly, User}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.TestTimestamps.{oneDayThis, thisYearIn, thisYearWhole}
-import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser
+import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchedEvent
+import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createUser}
 import org.apache.spark.rdd.RDD
 
 class UserMetricCalculatorTest extends IntegrationTest {
 
   "calculateStats" should "count new and repeat users" in sparkTest { implicit spark =>
     implicit val events: RDD[VideosSearchedEvent] = rdd(
-      EventFactory.createVideosSearchedEvent(userId = "aly", timestamp = thisYearIn(MAY)),
-      EventFactory.createVideosSearchedEvent(userId = "aly", timestamp = thisYearIn(MAY)),
-      EventFactory.createVideosSearchedEvent(userId = "bob", timestamp = thisYearIn(MAY)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("aly"), timestamp = thisYearIn(MAY)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("aly"), timestamp = thisYearIn(MAY)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("bob"), timestamp = thisYearIn(MAY)),
 
-      EventFactory.createVideosSearchedEvent(userId = "bob", timestamp = thisYearIn(JUNE)),
-      EventFactory.createVideosSearchedEvent(userId = "cal", timestamp = thisYearIn(JUNE)),
-      EventFactory.createVideosSearchedEvent(userId = "don", timestamp = thisYearIn(JUNE)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("bob"), timestamp = thisYearIn(JUNE)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("cal"), timestamp = thisYearIn(JUNE)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("don"), timestamp = thisYearIn(JUNE)),
     )
 
     implicit val users: RDD[User] = rdd()
@@ -35,10 +36,10 @@ class UserMetricCalculatorTest extends IntegrationTest {
 
   it should "calculate recently active users at the beginning and end of a time period" in sparkTest { implicit spark =>
     implicit val events: RDD[VideosSearchedEvent] = rdd(
-      EventFactory.createVideosSearchedEvent(userId = "aly", timestamp = thisYearIn(MAY).withDayOfMonth(1)),
-      EventFactory.createVideosSearchedEvent(userId = "ben", timestamp = thisYearIn(MAY).withDayOfMonth(30)),
-      EventFactory.createVideosSearchedEvent(userId = "cal", timestamp = thisYearIn(JUNE)),
-      EventFactory.createVideosSearchedEvent(userId = "cal", timestamp = thisYearIn(JULY))
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("aly"), timestamp = thisYearIn(MAY).withDayOfMonth(1)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("ben"), timestamp = thisYearIn(MAY).withDayOfMonth(30)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("cal"), timestamp = thisYearIn(JUNE)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("cal"), timestamp = thisYearIn(JULY))
     )
 
     implicit val users: RDD[User] = rdd()
@@ -51,9 +52,9 @@ class UserMetricCalculatorTest extends IntegrationTest {
 
   it should "calculate total accounts and total activated accounts at the beginning and end of a period" in sparkTest { implicit spark =>
     implicit val events: RDD[VideosSearchedEvent] = rdd(
-      EventFactory.createVideosSearchedEvent(timestamp = thisYearIn(MAY)),
-      EventFactory.createVideosSearchedEvent(timestamp = thisYearIn(JUNE)),
-      EventFactory.createVideosSearchedEvent(timestamp = thisYearIn(JULY)),
+      createVideosSearchedEvent(timestamp = thisYearIn(MAY)),
+      createVideosSearchedEvent(timestamp = thisYearIn(JUNE)),
+      createVideosSearchedEvent(timestamp = thisYearIn(JULY)),
     )
 
     implicit val users: RDD[User] = rdd(
@@ -77,10 +78,10 @@ class UserMetricCalculatorTest extends IntegrationTest {
 
   "calculateNumberNonChurnedUsers" should "calculateNumberNonChurnedUsers" in sparkTest { implicit spark =>
     implicit val events: RDD[VideosSearchedEvent] = rdd(
-      EventFactory.createVideosSearchedEvent(userId = "aly", timestamp = thisYearIn(JANUARY)),
-      EventFactory.createVideosSearchedEvent(userId = "aly", timestamp = thisYearIn(DECEMBER)),
-      EventFactory.createVideosSearchedEvent(userId = "ben", timestamp = thisYearIn(MAY)),
-      EventFactory.createVideosSearchedEvent(userId = "cal", timestamp = thisYearIn(DECEMBER))
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("aly"), timestamp = thisYearIn(JANUARY)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("aly"), timestamp = thisYearIn(DECEMBER)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("ben"), timestamp = thisYearIn(MAY)),
+      createVideosSearchedEvent(userIdentity = createBoclipsUserIdentity("cal"), timestamp = thisYearIn(DECEMBER))
     )
 
     implicit val users: RDD[User] = rdd()

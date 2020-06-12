@@ -14,11 +14,16 @@ object DocumentToEventConverter {
 
     def queryFromUrl: Option[Query] = url.flatMap(_.param("q")).map(Query)
 
-    def userId: Option[UserId] = Option(event.getString(EventFields.USER_ID))
-      .filter(_ != EventConstants.anonymousUserId.value)
-      .map(UserId)
+    def userIdentity: UserIdentity = {
+      val deviceId = Option(event.getString(EventFields.DEVICE_ID)).map(DeviceId)
+      Option(event.getString(EventFields.USER_ID))
+        .filter(_ != EventConstants.anonymousUserId.value)
+        .map(UserId) match {
+        case Some(userId) => BoclipsUserIdentity(userId, deviceId)
+        case _ => AnonymousUserIdentity(deviceId)
+      }
+    }
   }
-
 
   def convert(event: Document): Event = {
     val eventType = event.getString(EventFields.TYPE)
@@ -37,7 +42,7 @@ object DocumentToEventConverter {
 
   def convertVideoSegmentPlayedEvent(document: Document): Event = {
     val url = document.url
-    val userId = document.userId
+    val userIdentity = document.userIdentity
     val videoIndex = document.getInteger(EventFields.PLAYBACK_VIDEO_INDEX) match {
       case null => None
       case index => Some(index.toInt)
@@ -51,11 +56,10 @@ object DocumentToEventConverter {
       VideoSegmentPlayedEvent(
         id = document.getObjectId("_id").toHexString,
         timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
-        userId = userId,
+        userIdentity = userIdentity.asInstanceOf[BoclipsUserIdentity],
         url = url,
         query = url.flatMap(_.param("q")).map(Query),
         refererId = url.flatMap(_.param("referer")).map(UserId),
-        deviceId = Option(document.getString(EventFields.DEVICE_ID)).map(DeviceId),
         videoId = videoId,
         videoIndex = videoIndex,
         secondsWatched = Math.max(0, document.getLong(EventFields.PLAYBACK_SEGMENT_END_SECONDS).toInt - document.getLong(EventFields.PLAYBACK_SEGMENT_START_SECONDS).toInt)
@@ -70,7 +74,7 @@ object DocumentToEventConverter {
     } else {
       VideosSearchedEvent(
         timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
-        userIdPresent = document.userId.getOrElse(throw new IllegalStateException(s"No user id for search: ${document.get("_id")}")),
+        userIdentity = document.userIdentity.asInstanceOf[BoclipsUserIdentity],
         query = Query(query),
         url = document.url,
         videoResults = document.getListOption[String](EventFields.SEARCH_RESULTS_PAGE_VIDEO_IDS).map(_.map(VideoId)),
@@ -84,7 +88,7 @@ object DocumentToEventConverter {
     CollectionSearchedEvent(
       timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
       query = Query(document.getString(EventFields.SEARCH_QUERY)),
-      userId = document.userId,
+      userIdentity = document.userIdentity,
       url = document.url,
       collectionResults = document.getScalaList[String](EventFields.SEARCH_RESULTS_PAGE_RESOURCE_IDS).map(CollectionId),
       pageIndex = document.getInteger(EventFields.SEARCH_RESULTS_PAGE_INDEX),
@@ -96,7 +100,7 @@ object DocumentToEventConverter {
 
   def convertOtherEvent(document: Document, eventType: String) = OtherEvent(
     timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
-    userId = document.userId,
+    userIdentity = document.userIdentity,
     typeName = eventType
   )
 
@@ -106,7 +110,7 @@ object DocumentToEventConverter {
     VideoInteractedWithEvent(
       url = url,
       timestamp = timestamp,
-      userId = document.userId,
+      userIdentity = document.userIdentity,
       videoId = VideoId(document.getString(EventFields.VIDEO_ID)),
       query = document.queryFromUrl,
       subtype = document.getStringOption(EventFields.SUBTYPE)
@@ -120,7 +124,7 @@ object DocumentToEventConverter {
     CollectionInteractedWithEvent(
       url = url,
       timestamp = timestamp,
-      userId = document.userId,
+      userIdentity = document.userIdentity,
       query = document.queryFromUrl,
       subtype = document.getStringOption(EventFields.SUBTYPE),
       collectionId = CollectionId(document.getString(EventFields.COLLECTION_ID))
@@ -132,7 +136,7 @@ object DocumentToEventConverter {
     val timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC)
     VideoAddedToCollectionEvent(
       timestamp = timestamp,
-      userId = document.userId,
+      userIdentity = document.userIdentity.asInstanceOf[BoclipsUserIdentity],
       videoId = VideoId(document.getString(EventFields.VIDEO_ID)),
       url = document.url,
       query = document.queryFromUrl
@@ -143,16 +147,15 @@ object DocumentToEventConverter {
     val timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC)
     PageRenderedEvent(
       timestamp = timestamp,
-      userId = document.userId,
+      userIdentity = document.userIdentity,
       url = document.url
     )
   }
 
   def convertPlatformInteractedWithEvent(document: Document): PlatformInteractedWithEvent = {
-    val userId = document.userId
     val timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC)
     PlatformInteractedWithEvent(
-      userId = userId,
+      userIdentity = document.userIdentity,
       timestamp = timestamp,
       url = document.url,
       subtype = document.getStringOption(EventFields.SUBTYPE),

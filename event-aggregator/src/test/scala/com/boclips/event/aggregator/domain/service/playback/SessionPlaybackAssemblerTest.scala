@@ -4,7 +4,9 @@ import java.time.Duration
 
 import com.boclips.event.aggregator.domain.model.{DeviceId, Url, UserId, VideoId}
 import com.boclips.event.aggregator.testsupport.Test
+import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
 import com.boclips.event.aggregator.testsupport.testfactories.SessionFactory.createSession
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createAnonymousUserIdentity
 import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
 
 //noinspection ZeroIndexToHead
@@ -14,8 +16,8 @@ class SessionPlaybackAssemblerTest extends Test {
     val session = createSession(
       user = UserFactory.createUser(id = "user"),
       events = List(
-        EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 20),
-        EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 30),
+        createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 20),
+        createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 30),
       ))
 
     val highLevelEvents = new SessionPlaybackAssembler().assemblePlaybacksInSession(session, Map())
@@ -28,9 +30,9 @@ class SessionPlaybackAssemblerTest extends Test {
 
   it should "only aggregate seconds watched when video id is the same" in {
     val session = createSession(events = List(
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 20),
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 30),
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v2", secondsWatched = 30),
+      createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 20),
+      createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 30),
+      createVideoSegmentPlayedEvent(videoId = "v2", secondsWatched = 30),
     ))
 
     val highLevelEvents = new SessionPlaybackAssembler().assemblePlaybacksInSession(session, Map()).toList.sortBy(e => e.videoId)
@@ -44,8 +46,8 @@ class SessionPlaybackAssemblerTest extends Test {
 
   it should "include url path of one of the segment events" in {
     val session = createSession(events = List(
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", url = Url.parse("http://example.com/a")),
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", url = Url.parse("http://example.com/b")),
+      createVideoSegmentPlayedEvent(videoId = "v1", url = Url.parse("http://example.com/a")),
+      createVideoSegmentPlayedEvent(videoId = "v1", url = Url.parse("http://example.com/b")),
     ))
 
     val highLevelEvents = new SessionPlaybackAssembler().assemblePlaybacksInSession(session, Map()).toList
@@ -55,8 +57,8 @@ class SessionPlaybackAssemblerTest extends Test {
 
   it should "include referer id when present on any segment played event" in {
     val session = createSession(events = List(
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", refererId = None),
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", refererId = Some("refererId")),
+      createVideoSegmentPlayedEvent(videoId = "v1", refererId = None),
+      createVideoSegmentPlayedEvent(videoId = "v1", refererId = Some("refererId")),
     ))
 
     val highLevelEvents = new SessionPlaybackAssembler().assemblePlaybacksInSession(session, Map())
@@ -67,8 +69,8 @@ class SessionPlaybackAssemblerTest extends Test {
 
   it should "use id of the first segment played event as playback id" in {
     val session = createSession(events = List(
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", id = "first-id"),
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", id = "second-id"),
+      createVideoSegmentPlayedEvent(videoId = "v1", id = "first-id"),
+      createVideoSegmentPlayedEvent(videoId = "v1", id = "second-id"),
     ))
 
     val playbacks = new SessionPlaybackAssembler().assemblePlaybacksInSession(session, Map())
@@ -79,8 +81,8 @@ class SessionPlaybackAssemblerTest extends Test {
 
   it should "use device id of the first segment played event" in {
     val session = createSession(events = List(
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1", playbackDevice = Some("device id")),
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1"),
+      createVideoSegmentPlayedEvent(videoId = "v1", userIdentity = createAnonymousUserIdentity(Some("device id"))),
+      createVideoSegmentPlayedEvent(videoId = "v1"),
     ))
 
     val playbacks = new SessionPlaybackAssembler().assemblePlaybacksInSession(session, Map())
@@ -91,7 +93,7 @@ class SessionPlaybackAssemblerTest extends Test {
 
   it should "set video duration" in {
     val session = createSession(events = List(
-      EventFactory.createVideoSegmentPlayedEvent(videoId = "v1"),
+      createVideoSegmentPlayedEvent(videoId = "v1"),
     ))
 
     val durationSecondsByVideoId = Map("v1" -> 90)

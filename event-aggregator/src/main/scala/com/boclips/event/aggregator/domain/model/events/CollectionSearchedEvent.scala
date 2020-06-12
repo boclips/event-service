@@ -7,7 +7,7 @@ import com.boclips.event.aggregator.domain.model._
 case class CollectionSearchedEvent
 (
   timestamp: ZonedDateTime,
-  userId: Option[UserId],
+  userIdentity: UserIdentity,
   query: Query,
   url: Option[Url],
   collectionResults: Iterable[CollectionId],
@@ -15,7 +15,6 @@ case class CollectionSearchedEvent
   pageSize: Int,
   totalResults: Int
 ) extends Event {
-  override val deviceId: Option[DeviceId] = None
   override val typeName: String = "COLLECTION_SEARCH"
   override val subtype: Option[String] = None
 }

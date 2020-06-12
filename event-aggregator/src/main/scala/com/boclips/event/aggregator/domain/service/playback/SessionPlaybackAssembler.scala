@@ -33,7 +33,7 @@ class SessionPlaybackAssembler {
       secondsWatched = secondsWatched,
       url = firstEvent.url,
       refererId = refererId,
-      deviceId = firstEvent.deviceId,
+      deviceId = firstEvent.userIdentity.deviceId,
       videoDuration = videoDuration,
     )
   }
