@@ -11,7 +11,7 @@ public class ContractDocument {
     private String id;
 
     @NonNull
-    private String channelName;
+    private String name;
 
     private String contractDocumentLink;
     private Boolean contractIsRolling;
@@ -28,7 +28,7 @@ public class ContractDocument {
     public static ContractDocumentBuilder sample() {
         return ContractDocument.builder()
                 .id("contract-id")
-                .channelName("channel name")
+                .name("content partner name")
                 .contractDocumentLink("http://doc.com/it.pdf")
                 .contractIsRolling(true)
                 .contractDates(ContractDatesDocument.sample().build())

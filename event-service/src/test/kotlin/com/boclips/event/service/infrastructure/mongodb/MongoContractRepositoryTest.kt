@@ -23,17 +23,17 @@ class MongoContractRepositoryTest : AbstractSpringIntegrationTest() {
     @Test
     fun `save and update a contract with only id and name`() {
         val id = "my-simple-channel"
-        repository.save(createContract(id = id, channelName = "My simple contract."))
+        repository.save(createContract(id = id, name = "My simple contract."))
 
         val created = getSingleDocument()
         assertThat(created.id).isEqualTo(id)
-        assertThat(created.channelName).isEqualTo("My simple contract.")
+        assertThat(created.name).isEqualTo("My simple contract.")
 
-        repository.save(createContract(id = id, channelName = "My new name"))
+        repository.save(createContract(id = id, name = "My new name"))
 
         val updated = getSingleDocument()
         assertThat(updated.id).isEqualTo(id)
-        assertThat(updated.channelName).isEqualTo("My new name")
+        assertThat(updated.name).isEqualTo("My new name")
     }
 
     @Test
@@ -41,7 +41,7 @@ class MongoContractRepositoryTest : AbstractSpringIntegrationTest() {
         repository.save(
             createContract(
                 id = "contract-id",
-                channelName = "content partner name",
+                name = "content partner name",
                 contractDocument = "http://google.com",
                 contractIsRolling = true,
                 contractDates = createContractDates(
@@ -79,7 +79,7 @@ class MongoContractRepositoryTest : AbstractSpringIntegrationTest() {
         val document = getSingleDocument()
 
         assertThat(document.id).isEqualTo("contract-id")
-        assertThat(document.channelName).isEqualTo("content partner name")
+        assertThat(document.name).isEqualTo("content partner name")
         assertThat(document.contractDocumentLink).isEqualTo("http://google.com")
         assertThat(document.contractIsRolling).isTrue()
         assertThat(document.contractDates.start).isEqualTo(LocalDate.of(2010, Month.NOVEMBER, 11))

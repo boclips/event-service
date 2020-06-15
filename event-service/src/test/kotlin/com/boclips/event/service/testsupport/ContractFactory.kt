@@ -14,7 +14,7 @@ import java.util.Currency
 object ContractFactory {
     fun createContract(
         id: String = "contract-id",
-        channelName: String = "contract-name",
+        name: String = "contract-name",
         contractDocument: String = "http://contractdocument.com",
         contractIsRolling: Boolean = true,
         contractDates: ContractDates = createContractDates(),
@@ -29,7 +29,7 @@ object ContractFactory {
     ): Contract =
         Contract.builder()
             .contractId(ContractId(id))
-            .name(channelName)
+            .name(name)
             .contractDocument(contractDocument)
             .contractIsRolling(contractIsRolling)
             .contractDates(contractDates)

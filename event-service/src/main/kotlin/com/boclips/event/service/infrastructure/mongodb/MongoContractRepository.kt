@@ -1,6 +1,5 @@
 package com.boclips.event.service.infrastructure.mongodb
 
-import com.boclips.event.infrastructure.channel.ChannelDocument
 import com.boclips.event.infrastructure.contract.ContractCostsDocument
 import com.boclips.event.infrastructure.contract.ContractDatesDocument
 import com.boclips.event.infrastructure.contract.ContractDocument
@@ -43,7 +42,7 @@ class MongoContractRepository(private val mongoClient: MongoClient) : ContractRe
 fun Contract.toDocument(): ContractDocument =
     ContractDocument.builder()
         .id(contractId.value)
-        .channelName(name)
+        .name(name)
         .contractDocumentLink(contractDocument)
         .contractIsRolling(contractIsRolling)
         .contractDates(contractDates.toDocument())

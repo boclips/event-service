@@ -23,7 +23,7 @@ object ContractFactory {
                     ): Contract =
     Contract(
       id = ContractId(id),
-      channelName = channelName,
+      name = channelName,
       contractDocumentLink = Some(contractDocumentLink),
       contractIsRolling = Some(contractIsRolling),
       contractDates = Some(contractDates),

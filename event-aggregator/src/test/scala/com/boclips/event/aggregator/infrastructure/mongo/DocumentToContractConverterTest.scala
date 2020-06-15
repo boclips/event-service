@@ -13,7 +13,7 @@ class DocumentToContractConverterTest extends Test {
   it should "convert a full document" in {
     val document = ContractDocument.sample
       .id("contract-id")
-      .channelName("channel name")
+      .name("channel name")
       .contractDocumentLink("http://mylink.com")
       .contractDates(ContractDatesDocument.sample
         .start(LocalDate.ofYearDay(2012, 300))
@@ -54,7 +54,7 @@ class DocumentToContractConverterTest extends Test {
     val contract = DocumentToContractConverter convert document
 
     contract.id shouldBe ContractId("contract-id")
-    contract.channelName shouldBe "channel name"
+    contract.name shouldBe "channel name"
     contract.contractDates should contain(ContractDates(
       start = Some(LocalDate ofYearDay(2012, 300)),
       end = Some(LocalDate ofYearDay(2016, 310))
@@ -90,7 +90,7 @@ class DocumentToContractConverterTest extends Test {
   it should "convert an as-null-as-possible document" in {
     val document = ContractDocument.sample
       .id("contract-id")
-      .channelName("channel name")
+      .name("channel name")
       .contractDocumentLink(null)
       .contractDates(null)
       .daysBeforeTerminationWarning(null)
@@ -112,7 +112,7 @@ class DocumentToContractConverterTest extends Test {
     val contract = DocumentToContractConverter convert document
 
     contract.id shouldBe ContractId("contract-id")
-    contract.channelName shouldBe "channel name"
+    contract.name shouldBe "channel name"
     contract.contractDates shouldBe None
     contract.daysBeforeTerminationWarning shouldBe None
     contract.yearsForMaximumLicense shouldBe None

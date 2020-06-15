@@ -9,7 +9,7 @@ case class ContractId(value: String) extends Ordered[ContractId] {
 
 case class Contract(
                      id: ContractId,
-                     channelName: String,
+                     name: String,
                      contractDocumentLink: Option[String],
                      contractIsRolling: Option[Boolean],
                      contractDates: Option[ContractDates],

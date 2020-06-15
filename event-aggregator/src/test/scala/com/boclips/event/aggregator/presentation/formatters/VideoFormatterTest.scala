@@ -325,7 +325,7 @@ class VideoFormatterTest extends Test {
 
     val contractJson = json.getAsJsonObject("contract")
     contractJson.getString("id") shouldBe "my-contract-id"
-    contractJson.getString("channelName") shouldBe "my channel name"
+    contractJson.getString("name") shouldBe "my channel name"
 
     contractJson.getString("contractDocumentLink") shouldBe "http://mysite.com"
     contractJson.getBool("contractIsRolling") shouldBe false

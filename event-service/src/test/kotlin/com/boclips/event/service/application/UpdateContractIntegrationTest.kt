@@ -14,28 +14,28 @@ class UpdateContractIntegrationTest : AbstractSpringIntegrationTest() {
     fun `insert a contract when update event is received`() {
         val contract = ContractFactory.createContract(
             id = "contract-id",
-            channelName = "contract channel title"
+            name = "contract channel title"
         )
 
         eventBus.publish(ContractUpdated(contract))
 
         val document = getSingleDocument()
         assertThat(document.id).isEqualTo(contract.contractId.value)
-        assertThat(document.channelName).isEqualTo(contract.name)
+        assertThat(document.name).isEqualTo(contract.name)
     }
 
     @Test
     fun `insert a contract when broadcast event is received`() {
         val contract = ContractFactory.createContract(
             id = "contract-id",
-            channelName = "contract channel title"
+            name = "contract channel title"
         )
 
         eventBus.publish(BroadcastContractRequested(contract))
 
         val document = getSingleDocument()
         assertThat(document.id).isEqualTo(contract.contractId.value)
-        assertThat(document.channelName).isEqualTo(contract.name)
+        assertThat(document.name).isEqualTo(contract.name)
     }
 
     fun getSingleDocument() = document<ContractDocument>(MongoContractRepository.COLLECTION_NAME)

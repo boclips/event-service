@@ -52,7 +52,7 @@ object NestedChannelFormatter extends SingleRowFormatter[Channel] {
 object NestedContractFormatter extends SingleRowFormatter[Contract] {
   override def writeRow(obj: Contract, json: JsonObject): Unit = {
     json.addProperty("id", obj.id.value)
-    json.addProperty("channelName", obj.channelName)
+    json.addProperty("name", obj.name)
     json.addProperty("contractDocumentLink", obj.contractDocumentLink.orNull)
     json.addProperty("contractIsRolling", obj.contractIsRolling.map(Boolean.box).orNull)
     json.addDateProperty("contractStartDate", obj.contractDates.flatMap(_.start).orNull)

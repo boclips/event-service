@@ -12,7 +12,7 @@ object DocumentToContractConverter {
     val costs = document.getCosts
     Contract(
       id = ContractId(document.getId),
-      channelName = document.getChannelName,
+      name = document.getName,
       contractDocumentLink = Option(document.getContractDocumentLink),
       contractIsRolling = Option(document.getContractIsRolling),
       contractDates = Option(document.getContractDates)
