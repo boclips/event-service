@@ -56,7 +56,7 @@ object DocumentToEventConverter {
       VideoSegmentPlayedEvent(
         id = document.getObjectId("_id").toHexString,
         timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
-        userIdentity = userIdentity.asInstanceOf[BoclipsUserIdentity],
+        userIdentity = userIdentity,
         url = url,
         query = url.flatMap(_.param("q")).map(Query),
         refererId = url.flatMap(_.param("referer")).map(UserId),
