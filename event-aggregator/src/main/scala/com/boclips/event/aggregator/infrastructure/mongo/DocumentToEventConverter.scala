@@ -74,7 +74,10 @@ object DocumentToEventConverter {
     } else {
       VideosSearchedEvent(
         timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
-        userIdentity = document.userIdentity.asInstanceOf[BoclipsUserIdentity],
+        userIdentity = document.userIdentity match {
+          case ui: BoclipsUserIdentity => ui
+          case anonymous => BoclipsUserIdentity(id = UserId(""), deviceId = anonymous.deviceId)
+        },
         query = Query(query),
         url = document.url,
         videoResults = document.getListOption[String](EventFields.SEARCH_RESULTS_PAGE_VIDEO_IDS).map(_.map(VideoId)),
