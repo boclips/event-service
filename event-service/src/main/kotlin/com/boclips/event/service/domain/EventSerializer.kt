@@ -45,6 +45,7 @@ import com.boclips.eventbus.events.platform.PlatformInteractedWith
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
+import com.boclips.eventbus.events.video.VideoPlayerEvent
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
@@ -62,17 +63,14 @@ object EventSerializer {
     }
 
     fun convertVideoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed): Map<String, Any> {
-        return convertUserEvent(videoSegmentPlayed, Type.VIDEO_SEGMENT_PLAYED) +
+        return convertPlayerEvent(videoSegmentPlayed, Type.VIDEO_SEGMENT_PLAYED) +
             (PLAYBACK_SEGMENT_START_SECONDS to videoSegmentPlayed.segmentStartSeconds) +
             (PLAYBACK_SEGMENT_END_SECONDS to videoSegmentPlayed.segmentEndSeconds) +
-            (PLAYBACK_VIDEO_INDEX to videoSegmentPlayed.videoIndex) +
-            (VIDEO_ID to videoSegmentPlayed.videoId) +
-            (DEVICE_ID to (videoSegmentPlayed.deviceId ?: videoSegmentPlayed.playbackDevice))
+            (PLAYBACK_VIDEO_INDEX to videoSegmentPlayed.videoIndex)
     }
 
     fun convertVideoPlayerInteractedWith(videoPlayerInteractedWith: VideoPlayerInteractedWith): Map<String, Any> {
-        return convertUserEvent(videoPlayerInteractedWith, Type.VIDEO_PLAYER_INTERACTED_WITH) +
-            (VIDEO_ID to videoPlayerInteractedWith.videoId) +
+        return convertPlayerEvent(videoPlayerInteractedWith, Type.VIDEO_PLAYER_INTERACTED_WITH) +
             (PLAYER_INTERACTED_WITH_CURRENT_TIME to videoPlayerInteractedWith.currentTime) +
             (SUBTYPE to videoPlayerInteractedWith.subtype) +
             (PAYLOAD to videoPlayerInteractedWith.payload)
@@ -126,7 +124,19 @@ object EventSerializer {
         return mapOf<String, Any>(
             TYPE to type,
             USER_ID to event.userId,
-            EXTERNAL_USER_ID to (event.externalUserId ?: event.overrideUserId),
+            EXTERNAL_USER_ID to event.externalUserId,
+            DEVICE_ID to event.deviceId,
+            TIMESTAMP to Date.from(event.timestamp.toInstant()),
+            URL to event.url
+        )
+    }
+
+    fun convertPlayerEvent(event: VideoPlayerEvent, type: String): Map<String, Any> {
+        return mapOf<String, Any>(
+            TYPE to type,
+            VIDEO_ID to event.videoId,
+            USER_ID to event.userId,
+            EXTERNAL_USER_ID to event.externalUserId,
             DEVICE_ID to event.deviceId,
             TIMESTAMP to Date.from(event.timestamp.toInstant()),
             URL to event.url
