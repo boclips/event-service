@@ -2,11 +2,11 @@ package com.boclips.event.aggregator.domain.model.events
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.Url
+import com.boclips.event.aggregator.domain.model.{Url, UserIdentity}
 
-trait GenericEvent[TUserIdentity] {
+trait Event {
   val timestamp: ZonedDateTime
-  val userIdentity: TUserIdentity
+  val userIdentity: UserIdentity
   val url: Option[Url]
   val typeName: String
 
