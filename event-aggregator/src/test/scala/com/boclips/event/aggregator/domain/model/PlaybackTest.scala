@@ -4,13 +4,14 @@ import java.time.Duration
 
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createUser}
 
 class PlaybackTest extends Test {
 
   "isShare" should "be true when referer id and user id are different" in {
     val playback = createPlayback(
-      user = createUser(id = "user"),
+      user = createBoclipsUserIdentity(userId = "user"),
       refererId = Some("referer")
     )
 
@@ -19,7 +20,7 @@ class PlaybackTest extends Test {
 
   it should "be false when there is no referer" in {
     val playback = createPlayback(
-      user = createUser(id = "user"),
+      user = createBoclipsUserIdentity(userId = "user"),
       refererId = None
     )
 
@@ -28,7 +29,7 @@ class PlaybackTest extends Test {
 
   it should "be false when referer is the same as user" in {
     val playback = createPlayback(
-      user = createUser(id = "user"),
+      user = createBoclipsUserIdentity(userId = "user"),
       refererId = Some("user")
     )
 
@@ -37,7 +38,7 @@ class PlaybackTest extends Test {
 
   it should "be true when referer is not known but user is anonymous" in {
     val playback = createPlayback(
-      user = AnonymousUser(deviceId = Some(DeviceId("device-id"))),
+      user = AnonymousUserIdentity(deviceId = Some(DeviceId("device-id"))),
       refererId = None
     )
 

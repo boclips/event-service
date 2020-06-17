@@ -9,14 +9,14 @@ object VideoAssembler {
 
   def assembleVideosWithRelatedData(
                                      videos: RDD[Video],
-                                     playbacks: RDD[Playback],
+                                     playbacks: RDD[PlaybackWithRelatedData],
                                      orders: RDD[Order],
                                      channels: RDD[Channel],
                                      contracts: RDD[Contract],
                                      impressions: RDD[VideoSearchResultImpression],
                                      interactions: RDD[VideoInteractedWithEvent]
                                    ): RDD[VideoWithRelatedData] = {
-    val playbacksByVideoId: RDD[(VideoId, Iterable[Playback])] = playbacks.keyBy(_.videoId)
+    val playbacksByVideoId: RDD[(VideoId, Iterable[PlaybackWithRelatedData])] = playbacks.keyBy(_.playback.videoId)
       .groupByKey()
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Playbacks by video ID")

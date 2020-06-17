@@ -9,7 +9,7 @@ import com.boclips.event.aggregator.domain.service.Data
 import com.boclips.event.aggregator.domain.service.collection.{CollectionAssembler, CollectionInteractionEventAssembler, CollectionSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.domain.service.navigation.{PagesRenderedAssembler, PlatformInteractedWithEventAssembler}
 import com.boclips.event.aggregator.domain.service.okr.OkrService
-import com.boclips.event.aggregator.domain.service.playback.PlaybackAssembler
+import com.boclips.event.aggregator.domain.service.playback.{PlaybackAssembler, PlaybackWithRelatedDataAssembler}
 import com.boclips.event.aggregator.domain.service.search.{QueryScorer, SearchAssembler}
 import com.boclips.event.aggregator.domain.service.session.SessionAssembler
 import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembler
@@ -49,7 +49,7 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
   val contracts: RDD[Contract] = new MongoContractLoader(mongoClient).load()
   val orders: RDD[Order] = new MongoOrderLoader(mongoClient).load()
 
-  val sessions: RDD[Session] = new SessionAssembler(events, users, "all data").assembleSessions()
+  val sessions: RDD[Session] = new SessionAssembler(events, "all data").assembleSessions()
   val playbacks: RDD[Playback] = new PlaybackAssembler(sessions, videos).assemblePlaybacks()
   val searches: RDD[Search] = new SearchAssembler(sessions).assembleSearches()
   val storageCharges: RDD[VideoStorageCharge] = new StorageChargesAssembler(videos).assembleStorageCharges
@@ -65,8 +65,9 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     logProcessingStart(s"Updating videos")
     val impressions = VideoSearchResultImpressionAssembler(searches)
     val videoInteractions = VideoInteractionAssembler(events)
+    val playbacksWithRelatedData = new PlaybackWithRelatedDataAssembler(playbacks, users).assemblePlaybacksWithRelatedData()
     val videosWithRelatedData = VideoAssembler.assembleVideosWithRelatedData(
-      videos, playbacks, orders, channels, contracts, impressions, videoInteractions
+      videos, playbacksWithRelatedData, orders, channels, contracts, impressions, videoInteractions
     )
     writeTable(videosWithRelatedData, "videos")(VideoFormatter, implicitly)
 

@@ -1,10 +1,11 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import com.boclips.event.aggregator.domain.model.{AnonymousUser, Playback, User}
+import com.boclips.event.aggregator.domain.model.{Playback, PlaybackWithRelatedData}
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
-import com.google.gson.{JsonNull, JsonObject}
+import com.google.gson.{JsonElement, JsonNull, JsonObject}
 
-object PlaybackFormatter extends SingleRowFormatter[Playback] {
+
+object SimplePlaybackFormatter extends SingleRowFormatter[Playback] {
 
   def writeRow(playback: Playback, json: JsonObject): Unit = {
 
@@ -15,10 +16,7 @@ object PlaybackFormatter extends SingleRowFormatter[Playback] {
     }
     val url = playback.url
 
-    val userId = playback.user match {
-      case u: User => Some(u.id.value)
-      case _: AnonymousUser => None
-    }
+    val userId = playback.user.boclipsId.map(_.value)
 
     json.addDateTimeProperty("timestamp", playback.timestamp)
     json.addProperty("userId", userId)
@@ -34,10 +32,21 @@ object PlaybackFormatter extends SingleRowFormatter[Playback] {
     json.addProperty("isShare", playback.isShare)
     json.addProperty("isPayable", playback.isPayable)
     json.addProperty("deviceId", playback.deviceId.map(_.value))
+  }
+}
 
-    playback.user match {
-      case u: User => json.add("user", SimpleUserFormatter.formatRow(u))
-      case _: AnonymousUser => json.add("user", JsonNull.INSTANCE)
+object PlaybackFormatter extends SingleRowFormatter[PlaybackWithRelatedData] {
+  override def writeRow(playbackWithRelatedData: PlaybackWithRelatedData, json: JsonObject): Unit = {
+    val PlaybackWithRelatedData(playback, userOption) = playbackWithRelatedData
+    SimplePlaybackFormatter.writeRow(playback, json)
+
+    val userJson: JsonElement = userOption match {
+      case Some(user) =>
+        val userJsonObject = new JsonObject
+        SimpleUserFormatter.writeRow(user, userJsonObject)
+        userJsonObject
+      case None => JsonNull.INSTANCE
     }
+    json.add("user", userJson)
   }
 }

@@ -7,8 +7,8 @@ import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.cre
 import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoInteractedWithEvent
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem}
-import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
-import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory
+import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.{createPlayback, createPlaybackWithRelatedData}
+import com.boclips.event.aggregator.testsupport.testfactories.{PlaybackFactory, SearchFactory}
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.createVideoSearchResultImpression
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
 
@@ -21,9 +21,9 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
     )
 
     val playbacks = rdd(
-      createPlayback(videoId = "v1"),
-      createPlayback(videoId = "v1"),
-      createPlayback(videoId = "v2"),
+      createPlaybackWithRelatedData(createPlayback(videoId = "v1")),
+      createPlaybackWithRelatedData(createPlayback(videoId = "v1")),
+      createPlaybackWithRelatedData(createPlayback(videoId = "v2")),
     )
 
     val orders = rdd(

@@ -39,10 +39,10 @@ object UserFormatter extends SingleRowFormatter[UserWithRelatedData] {
 
     SimpleUserFormatter.writeRow(user, json)
 
-    val playbacksJson = playbacks.map(playback => PlaybackFormatter.formatRow(playback))
+    val playbacksJson = playbacks.map(playback => SimplePlaybackFormatter.formatRow(playback))
     json.addJsonArrayProperty("playbacks", playbacksJson)
 
-    val referredPlaybacksJson = referredPlaybacks.map(playback => PlaybackFormatter.formatRow(playback))
+    val referredPlaybacksJson = referredPlaybacks.map(playback => SimplePlaybackFormatter.formatRow(playback))
     json.addJsonArrayProperty("referredPlaybacks", referredPlaybacksJson)
 
     val searchesJson = searches.map(search => SearchFormatter.formatRow(search))

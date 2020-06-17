@@ -19,7 +19,7 @@ object DocumentToEventConverter {
       Option(event.getString(EventFields.USER_ID))
         .filter(_ != EventConstants.anonymousUserId.value)
         .map(UserId) match {
-        case Some(userId) => BoclipsUserIdentity(userId, deviceId)
+        case Some(userId) => BoclipsUserIdentity(userId)
         case _ => AnonymousUserIdentity(deviceId)
       }
     }
@@ -76,7 +76,7 @@ object DocumentToEventConverter {
         timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
         userIdentity = document.userIdentity match {
           case ui: BoclipsUserIdentity => ui
-          case anonymous => BoclipsUserIdentity(id = UserId(""), deviceId = anonymous.deviceId)
+          case anonymous => BoclipsUserIdentity(id = UserId(""))
         },
         query = Query(query),
         url = document.url,

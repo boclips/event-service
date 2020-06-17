@@ -8,25 +8,21 @@ import com.boclips.event.aggregator.presentation.formatters.UserFormatter
 sealed trait UserIdentity {
   def boclipsId: Option[UserId]
   def deviceId: Option[DeviceId]
-
-  def mostSpecificIdentifier: UniqueUserIdentifier
 }
 
 case class BoclipsUserIdentity(
-                                id: UserId,
-                                deviceId: Option[DeviceId]
+                                id: UserId
                               ) extends UserIdentity {
   override def boclipsId: Option[UserId] = Some(id)
 
-  override def mostSpecificIdentifier: UniqueUserIdentifier = id
+  override def deviceId: Option[DeviceId] = None
+
 }
 
 case class AnonymousUserIdentity(
                                 deviceId: Option[DeviceId]
                                 ) extends UserIdentity {
   override def boclipsId: Option[UserId] = None
-
-  override def mostSpecificIdentifier: UniqueUserIdentifier = deviceId.getOrElse(DeviceId("UNKNOWN DEVICE"))
 }
 
 sealed trait UniqueUserIdentifier

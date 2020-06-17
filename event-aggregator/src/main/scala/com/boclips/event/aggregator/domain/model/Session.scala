@@ -5,7 +5,7 @@ import java.time.ZonedDateTime
 import com.boclips.event.aggregator.domain.model.events.Event
 
 case class Session(
-                    user: UserOrAnonymous,
+                    user: UserIdentity,
                     events: List[Event]
                   ) {
 

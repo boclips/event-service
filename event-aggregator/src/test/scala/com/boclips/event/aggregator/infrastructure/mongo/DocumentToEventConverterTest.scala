@@ -102,7 +102,7 @@ class DocumentToEventConverterTest extends Test {
   }
 
   it should "convert playback device when exists" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(deviceId = Some("device"))
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(userId = null, deviceId = Some("device"))
 
     val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
 

@@ -6,7 +6,7 @@ case class Playback
 (
   id: String,
   timestamp: ZonedDateTime,
-  user: UserOrAnonymous,
+  user: UserIdentity,
   videoId: VideoId,
   secondsWatched: Int,
   url: Option[Url],
@@ -14,12 +14,11 @@ case class Playback
   deviceId: Option[DeviceId],
   videoDuration: Duration,
 ) {
-
   def isShare: Boolean = {
-    (user, refererId) match {
-      case (u: User, Some(referer)) => u.id != referer
-      case (_: User, None) => false
-      case (_: AnonymousUser, _) => true
+    (user.boclipsId, refererId) match {
+      case (Some(userId), Some(referer)) => userId != referer
+      case (Some(_), None) => false
+      case (None, _) => true
     }
   }
 
@@ -31,3 +30,8 @@ case class Playback
     }
   }
 }
+
+case class PlaybackWithRelatedData(
+                                  playback: Playback,
+                                  user: Option[User],
+                                  )

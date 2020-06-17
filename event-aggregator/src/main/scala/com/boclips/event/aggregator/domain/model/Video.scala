@@ -69,7 +69,7 @@ case class VideoAsset(
 
 case class VideoWithRelatedData(
                                  video: Video,
-                                 playbacks: List[Playback] = Nil,
+                                 playbacks: List[PlaybackWithRelatedData] = Nil,
                                  orders: List[VideoItemWithOrder] = Nil,
                                  channel: Option[Channel] = None,
                                  contract: Option[Contract] = None,

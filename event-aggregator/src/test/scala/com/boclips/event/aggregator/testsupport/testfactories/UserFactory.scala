@@ -8,11 +8,9 @@ object UserFactory {
 
   def createBoclipsUserIdentity(
                                  userId: String = "the-user-id",
-                                 deviceId: Option[DeviceId] = None,
                                ): BoclipsUserIdentity = {
     BoclipsUserIdentity(
       id = UserId(userId),
-      deviceId = deviceId,
     )
   }
 

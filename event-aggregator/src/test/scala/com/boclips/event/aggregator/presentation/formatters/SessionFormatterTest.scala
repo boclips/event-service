@@ -2,7 +2,6 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.events.EventConstants
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory, UserFactory}
@@ -11,7 +10,7 @@ import com.boclips.event.infrastructure.EventFields
 class SessionFormatterTest extends Test {
 
   it should "write id start and end" in {
-    val json = SessionFormatter formatRow SessionFactory.createSession(UserFactory.createUser(id = "id-666"),
+    val json = SessionFormatter formatRow SessionFactory.createSession(createBoclipsUserIdentity("id-666"),
       List(
         EventFactory.createVideoSegmentPlayedEvent(timestamp = ZonedDateTime.of(2017, 3, 23, 18, 25, 41, 511000000, ZoneOffset.UTC)),
         EventFactory.createVideoSegmentPlayedEvent(timestamp = ZonedDateTime.of(2017, 3, 23, 18, 30, 41, 511000000, ZoneOffset.UTC)))
@@ -23,7 +22,7 @@ class SessionFormatterTest extends Test {
   }
 
   it should "write session events as a nested array" in {
-    val json = SessionFormatter formatRow SessionFactory.createSession(UserFactory.createUser(id = "id-667"),
+    val json = SessionFormatter formatRow SessionFactory.createSession(createBoclipsUserIdentity("id-667"),
       List(EventFactory.createVideoInteractedWithEvent(timestamp = ZonedDateTime.of(2017, 3, 23, 18, 25, 41, 511000000, ZoneOffset.UTC),
         subtype = Some("VIDEO_LINK_COPIED"))))
     json.getAsJsonArray("events") should have size 1
@@ -32,7 +31,7 @@ class SessionFormatterTest extends Test {
   }
 
   it should "handle events with none subtypes" in {
-    val json = SessionFormatter formatRow SessionFactory.createSession(UserFactory.createUser(id = "id-667"),
+    val json = SessionFormatter formatRow SessionFactory.createSession(createBoclipsUserIdentity("id-667"),
       List(EventFactory.createVideosSearchedEvent(timestamp = ZonedDateTime.of(2017, 3, 23, 18, 25, 41, 511000000, ZoneOffset.UTC))))
     json.getAsJsonArray("events") should have size 1
     json.getAsJsonArray("events").get(0).getAsJsonObject.get("typeName").getAsString shouldBe EventFields.Type.VIDEOS_SEARCHED
@@ -40,7 +39,7 @@ class SessionFormatterTest extends Test {
   }
 
   it should "write id, userID, url host, path and params" in {
-    val json = SessionFormatter formatRow SessionFactory.createSession(UserFactory.createUser(),
+    val json = SessionFormatter formatRow SessionFactory.createSession(createBoclipsUserIdentity(),
       List(EventFactory.createPageRenderedEvent(
         userIdentity = createBoclipsUserIdentity("id-666"),
         url = "https://teachers.boclips.com/videos?age_range=9-11&page=1&q=unit%20test"

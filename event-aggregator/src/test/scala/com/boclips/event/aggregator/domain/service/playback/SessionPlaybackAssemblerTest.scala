@@ -14,7 +14,7 @@ class SessionPlaybackAssemblerTest extends Test {
 
   "aggregate playback events" should "sum watched seconds by video id" in {
     val session = createSession(
-      user = UserFactory.createUser(id = "user"),
+      user = UserFactory.createBoclipsUserIdentity(userId = "user"),
       events = List(
         createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 20),
         createVideoSegmentPlayedEvent(videoId = "v1", secondsWatched = 30),
@@ -24,7 +24,7 @@ class SessionPlaybackAssemblerTest extends Test {
 
     highLevelEvents should have size 1
     highLevelEvents.head.videoId shouldBe VideoId("v1")
-    highLevelEvents.head.user.asUser.id shouldBe UserId("user")
+    highLevelEvents.head.user.boclipsId should contain(UserId("user"))
     highLevelEvents.head.secondsWatched shouldBe 50
   }
 

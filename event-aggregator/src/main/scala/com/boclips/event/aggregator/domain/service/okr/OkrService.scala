@@ -14,7 +14,7 @@ object OkrService {
     data.events.sparkContext.setJobGroup("Calculating OKRs", "")
     implicit val events: RDD[_ <: Event] = data.events
     implicit val users: RDD[User] = data.users
-    implicit val sessions: RDD[Session] = new SessionAssembler(events, users, data.dataDescription).assembleSessions()
+    implicit val sessions: RDD[Session] = new SessionAssembler(events, data.dataDescription).assembleSessions()
     implicit val searches: RDD[Search] = new SearchAssembler(sessions).assembleSearches()
     join(
       UserMetricCalculator calculateMetrics timePeriodDuration,

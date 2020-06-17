@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.domain.service.playback
 import java.time.Duration
 
 import com.boclips.event.aggregator.domain.model.events.VideoSegmentPlayedEvent
-import com.boclips.event.aggregator.domain.model.{Playback, Session, UserOrAnonymous}
+import com.boclips.event.aggregator.domain.model.{Playback, Session, UserIdentity, UserOrAnonymous}
 
 class SessionPlaybackAssembler {
 
@@ -20,7 +20,7 @@ class SessionPlaybackAssembler {
       }
   }
 
-  private def combineSameVideoEvents(events: Iterable[VideoSegmentPlayedEvent], videoDuration: Duration, user: UserOrAnonymous): Playback = {
+  private def combineSameVideoEvents(events: Iterable[VideoSegmentPlayedEvent], videoDuration: Duration, user: UserIdentity): Playback = {
     val firstEvent = events.head
     val timestamp = events.map(_.timestamp).minBy(_.toEpochSecond)
     val secondsWatched = events.map(_.secondsWatched).sum
