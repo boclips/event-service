@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.domain.service
 
 import com.boclips.event.aggregator.domain.model.events.{Event, EventConstants}
-import com.boclips.event.aggregator.domain.model.{SCHOOL_ORGANISATION, User, UserId, Video}
+import com.boclips.event.aggregator.domain.model.{AnonymousUserIdentity, SCHOOL_ORGANISATION, User, UserId, Video}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 
@@ -20,12 +20,11 @@ case class Data(
   }
 
   private def schoolEvents(schoolUsers: RDD[User]): RDD[_ <: Event] = {
-    val anonymous = UserId("anonymous")
     events
-      .keyBy(_.userIdentity.boclipsId.getOrElse(anonymous))
-      .leftOuterJoin(schoolUsers.keyBy(_.id))
+      .keyBy(_.userIdentity)
+      .leftOuterJoin(schoolUsers.keyBy(_.identity))
       .flatMap {
-        case (`anonymous`, (event, _)) => Some(event)
+        case (AnonymousUserIdentity(_), (event, _)) => Some(event)
         case (_, (event, Some(_))) => Some(event)
         case (_, (_, None)) => None
       }

@@ -16,7 +16,7 @@ object SimplePlaybackFormatter extends SingleRowFormatter[Playback] {
     }
     val url = playback.url
 
-    val userId = playback.user.boclipsId.map(_.value)
+    val userId = playback.user.id.map(_.value)
 
     json.addDateTimeProperty("timestamp", playback.timestamp)
     json.addProperty("userId", userId)

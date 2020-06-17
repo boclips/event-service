@@ -58,12 +58,12 @@ class UserMetricCalculatorTest extends IntegrationTest {
     )
 
     implicit val users: RDD[User] = rdd(
-      createUser(id = "aly", createdAt = thisYearIn(MAY)),
-      createUser(id = "ben", createdAt = thisYearIn(MAY)),
-      createUser(id = "cal", createdAt = thisYearIn(JUNE)),
-      createUser(id = "dom", createdAt = thisYearIn(JUNE)),
-      createUser(id = "eve", createdAt = thisYearIn(JUNE)),
-      createUser(id = "fad", createdAt = thisYearIn(JULY)),
+      createUser(identity = createBoclipsUserIdentity("aly"), createdAt = thisYearIn(MAY)),
+      createUser(identity = createBoclipsUserIdentity("ben"), createdAt = thisYearIn(MAY)),
+      createUser(identity = createBoclipsUserIdentity("cal"), createdAt = thisYearIn(JUNE)),
+      createUser(identity = createBoclipsUserIdentity("dom"), createdAt = thisYearIn(JUNE)),
+      createUser(identity = createBoclipsUserIdentity("eve"), createdAt = thisYearIn(JUNE)),
+      createUser(identity = createBoclipsUserIdentity("fad"), createdAt = thisYearIn(JULY)),
     )
 
     val userMetrics = UserMetricCalculator calculateMetrics Monthly()

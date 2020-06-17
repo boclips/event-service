@@ -5,6 +5,7 @@ import java.time.{Duration, ZoneOffset, ZonedDateTime}
 import com.boclips.event.aggregator.domain.model.{Playback, PlaybackWithRelatedData, Url, User}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity, createUser}
 
 class PlaybackFormatterTest extends Test {
@@ -137,7 +138,7 @@ class PlaybackFormatterTest extends Test {
   }
 
   it should "write user when not anonymous" in {
-    val json = PlaybackFormatter.formatRow(createPlayback().withNested(user = Some(createUser("user-id"))))
+    val json = PlaybackFormatter.formatRow(createPlayback().withNested(user = Some(createUser(createBoclipsUserIdentity("user-id")))))
 
     json.getAsJsonObject("user").getString("id") shouldBe "user-id"
   }

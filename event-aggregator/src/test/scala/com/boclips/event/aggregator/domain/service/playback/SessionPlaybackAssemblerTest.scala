@@ -24,7 +24,7 @@ class SessionPlaybackAssemblerTest extends Test {
 
     highLevelEvents should have size 1
     highLevelEvents.head.videoId shouldBe VideoId("v1")
-    highLevelEvents.head.user.boclipsId should contain(UserId("user"))
+    highLevelEvents.head.user.id should contain(UserId("user"))
     highLevelEvents.head.secondsWatched shouldBe 50
   }
 

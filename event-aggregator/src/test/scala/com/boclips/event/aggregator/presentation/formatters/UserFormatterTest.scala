@@ -6,8 +6,8 @@ import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchRequest}
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createDeal, createOrganisation, createUser}
-import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createDeal, createOrganisation, createUser}
+import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory, UserFactory}
 
 class UserFormatterTest extends Test {
 
@@ -24,10 +24,18 @@ class UserFormatterTest extends Test {
 
   implicit def user2userWithRelatedData(user: User): UserWithRelatedData = user.withNested()
 
-  it should "write user id" in {
-    val json = UserFormatter formatRow createUser(id = "user-id")
+  it should "write user id when boclips user" in {
+    val json = UserFormatter formatRow createUser(identity = createBoclipsUserIdentity("user-id"))
 
     json.get("id").getAsString shouldBe "user-id"
+    json.get("externalId").getAsString shouldBe ""
+  }
+
+  it should "write user id when external user" in {
+    val json = UserFormatter formatRow createUser(identity = ExternalUserIdentity(UserId("user1"), ExternalUserId("external1")))
+
+    json.get("id").getAsString shouldBe "user1"
+    json.get("externalId").getAsString shouldBe "external1"
   }
 
   it should "write user personal information" in {

@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.{User, UserId}
+import com.boclips.event.aggregator.domain.model.{BoclipsUserIdentity, User, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.infrastructure.user.UserDocument
 import com.mongodb.client.MongoCollection
@@ -22,7 +22,7 @@ class MongoUserLoaderIntegrationTest extends IntegrationTest {
     val users = loadUsers(spark, mongo)
 
     users should have length 1
-    users.head.id shouldBe UserId("my-id")
+    users.head.identity shouldBe BoclipsUserIdentity(UserId("my-id"))
   }
 
   it should "not ignore boclips employees" in mongoSparkTest { (spark, mongo) =>
@@ -52,7 +52,7 @@ class MongoUserLoaderIntegrationTest extends IntegrationTest {
     val users = loadBoclipsUsers(spark, mongo)
 
     users should have length 2
-    users.map(_.id) shouldBe List(UserId("1"), UserId("2"))
+    users.map(_.identity) shouldBe List(BoclipsUserIdentity(UserId("1")), BoclipsUserIdentity(UserId("2")))
   }
 
   it should "ignore non-boclips users" in mongoSparkTest { (spark, mongo) =>

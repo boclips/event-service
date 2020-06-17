@@ -12,7 +12,7 @@ object DocumentToUserConverter {
 
   def convert(document: UserDocument): User = {
     User(
-      id = UserId(document.getId),
+      identity = BoclipsUserIdentity(UserId(document.getId)),
       firstName = Option(document.getFirstName),
       lastName = Option(document.getLastName),
       email = Option(document.getEmail),

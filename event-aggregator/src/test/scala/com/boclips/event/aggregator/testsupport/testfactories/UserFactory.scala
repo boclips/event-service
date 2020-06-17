@@ -10,7 +10,7 @@ object UserFactory {
                                  userId: String = "the-user-id",
                                ): BoclipsUserIdentity = {
     BoclipsUserIdentity(
-      id = UserId(userId),
+      UserId(userId),
     )
   }
 
@@ -53,7 +53,7 @@ object UserFactory {
   }
 
   def createUser(
-                  id: String = "userId",
+                  identity: UserIdentity = createBoclipsUserIdentity(),
                   firstName: Option[String] = None,
                   lastName: Option[String] = None,
                   email: Option[String] = None,
@@ -66,7 +66,7 @@ object UserFactory {
                   hasOptedIntoMarketing: Option[Boolean] = None,
                 ): User = {
     User(
-      id = UserId(id),
+      identity = identity,
       firstName = firstName,
       lastName = lastName,
       email = email,

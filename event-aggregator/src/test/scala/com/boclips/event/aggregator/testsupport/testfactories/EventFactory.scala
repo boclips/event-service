@@ -70,7 +70,8 @@ object EventFactory {
 
   def createVideoSegmentPlayedEventDocument(
                                              id: String = "5cded765a22ace42b322a49e",
-                                             userId: String = "userId",
+                                             userId: Option[String] = Some("userId"),
+                                             externalUserId: Option[String] = None,
                                              url: String = "http://example.com",
                                              videoId: String = "videoId",
                                              videoIndex: Option[Int] = None,
@@ -83,14 +84,17 @@ object EventFactory {
     val properties = Map[String, Object](
       ("_id", new ObjectId(id)),
       (EventFields.TYPE, EventFields.Type.VIDEO_SEGMENT_PLAYED),
-      (EventFields.USER_ID, userId),
       (EventFields.URL, url),
       (EventFields.VIDEO_ID, videoId),
       (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
       (EventFields.PLAYBACK_SEGMENT_START_SECONDS, Long.box(segmentStartSeconds)),
       (EventFields.PLAYBACK_SEGMENT_END_SECONDS, Long.box(segmentEndSeconds)),
-    ) ++ (videoIndex.map(index => (EventFields.PLAYBACK_VIDEO_INDEX, Int.box(index)))
-      ++ deviceId.map(device => (EventFields.DEVICE_ID, device)))
+    ) ++ (
+      userId.map(it => (EventFields.USER_ID, it))
+      ++ externalUserId.map(it => (EventFields.EXTERNAL_USER_ID, it))
+      ++ deviceId.map(device => (EventFields.DEVICE_ID, device))
+      ++ videoIndex.map(index => (EventFields.PLAYBACK_VIDEO_INDEX, Int.box(index)))
+    )
 
     new Document(properties.asJava)
   }

@@ -62,7 +62,7 @@ class SessionSearchAssembler() {
       request = SearchRequest(
         id = UUID.randomUUID().toString,
         timestamp = timestamp,
-        userId = searchEvent.userIdentity.id,
+        userId = searchEvent.userIdentity.boclipsId,
         query = searchEvent.query,
         url = searchEvent.url,
         urlParamsKeys = urlParamsKeys,

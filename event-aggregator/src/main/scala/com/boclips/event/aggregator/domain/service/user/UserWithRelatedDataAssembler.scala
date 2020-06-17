@@ -10,33 +10,32 @@ object UserWithRelatedDataAssembler {
 
   def apply(users: RDD[User], playbacks: RDD[Playback], searches: RDD[Search], sessions: RDD[Session]): RDD[UserWithRelatedData] = {
 
-    val playbacksByUser: RDD[(UserId, Iterable[Playback])] = playbacks
-      .filter(p => p.user.boclipsId.isDefined)
-      .keyBy(_.user.boclipsId.get)
+    val playbacksByUser: RDD[(UserIdentity, Iterable[Playback])] = playbacks
+      .keyBy(_.user)
       .groupByKey()
 
-    val referredPlaybacksByUser: RDD[(UserId, Iterable[Playback])] = playbacks
+    val referredPlaybacksByUser: RDD[(UserIdentity, Iterable[Playback])] = playbacks
       .filter(p => p.refererId.isDefined && p.isShare)
-      .keyBy(p => p.refererId.get)
+      .keyBy[UserIdentity](p => BoclipsUserIdentity(p.refererId.get))
       .groupByKey()
 
-    val searchesByUser: RDD[(UserId, Iterable[Search])] = searches
-      .keyBy(_.request.userId)
+    val searchesByUser: RDD[(UserIdentity, Iterable[Search])] = searches
+      .keyBy[UserIdentity](it => BoclipsUserIdentity(it.request.userId))
       .groupByKey()
 
-    val activeMonthsByUser: RDD[(UserId, Iterable[YearMonth])] = playbacks
-      .filter(p => p.user.boclipsId.isDefined)
-      .map(playback => (playback.user.boclipsId.get, YearMonth.from(playback.timestamp)))
+    val activeMonthsByUser: RDD[(UserIdentity, Iterable[YearMonth])] = playbacks
+      .filter(p => p.user.id.isDefined)
+      .map(playback => (playback.user, YearMonth.from(playback.timestamp)))
       .distinct()
       .groupByKey()
 
-    val sessionsByUser: RDD[(UserId, Iterable[Session])] = sessions
-      .filter(p => p.user.boclipsId.isDefined)
-      .keyBy(_.user.boclipsId.get)
+    val sessionsByUser: RDD[(UserIdentity, Iterable[Session])] = sessions
+      .filter(p => p.user.id.isDefined)
+      .keyBy(_.user)
       .groupByKey()
 
     users
-      .keyBy(_.id)
+      .keyBy(_.identity)
       .leftOuterJoin(playbacksByUser)
       .leftOuterJoin(referredPlaybacksByUser)
       .leftOuterJoin(searchesByUser)

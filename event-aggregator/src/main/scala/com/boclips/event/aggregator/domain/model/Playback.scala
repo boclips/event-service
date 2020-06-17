@@ -15,7 +15,7 @@ case class Playback
   videoDuration: Duration,
 ) {
   def isShare: Boolean = {
-    (user.boclipsId, refererId) match {
+    (user.id, refererId) match {
       case (Some(userId), Some(referer)) => userId != referer
       case (Some(_), None) => false
       case (None, _) => true

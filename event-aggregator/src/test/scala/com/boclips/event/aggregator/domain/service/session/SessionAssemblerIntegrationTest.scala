@@ -23,7 +23,7 @@ class SessionAssemblerIntegrationTest extends IntegrationTest {
     anonymousUserSession.user.deviceId should contain (DeviceId("device-1"))
     anonymousUserSession.events should have length 1
 
-    loggedInUserSession.user.boclipsId should contain (UserId("user-1"))
+    loggedInUserSession.user.id should contain (UserId("user-1"))
     loggedInUserSession.events should have length 2
   }
 

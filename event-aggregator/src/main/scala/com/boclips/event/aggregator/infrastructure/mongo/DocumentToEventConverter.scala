@@ -15,12 +15,17 @@ object DocumentToEventConverter {
     def queryFromUrl: Option[Query] = url.flatMap(_.param("q")).map(Query)
 
     def userIdentity: UserIdentity = {
-      val deviceId = Option(event.getString(EventFields.DEVICE_ID)).map(DeviceId)
-      Option(event.getString(EventFields.USER_ID))
+      val userIdOption = Option(event.getString(EventFields.USER_ID))
         .filter(_ != EventConstants.anonymousUserId.value)
-        .map(UserId) match {
-        case Some(userId) => BoclipsUserIdentity(userId)
-        case _ => AnonymousUserIdentity(deviceId)
+        .map(UserId)
+      val externalUserIdOption = Option(event.getString(EventFields.EXTERNAL_USER_ID))
+        .map(ExternalUserId)
+      val deviceIdOption = Option(event.getString(EventFields.DEVICE_ID))
+        .map(DeviceId)
+      (userIdOption, externalUserIdOption, deviceIdOption) match {
+        case (Some(userId), None, _) => BoclipsUserIdentity(userId)
+        case (Some(userId), Some(externalUserId), _) => ExternalUserIdentity(userId, externalUserId)
+        case (_, _, deviceId) => AnonymousUserIdentity(deviceId)
       }
     }
   }
@@ -76,7 +81,7 @@ object DocumentToEventConverter {
         timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
         userIdentity = document.userIdentity match {
           case ui: BoclipsUserIdentity => ui
-          case anonymous => BoclipsUserIdentity(id = UserId(""))
+          case _ => BoclipsUserIdentity(UserId(""))
         },
         query = Query(query),
         url = document.url,

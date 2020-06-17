@@ -14,9 +14,11 @@ class UserWithRelatedDataAssemblerTest extends IntegrationTest {
 
   val today: ZonedDateTime = ZonedDateTime.now()
 
-  val user: User = createUser(createdAt = today, id = "user-1")
+  val userId: UserId = UserId("user-1")
 
-  val userIdentity: UserIdentity = BoclipsUserIdentity(UserId("user-1"))
+  val user: User = createUser(createdAt = today, identity = BoclipsUserIdentity(userId))
+
+  val userIdentity: UserIdentity = BoclipsUserIdentity(userId)
 
   it should "mark a user active in the month of playback" in sparkTest { implicit spark =>
     val users = rdd(user)
@@ -45,7 +47,7 @@ class UserWithRelatedDataAssemblerTest extends IntegrationTest {
 
   it should "assemble all referred playbacks for one user" in sparkTest { implicit spark =>
     val users = rdd(user)
-    val playbacks = rdd(createPlayback(timestamp = today, user = createAnonymousUserIdentity(), refererId = Some(user.id.value)))
+    val playbacks = rdd(createPlayback(timestamp = today, user = createAnonymousUserIdentity(), refererId = Some(userId.value)))
     val searches = rdd[Search]()
     val sessions = rdd[Session]()
 
@@ -57,7 +59,7 @@ class UserWithRelatedDataAssemblerTest extends IntegrationTest {
 
   it should "exclude self-referred playbacks" in sparkTest { implicit spark =>
     val users = rdd(user)
-    val playbacks = rdd(createPlayback(timestamp = today, user = userIdentity, refererId = Some(user.id.value)))
+    val playbacks = rdd(createPlayback(timestamp = today, user = userIdentity, refererId = Some(userId.value)))
     val searches = rdd[Search]()
     val sessions = rdd[Session]()
 
@@ -70,7 +72,7 @@ class UserWithRelatedDataAssemblerTest extends IntegrationTest {
   it should "assemble all searches for one user" in sparkTest { implicit spark =>
     val users = rdd(user)
     val playbacks = rdd[Playback]()
-    val searches = rdd(createSearch(request = createSearchRequest(timestamp = today, userId = user.id.value)))
+    val searches = rdd(createSearch(request = createSearchRequest(timestamp = today, userId = userId.value)))
     val sessions = rdd[Session]()
 
     val usersWithRelatedData = UserWithRelatedDataAssembler(users, playbacks, searches, sessions).collect().toList

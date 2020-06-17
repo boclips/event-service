@@ -8,8 +8,10 @@ import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.create
 class PlaybackWithRelatedDataAssemblerTest extends IntegrationTest {
 
   it should "include users when exist" in sparkTest { implicit spark =>
-    val playback = createPlayback(user = BoclipsUserIdentity(UserId("user-id")))
-    val user = createUser(id = "user-id")
+
+    val userIdentity = BoclipsUserIdentity(UserId("user-id"))
+    val playback = createPlayback(user = userIdentity)
+    val user = createUser(identity = userIdentity)
 
     val playbacksWithRelatedData = new PlaybackWithRelatedDataAssembler(rdd(playback), rdd(user))
       .assemblePlaybacksWithRelatedData()
@@ -22,8 +24,9 @@ class PlaybackWithRelatedDataAssemblerTest extends IntegrationTest {
   }
 
   it should "not include users for anonymous playbacks" in sparkTest { implicit spark =>
+    val userIdentity = BoclipsUserIdentity(UserId("user-id"))
     val playback = createPlayback(user = AnonymousUserIdentity(deviceId = None))
-    val user = createUser(id = "user-id")
+    val user = createUser(identity = userIdentity)
 
     val playbacksWithRelatedData = new PlaybackWithRelatedDataAssembler(rdd(playback), rdd(user))
       .assemblePlaybacksWithRelatedData()

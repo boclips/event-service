@@ -11,7 +11,7 @@ import com.google.gson.JsonObject
 object VideoInteractionEventsFormatter extends SingleRowFormatter[VideoInteractedWithEvent] {
   override def writeRow(event: VideoInteractedWithEvent, json: JsonObject): Unit = {
     json.addProperty("timestamp", event.timestamp.format(ISO_OFFSET_DATE_TIME))
-    json.addProperty("userId", event.userIdentity.boclipsId.map(_.value))
+    json.addProperty("userId", event.userIdentity.id.map(_.value))
     json.addProperty("urlPath", event.url.map(_.path))
     json.addProperty("urlHost", event.url.map(_.host))
     json.addProperty("urlParams", event.url.map(_.rawParams))

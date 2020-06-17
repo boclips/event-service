@@ -13,12 +13,13 @@ class MongoEventLoader(
                       ) extends EventLoader {
 
   override def load()(implicit session: SparkSession): RDD[Event] = {
-    val boclipsEmployeeIds = boclipsEmployees.map(_.id.value).collect().toSet
+    val boclipsEmployeeIds = boclipsEmployees
+      .map(_.identity).collect().toSet
 
     mongoClient
       .collectionRDD("events")
       .map(DocumentToEventConverter.convert)
-      .filter(event => event.userIdentity.boclipsId.isEmpty || !boclipsEmployeeIds.contains(event.userIdentity.boclipsId.get.value))
+      .filter(event => event.userIdentity.id.isEmpty || !boclipsEmployeeIds.contains(event.userIdentity))
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Events")
   }

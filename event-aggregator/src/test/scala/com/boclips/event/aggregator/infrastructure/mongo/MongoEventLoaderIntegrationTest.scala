@@ -2,6 +2,7 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchEventDocument
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser
 import org.apache.spark.sql.SparkSession
 
@@ -15,7 +16,7 @@ class MongoEventLoaderIntegrationTest extends IntegrationTest {
 
     implicit val session: SparkSession = spark
 
-    val boclipsEmployees = rdd(createUser(id = "john@boclips.com", isBoclipsEmployee = true))
+    val boclipsEmployees = rdd(createUser(identity = UserFactory.createBoclipsUserIdentity("john@boclips.com"), isBoclipsEmployee = true))
 
     val events = new MongoEventLoader(mongo, boclipsEmployees).load.collect()
 

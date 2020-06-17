@@ -33,7 +33,7 @@ class DocumentToEventConverterTest extends Test {
 
     val event = DocumentToEventConverter convert document
 
-    event.userIdentity.boclipsId should contain (UserId("user"))
+    event.userIdentity.id should contain (UserId("user"))
   }
 
   it should "convert query" in {
@@ -101,28 +101,50 @@ class DocumentToEventConverterTest extends Test {
     event.asInstanceOf[VideoSegmentPlayedEvent].id shouldBe "5e1278800000000000000000"
   }
 
-  it should "convert playback device when exists" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(userId = null, deviceId = Some("device"))
-
-    val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
-
-    event.userIdentity.deviceId shouldBe Some(DeviceId("device"))
-  }
-
-  it should "skip playback device when does not exist" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(deviceId = None)
-
-    val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
-
-    event.userIdentity.deviceId shouldBe None
-  }
-
-  it should "convert userId" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(userId = "the user")
+  it should "convert user identity when boclips id specified and no external id" in {
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(
+      userId = Some("the user"),
+      externalUserId = None,
+    )
 
     val event = DocumentToEventConverter convert document
 
-    event.userIdentity.boclipsId should contain(UserId("the user"))
+    event.userIdentity shouldBe BoclipsUserIdentity(UserId("the user"))
+  }
+
+  it should "convert user identity when both boclips id and external id specified" in {
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(
+      userId = Some("the user"),
+      externalUserId = Some("pearson-user-1"),
+    )
+
+    val event = DocumentToEventConverter convert document
+
+    event.userIdentity shouldBe ExternalUserIdentity(UserId("the user"), ExternalUserId("pearson-user-1"))
+  }
+
+  it should "create anonymous user identity for events with device id" in {
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(
+      userId = None,
+      externalUserId = None,
+      deviceId = Some("device"),
+    )
+
+    val event = DocumentToEventConverter convert document
+
+    event.userIdentity shouldBe AnonymousUserIdentity(Some(DeviceId("device")))
+  }
+
+  it should "create anonymous user identity for events without device id" in {
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(
+      userId = None,
+      externalUserId = None,
+      deviceId = None,
+    )
+
+    val event = DocumentToEventConverter convert document
+
+    event.userIdentity shouldBe AnonymousUserIdentity(None)
   }
 
   it should "convert videoId" in {
@@ -206,7 +228,7 @@ class DocumentToEventConverterTest extends Test {
 
     event.timestamp shouldBe ZonedDateTime.parse("2020-01-10T12:13:14Z")
     event.url should contain(Url.parse("http://teachers.boclips.com/apage"))
-    event.userIdentity.boclipsId should contain(UserId("user"))
+    event.userIdentity.id should contain(UserId("user"))
     event.asInstanceOf[CollectionSearchedEvent].pageIndex shouldBe 1
     event.asInstanceOf[CollectionSearchedEvent].pageSize shouldBe 20
     event.asInstanceOf[CollectionSearchedEvent].totalResults shouldBe 1000
@@ -226,7 +248,7 @@ class DocumentToEventConverterTest extends Test {
 
     event.isInstanceOf[VideoInteractedWithEvent] shouldBe true
     event.asInstanceOf[VideoInteractedWithEvent].timestamp shouldBe date
-    event.asInstanceOf[VideoInteractedWithEvent].userIdentity.boclipsId should contain(UserId("user1"))
+    event.asInstanceOf[VideoInteractedWithEvent].userIdentity.id should contain(UserId("user1"))
     event.asInstanceOf[VideoInteractedWithEvent].query shouldBe Some(Query("antagonist"))
     event.asInstanceOf[VideoInteractedWithEvent].videoId shouldBe VideoId("666")
     event.asInstanceOf[VideoInteractedWithEvent].subtype shouldBe Some("HAD_FUN_WITH_VIDEO")
@@ -238,7 +260,7 @@ class DocumentToEventConverterTest extends Test {
 
     val event = DocumentToEventConverter.convert(document).asInstanceOf[OtherEvent]
 
-    event.userIdentity.boclipsId should contain(UserId("user id"))
+    event.userIdentity.id should contain(UserId("user id"))
   }
 
   "transforming documents with type VIDEO_ADDED_TO_COLLECTION" should "convert obligatory properties" in {
@@ -253,7 +275,7 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[VideoAddedToCollectionEvent] shouldBe true
     event.asInstanceOf[VideoAddedToCollectionEvent].timestamp shouldBe date
-    event.asInstanceOf[VideoAddedToCollectionEvent].userIdentity.boclipsId should contain(UserId("user1"))
+    event.asInstanceOf[VideoAddedToCollectionEvent].userIdentity.id should contain(UserId("user1"))
     event.asInstanceOf[VideoAddedToCollectionEvent].query shouldBe Some(Query("fractions"))
     event.asInstanceOf[VideoAddedToCollectionEvent].videoId shouldBe VideoId("videoId")
 
@@ -270,7 +292,7 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[PageRenderedEvent] shouldBe true
     event.asInstanceOf[PageRenderedEvent].timestamp shouldBe timestamp
-    event.asInstanceOf[PageRenderedEvent].userIdentity.boclipsId should contain(UserId("renderer-user"))
+    event.asInstanceOf[PageRenderedEvent].userIdentity.id should contain(UserId("renderer-user"))
     event.asInstanceOf[PageRenderedEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=fractions"))
   }
 
@@ -288,7 +310,7 @@ class DocumentToEventConverterTest extends Test {
 
     event.isInstanceOf[CollectionInteractedWithEvent] shouldBe true
     event.asInstanceOf[CollectionInteractedWithEvent].timestamp shouldBe timestamp
-    event.asInstanceOf[CollectionInteractedWithEvent].userIdentity.boclipsId should contain(UserId("collection-user"))
+    event.asInstanceOf[CollectionInteractedWithEvent].userIdentity.id should contain(UserId("collection-user"))
     event.asInstanceOf[CollectionInteractedWithEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=fractions"))
     event.asInstanceOf[CollectionInteractedWithEvent].collectionId shouldBe CollectionId("collection-id")
     event.asInstanceOf[CollectionInteractedWithEvent].query shouldBe Some(Query("fractions"))
@@ -307,7 +329,7 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[PlatformInteractedWithEvent] shouldBe true
     event.asInstanceOf[PlatformInteractedWithEvent].timestamp shouldBe timestamp
-    event.asInstanceOf[PlatformInteractedWithEvent].userIdentity.boclipsId should contain(UserId("user-id"))
+    event.asInstanceOf[PlatformInteractedWithEvent].userIdentity.id should contain(UserId("user-id"))
     event.asInstanceOf[PlatformInteractedWithEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=queries"))
     event.asInstanceOf[PlatformInteractedWithEvent].subtype shouldBe Some("EXIT")
   }
@@ -323,7 +345,7 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[PlatformInteractedWithEvent] shouldBe true
     event.asInstanceOf[PlatformInteractedWithEvent].timestamp shouldBe timestamp
-    event.asInstanceOf[PlatformInteractedWithEvent].userIdentity.boclipsId shouldBe None
+    event.asInstanceOf[PlatformInteractedWithEvent].userIdentity.id shouldBe None
     event.asInstanceOf[PlatformInteractedWithEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=queries"))
     event.asInstanceOf[PlatformInteractedWithEvent].subtype shouldBe Some("EXIT")
   }
