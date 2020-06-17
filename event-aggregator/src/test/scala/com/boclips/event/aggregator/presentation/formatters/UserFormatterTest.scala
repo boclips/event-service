@@ -28,14 +28,12 @@ class UserFormatterTest extends Test {
     val json = UserFormatter formatRow createUser(identity = createBoclipsUserIdentity("user-id"))
 
     json.get("id").getAsString shouldBe "user-id"
-    json.get("externalId").getAsString shouldBe ""
   }
 
   it should "write user id when external user" in {
     val json = UserFormatter formatRow createUser(identity = ExternalUserIdentity(UserId("user1"), ExternalUserId("external1")))
 
-    json.get("id").getAsString shouldBe "user1"
-    json.get("externalId").getAsString shouldBe "external1"
+    json.get("id").getAsString shouldBe "user1/external1"
   }
 
   it should "write user personal information" in {

@@ -8,13 +8,13 @@ import com.google.gson.JsonObject
 
 object SimpleUserFormatter extends SingleRowFormatter[User] {
   override def writeRow(user: User, json: JsonObject): Unit = {
-    val externalId = user.identity match {
-      case ExternalUserIdentity(_, externalId) => externalId.value
+    val id = user.identity match {
+      case BoclipsUserIdentity(id) => id.value
+      case ExternalUserIdentity(id, externalId) => s"${id.value}/${externalId.value}"
       case _ => ""
     }
 
-    json.addProperty("id", user.identity.id.get.value)
-    json.addProperty("externalId", externalId)
+    json.addProperty("id", id)
     json.addProperty("firstName", user.firstName)
     json.addProperty("lastName", user.lastName)
     json.addProperty("email", user.email)
