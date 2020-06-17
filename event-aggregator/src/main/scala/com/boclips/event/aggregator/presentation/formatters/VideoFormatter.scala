@@ -17,88 +17,6 @@ object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
   }
 }
 
-object NestedChannelFormatter extends SingleRowFormatter[Channel] {
-  override def writeRow(obj: Channel, json: JsonObject): Unit = {
-    json.addProperty("id", obj.id.value)
-    json.addProperty("name", obj.name)
-
-    json.addStringArrayProperty("detailsContentTypes", obj.details.contentTypes.getOrElse(Nil))
-    json.addStringArrayProperty("detailsContentCategories", obj.details.contentCategories.getOrElse(Nil))
-    json.addProperty("detailsLanguage", obj.details.language.map(_.toLanguageTag).orNull)
-    json.addProperty("detailsHubspotId", obj.details.hubspotId.orNull)
-    json.addProperty("detailsContractId", obj.details.contractId.orNull)
-    json.addProperty("detailsAwards", obj.details.awards.orNull)
-    json.addProperty("detailsNotes", obj.details.notes.orNull)
-
-    json.addProperty("ingestType", obj.ingest._type)
-    json.addProperty("ingestDeliveryFrequency", obj.ingest.deliveryFrequency.map(_.toString))
-    json.addStringArrayProperty(
-      "ingestDistributionMethods",
-      obj.ingest.distributionMethods.map(_.map(it => it.toString)).orNull
-    )
-
-    json.addStringArrayProperty("pedagogySubjects", obj.pedagogy.subjectNames.getOrElse(Nil))
-    json.addProperty("pedagogyAgeRangeMin", obj.pedagogy.ageRangeMin.map(Int.box).orNull)
-    json.addProperty("pedagogyAgeRangeMax", obj.pedagogy.ageRangeMax.map(Int.box).orNull)
-    json.addStringArrayProperty("pedagogyBestForTags", obj.pedagogy.bestForTags.getOrElse(Nil))
-    json.addProperty("pedagogyCurriculumAligned", obj.pedagogy.curriculumAligned.orNull)
-    json.addProperty("pedagogyEducationalResources", obj.pedagogy.educationalResources.orNull)
-    json.addProperty("pedagogyTranscriptProvided", obj.pedagogy.transcriptProvided.map(Boolean.box).orNull)
-
-    json.addProperty("marketingStatus", obj.marketing.status.orNull)
-    json.addProperty("marketingOneLineIntro", obj.marketing.oneLineIntro.orNull)
-    json.addStringArrayProperty("marketingLogos", obj.marketing.logos.getOrElse(Nil))
-    json.addProperty("marketingShowreel", obj.marketing.showreel.orNull)
-    json.addStringArrayProperty("marketingSampleVideos", obj.marketing.sampleVideos.getOrElse(Nil))
-  }
-}
-
-object NestedContractFormatter extends SingleRowFormatter[Contract] {
-  override def writeRow(obj: Contract, json: JsonObject): Unit = {
-    json.addProperty("id", obj.id.value)
-    json.addProperty("name", obj.name)
-    json.addProperty("contractDocumentLink", obj.contractDocumentLink.orNull)
-    json.addProperty("contractIsRolling", obj.contractIsRolling.map(Boolean.box).orNull)
-    json.addDateProperty("contractStartDate", obj.contractDates.flatMap(_.start).orNull)
-    json.addDateProperty("contractEndDate", obj.contractDates.flatMap(_.end).orNull)
-    json.addProperty("daysBeforeTerminationWarning", obj.daysBeforeTerminationWarning.map(Int.box).orNull)
-    json.addProperty("yearsForMaximumLicense", obj.yearsForMaximumLicense.map(Int.box).orNull)
-    json.addProperty("daysForSellOffPeriod", obj.daysForSellOffPeriod.map(Int.box).orNull)
-    json.addProperty("downloadRoyaltySplit", obj.royaltySplit.flatMap(_.download).map(Float.box).orNull)
-    json.addProperty("streamingRoyaltySplit", obj.royaltySplit.flatMap(_.streaming).map(Float.box).orNull)
-    json.addProperty("minimumPriceDescription", obj.minimumPriceDescription.orNull)
-    json.addProperty("remittanceCurrency", obj.remittanceCurrency.map(_.toString).orNull)
-
-    obj.restrictions match {
-      case Some(restrictions) =>
-        json.addStringArrayProperty("clientFacingRestrictions", restrictions.clientFacing.orNull)
-        json.addProperty("territoryRestrictions", restrictions.territory.orNull)
-        json.addProperty("licensingRestrictions", restrictions.licensing.orNull)
-        json.addProperty("editingRestrictions", restrictions.editing.orNull)
-        json.addProperty("marketingRestrictions", restrictions.marketing.orNull)
-        json.addProperty("companiesRestrictions", restrictions.companies.orNull)
-        json.addProperty("payoutRestrictions", restrictions.payout.orNull)
-        json.addProperty("otherRestrictions", restrictions.other.orNull)
-      case None =>
-    }
-
-    val costs = obj.costs
-
-    val minimumGuarantees = new JsonArray()
-    obj.costs.minimumGuarantee.zipWithIndex.foreach { case (mg: BigDecimal, index: Int) =>
-      val thisJson = new JsonObject()
-      thisJson.addProperty("amount", mg)
-      thisJson.addProperty("contractYear", index + 1)
-      minimumGuarantees.add(thisJson)
-    }
-    json.add("minimumGuarantee", minimumGuarantees)
-
-    json.addProperty("upfrontLicenseCost", costs.upfrontLicense.orNull)
-    json.addProperty("technicalFee", costs.technicalFee.orNull)
-    json.addProperty("recoupable", costs.recoupable.map(Boolean.box).orNull)
-  }
-}
-
 object VideoFormatter extends SingleRowFormatter[VideoWithRelatedData] {
   override def writeRow(obj: VideoWithRelatedData, json: JsonObject): Unit = {
 
@@ -117,10 +35,10 @@ object VideoFormatter extends SingleRowFormatter[VideoWithRelatedData] {
     val ordersJson = orders.map(o => NestedOrderFormatter.formatRow(o))
     json.addJsonArrayProperty(property = "orders", ordersJson)
 
-    val channelJson: JsonObject = channel.map(NestedChannelFormatter.formatRow).orNull
+    val channelJson: JsonObject = channel.map(ChannelFormatter.formatRow).orNull
     json.add("channel", channelJson)
 
-    val contractJson: JsonObject = contract.map(NestedContractFormatter.formatRow).orNull
+    val contractJson: JsonObject = contract.map(ContractFormatter.formatRow).orNull
     json.add("contract", contractJson)
 
     val impressionsJson = impressions.map(o => VideoSearchResultImpressionFormatter.formatRow(o))

@@ -17,7 +17,7 @@ import com.boclips.event.aggregator.domain.service.user.UserWithRelatedDataAssem
 import com.boclips.event.aggregator.domain.service.video.{VideoAssembler, VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
-import com.boclips.event.aggregator.presentation.formatters.{CollectionFormatter, DataVersionFormatter, VideoFormatter}
+import com.boclips.event.aggregator.presentation.formatters.{ChannelFormatter, CollectionFormatter, ContractFormatter, DataVersionFormatter, VideoFormatter}
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableWriter}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
@@ -71,6 +71,12 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     )
     writeTable(videosWithRelatedData, "videos")(VideoFormatter, implicitly)
 
+    logProcessingStart(s"Updating contracts")
+    writeTable(contracts, "contracts")(ContractFormatter, implicitly)
+
+    logProcessingStart(s"Updating channels")
+    writeTable(channels, "channels")(ChannelFormatter, implicitly)
+
     logProcessingStart(s"Updating collections")
     val collectionImpressions = CollectionSearchResultImpressionAssembler(searches)
     val collectionInteractions: RDD[CollectionInteractedWithEvent] = CollectionInteractionEventAssembler(events)
@@ -99,7 +105,7 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     writeTable(pagesRendered, "user_navigation")
 
     logProcessingStart(s"Updating Platform Generic Interactions")
-    val platformInteractedWithEvents : RDD[PlatformInteractedWithEvent] = new PlatformInteractedWithEventAssembler(events).assemblePlatformInteractedWithEvents()
+    val platformInteractedWithEvents: RDD[PlatformInteractedWithEvent] = new PlatformInteractedWithEventAssembler(events).assemblePlatformInteractedWithEvents()
     writeTable(platformInteractedWithEvents, "platform_interacted_with_events")
 
 
