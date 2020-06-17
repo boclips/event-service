@@ -13,7 +13,7 @@ import com.boclips.event.aggregator.domain.service.playback.{PlaybackAssembler, 
 import com.boclips.event.aggregator.domain.service.search.{QueryScorer, SearchAssembler}
 import com.boclips.event.aggregator.domain.service.session.SessionAssembler
 import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembler
-import com.boclips.event.aggregator.domain.service.user.UserWithRelatedDataAssembler
+import com.boclips.event.aggregator.domain.service.user.{UserAssembler, UserWithRelatedDataAssembler}
 import com.boclips.event.aggregator.domain.service.video.{VideoAssembler, VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
@@ -42,7 +42,7 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
 
   val userLoader = new MongoUserLoader(mongoClient)
   val events: RDD[Event] = new MongoEventLoader(mongoClient, userLoader.loadBoclipsEmployees).load
-  val users: RDD[User] = userLoader.loadAllUsers
+  val users: RDD[User] = UserAssembler(userLoader.loadAllUsers, events)
   val videos: RDD[Video] = new MongoVideoLoader(mongoClient).load()
   val collections: RDD[Collection] = new MongoCollectionLoader(mongoClient).load()
   val channels: RDD[Channel] = new MongoChannelLoader(mongoClient).load()
