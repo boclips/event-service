@@ -3,7 +3,9 @@ package com.boclips.event.aggregator.presentation.formatters
 import java.time.Month
 import java.time.Month.AUGUST
 
-import com.boclips.event.aggregator.domain.model.{ActiveUserCounts, PlaybackMetric, UserMetric, UserTotals}
+import com.boclips.event.aggregator.domain.model.okrs.{ActiveUserCounts, PlaybackMetric, UserMetric}
+import com.boclips.event.aggregator.domain.model.users.UserTotals
+import com.boclips.event.aggregator.domain.model.{okrs, users}
 import com.boclips.event.aggregator.testsupport.TestTimestamps.wholeMonthOf
 import com.boclips.event.aggregator.testsupport.testfactories.MetricsFactory.{createKeyResults, createSearchMetric, createUserTotals}
 import com.boclips.event.aggregator.testsupport.{Test, TestTimestamps}
@@ -22,7 +24,7 @@ class KeyResultsFormatterTest extends Test {
       timePeriod = wholeMonthOf(AUGUST, 2019),
       ActiveUserCounts(newUsers = 60, repeatUsers = 40),
       totalsAtStart = UserTotals(date = null, totalAccounts = 1234),
-      totalsAtEnd = UserTotals(date = null, totalAccounts = 2345),
+      totalsAtEnd = users.UserTotals(date = null, totalAccounts = 2345),
       recentlyActiveAtStart = 100,
       recentlyActiveAtEnd = 110
     ))
@@ -37,7 +39,7 @@ class KeyResultsFormatterTest extends Test {
   }
 
   it should "write churn as 0 when NaN" in {
-    val json = KeyResultsFormatter formatRow createKeyResults(userStats = UserMetric(
+    val json = KeyResultsFormatter formatRow createKeyResults(userStats = okrs.UserMetric(
       timePeriod = wholeMonthOf(AUGUST, 2019),
       activeUserCounts = ActiveUserCounts(newUsers = 0, repeatUsers = 0),
       totalsAtStart = createUserTotals(),

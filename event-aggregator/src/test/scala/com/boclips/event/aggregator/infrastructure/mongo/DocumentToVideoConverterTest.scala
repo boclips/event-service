@@ -4,6 +4,7 @@ import java.time.{Duration, ZonedDateTime}
 import java.util.Collections.{singleton, singletonList}
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.videos.{Dimensions, VideoAsset, VideoId}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument}
 

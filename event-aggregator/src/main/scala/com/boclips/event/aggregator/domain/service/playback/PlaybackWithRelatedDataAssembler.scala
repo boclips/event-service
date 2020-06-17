@@ -1,6 +1,7 @@
 package com.boclips.event.aggregator.domain.service.playback
 
-import com.boclips.event.aggregator.domain.model.{Playback, PlaybackWithRelatedData, User, UserId}
+import com.boclips.event.aggregator.domain.model.users.User
+import com.boclips.event.aggregator.domain.model.playbacks.{Playback, PlaybackWithRelatedData}
 import org.apache.spark.rdd.RDD
 
 class PlaybackWithRelatedDataAssembler(playbacks: RDD[Playback], users: RDD[User]) {

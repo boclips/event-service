@@ -1,5 +1,6 @@
 package com.boclips.event.aggregator.domain.model
 
+import com.boclips.event.aggregator.domain.model.okrs.ActiveUserCounts
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.MetricsFactory
 

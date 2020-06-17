@@ -1,4 +1,4 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.users
 
 sealed trait UserIdentity {
   def id: Option[UserId]

@@ -2,6 +2,7 @@ package com.boclips.event.aggregator.domain.model
 
 import java.time.{LocalDate, ZonedDateTime}
 
+import com.boclips.event.aggregator.domain.model.videos.Dimensions
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideo, createVideoAsset}
 

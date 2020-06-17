@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.User
 import com.boclips.event.aggregator.domain.model.events.Event
+import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.service.EventLoader
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession

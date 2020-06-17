@@ -4,6 +4,11 @@ import java.time.{LocalDate, YearMonth}
 
 import com.boclips.event.aggregator._
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.sessions.Session
+import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, User, UserIdentity}
+import com.boclips.event.aggregator.presentation.UserWithRelatedData
 import org.apache.spark.rdd.RDD
 
 object UserWithRelatedDataAssembler {

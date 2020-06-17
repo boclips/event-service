@@ -1,6 +1,8 @@
 package com.boclips.event.aggregator.domain.service.search
 
-import com.boclips.event.aggregator.domain.model.{QueryScore, Search, TimePeriodDuration}
+import com.boclips.event.aggregator.domain.model.okrs.TimePeriodDuration
+import com.boclips.event.aggregator.domain.model.search.{QueryScore, Search}
+import com.boclips.event.aggregator.domain.model.search
 import org.apache.spark.rdd.RDD
 
 class QueryScorer(priorHits: Int, priorMisses: Int) {
@@ -15,7 +17,7 @@ class QueryScorer(priorHits: Int, priorMisses: Int) {
       .mapValues(anyPlaybacks => anyPlaybacks.toList.contains(true))
       .map { case ((timePeriod, query, _), hit) => ((timePeriod, query), hit) }
       .aggregateByKey(BetaDistribution(0, 0))(_.add(_), _.add(_))
-      .map { case ((timePeriod, query), distribution) => QueryScore(
+      .map { case ((timePeriod, query), distribution) => search.QueryScore(
         timePeriod = timePeriod,
         query = query,
         count = distribution.total(),

@@ -4,6 +4,9 @@ import java.time.{Duration, ZoneOffset, ZonedDateTime}
 import java.util.UUID
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.playbacks.{Playback, PlaybackWithRelatedData}
+import com.boclips.event.aggregator.domain.model.users.{DeviceId, User, UserId, UserIdentity}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createUser}
 
 object PlaybackFactory {

@@ -2,7 +2,8 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.util.Currency
 
-import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.{contentpartners, _}
+import com.boclips.event.aggregator.domain.model.contentpartners.{Contract, ContractCosts, ContractDates, ContractId, ContractRestrictions, ContractRoyaltySplit}
 import com.boclips.event.infrastructure.contract.ContractDocument
 
 import scala.collection.JavaConverters._
@@ -10,7 +11,7 @@ import scala.collection.JavaConverters._
 object DocumentToContractConverter {
   def convert(document: ContractDocument): Contract = {
     val costs = document.getCosts
-    Contract(
+    contentpartners.Contract(
       id = ContractId(document.getId),
       name = document.getName,
       contractDocumentLink = Option(document.getContractDocumentLink),

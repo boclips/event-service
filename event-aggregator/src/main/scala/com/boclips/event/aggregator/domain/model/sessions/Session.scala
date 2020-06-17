@@ -1,8 +1,9 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.sessions
 
 import java.time.ZonedDateTime
 
 import com.boclips.event.aggregator.domain.model.events.Event
+import com.boclips.event.aggregator.domain.model.users.UserIdentity
 
 case class Session(
                     user: UserIdentity,

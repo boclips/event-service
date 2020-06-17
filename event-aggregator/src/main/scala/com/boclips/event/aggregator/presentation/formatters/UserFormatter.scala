@@ -2,7 +2,8 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.util.UUID
 
-import com.boclips.event.aggregator.domain.model.{AnonymousUserIdentity, BoclipsUserIdentity, ExternalUserIdentity, SCHOOL_ORGANISATION, User, UserWithRelatedData}
+import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, ExternalUserIdentity, SCHOOL_ORGANISATION, User}
+import com.boclips.event.aggregator.presentation.UserWithRelatedData
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.JsonObject
 

@@ -2,7 +2,8 @@ package com.boclips.event.aggregator.testsupport.testfactories
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.{users, _}
+import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, Deal, DeviceId, Organisation, OrganisationType, SCHOOL_ORGANISATION, User, UserId, UserIdentity}
 
 object UserFactory {
 
@@ -40,7 +41,7 @@ object UserFactory {
                           typeName: OrganisationType = SCHOOL_ORGANISATION,
                           deal: Deal = createDeal(),
                         ): Organisation = {
-    Organisation(
+    users.Organisation(
       name = name,
       postcode = postcode,
       state = state,

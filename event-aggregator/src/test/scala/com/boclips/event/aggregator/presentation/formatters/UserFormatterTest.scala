@@ -3,6 +3,12 @@ package com.boclips.event.aggregator.presentation.formatters
 import java.time.{Month, YearMonth, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.sessions.Session
+import com.boclips.event.aggregator.domain.model.users.{ExternalUserId, ExternalUserIdentity, SCHOOL_ORGANISATION, User, UserActiveStatus, UserId}
+import com.boclips.event.aggregator.presentation
+import com.boclips.event.aggregator.presentation.UserWithRelatedData
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchRequest}
@@ -18,7 +24,7 @@ class UserFormatterTest extends Test {
                     referredPlaybacks: List[Playback] = Nil,
                     searches: List[Search] = Nil,
                     sessions: List[Session] = Nil,
-                  ): UserWithRelatedData = UserWithRelatedData(user, status, playbacks, referredPlaybacks, searches, sessions)
+                  ): UserWithRelatedData = presentation.UserWithRelatedData(user, status, playbacks, referredPlaybacks, searches, sessions)
 
   }
 

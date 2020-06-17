@@ -2,7 +2,9 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.{Duration, ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.{Playback, PlaybackWithRelatedData, Url, User}
+import com.boclips.event.aggregator.domain.model.users.User
+import com.boclips.event.aggregator.domain.model.Url
+import com.boclips.event.aggregator.domain.model.playbacks.{Playback, PlaybackWithRelatedData}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory

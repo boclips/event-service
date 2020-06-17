@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.domain.service.user
 
 import com.boclips.event.aggregator.domain.model.events.Event
-import com.boclips.event.aggregator.domain.model.{BoclipsUserIdentity, ExternalUserId, ExternalUserIdentity, UserId}
+import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, ExternalUserId, ExternalUserIdentity, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser

@@ -2,7 +2,10 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.collections.CollectionId
+import com.boclips.event.aggregator.domain.model.{search, _}
+import com.boclips.event.aggregator.domain.model.search.{CollectionImpression, SearchImpression}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.domain.service.search.SearchResultPlayback
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchInteractions, createSearchRequest, createSearchResponse}
@@ -58,7 +61,7 @@ class SearchFormatterTest extends Test {
       ),
       collectionResults = Set(
         CollectionImpression(collectionId = CollectionId("collection-1"), interaction = true),
-        CollectionImpression(collectionId = CollectionId("collection-2"), interaction = false),
+        search.CollectionImpression(collectionId = CollectionId("collection-2"), interaction = false),
       )
     ))
 
@@ -76,8 +79,8 @@ class SearchFormatterTest extends Test {
   it should "write the number of collection results" in {
 
     val json = SearchFormatter formatRow createSearch(response = createSearchResponse(collectionResults = Set(
-      CollectionImpression(collectionId = CollectionId("collection-1"), interaction = true),
-      CollectionImpression(collectionId = CollectionId("collection-2"), interaction = false),
+      search.CollectionImpression(collectionId = CollectionId("collection-1"), interaction = true),
+      search.CollectionImpression(collectionId = CollectionId("collection-2"), interaction = false),
     )))
 
     json.getInt("collectionResultsCount") shouldBe 2

@@ -1,7 +1,14 @@
 package com.boclips.event.aggregator.domain.service.video
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
 import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
+import com.boclips.event.aggregator.domain.model.orders.{Order, VideoItemWithOrder}
+import com.boclips.event.aggregator.domain.model.playbacks.PlaybackWithRelatedData
+import com.boclips.event.aggregator.domain.model.search.VideoSearchResultImpression
+import com.boclips.event.aggregator.domain.model.videos.{Video, VideoId}
+import com.boclips.event.aggregator.presentation
+import com.boclips.event.aggregator.presentation.VideoWithRelatedData
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 
@@ -64,7 +71,7 @@ object VideoAssembler {
       .values
       .map {
         case ((((((video, videoPlaybacks), videoOrders), videoChannel), videoContract), videoImpressions), videoInteractions) =>
-          VideoWithRelatedData(
+          presentation.VideoWithRelatedData(
             video = video,
             playbacks = videoPlaybacks,
             orders = videoOrders,

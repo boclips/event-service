@@ -2,7 +2,8 @@ package com.boclips.event.aggregator.domain.model.events
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.{Url, UserIdentity}
+import com.boclips.event.aggregator.domain.model.Url
+import com.boclips.event.aggregator.domain.model.users.UserIdentity
 import com.boclips.event.aggregator.presentation.RowFormatter
 import com.boclips.event.aggregator.presentation.formatters.PlatformInteractedWithEventFormatter
 import com.boclips.event.infrastructure.EventFields

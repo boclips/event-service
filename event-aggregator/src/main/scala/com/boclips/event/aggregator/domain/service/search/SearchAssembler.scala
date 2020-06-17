@@ -1,6 +1,7 @@
 package com.boclips.event.aggregator.domain.service.search
 
-import com.boclips.event.aggregator.domain.model.{Search, Session}
+import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.sessions.Session
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 

@@ -1,6 +1,8 @@
 package com.boclips.event.aggregator.domain.service.okr
 
-import com.boclips.event.aggregator.domain.model.{DateRange, Search, SearchMetric, TimePeriodDuration}
+import com.boclips.event.aggregator.domain.model.okrs.{DateRange, SearchMetric, TimePeriodDuration}
+import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.okrs
 import org.apache.spark.rdd.RDD
 
 object SearchMetricCalculator {
@@ -25,7 +27,7 @@ object SearchMetricCalculator {
       .mapValues(SearchMetricCalculator.mean)
 
     searchesLeadingToPlayback.fullOuterJoin(playbackTop3).map {
-      case (timePeriod, (maybeSearchesLeadingToPlayback, maybePlaybackTop3)) => SearchMetric(timePeriod, maybeSearchesLeadingToPlayback.getOrElse(0), maybePlaybackTop3.getOrElse(0))
+      case (timePeriod, (maybeSearchesLeadingToPlayback, maybePlaybackTop3)) => okrs.SearchMetric(timePeriod, maybeSearchesLeadingToPlayback.getOrElse(0), maybePlaybackTop3.getOrElse(0))
     }
       .collect().toList
   }

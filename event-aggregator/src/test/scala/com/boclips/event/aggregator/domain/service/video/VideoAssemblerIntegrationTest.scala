@@ -1,6 +1,9 @@
 package com.boclips.event.aggregator.domain.service.video
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelDetails, ChannelId, ContractId}
+import com.boclips.event.aggregator.domain.model.orders.OrderId
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel

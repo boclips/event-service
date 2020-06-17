@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.Contract
+import com.boclips.event.aggregator.domain.model.contentpartners.Contract
 import com.boclips.event.aggregator.domain.service.ContractLoader
 import com.boclips.event.infrastructure.contract.ContractDocument
 import org.apache.spark.rdd.RDD

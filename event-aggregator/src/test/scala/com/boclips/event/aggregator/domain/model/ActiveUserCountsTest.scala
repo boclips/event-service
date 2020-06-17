@@ -1,5 +1,6 @@
 package com.boclips.event.aggregator.domain.model
 
+import com.boclips.event.aggregator.domain.model.okrs.ActiveUserCounts
 import com.boclips.event.aggregator.testsupport.Test
 
 class ActiveUserCountsTest extends Test {

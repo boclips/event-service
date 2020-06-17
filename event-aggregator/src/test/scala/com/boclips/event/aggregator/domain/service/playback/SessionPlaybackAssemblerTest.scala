@@ -2,7 +2,9 @@ package com.boclips.event.aggregator.domain.service.playback
 
 import java.time.Duration
 
-import com.boclips.event.aggregator.domain.model.{DeviceId, Url, UserId, VideoId}
+import com.boclips.event.aggregator.domain.model.users.{DeviceId, UserId}
+import com.boclips.event.aggregator.domain.model.Url
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
 import com.boclips.event.aggregator.testsupport.testfactories.SessionFactory.createSession

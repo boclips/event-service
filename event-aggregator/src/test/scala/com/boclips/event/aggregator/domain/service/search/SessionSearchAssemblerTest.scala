@@ -4,6 +4,10 @@ import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.collections.CollectionId
+import com.boclips.event.aggregator.domain.model.search.Query
+import com.boclips.event.aggregator.domain.model.users.UserId
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory._
 import com.boclips.event.aggregator.testsupport.testfactories.SessionFactory.createSession

@@ -1,5 +1,6 @@
 package com.boclips.event.aggregator.domain.model
 
+import com.boclips.event.aggregator.domain.model.search.Query
 import com.boclips.event.aggregator.testsupport.Test
 
 class QueryTest extends Test {

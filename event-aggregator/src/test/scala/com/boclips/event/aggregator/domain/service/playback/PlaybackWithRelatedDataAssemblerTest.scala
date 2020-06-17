@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.domain.service.playback
 
-import com.boclips.event.aggregator.domain.model.{AnonymousUserIdentity, BoclipsUserIdentity, User, UserId}
+import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, User, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser

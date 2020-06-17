@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.VideoId
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.infrastructure.video.VideoDocument
 

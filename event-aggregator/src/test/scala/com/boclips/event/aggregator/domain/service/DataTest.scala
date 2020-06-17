@@ -1,12 +1,13 @@
 package com.boclips.event.aggregator.domain.service
 
-import com.boclips.event.aggregator.domain.model.events.{Event, EventConstants}
-import com.boclips.event.aggregator.domain.model.{API_ORGANISATION, SCHOOL_ORGANISATION, User, Video}
+import com.boclips.event.aggregator.domain.model.events.Event
+import com.boclips.event.aggregator.domain.model.users.{API_ORGANISATION, SCHOOL_ORGANISATION, User}
+import com.boclips.event.aggregator.domain.model.videos.Video
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.{createVideoSegmentPlayedEvent, createVideosSearchedEvent}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity, createUser}
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
-import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
 
 class DataTest extends IntegrationTest {
 

@@ -1,13 +1,11 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.videos
 
 import java.time.{Duration, LocalDate, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
+import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.contentpartners.ChannelId
 
-case class VideoId(value: String) extends Ordered[VideoId] {
 
-  override def compare(that: VideoId): Int = value.compare(that.value)
-}
 
 case class Video(
                   id: VideoId,
@@ -59,21 +57,9 @@ case class Video(
   }
 }
 
-case class Dimensions(width: Int, height: Int)
 
-case class VideoAsset(
-                       sizeKb: Int,
-                       dimensions: Dimensions,
-                       bitrateKbps: Int
-                     )
 
-case class VideoWithRelatedData(
-                                 video: Video,
-                                 playbacks: List[PlaybackWithRelatedData] = Nil,
-                                 orders: List[VideoItemWithOrder] = Nil,
-                                 channel: Option[Channel] = None,
-                                 contract: Option[Contract] = None,
-                                 impressions: List[VideoSearchResultImpression] = Nil,
-                                 interactions: List[VideoInteractedWithEvent] = Nil
-                               )
+
+
+
 

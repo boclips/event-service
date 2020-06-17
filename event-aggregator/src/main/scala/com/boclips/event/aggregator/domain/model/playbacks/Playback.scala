@@ -1,6 +1,10 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.playbacks
 
 import java.time.{Duration, ZonedDateTime}
+
+import com.boclips.event.aggregator.domain.model.Url
+import com.boclips.event.aggregator.domain.model.users.{DeviceId, User, UserId, UserIdentity}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 
 case class Playback
 (

@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.domain.service.user
 
 import com.boclips.event.aggregator.domain.model.events.Event
-import com.boclips.event.aggregator.domain.model.{BoclipsUserIdentity, ExternalUserIdentity, User, UserIdentity}
+import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, ExternalUserIdentity, User, UserIdentity}
 import org.apache.spark.rdd.RDD
 
 object UserAssembler {

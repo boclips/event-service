@@ -3,11 +3,17 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.domain.model.events._
+import com.boclips.event.aggregator.domain.model.search.Query
+import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, DeviceId, ExternalUserId, ExternalUserIdentity, UserId, UserIdentity}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.infrastructure.EventFields
 import org.bson.Document
 
 object DocumentToEventConverter {
+
+  final val LEGACY_ANONYMOUS_USER_ID: String = "anonymousUser"
 
   implicit class DocumentExtensions(event: Document) {
     def url: Option[Url] = Option(event.getString(EventFields.URL)).map(Url.parse)
@@ -16,7 +22,7 @@ object DocumentToEventConverter {
 
     def userIdentity: UserIdentity = {
       val userIdOption = Option(event.getString(EventFields.USER_ID))
-        .filter(_ != EventConstants.anonymousUserId.value)
+        .filter(_ != LEGACY_ANONYMOUS_USER_ID)
         .map(UserId)
       val externalUserIdOption = Option(event.getString(EventFields.EXTERNAL_USER_ID))
         .map(ExternalUserId)

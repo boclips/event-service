@@ -1,5 +1,6 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.okrs
 
+import com.boclips.event.aggregator.domain.model.users.UserTotals
 import com.boclips.event.aggregator.presentation.RowFormatter
 import com.boclips.event.aggregator.presentation.formatters.KeyResultsFormatter
 

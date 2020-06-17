@@ -2,7 +2,7 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
-import com.boclips.event.aggregator.domain.model.Search
+import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.JsonObject
 

@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.Order
+import com.boclips.event.aggregator.domain.model.orders.Order
 import com.boclips.event.aggregator.domain.service.OrderLoader
 import com.boclips.event.infrastructure.order.OrderDocument
 import org.apache.spark.rdd.RDD

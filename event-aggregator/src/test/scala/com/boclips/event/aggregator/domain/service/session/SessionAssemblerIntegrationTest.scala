@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.domain.service.session
 
-import com.boclips.event.aggregator.domain.model.{DeviceId, User, UserId}
+import com.boclips.event.aggregator.domain.model.users.{DeviceId, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.{createVideoSegmentPlayedEvent, createVideosSearchedEvent}
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity, createUser}

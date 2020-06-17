@@ -1,5 +1,6 @@
 package com.boclips.event.aggregator.domain.model
 
+import com.boclips.event.aggregator.domain.model.users.{API_ORGANISATION, DISTRICT_ORGANISATION, OrganisationType, SCHOOL_ORGANISATION}
 import com.boclips.event.aggregator.testsupport.Test
 
 class OrganisationTypeTest extends Test {

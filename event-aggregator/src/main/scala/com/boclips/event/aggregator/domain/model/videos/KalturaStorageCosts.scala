@@ -1,4 +1,4 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.videos
 
 object KalturaStorageCosts {
   final val GB_MONTHLY_GBP = 0.1

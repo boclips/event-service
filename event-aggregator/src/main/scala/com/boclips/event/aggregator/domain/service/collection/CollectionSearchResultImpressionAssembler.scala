@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.domain.service.collection
 
-import com.boclips.event.aggregator.domain.model.{CollectionSearchResultImpression, Search}
+import com.boclips.event.aggregator.domain.model.search.{CollectionSearchResultImpression, Search}
 import org.apache.spark.rdd.RDD
 
 object CollectionSearchResultImpressionAssembler {

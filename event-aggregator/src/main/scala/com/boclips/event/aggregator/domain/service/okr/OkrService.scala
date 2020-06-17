@@ -1,7 +1,11 @@
 package com.boclips.event.aggregator.domain.service.okr
 
-import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.{okrs, _}
 import com.boclips.event.aggregator.domain.model.events.Event
+import com.boclips.event.aggregator.domain.model.okrs.{DateRange, KeyResults, Metric, PlaybackMetric, SearchMetric, TimePeriodDuration, UserMetric}
+import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.sessions.Session
+import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.service.Data
 import com.boclips.event.aggregator.domain.service.search.SearchAssembler
 import com.boclips.event.aggregator.domain.service.session.SessionAssembler
@@ -26,7 +30,7 @@ object OkrService {
   private def join(userMetrics: List[UserMetric], playbackMetrics: List[PlaybackMetric], searchMetrics: List[SearchMetric]) = {
     Collections.fullJoin(indexByTimePeriod(userMetrics), indexByTimePeriod(playbackMetrics), indexByTimePeriod(searchMetrics))
       .flatMap {
-        case (timePeriod, (Some(userMetric), Some(playbackMetric), Some(searchMetric))) => Some(KeyResults(timePeriod, userMetric, playbackMetric, searchMetric))
+        case (timePeriod, (Some(userMetric), Some(playbackMetric), Some(searchMetric))) => Some(okrs.KeyResults(timePeriod, userMetric, playbackMetric, searchMetric))
         case x => println(x); None
       }
       .toList

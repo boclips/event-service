@@ -2,7 +2,7 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.LocalDate
 
-import com.boclips.event.aggregator.domain.model.VideoId
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createStorageCharge
 

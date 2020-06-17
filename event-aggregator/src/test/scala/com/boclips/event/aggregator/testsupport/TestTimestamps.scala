@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.testsupport
 import java.time.ZoneOffset.UTC
 import java.time.{LocalDate, Month, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.{DateRange, Monthly}
+import com.boclips.event.aggregator.domain.model.okrs.{DateRange, Monthly}
 
 object TestTimestamps {
 

@@ -2,7 +2,8 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.{OrderId, OrderItem, VideoId}
+import com.boclips.event.aggregator.domain.model.orders.{OrderId, OrderItem}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.createOrder
 

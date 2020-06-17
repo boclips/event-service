@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.Collection
+import com.boclips.event.aggregator.domain.model.collections.Collection
 import com.boclips.event.aggregator.domain.service.CollectionLoader
 import com.boclips.event.infrastructure.collection.CollectionDocument
 import org.apache.spark.rdd.RDD

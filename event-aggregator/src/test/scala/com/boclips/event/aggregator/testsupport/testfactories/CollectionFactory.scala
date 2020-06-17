@@ -2,7 +2,10 @@ package com.boclips.event.aggregator.testsupport.testfactories
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.{collections, _}
+import com.boclips.event.aggregator.domain.model.collections.{Collection, CollectionId}
+import com.boclips.event.aggregator.domain.model.users.UserId
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 
 object CollectionFactory {
 
@@ -20,7 +23,7 @@ object CollectionFactory {
                         deleted: Boolean = false,
                         public: Boolean = true
                       ): Collection =
-    Collection(
+    collections.Collection(
       id = CollectionId(id),
       title = title,
       description = description,

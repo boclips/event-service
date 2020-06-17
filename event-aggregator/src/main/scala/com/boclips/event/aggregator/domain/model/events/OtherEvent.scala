@@ -2,7 +2,8 @@ package com.boclips.event.aggregator.domain.model.events
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.{DeviceId, Url, UserId, UserIdentity}
+import com.boclips.event.aggregator.domain.model.Url
+import com.boclips.event.aggregator.domain.model.users.UserIdentity
 
 case class OtherEvent
 (

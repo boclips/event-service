@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.bigquery
 
-import com.boclips.event.aggregator.domain.model.VideoWithRelatedData
+import com.boclips.event.aggregator.presentation.VideoWithRelatedData
 import com.boclips.event.aggregator.presentation.formatters.VideoFormatter
 import com.boclips.event.aggregator.presentation.formatters.schema.Schema
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance

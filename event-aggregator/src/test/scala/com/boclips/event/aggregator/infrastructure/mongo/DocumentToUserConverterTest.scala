@@ -2,7 +2,7 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.{API_ORGANISATION, BoclipsUserIdentity, UserId}
+import com.boclips.event.aggregator.domain.model.users.{API_ORGANISATION, BoclipsUserIdentity, UserId}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.infrastructure.user.{OrganisationDocument, UserDocument}
 

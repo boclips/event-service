@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.LocalDate
 import java.util.Currency
 
-import com.boclips.event.aggregator.domain.model.{ContractCosts, ContractDates, ContractId, ContractRestrictions, ContractRoyaltySplit}
+import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.infrastructure.contract._
 
@@ -59,7 +59,7 @@ class DocumentToContractConverterTest extends Test {
       start = Some(LocalDate ofYearDay(2012, 300)),
       end = Some(LocalDate ofYearDay(2016, 310))
     ))
-    contract.contractIsRolling should contain (true)
+    contract.contractIsRolling should contain(true)
     contract.daysBeforeTerminationWarning should contain(60)
     contract.yearsForMaximumLicense should contain(30)
     contract.daysForSellOffPeriod should contain(199)
@@ -67,8 +67,8 @@ class DocumentToContractConverterTest extends Test {
       download = Some(20F),
       streaming = Some(0.9F)
     ))
-    contract.minimumPriceDescription should contain ("minimum")
-    contract.remittanceCurrency should contain (Currency.getInstance("GBP"))
+    contract.minimumPriceDescription should contain("minimum")
+    contract.remittanceCurrency should contain(Currency.getInstance("GBP"))
     contract.restrictions should contain(ContractRestrictions(
       clientFacing = Some(List("client facing")),
       territory = Some("territory"),

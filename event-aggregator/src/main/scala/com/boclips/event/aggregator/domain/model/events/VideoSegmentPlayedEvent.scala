@@ -3,6 +3,9 @@ package com.boclips.event.aggregator.domain.model.events
 import java.time.ZonedDateTime
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.search.Query
+import com.boclips.event.aggregator.domain.model.users.{UserId, UserIdentity}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.infrastructure.EventFields
 
 case class VideoSegmentPlayedEvent

@@ -3,6 +3,7 @@ package com.boclips.event.aggregator.testsupport.testfactories
 import java.util.Currency
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.contentpartners.{Contract, ContractCosts, ContractDates, ContractId, ContractRestrictions, ContractRoyaltySplit}
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
 
 object ContractFactory {

@@ -3,6 +3,8 @@ package com.boclips.event.aggregator.domain.model
 import java.time.Month.{FEBRUARY, JANUARY, NOVEMBER}
 import java.time.{LocalDate, YearMonth, ZonedDateTime}
 
+import com.boclips.event.aggregator.domain.model.users.UserActiveStatus
+import com.boclips.event.aggregator.presentation.UserWithRelatedData
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
 

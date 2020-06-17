@@ -3,6 +3,9 @@ package com.boclips.event.aggregator.domain.model.events
 import java.time.ZonedDateTime
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.collections.CollectionId
+import com.boclips.event.aggregator.domain.model.search.Query
+import com.boclips.event.aggregator.domain.model.users.UserIdentity
 import com.boclips.event.aggregator.presentation.RowFormatter
 import com.boclips.event.aggregator.presentation.formatters.CollectionInteractionEventsFormatter
 import com.boclips.event.infrastructure.EventFields

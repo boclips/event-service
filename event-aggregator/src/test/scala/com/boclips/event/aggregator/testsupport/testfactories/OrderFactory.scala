@@ -2,7 +2,9 @@ package com.boclips.event.aggregator.testsupport.testfactories
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.{Order, OrderId, OrderItem, VideoId}
+import com.boclips.event.aggregator.domain.model.orders
+import com.boclips.event.aggregator.domain.model.orders.{Order, OrderId, OrderItem}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 
 object OrderFactory {
 
@@ -13,7 +15,7 @@ object OrderFactory {
                    customerOrganisationName: String = "customer name",
                    items: List[OrderItem] = List(),
                  ): Order = {
-    Order(
+    orders.Order(
       id = id,
       createdAt = createdAt,
       updatedAt = updatedAt,

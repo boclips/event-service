@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.domain.service
 
-import com.boclips.event.aggregator.domain.model.Channel
+import com.boclips.event.aggregator.domain.model.contentpartners.Channel
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 

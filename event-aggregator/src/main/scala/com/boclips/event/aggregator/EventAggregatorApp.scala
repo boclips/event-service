@@ -4,7 +4,16 @@ import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.config.{BigQueryConfig, MongoConfig, SparkConfig}
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.collections.Collection
+import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent, PlatformInteractedWithEvent}
+import com.boclips.event.aggregator.domain.model.okrs.{Monthly, Weekly}
+import com.boclips.event.aggregator.domain.model.orders.Order
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.sessions.Session
+import com.boclips.event.aggregator.domain.model.users.User
+import com.boclips.event.aggregator.domain.model.videos.{Video, VideoStorageCharge}
 import com.boclips.event.aggregator.domain.service.Data
 import com.boclips.event.aggregator.domain.service.collection.{CollectionAssembler, CollectionInteractionEventAssembler, CollectionSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.domain.service.navigation.{PagesRenderedAssembler, PlatformInteractedWithEventAssembler}

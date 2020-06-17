@@ -1,4 +1,4 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.contentpartners
 
 import java.time.Period
 import java.util.Locale

@@ -3,8 +3,9 @@ package com.boclips.event.aggregator.presentation.formatters.schema.base
 import java.time._
 import java.util.{Currency, Locale}
 
+import com.boclips.event.aggregator.domain.model.contentpartners.{DistributionMethod, Streaming}
 import com.boclips.event.aggregator.domain.model.events.{Event, OtherEvent}
-import com.boclips.event.aggregator.domain.model.{BoclipsUserIdentity, DistributionMethod, OrganisationType, SCHOOL_ORGANISATION, Streaming, User, UserIdentity}
+import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, OrganisationType, SCHOOL_ORGANISATION, UserIdentity}
 
 import scala.reflect.runtime.universe
 import scala.reflect.runtime.universe._

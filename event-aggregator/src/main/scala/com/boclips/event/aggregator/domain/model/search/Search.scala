@@ -1,7 +1,11 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.search
 
 import java.time.ZonedDateTime
 
+import com.boclips.event.aggregator.domain.model.users.UserIdentity
+import com.boclips.event.aggregator.domain.model.videos.VideoId
+import com.boclips.event.aggregator.domain.model.Url
+import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.domain.service.search.SearchResultPlayback
 import com.boclips.event.aggregator.presentation.RowFormatter
 import com.boclips.event.aggregator.presentation.formatters.SearchFormatter

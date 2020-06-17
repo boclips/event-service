@@ -3,6 +3,7 @@ package com.boclips.event.aggregator.domain.model
 import java.time.Month.{APRIL, MAY}
 import java.time.{LocalDate, ZoneOffset, ZonedDateTime}
 
+import com.boclips.event.aggregator.domain.model.okrs.{Monthly, Weekly}
 import com.boclips.event.aggregator.testsupport.Test
 
 class DateRangeTest extends Test {

@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.Video
+import com.boclips.event.aggregator.domain.model.videos.Video
 import com.boclips.event.aggregator.domain.service.VideoLoader
 import com.boclips.event.infrastructure.video.VideoDocument
 import org.apache.spark.rdd.RDD

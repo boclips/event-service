@@ -4,6 +4,7 @@ import java.time.Period
 import java.util.Locale
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, ChannelDetails, ChannelId, ChannelIngest, ChannelMarketing, ChannelPedagogy, Download, Streaming}
 import com.boclips.event.infrastructure.channel.{ChannelDocument, DistributionMethodDocument}
 
 import scala.collection.JavaConverters._

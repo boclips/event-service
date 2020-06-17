@@ -1,4 +1,4 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.okrs
 
 import java.time.ZoneOffset.UTC
 import java.time.{LocalDate, ZonedDateTime}

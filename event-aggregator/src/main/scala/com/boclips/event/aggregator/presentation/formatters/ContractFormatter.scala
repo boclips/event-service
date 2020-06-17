@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import com.boclips.event.aggregator.domain.model.Contract
+import com.boclips.event.aggregator.domain.model.contentpartners.Contract
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.{JsonArray, JsonObject}
 

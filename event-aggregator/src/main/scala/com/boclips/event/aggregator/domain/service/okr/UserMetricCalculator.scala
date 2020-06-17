@@ -2,8 +2,10 @@ package com.boclips.event.aggregator.domain.service.okr
 
 import java.time.{LocalDate, ZoneOffset}
 
-import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.events.Event
+import com.boclips.event.aggregator.domain.model.okrs
+import com.boclips.event.aggregator.domain.model.okrs.{ActiveUserCounts, DateRange, TimePeriodDuration, UserMetric}
+import com.boclips.event.aggregator.domain.model.users.{User, UserId, UserTotals}
 import com.boclips.event.aggregator.domain.service.okr.ActivityType.ActivityType
 import com.boclips.event.aggregator.utils.Collections._
 import org.apache.spark.rdd.RDD
@@ -26,7 +28,7 @@ object UserMetricCalculator {
     activeUsersByTimePeriod
       .map {
         case (timePeriod: DateRange, counts) => {
-          UserMetric(
+          okrs.UserMetric(
             timePeriod = timePeriod,
             activeUserCounts = counts,
             totalsAtStart = totalsByDate.getOrElse(timePeriod.startInclusive, UserTotals(timePeriod.startInclusive, 0)),

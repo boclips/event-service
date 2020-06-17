@@ -4,7 +4,11 @@ import java.time.temporal.ChronoUnit
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.domain.model.events._
+import com.boclips.event.aggregator.domain.model.search.Query
+import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, DeviceId, ExternalUserId, ExternalUserIdentity, UserId}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchEventDocument

@@ -3,7 +3,9 @@ package com.boclips.event.aggregator.domain.service.session
 import java.time.Duration
 
 import com.boclips.event.aggregator.domain.model.events.Event
-import com.boclips.event.aggregator.domain.model.{Session, UserIdentity}
+import com.boclips.event.aggregator.domain.model.sessions
+import com.boclips.event.aggregator.domain.model.sessions.Session
+import com.boclips.event.aggregator.domain.model.users.UserIdentity
 
 class SessionService {
 
@@ -11,7 +13,7 @@ class SessionService {
     events.toList
       .sortBy(_.timestamp.toEpochSecond)
       .foldLeft(List(List[Event]()))(buildSessions)
-      .map(Session(owner, _))
+      .map(sessions.Session(owner, _))
   }
 
   private def buildSessions(sessions: List[List[Event]], event: Event): List[List[Event]] = {

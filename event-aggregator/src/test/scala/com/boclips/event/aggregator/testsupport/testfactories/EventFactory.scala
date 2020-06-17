@@ -4,7 +4,11 @@ import java.time.{ZoneOffset, ZonedDateTime}
 import java.util.{Date, UUID}
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.domain.model.events._
+import com.boclips.event.aggregator.domain.model.search.Query
+import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, UserId, UserIdentity}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.infrastructure.EventFields
 import org.bson.Document

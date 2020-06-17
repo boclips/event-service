@@ -1,5 +1,6 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.search
 
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.presentation.RowFormatter
 import com.boclips.event.aggregator.presentation.formatters.VideoSearchResultImpressionFormatter
 

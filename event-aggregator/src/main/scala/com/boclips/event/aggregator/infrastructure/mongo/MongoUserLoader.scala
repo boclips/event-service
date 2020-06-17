@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.User
+import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.service.UserLoader
 import com.boclips.event.infrastructure.user.UserDocument
 import org.apache.spark.rdd.RDD

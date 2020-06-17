@@ -1,7 +1,8 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.orders
 
 import java.time.ZonedDateTime
 
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.presentation.RowFormatter
 import com.boclips.event.aggregator.presentation.formatters.OrderFormatter
 

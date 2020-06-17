@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.{BoclipsUserIdentity, User, UserId}
+import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, User, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.infrastructure.user.UserDocument
 import com.mongodb.client.MongoCollection

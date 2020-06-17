@@ -3,7 +3,8 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
 import java.util.Date
 
-import com.boclips.event.aggregator.domain.model.{OrderId, OrderItem, VideoId}
+import com.boclips.event.aggregator.domain.model.orders.{OrderId, OrderItem}
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.infrastructure.order.{OrderDocument, OrderItemDocument}
 

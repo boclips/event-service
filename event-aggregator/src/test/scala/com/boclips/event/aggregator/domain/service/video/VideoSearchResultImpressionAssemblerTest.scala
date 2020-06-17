@@ -1,6 +1,7 @@
 package com.boclips.event.aggregator.domain.service.video
 
-import com.boclips.event.aggregator.domain.model.{SearchImpression, VideoId}
+import com.boclips.event.aggregator.domain.model.search.SearchImpression
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchResponse}
 

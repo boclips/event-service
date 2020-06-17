@@ -3,7 +3,8 @@ package com.boclips.event.aggregator.domain.service.okr
 import java.time.Month._
 
 import com.boclips.event.aggregator.domain.model.events.VideosSearchedEvent
-import com.boclips.event.aggregator.domain.model.{Monthly, User}
+import com.boclips.event.aggregator.domain.model.okrs.Monthly
+import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.TestTimestamps.{oneDayThis, thisYearIn, thisYearWhole}
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchedEvent

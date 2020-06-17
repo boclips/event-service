@@ -3,7 +3,8 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.ZonedDateTime
 import java.util
 
-import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.{users, _}
+import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, Deal, Organisation, OrganisationType, User, UserId}
 import com.boclips.event.infrastructure.user.{OrganisationDocument, UserDocument}
 
 import scala.collection.JavaConverters._
@@ -41,7 +42,7 @@ object DocumentToUserConverter {
       document.getBilling
     }
 
-    Organisation(
+    users.Organisation(
       name = document.getName,
       `type` = OrganisationType.from(document.getType),
       parent = Option(document.getParent).map(convertOrganisation),

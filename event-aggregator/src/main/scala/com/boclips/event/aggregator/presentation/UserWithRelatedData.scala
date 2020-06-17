@@ -1,40 +1,13 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.presentation
 
-import java.time.{LocalDate, YearMonth, ZonedDateTime}
+import java.time.{LocalDate, YearMonth}
 
-import com.boclips.event.aggregator.presentation.RowFormatter
+import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.sessions.Session
+import com.boclips.event.aggregator.domain.model.users.{User, UserActiveStatus}
 import com.boclips.event.aggregator.presentation.formatters.UserFormatter
-
-case class UserId(value: String) extends Ordered[UserId] {
-  override def compare(that: UserId): Int = value.compare(that.value)
-}
-
-case class DeviceId(value: String)
-
-case class User(
-                 identity: UserIdentity,
-                 firstName: Option[String],
-                 lastName: Option[String],
-                 email: Option[String],
-                 role: Option[String],
-                 subjects: List[String],
-                 ages: List[Int],
-                 createdAt: ZonedDateTime,
-                 organisation: Option[Organisation],
-                 isBoclipsEmployee: Boolean,
-                 hasOptedIntoMarketing: Option[Boolean]
-               )
-
-case class UserActiveStatus(month: YearMonth, isActive: Boolean)
-
-case class UserWithRelatedData(
-                                user: User,
-                                monthlyActiveStatus: List[UserActiveStatus],
-                                playbacks: List[Playback],
-                                referredPlaybacks: List[Playback],
-                                searches: List[Search],
-                                sessions: List[Session],
-                              )
 
 object UserWithRelatedData {
 
@@ -69,3 +42,12 @@ object UserWithRelatedData {
     if (start == end) List(start) else start :: monthsBetween(start.plusMonths(1), end)
   }
 }
+
+case class UserWithRelatedData(
+                                user: User,
+                                monthlyActiveStatus: List[UserActiveStatus],
+                                playbacks: List[Playback],
+                                referredPlaybacks: List[Playback],
+                                searches: List[Search],
+                                sessions: List[Session],
+                              )

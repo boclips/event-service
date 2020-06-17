@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.Period
 import java.util.Locale
 
-import com.boclips.event.aggregator.domain.model.{ChannelId, Download, Streaming}
+import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelId, Download, Streaming}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.infrastructure.channel._
 
@@ -72,7 +72,7 @@ class DocumentToChannelConverterTest extends Test {
 
     channel.ingest._type shouldBe "MANUAL"
     channel.ingest.deliveryFrequency should contain(Period.ofMonths(1))
-    channel.ingest.distributionMethods should contain (Set(Streaming, Download))
+    channel.ingest.distributionMethods should contain(Set(Streaming, Download))
 
     channel.pedagogy.subjectNames should contain(List("ENGLISH", "MATH"))
     channel.pedagogy.ageRangeMin should contain(8)

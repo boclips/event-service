@@ -1,7 +1,8 @@
 package com.boclips.event.aggregator.domain.service
 
-import com.boclips.event.aggregator.domain.model.events.{Event, EventConstants}
-import com.boclips.event.aggregator.domain.model.{AnonymousUserIdentity, SCHOOL_ORGANISATION, User, UserId, Video}
+import com.boclips.event.aggregator.domain.model.events.Event
+import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, SCHOOL_ORGANISATION, User}
+import com.boclips.event.aggregator.domain.model.videos.Video
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 

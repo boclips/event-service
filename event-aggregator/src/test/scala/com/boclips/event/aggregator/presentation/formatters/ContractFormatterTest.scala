@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.presentation.formatters
 import java.time.LocalDate
 import java.util.Currency
 
-import com.boclips.event.aggregator.domain.model.{ContractCosts, ContractDates, ContractRestrictions, ContractRoyaltySplit}
+import com.boclips.event.aggregator.domain.model.contentpartners.{ContractCosts, ContractDates, ContractRestrictions, ContractRoyaltySplit}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.{createEmptyContract, createFullContract}
 import com.google.gson.JsonNull

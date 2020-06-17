@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.domain.service.collection
 
-import com.boclips.event.aggregator.domain.model.CollectionId
+import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.CollectionFactory.createCollection
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createCollectionInteractedWithEvent

@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.domain.service.okr
 
-import com.boclips.event.aggregator.domain.model.Monthly
 import com.boclips.event.aggregator.domain.model.events.VideoSegmentPlayedEvent
+import com.boclips.event.aggregator.domain.model.okrs.Monthly
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent

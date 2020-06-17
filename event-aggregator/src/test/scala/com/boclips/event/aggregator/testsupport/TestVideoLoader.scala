@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.testsupport
 
-import com.boclips.event.aggregator.domain.model.Video
+import com.boclips.event.aggregator.domain.model.videos.Video
 import com.boclips.event.aggregator.domain.service.VideoLoader
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession

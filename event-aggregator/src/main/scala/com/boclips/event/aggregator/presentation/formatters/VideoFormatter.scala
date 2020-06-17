@@ -3,6 +3,9 @@ package com.boclips.event.aggregator.presentation.formatters
 import java.time.LocalDate
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.orders.VideoItemWithOrder
+import com.boclips.event.aggregator.domain.model.videos.Video
+import com.boclips.event.aggregator.presentation.VideoWithRelatedData
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.{JsonArray, JsonElement, JsonObject}
 

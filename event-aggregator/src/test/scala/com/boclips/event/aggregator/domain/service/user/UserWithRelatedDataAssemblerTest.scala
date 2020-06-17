@@ -3,6 +3,10 @@ package com.boclips.event.aggregator.domain.service.user
 import java.time.{YearMonth, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.sessions.Session
+import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, User, UserId, UserIdentity}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback

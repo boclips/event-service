@@ -3,7 +3,9 @@ package com.boclips.event.aggregator.domain.service.playback
 import java.time.Duration
 
 import com.boclips.event.aggregator.domain.model.events.VideoSegmentPlayedEvent
-import com.boclips.event.aggregator.domain.model.{Playback, Session, UserIdentity}
+import com.boclips.event.aggregator.domain.model.users.UserIdentity
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.sessions.Session
 
 class SessionPlaybackAssembler {
 

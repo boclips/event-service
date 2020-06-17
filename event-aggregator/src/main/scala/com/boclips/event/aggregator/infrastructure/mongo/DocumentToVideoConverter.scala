@@ -2,7 +2,9 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.time.{Duration, LocalDate, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model._
+import com.boclips.event.aggregator.domain.model.contentpartners.ChannelId
+import com.boclips.event.aggregator.domain.model.{videos, _}
+import com.boclips.event.aggregator.domain.model.videos.{Dimensions, Video, VideoAsset, VideoId}
 import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument}
 
 import scala.collection.JavaConverters._
@@ -10,7 +12,7 @@ import scala.collection.JavaConverters._
 object DocumentToVideoConverter {
 
   def convert(document: VideoDocument): Video = {
-    Video(
+    videos.Video(
       id = VideoId(document.getId()),
       title = document.getTitle,
       channelId = ChannelId(document.getChannelId),

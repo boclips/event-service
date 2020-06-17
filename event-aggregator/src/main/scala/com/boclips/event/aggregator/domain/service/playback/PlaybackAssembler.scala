@@ -1,7 +1,9 @@
 package com.boclips.event.aggregator.domain.service.playback
 
 import com.boclips.event.aggregator.domain.model.events.VideoSegmentPlayedEvent
-import com.boclips.event.aggregator.domain.model.{Playback, Session, Video, VideoId}
+import com.boclips.event.aggregator.domain.model.videos.{Video, VideoId}
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.sessions.Session
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 

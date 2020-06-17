@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import com.boclips.event.aggregator.domain.model.Channel
+import com.boclips.event.aggregator.domain.model.contentpartners.Channel
 import com.boclips.event.aggregator.domain.service.ChannelLoader
 import com.boclips.event.infrastructure.channel.ChannelDocument
 import org.apache.spark.rdd.RDD

@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.domain.service.video
 
-import com.boclips.event.aggregator.domain.model.{Search, VideoSearchResultImpression}
+import com.boclips.event.aggregator.domain.model.search.{Search, VideoSearchResultImpression}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 

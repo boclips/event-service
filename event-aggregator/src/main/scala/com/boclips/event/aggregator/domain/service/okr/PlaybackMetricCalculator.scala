@@ -1,7 +1,8 @@
 package com.boclips.event.aggregator.domain.service.okr
 
 import com.boclips.event.aggregator.domain.model.events.{Event, VideoSegmentPlayedEvent}
-import com.boclips.event.aggregator.domain.model.{DateRange, PlaybackMetric, TimePeriodDuration}
+import com.boclips.event.aggregator.domain.model.okrs.{DateRange, PlaybackMetric, TimePeriodDuration}
+import com.boclips.event.aggregator.domain.model.okrs
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
 import org.apache.spark.rdd.RDD
 
@@ -14,7 +15,7 @@ object PlaybackMetricCalculator {
         case (timePeriod, totalSecondsWatchedByUser) =>
           val totalSeconds = totalSecondsWatchedByUser.sum
           val medianSeconds = PlaybackMetricCalculator.median(totalSecondsWatchedByUser).toLong
-          PlaybackMetric(timePeriod = timePeriod, totalSecondsWatched = totalSeconds, medianSecondsWatched = medianSeconds)
+          okrs.PlaybackMetric(timePeriod = timePeriod, totalSecondsWatched = totalSeconds, medianSecondsWatched = medianSeconds)
       }
       .collect()
       .toList

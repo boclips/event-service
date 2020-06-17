@@ -1,13 +1,12 @@
-package com.boclips.event.aggregator.domain.model
+package com.boclips.event.aggregator.domain.model.collections
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.events.CollectionInteractedWithEvent
+import com.boclips.event.aggregator.domain.model.AgeRange
+import com.boclips.event.aggregator.domain.model.users.UserId
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 
-case class CollectionId(value: String) extends Ordered[CollectionId] {
 
-  override def compare(that: CollectionId): Int = value.compare(that.value)
-}
 
 case class Collection(
                        id: CollectionId,
@@ -24,4 +23,4 @@ case class Collection(
                        deleted: Boolean
                      )
 
-case class CollectionWithRelatedData(collection: Collection, impressions: List[CollectionSearchResultImpression], interactions: List[CollectionInteractedWithEvent])
+

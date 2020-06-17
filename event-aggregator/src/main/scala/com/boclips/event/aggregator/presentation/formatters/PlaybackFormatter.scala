@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import com.boclips.event.aggregator.domain.model.{Playback, PlaybackWithRelatedData}
+import com.boclips.event.aggregator.domain.model.playbacks.{Playback, PlaybackWithRelatedData}
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.{JsonElement, JsonNull, JsonObject}
 

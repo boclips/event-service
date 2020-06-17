@@ -2,7 +2,7 @@ package com.boclips.event.aggregator.domain.service.storage
 
 import java.time.LocalDate
 
-import com.boclips.event.aggregator.domain.model.{Video, VideoStorageCharge}
+import com.boclips.event.aggregator.domain.model.videos.{Video, VideoStorageCharge}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 
