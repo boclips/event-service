@@ -12,27 +12,27 @@ package object formatters {
 
   implicit class ExtendedJsonObject(json: JsonObject) {
     def addDateProperty(property: String, date: LocalDate): Unit = {
-      json.addProperty(property, date.format(ISO_LOCAL_DATE))
+      json.addProperty(property, Option(date).map(_.format(ISO_LOCAL_DATE)).orNull)
     }
 
     def addDateProperty(property: String, date: ZonedDateTime): Unit = {
-      json.addProperty(property, date.format(ISO_LOCAL_DATE))
+      json.addProperty(property, Option(date).map(_.format(ISO_LOCAL_DATE)).orNull)
     }
 
     def addDateTimeProperty(property: String, dateTime: ZonedDateTime): Unit = {
-      json.addProperty(property, dateTime.withZoneSameInstant(ZoneOffset.UTC).withFixedOffsetZone().format(ISO_DATE_TIME))
+      json.addProperty(property, Option(dateTime).map(_.withZoneSameInstant(ZoneOffset.UTC).withFixedOffsetZone().format(ISO_DATE_TIME)).orNull)
     }
 
     def addDateTimeProperty(property: String, date: LocalDate): Unit = {
-      json.addProperty(property, date.atStartOfDay(ZoneOffset.UTC).format(ISO_DATE_TIME))
+      json.addProperty(property, Option(date).map(_.atStartOfDay(ZoneOffset.UTC).format(ISO_DATE_TIME)).orNull)
     }
 
     def addMonthProperty(property: String, date: LocalDate): Unit = {
-      json.addProperty(property, date.format(DateTimeFormatter.ofPattern("yyyy-MM")))
+      json.addProperty(property, Option(date).map(_.format(DateTimeFormatter.ofPattern("yyyy-MM"))).orNull)
     }
 
     def addMonthProperty(property: String, month: YearMonth): Unit = {
-      json.addProperty(property, month.format(DateTimeFormatter.ofPattern("yyyy-MM")))
+      json.addProperty(property, Option(month).map(_.format(DateTimeFormatter.ofPattern("yyyy-MM"))).orNull)
     }
 
     def addProperty(property: String, value: Option[String]): Unit = {

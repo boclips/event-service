@@ -36,4 +36,29 @@ object ContractFactory {
       restrictions = Some(restrictions),
       costs = costs
     )
+
+  def createEmptyContract(
+                         id: String = "contract-id",
+                         channelName: String = "channel name"
+                         ): Contract =
+    Contract(
+      id = ContractId(id),
+      name = channelName,
+      contractDocumentLink = None,
+      contractIsRolling = None,
+      contractDates = None,
+      daysBeforeTerminationWarning = None,
+      yearsForMaximumLicense = None,
+      daysForSellOffPeriod = None,
+      royaltySplit = None,
+      minimumPriceDescription = None,
+      remittanceCurrency = None,
+      restrictions = None,
+      costs = ContractCosts(
+        minimumGuarantee = List(),
+        upfrontLicense = None,
+        technicalFee = None,
+        recoupable = None
+      )
+    )
 }

@@ -21,7 +21,7 @@ object ChannelFormatter extends SingleRowFormatter[Channel] {
     json.addProperty("ingestDeliveryFrequency", obj.ingest.deliveryFrequency.map(_.toString))
     json.addStringArrayProperty(
       "ingestDistributionMethods",
-      obj.ingest.distributionMethods.map(_.map(it => it.toString)).orNull
+      obj.ingest.distributionMethods.map(_.map(it => it.toString)).getOrElse(Set())
     )
 
     json.addStringArrayProperty("pedagogySubjects", obj.pedagogy.subjectNames.getOrElse(Nil))

@@ -6,10 +6,10 @@ import java.util.Locale
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
-import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
+import com.google.gson.JsonNull
 
 class ChannelFormatterTest extends Test {
-  it should "write nested channel" in {
+  it should "write full channel" in {
     val channel = createChannel(
       id = "my-channel-id",
       name = "cool channel",
@@ -75,5 +75,73 @@ class ChannelFormatterTest extends Test {
     json.getStringList("marketingLogos") shouldBe List("http://logo.com")
     json.getString("marketingShowreel") shouldBe "http://showreel.com"
     json.getStringList("marketingSampleVideos") shouldBe List("http://sampleVideos.com")
+  }
+
+  it should "write all-none channel" in {
+    val channel = createChannel(
+      id = "my-channel-id",
+      name = "cool channel",
+      details = ChannelDetails(
+        contentTypes = None,
+        contentCategories = None,
+        language = None,
+        hubspotId = None,
+        contractId = None,
+        awards = None,
+        notes = None
+      ),
+      ingest = ChannelIngest(
+        _type = "MRSS",
+        deliveryFrequency = None,
+        distributionMethods = None
+      ),
+      pedagogy = ChannelPedagogy(
+        subjectNames = None,
+        ageRangeMin = None,
+        ageRangeMax = None,
+        bestForTags = None,
+        curriculumAligned = None,
+        educationalResources = None,
+        transcriptProvided = None,
+      ),
+      marketing = ChannelMarketing(
+        status = None,
+        oneLineIntro = None,
+        logos = None,
+        showreel = None,
+        sampleVideos = None
+      )
+    )
+
+    val json = ChannelFormatter formatRow channel
+
+    json.getString("id") shouldBe "my-channel-id"
+    json.getString("name") shouldBe "cool channel"
+
+    json.getStringList("detailsContentTypes") shouldBe List()
+    json.getStringList("detailsContentCategories") shouldBe List()
+    json.get("detailsLanguage") shouldBe JsonNull.INSTANCE
+    json.get("detailsHubspotId") shouldBe JsonNull.INSTANCE
+    json.get("detailsContractId") shouldBe JsonNull.INSTANCE
+    json.get("detailsAwards") shouldBe JsonNull.INSTANCE
+    json.get("detailsNotes") shouldBe JsonNull.INSTANCE
+
+    json.getString("ingestType") shouldBe "MRSS"
+    json.getString("ingestDeliveryFrequency") shouldBe "UNKNOWN"
+    json.getStringList("ingestDistributionMethods") shouldBe List()
+
+    json.getStringList("pedagogySubjects") shouldBe List()
+    json.get("pedagogyAgeRangeMin") shouldBe JsonNull.INSTANCE
+    json.get("pedagogyAgeRangeMax") shouldBe JsonNull.INSTANCE
+    json.getStringList("pedagogyBestForTags") shouldBe List()
+    json.get("pedagogyCurriculumAligned") shouldBe JsonNull.INSTANCE
+    json.get("pedagogyEducationalResources") shouldBe JsonNull.INSTANCE
+    json.get("pedagogyTranscriptProvided") shouldBe JsonNull.INSTANCE
+
+    json.get("marketingStatus") shouldBe JsonNull.INSTANCE
+    json.get("marketingOneLineIntro") shouldBe JsonNull.INSTANCE
+    json.getStringList("marketingLogos") shouldBe List()
+    json.get("marketingShowreel") shouldBe JsonNull.INSTANCE
+    json.getStringList("marketingSampleVideos") shouldBe List()
   }
 }
