@@ -1,15 +1,15 @@
 package com.boclips.event.aggregator.infrastructure.bigquery
 
-import com.boclips.event.aggregator.presentation.VideoWithRelatedData
 import com.boclips.event.aggregator.presentation.formatters.VideoFormatter
 import com.boclips.event.aggregator.presentation.formatters.schema.Schema
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
+import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import com.boclips.event.aggregator.testsupport.Test
 
 class BigQuerySchemaTest extends Test {
 
   it should "create a schema for videos" in {
-    val video = ExampleInstance.create[VideoWithRelatedData]()
+    val video = ExampleInstance.create[VideoTableRow]()
     val videoJson = VideoFormatter.formatRow(video)
     val videosSchema = Schema.fromJson(videoJson)
     val bigQuerySchema = BigQuerySchema.fieldsFrom(videosSchema)

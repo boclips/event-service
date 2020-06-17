@@ -4,10 +4,10 @@ import java.time.{Duration, ZoneOffset, ZonedDateTime}
 import java.util.UUID
 
 import com.boclips.event.aggregator.domain.model._
-import com.boclips.event.aggregator.domain.model.playbacks.{Playback, PlaybackWithRelatedData}
-import com.boclips.event.aggregator.domain.model.users.{DeviceId, User, UserId, UserIdentity}
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.users.{DeviceId, UserId, UserIdentity}
 import com.boclips.event.aggregator.domain.model.videos.VideoId
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createUser}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 object PlaybackFactory {
 
@@ -34,15 +34,4 @@ object PlaybackFactory {
       videoDuration = videoDuration,
     )
   }
-
-  def createPlaybackWithRelatedData(
-                                   playback: Playback = createPlayback(),
-                                   user: Option[User] = None,
-                                   ): PlaybackWithRelatedData = {
-    PlaybackWithRelatedData(
-      playback = playback,
-      user = user,
-    )
-  }
-
 }

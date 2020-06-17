@@ -3,8 +3,8 @@ package com.boclips.event.aggregator.presentation.formatters
 import java.util.UUID
 
 import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, ExternalUserIdentity, SCHOOL_ORGANISATION, User}
-import com.boclips.event.aggregator.presentation.UserWithRelatedData
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
+import com.boclips.event.aggregator.presentation.model.UserTableRow
 import com.google.gson.JsonObject
 
 object SimpleUserFormatter extends SingleRowFormatter[User] {
@@ -39,10 +39,10 @@ object SimpleUserFormatter extends SingleRowFormatter[User] {
 }
 
 
-object UserFormatter extends SingleRowFormatter[UserWithRelatedData] {
+object UserFormatter extends SingleRowFormatter[UserTableRow] {
 
-  override def writeRow(userWithRelatedData: UserWithRelatedData, json: JsonObject): Unit = {
-    val UserWithRelatedData(user, monthlyActiveStatuses, playbacks, referredPlaybacks, searches, sessions) = userWithRelatedData
+  override def writeRow(userWithRelatedData: UserTableRow, json: JsonObject): Unit = {
+    val UserTableRow(user, monthlyActiveStatuses, playbacks, referredPlaybacks, searches, sessions) = userWithRelatedData
 
     SimpleUserFormatter.writeRow(user, json)
 

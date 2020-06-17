@@ -8,7 +8,8 @@ import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelDetails
 import com.boclips.event.aggregator.domain.model.orders.{OrderId, VideoItemWithOrder}
 import com.boclips.event.aggregator.domain.model.videos.Dimensions
 import com.boclips.event.aggregator.presentation
-import com.boclips.event.aggregator.presentation.VideoWithRelatedData
+import com.boclips.event.aggregator.presentation.model
+import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
 import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
@@ -27,7 +28,7 @@ class VideoFormatterTest extends Test {
       subjects = List("maths", "physics")
     )
 
-    val json = VideoFormatter formatRow VideoWithRelatedData(video)
+    val json = VideoFormatter formatRow model.VideoTableRow(video)
 
     json.get("subjects").getAsJsonArray should have size 2
     json.getAsJsonArray("subjects").get(0).getAsJsonObject.getString("name") shouldBe "maths"
@@ -41,7 +42,7 @@ class VideoFormatterTest extends Test {
       ageRange = AgeRange(Some(5), Some(6))
     )
 
-    val jsonObjects = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObjects = VideoFormatter formatRow model.VideoTableRow(video)
 
 
     jsonObjects.get("id").getAsString shouldBe "the-id"
@@ -55,7 +56,7 @@ class VideoFormatterTest extends Test {
       ageRange = AgeRange(Some(17), None)
     )
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
     jsonObject.get("ages").getAsJsonArray should have size 3
   }
 
@@ -65,7 +66,7 @@ class VideoFormatterTest extends Test {
       ageRange = AgeRange(None, None)
     )
 
-    val jsonObjects = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObjects = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObjects.getStringList("ages") shouldBe List("UNKNOWN")
   }
@@ -75,7 +76,7 @@ class VideoFormatterTest extends Test {
       subjects = List()
     )
 
-    val jsonObjects = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObjects = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObjects.getAsJsonArray("subjects") should have size 1
     jsonObjects.getAsJsonArray("subjects").get(0).getAsJsonObject.getString("name") shouldBe "UNKNOWN"
@@ -84,7 +85,7 @@ class VideoFormatterTest extends Test {
   it should "write video duration" in {
     val video = createVideo(duration = Duration.ofMinutes(2))
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.get("durationSeconds").getAsInt shouldBe 120
   }
@@ -92,7 +93,7 @@ class VideoFormatterTest extends Test {
   it should "write video title" in {
     val video = createVideo(title = "Video title")
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.get("title").getAsString shouldBe "Video title"
   }
@@ -100,7 +101,7 @@ class VideoFormatterTest extends Test {
   it should "write contentType when known" in {
     val video = createVideo(contentType = Some("STOCK"))
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.get("type").getAsString shouldBe "STOCK"
   }
@@ -108,7 +109,7 @@ class VideoFormatterTest extends Test {
   it should "write contentType when not known" in {
     val video = createVideo(contentType = None)
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.get("type").getAsString shouldBe "UNKNOWN"
   }
@@ -119,7 +120,7 @@ class VideoFormatterTest extends Test {
       ingestedAt = ZonedDateTime.parse("2018-11-12T12:14:16.7Z[UTC]")
     )
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.get("ingestedAt").getAsString shouldBe "2018-11-12T12:14:16.7Z"
   }
@@ -127,7 +128,7 @@ class VideoFormatterTest extends Test {
   it should "write monthly storage cost in GBP" in {
     val video = createVideo(assets = List(createVideoAsset(sizeKb = 1000000)))
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.getDouble("monthlyStorageCostGbp") shouldBe 0.1
   }
@@ -135,7 +136,7 @@ class VideoFormatterTest extends Test {
   it should "write storage cost so far in GBP" in {
     val video = createVideo(assets = List(createVideoAsset(sizeKb = 1000000)), ingestedAt = ZonedDateTime.now().minusDays(365))
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.getDouble("storageCostSoFarGbp") shouldBe 1.2 +- 0.01
   }
@@ -143,7 +144,7 @@ class VideoFormatterTest extends Test {
   it should "write originalWidth & originHeight" in {
     val video = createVideo(originalDimensions = Some(Dimensions(480, 360)))
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.getInt("originalWidth") shouldBe 480
     jsonObject.getInt("originalHeight") shouldBe 360
@@ -152,7 +153,7 @@ class VideoFormatterTest extends Test {
   it should "write original width & height as 0 when no data" in {
     val video = createVideo(originalDimensions = None)
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.getInt("originalWidth") shouldBe 0
     jsonObject.getInt("originalHeight") shouldBe 0
@@ -164,7 +165,7 @@ class VideoFormatterTest extends Test {
       createVideoAsset(dimensions = Dimensions(1024, 860), sizeKb = 2048)
     ))
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.getInt("assetWidth") shouldBe 1024
     jsonObject.getInt("assetHeight") shouldBe 860
@@ -174,7 +175,7 @@ class VideoFormatterTest extends Test {
   it should "write dimensions and size of the largest asset as 0 when no assets" in {
     val video = createVideo(assets = List())
 
-    val jsonObject = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
 
     jsonObject.getInt("assetWidth") shouldBe 0
     jsonObject.getInt("assetHeight") shouldBe 0
@@ -186,7 +187,7 @@ class VideoFormatterTest extends Test {
       assets = List(createVideoAsset())
     )
 
-    val json = VideoFormatter formatRow presentation.VideoWithRelatedData(video)
+    val json = VideoFormatter formatRow model.VideoTableRow(video)
 
     json.get("storageCharges").getAsJsonArray should have size 1
   }
@@ -203,7 +204,7 @@ class VideoFormatterTest extends Test {
       ))
     )
 
-    val json = VideoFormatter formatRow presentation.VideoWithRelatedData(video = video, orders = orders)
+    val json = VideoFormatter formatRow model.VideoTableRow(video = video, orders = orders)
 
     val orderJson = json.get("orders").getAsJsonArray.get(0).getAsJsonObject
     orderJson.getString("id") should not be empty
@@ -251,7 +252,7 @@ class VideoFormatterTest extends Test {
       )
     )
 
-    val json = VideoFormatter formatRow presentation.VideoWithRelatedData(
+    val json = VideoFormatter formatRow model.VideoTableRow(
       video = video,
       channel = Some(channel),
     )
@@ -325,7 +326,7 @@ class VideoFormatterTest extends Test {
       )
     )
 
-    val json = VideoFormatter formatRow presentation.VideoWithRelatedData(
+    val json = VideoFormatter formatRow model.VideoTableRow(
       video = video,
       contract = Some(contract),
     )
@@ -374,7 +375,7 @@ class VideoFormatterTest extends Test {
       interaction = true,
     )
 
-    val json = VideoFormatter formatRow presentation.VideoWithRelatedData(
+    val json = VideoFormatter formatRow model.VideoTableRow(
       video = video,
       impressions = List(impression)
     )
@@ -397,7 +398,7 @@ class VideoFormatterTest extends Test {
 
     )
 
-    val json = VideoFormatter formatRow presentation.VideoWithRelatedData(
+    val json = VideoFormatter formatRow model.VideoTableRow(
       video = video,
       interactions = List(interaction)
     )

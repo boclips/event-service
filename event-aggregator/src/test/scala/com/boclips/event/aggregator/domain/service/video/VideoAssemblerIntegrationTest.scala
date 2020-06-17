@@ -1,8 +1,8 @@
 package com.boclips.event.aggregator.domain.service.video
 
-import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelDetails, ChannelId, ContractId}
 import com.boclips.event.aggregator.domain.model.orders.OrderId
+import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
 import com.boclips.event.aggregator.testsupport.IntegrationTest
@@ -10,8 +10,8 @@ import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.cre
 import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoInteractedWithEvent
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem}
-import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.{createPlayback, createPlaybackWithRelatedData}
-import com.boclips.event.aggregator.testsupport.testfactories.{PlaybackFactory, SearchFactory}
+import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
+import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.createVideoSearchResultImpression
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
 
@@ -24,10 +24,12 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
     )
 
     val playbacks = rdd(
-      createPlaybackWithRelatedData(createPlayback(videoId = "v1")),
-      createPlaybackWithRelatedData(createPlayback(videoId = "v1")),
-      createPlaybackWithRelatedData(createPlayback(videoId = "v2")),
+      createPlayback(videoId = "v1"),
+      createPlayback(videoId = "v1"),
+      createPlayback(videoId = "v2"),
     )
+
+    val users = rdd[User]()
 
     val orders = rdd(
       createOrder(id = OrderId("o1"), items = List(
@@ -66,6 +68,7 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
     val videosWithRelatedData = VideoAssembler.assembleVideosWithRelatedData(
       videos,
       playbacks,
+      users,
       orders,
       channels,
       contracts,

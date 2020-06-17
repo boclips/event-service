@@ -8,12 +8,12 @@ import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, User, UserIdentity}
-import com.boclips.event.aggregator.presentation.UserWithRelatedData
+import com.boclips.event.aggregator.presentation.model.UserTableRow
 import org.apache.spark.rdd.RDD
 
 object UserWithRelatedDataAssembler {
 
-  def apply(users: RDD[User], playbacks: RDD[Playback], searches: RDD[Search], sessions: RDD[Session]): RDD[UserWithRelatedData] = {
+  def apply(users: RDD[User], playbacks: RDD[Playback], searches: RDD[Search], sessions: RDD[Session]): RDD[UserTableRow] = {
 
     val playbacksByUser: RDD[(UserIdentity, Iterable[Playback])] = playbacks
       .keyBy(_.user)
@@ -49,7 +49,7 @@ object UserWithRelatedDataAssembler {
       .values
       .map {
         case (((((user, playbacks), referredPlaybacks), searches), monthsActive), sessions) => {
-          UserWithRelatedData.from(
+          UserTableRow.from(
             user = user,
             playbacks = playbacks,
             referredPlaybacks = referredPlaybacks,

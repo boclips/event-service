@@ -5,8 +5,8 @@ import java.time.LocalDate
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.orders.VideoItemWithOrder
 import com.boclips.event.aggregator.domain.model.videos.Video
-import com.boclips.event.aggregator.presentation.VideoWithRelatedData
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
+import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import com.google.gson.{JsonArray, JsonElement, JsonObject}
 
 object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
@@ -20,10 +20,10 @@ object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
   }
 }
 
-object VideoFormatter extends SingleRowFormatter[VideoWithRelatedData] {
-  override def writeRow(obj: VideoWithRelatedData, json: JsonObject): Unit = {
+object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
+  override def writeRow(obj: VideoTableRow, json: JsonObject): Unit = {
 
-    val VideoWithRelatedData(video, playbacks, orders, channel, contract, impressions, interactions) = obj
+    val VideoTableRow(video, playbacks, orders, channel, contract, impressions, interactions) = obj
     val highestResolutionAsset = video.largestAsset()
 
     json.addProperty("id", video.id.value)

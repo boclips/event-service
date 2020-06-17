@@ -1,9 +1,9 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import com.boclips.event.aggregator.domain.model.playbacks.{Playback, PlaybackWithRelatedData}
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.{JsonElement, JsonNull, JsonObject}
-
 
 object SimplePlaybackFormatter extends SingleRowFormatter[Playback] {
 
@@ -35,9 +35,9 @@ object SimplePlaybackFormatter extends SingleRowFormatter[Playback] {
   }
 }
 
-object PlaybackFormatter extends SingleRowFormatter[PlaybackWithRelatedData] {
-  override def writeRow(playbackWithRelatedData: PlaybackWithRelatedData, json: JsonObject): Unit = {
-    val PlaybackWithRelatedData(playback, userOption) = playbackWithRelatedData
+object PlaybackFormatter extends SingleRowFormatter[(Playback, Option[User])] {
+  override def writeRow(playbackWithUser: (Playback, Option[User]), json: JsonObject): Unit = {
+    val (playback, userOption) = playbackWithUser
     SimplePlaybackFormatter.writeRow(playback, json)
 
     val userJson: JsonElement = userOption match {

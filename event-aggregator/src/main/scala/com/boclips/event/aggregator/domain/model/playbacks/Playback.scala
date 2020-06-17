@@ -35,7 +35,4 @@ case class Playback
   }
 }
 
-case class PlaybackWithRelatedData(
-                                  playback: Playback,
-                                  user: Option[User],
-                                  )
+

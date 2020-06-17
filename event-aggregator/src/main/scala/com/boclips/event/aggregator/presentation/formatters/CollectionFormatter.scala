@@ -1,13 +1,13 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import com.boclips.event.aggregator.presentation.CollectionWithRelatedData
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
+import com.boclips.event.aggregator.presentation.model.CollectionTableRow
 import com.google.gson.JsonObject
 
-object CollectionFormatter extends SingleRowFormatter[CollectionWithRelatedData] {
+object CollectionFormatter extends SingleRowFormatter[CollectionTableRow] {
 
-  override def writeRow(obj: CollectionWithRelatedData, json: JsonObject): Unit = {
-    val CollectionWithRelatedData(collection, impressions, interactions) = obj
+  override def writeRow(obj: CollectionTableRow, json: JsonObject): Unit = {
+    val CollectionTableRow(collection, impressions, interactions) = obj
 
     json.addProperty("id", collection.id.value)
     json.addProperty("title", collection.title)

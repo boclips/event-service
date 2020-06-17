@@ -8,7 +8,8 @@ import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.{ExternalUserId, ExternalUserIdentity, SCHOOL_ORGANISATION, User, UserActiveStatus, UserId}
 import com.boclips.event.aggregator.presentation
-import com.boclips.event.aggregator.presentation.UserWithRelatedData
+import com.boclips.event.aggregator.presentation.model
+import com.boclips.event.aggregator.presentation.model.UserTableRow
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchRequest}
@@ -24,11 +25,11 @@ class UserFormatterTest extends Test {
                     referredPlaybacks: List[Playback] = Nil,
                     searches: List[Search] = Nil,
                     sessions: List[Session] = Nil,
-                  ): UserWithRelatedData = presentation.UserWithRelatedData(user, status, playbacks, referredPlaybacks, searches, sessions)
+                  ): UserTableRow = model.UserTableRow(user, status, playbacks, referredPlaybacks, searches, sessions)
 
   }
 
-  implicit def user2userWithRelatedData(user: User): UserWithRelatedData = user.withNested()
+  implicit def user2userWithRelatedData(user: User): UserTableRow = user.withNested()
 
   it should "write user id when boclips user" in {
     val json = UserFormatter formatRow createUser(identity = createBoclipsUserIdentity("user-id"))

@@ -1,14 +1,13 @@
 package com.boclips.event.aggregator.domain.service.video
 
-import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
 import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
 import com.boclips.event.aggregator.domain.model.orders.{Order, VideoItemWithOrder}
-import com.boclips.event.aggregator.domain.model.playbacks.PlaybackWithRelatedData
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.VideoSearchResultImpression
+import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.model.videos.{Video, VideoId}
-import com.boclips.event.aggregator.presentation
-import com.boclips.event.aggregator.presentation.VideoWithRelatedData
+import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 
@@ -16,14 +15,20 @@ object VideoAssembler {
 
   def assembleVideosWithRelatedData(
                                      videos: RDD[Video],
-                                     playbacks: RDD[PlaybackWithRelatedData],
+                                     playbacks: RDD[Playback],
+                                     users: RDD[User],
                                      orders: RDD[Order],
                                      channels: RDD[Channel],
                                      contracts: RDD[Contract],
                                      impressions: RDD[VideoSearchResultImpression],
-                                     interactions: RDD[VideoInteractedWithEvent]
-                                   ): RDD[VideoWithRelatedData] = {
-    val playbacksByVideoId: RDD[(VideoId, Iterable[PlaybackWithRelatedData])] = playbacks.keyBy(_.playback.videoId)
+                                     interactions: RDD[VideoInteractedWithEvent],
+                                   ): RDD[VideoTableRow] = {
+
+    val playbacksByVideoId: RDD[(VideoId, Iterable[(Playback, Option[User])])] = (
+      playbacks.keyBy(_.user) leftOuterJoin users.keyBy(_.identity)
+    )
+      .values
+      .keyBy { case (playback, _) => playback.videoId}
       .groupByKey()
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Playbacks by video ID")
@@ -71,7 +76,7 @@ object VideoAssembler {
       .values
       .map {
         case ((((((video, videoPlaybacks), videoOrders), videoChannel), videoContract), videoImpressions), videoInteractions) =>
-          presentation.VideoWithRelatedData(
+          VideoTableRow(
             video = video,
             playbacks = videoPlaybacks,
             orders = videoOrders,

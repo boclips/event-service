@@ -4,7 +4,8 @@ import com.boclips.event.aggregator.domain.model.events.CollectionInteractedWith
 import com.boclips.event.aggregator.domain.model.collections.{Collection, CollectionId}
 import com.boclips.event.aggregator.domain.model.search.CollectionSearchResultImpression
 import com.boclips.event.aggregator.presentation
-import com.boclips.event.aggregator.presentation.CollectionWithRelatedData
+import com.boclips.event.aggregator.presentation.model
+import com.boclips.event.aggregator.presentation.model.CollectionTableRow
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 
@@ -13,7 +14,7 @@ object CollectionAssembler {
   def assembleCollectionsWithRelatedData(collections: RDD[Collection],
                                          impressions: RDD[CollectionSearchResultImpression],
                                          interactions: RDD[CollectionInteractedWithEvent],
-                                        ): RDD[CollectionWithRelatedData] = {
+                                        ): RDD[CollectionTableRow] = {
 
     val impressionsByCollectionId: RDD[(CollectionId, Iterable[CollectionSearchResultImpression])] = impressions
       .keyBy(_.collectionId)
@@ -27,7 +28,7 @@ object CollectionAssembler {
       .leftOuterJoin(impressionsByCollectionId)
       .leftOuterJoin(interactionsByCollectionId)
       .values
-      .map { case ((collection, impressions), interactions) => presentation.CollectionWithRelatedData(
+      .map { case ((collection, impressions), interactions) => model.CollectionTableRow(
         collection = collection,
         impressions = impressions,
         interactions = interactions

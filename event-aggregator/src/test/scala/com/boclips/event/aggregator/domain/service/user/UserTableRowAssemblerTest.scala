@@ -14,7 +14,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{cre
 import com.boclips.event.aggregator.testsupport.testfactories.SessionFactory.createSession
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createUser}
 
-class UserWithRelatedDataAssemblerTest extends IntegrationTest {
+class UserTableRowAssemblerTest extends IntegrationTest {
 
   val today: ZonedDateTime = ZonedDateTime.now()
 

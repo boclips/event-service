@@ -2,24 +2,23 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.{Duration, ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.model.Url
-import com.boclips.event.aggregator.domain.model.playbacks.{Playback, PlaybackWithRelatedData}
+import com.boclips.event.aggregator.domain.model.playbacks.Playback
+import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity, createUser}
 
 class PlaybackFormatterTest extends Test {
 
   implicit class PlaybackExtensions(val playback: Playback) {
-    def withNested(
-                    user: Option[User] = None,
-                  ): PlaybackWithRelatedData = PlaybackWithRelatedData(playback, user)
+    def withUser(
+                  user: Option[User] = None,
+                ): (Playback, Option[User]) = (playback, user)
 
   }
 
-  implicit def playback2playbackWithRelatedData(playback: Playback): PlaybackWithRelatedData = playback.withNested()
+  implicit def playback2playbackWithRelatedData(playback: Playback): (Playback, Option[User]) = playback.withUser()
 
   it should "write playback id" in {
     val json = PlaybackFormatter.formatRow(createPlayback(id = "playback-id"))
@@ -140,13 +139,13 @@ class PlaybackFormatterTest extends Test {
   }
 
   it should "write user when not anonymous" in {
-    val json = PlaybackFormatter.formatRow(createPlayback().withNested(user = Some(createUser(createBoclipsUserIdentity("user-id")))))
+    val json = PlaybackFormatter.formatRow(createPlayback().withUser(user = Some(createUser(createBoclipsUserIdentity("user-id")))))
 
     json.getAsJsonObject("user").getString("id") shouldBe "user-id"
   }
 
   it should "write user as null when anonymous" in {
-    val json = PlaybackFormatter.formatRow(createPlayback().withNested(user = None))
+    val json = PlaybackFormatter.formatRow(createPlayback().withUser(user = None))
 
     json.get("user").isJsonNull shouldBe true
   }

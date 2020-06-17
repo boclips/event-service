@@ -1,17 +1,17 @@
-package com.boclips.event.aggregator.presentation
+package com.boclips.event.aggregator.presentation.model
 
 import java.time.{LocalDate, YearMonth}
 
-import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.{User, UserActiveStatus}
+import com.boclips.event.aggregator.presentation.RowFormatter
 import com.boclips.event.aggregator.presentation.formatters.UserFormatter
 
-object UserWithRelatedData {
+object UserTableRow {
 
-  implicit val formatter: RowFormatter[UserWithRelatedData] = UserFormatter
+  implicit val formatter: RowFormatter[UserTableRow] = UserFormatter
 
   def from(
             user: User,
@@ -21,8 +21,8 @@ object UserWithRelatedData {
             sessions: List[Session],
             monthsActive: List[YearMonth],
             until: LocalDate
-          ): UserWithRelatedData = {
-    UserWithRelatedData(
+          ): UserTableRow = {
+    UserTableRow(
       user = user,
       monthlyActiveStatus = this.monthlyActiveStatus(signupMonth = YearMonth.from(user.createdAt), currentMonth = YearMonth.from(until), monthsActive = monthsActive.toSet),
       playbacks = playbacks,
@@ -43,7 +43,7 @@ object UserWithRelatedData {
   }
 }
 
-case class UserWithRelatedData(
+case class UserTableRow(
                                 user: User,
                                 monthlyActiveStatus: List[UserActiveStatus],
                                 playbacks: List[Playback],

@@ -3,7 +3,6 @@ package com.boclips.event.aggregator
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.config.{BigQueryConfig, MongoConfig, SparkConfig}
-import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.collections.Collection
 import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent, PlatformInteractedWithEvent}
@@ -18,7 +17,7 @@ import com.boclips.event.aggregator.domain.service.Data
 import com.boclips.event.aggregator.domain.service.collection.{CollectionAssembler, CollectionInteractionEventAssembler, CollectionSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.domain.service.navigation.{PagesRenderedAssembler, PlatformInteractedWithEventAssembler}
 import com.boclips.event.aggregator.domain.service.okr.OkrService
-import com.boclips.event.aggregator.domain.service.playback.{PlaybackAssembler, PlaybackWithRelatedDataAssembler}
+import com.boclips.event.aggregator.domain.service.playback.PlaybackAssembler
 import com.boclips.event.aggregator.domain.service.search.{QueryScorer, SearchAssembler}
 import com.boclips.event.aggregator.domain.service.session.SessionAssembler
 import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembler
@@ -74,9 +73,8 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     logProcessingStart(s"Updating videos")
     val impressions = VideoSearchResultImpressionAssembler(searches)
     val videoInteractions = VideoInteractionAssembler(events)
-    val playbacksWithRelatedData = new PlaybackWithRelatedDataAssembler(playbacks, users).assemblePlaybacksWithRelatedData()
     val videosWithRelatedData = VideoAssembler.assembleVideosWithRelatedData(
-      videos, playbacksWithRelatedData, orders, channels, contracts, impressions, videoInteractions
+      videos, playbacks, users, orders, channels, contracts, impressions, videoInteractions
     )
     writeTable(videosWithRelatedData, "videos")(VideoFormatter, implicitly)
 
