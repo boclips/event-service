@@ -33,16 +33,6 @@ case class UserId(value: String) extends Ordered[UserId] with UniqueUserIdentifi
 
 case class DeviceId(value: String) extends UniqueUserIdentifier
 
-sealed trait UserOrAnonymous {
-  def isAnonymous: Boolean
-
-  def isNotAnonymous: Boolean = !isAnonymous
-
-  def asUser: User
-
-  def asAnonymous: AnonymousUser
-}
-
 case class User(
                  id: UserId,
                  firstName: Option[String],
@@ -55,23 +45,7 @@ case class User(
                  organisation: Option[Organisation],
                  isBoclipsEmployee: Boolean,
                  hasOptedIntoMarketing: Option[Boolean]
-               ) extends UserOrAnonymous {
-  override def isAnonymous: Boolean = false
-
-  override def asUser: User = this
-
-  override def asAnonymous: AnonymousUser = throw new UnsupportedOperationException("Logged in user")
-}
-
-case class AnonymousUser(
-                          deviceId: Option[DeviceId]
-                        ) extends UserOrAnonymous {
-  override def isAnonymous: Boolean = true
-
-  override def asUser: User = throw new UnsupportedOperationException("Anonymous user")
-
-  override def asAnonymous: AnonymousUser = this
-}
+               )
 
 case class UserActiveStatus(month: YearMonth, isActive: Boolean)
 

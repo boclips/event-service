@@ -15,7 +15,7 @@ object UserFactory {
   }
 
   def createAnonymousUserIdentity(
-                                 deviceId: Option[String] = None,
+                                   deviceId: Option[String] = None,
                                  ): AnonymousUserIdentity = {
     AnonymousUserIdentity(
       deviceId = deviceId.map(DeviceId),
@@ -80,11 +80,4 @@ object UserFactory {
     )
   }
 
-  def createAnonymousUser(
-                           deviceId: Option[DeviceId] = None,
-                         ): AnonymousUser = {
-    AnonymousUser(
-      deviceId = deviceId,
-    )
-  }
 }

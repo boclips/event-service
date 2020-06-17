@@ -2,16 +2,16 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.{Duration, ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.{Playback, PlaybackWithRelatedData, Search, Session, Url, User, UserActiveStatus, UserWithRelatedData}
+import com.boclips.event.aggregator.domain.model.{Playback, PlaybackWithRelatedData, Url, User}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUser, createAnonymousUserIdentity, createBoclipsUserIdentity, createUser}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity, createUser}
 
 class PlaybackFormatterTest extends Test {
 
   implicit class PlaybackExtensions(val playback: Playback) {
     def withNested(
-                  user: Option[User] = None,
+                    user: Option[User] = None,
                   ): PlaybackWithRelatedData = PlaybackWithRelatedData(playback, user)
 
   }

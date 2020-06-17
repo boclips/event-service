@@ -4,7 +4,7 @@ import java.time._
 import java.util.{Currency, Locale}
 
 import com.boclips.event.aggregator.domain.model.events.{Event, OtherEvent}
-import com.boclips.event.aggregator.domain.model.{BoclipsUserIdentity, DistributionMethod, OrganisationType, SCHOOL_ORGANISATION, Streaming, User, UserIdentity, UserOrAnonymous}
+import com.boclips.event.aggregator.domain.model.{BoclipsUserIdentity, DistributionMethod, OrganisationType, SCHOOL_ORGANISATION, Streaming, User, UserIdentity}
 
 import scala.reflect.runtime.universe
 import scala.reflect.runtime.universe._
@@ -124,9 +124,6 @@ object ExampleInstance {
     }
     else if (tpe <:< typeOf[OrganisationType]) {
       Some(SCHOOL_ORGANISATION)
-    }
-    else if (tpe =:= typeOf[UserOrAnonymous]) {
-      Some(create[User]())
     }
     else if (tpe =:= typeOf[Event]) {
       Some(create[OtherEvent])

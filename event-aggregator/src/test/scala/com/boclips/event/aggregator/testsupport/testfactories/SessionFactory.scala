@@ -1,8 +1,7 @@
 package com.boclips.event.aggregator.testsupport.testfactories
 
 import com.boclips.event.aggregator.domain.model.events.Event
-import com.boclips.event.aggregator.domain.model.{Session, UserIdentity, UserOrAnonymous}
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser
+import com.boclips.event.aggregator.domain.model.{Session, UserIdentity}
 
 object SessionFactory {
 
