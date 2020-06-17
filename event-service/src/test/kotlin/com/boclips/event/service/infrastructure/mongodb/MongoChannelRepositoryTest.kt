@@ -1,6 +1,7 @@
 package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.infrastructure.channel.ChannelDocument
+import com.boclips.event.infrastructure.channel.DistributionMethodDocument
 import com.boclips.event.service.domain.ChannelRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.ChannelFactory.createChannel
@@ -11,6 +12,7 @@ import com.boclips.event.service.testsupport.ChannelFactory.createChannelTopLeve
 import com.boclips.eventbus.domain.AgeRange
 import com.boclips.eventbus.domain.Subject
 import com.boclips.eventbus.domain.SubjectId
+import com.boclips.eventbus.domain.contentpartner.DistributionMethod
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -73,7 +75,8 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
             createChannel(
                 id = id, ingest = createChannelIngestDetails(
                     type = "MRSS",
-                    deliveryFrequency = Period.ofMonths(2)
+                    deliveryFrequency = Period.ofMonths(2),
+                    distributionMethods = setOf(DistributionMethod.STREAM, DistributionMethod.DOWNLOAD)
                 )
             )
         )
@@ -83,6 +86,11 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         val ingest = document.ingest
         assertThat(ingest.type).isEqualTo("MRSS")
         assertThat(ingest.deliveryFrequency).isEqualTo("P2M")
+        assertThat(ingest.distributionMethods)
+            .containsExactlyInAnyOrder(
+                DistributionMethodDocument.STREAM,
+                DistributionMethodDocument.DOWNLOAD
+            )
     }
 
     @Test

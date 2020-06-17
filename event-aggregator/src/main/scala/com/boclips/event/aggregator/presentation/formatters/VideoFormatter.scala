@@ -32,6 +32,10 @@ object NestedChannelFormatter extends SingleRowFormatter[Channel] {
 
     json.addProperty("ingestType", obj.ingest._type)
     json.addProperty("ingestDeliveryFrequency", obj.ingest.deliveryFrequency.map(_.toString))
+    json.addStringArrayProperty(
+      "ingestDistributionMethods",
+      obj.ingest.distributionMethods.map(_.map(it => it.toString)).orNull
+    )
 
     json.addStringArrayProperty("pedagogySubjects", obj.pedagogy.subjectNames.getOrElse(Nil))
     json.addProperty("pedagogyAgeRangeMin", obj.pedagogy.ageRangeMin.map(Int.box).orNull)

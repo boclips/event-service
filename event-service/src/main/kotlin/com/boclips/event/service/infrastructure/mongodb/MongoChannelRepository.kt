@@ -5,12 +5,14 @@ import com.boclips.event.infrastructure.channel.ChannelDocument
 import com.boclips.event.infrastructure.channel.ChannelIngestDocument
 import com.boclips.event.infrastructure.channel.ChannelMarketingDocument
 import com.boclips.event.infrastructure.channel.ChannelPedagogyDocument
+import com.boclips.event.infrastructure.channel.DistributionMethodDocument
 import com.boclips.event.service.domain.ChannelRepository
 import com.boclips.eventbus.domain.contentpartner.Channel
 import com.boclips.eventbus.domain.contentpartner.ChannelIngestDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelMarketingDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelPedagogyDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelTopLevelDetails
+import com.boclips.eventbus.domain.contentpartner.DistributionMethod
 import com.mongodb.MongoClient
 import com.mongodb.client.model.ReplaceOptions
 import mu.KLogging
@@ -64,6 +66,14 @@ fun ChannelIngestDetails.toDocument(): ChannelIngestDocument =
     ChannelIngestDocument.builder()
         .type(type)
         .deliveryFrequency(deliveryFrequency?.toString())
+        .distributionMethods(distributionMethods?.map { method ->
+            method?.let {
+                when (it) {
+                    DistributionMethod.DOWNLOAD -> DistributionMethodDocument.DOWNLOAD
+                    DistributionMethod.STREAM -> DistributionMethodDocument.STREAM
+                }
+            }
+        }?.toSet())
         .build()
 
 fun ChannelPedagogyDetails.toDocument(): ChannelPedagogyDocument =

@@ -4,7 +4,7 @@ import java.time.Period
 import java.util.Locale
 
 import com.boclips.event.aggregator.domain.model._
-import com.boclips.event.infrastructure.channel.ChannelDocument
+import com.boclips.event.infrastructure.channel.{ChannelDocument, DistributionMethodDocument}
 
 import scala.collection.JavaConverters._
 
@@ -28,7 +28,11 @@ object DocumentToChannelConverter {
       ),
       ingest = ChannelIngest(
         _type = ingest.getType,
-        deliveryFrequency = Option(ingest.getDeliveryFrequency).map(Period.parse)
+        deliveryFrequency = Option(ingest.getDeliveryFrequency).map(Period.parse),
+        distributionMethods = Option(ingest.getDistributionMethods).map(_.asScala.map {
+          case DistributionMethodDocument.STREAM => Streaming
+          case DistributionMethodDocument.DOWNLOAD => Download
+        }.toSet)
       ),
       pedagogy = ChannelPedagogy(
         subjectNames = Option(pedagogy.getSubjectNames).map(_.asScala.toList),

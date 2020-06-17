@@ -28,8 +28,17 @@ case class ChannelDetails(
 
 case class ChannelIngest(
                           _type: String,
-                          deliveryFrequency: Option[Period]
+                          deliveryFrequency: Option[Period],
+                          distributionMethods: Option[Set[DistributionMethod]]
                         )
+
+sealed trait DistributionMethod
+case object Streaming extends DistributionMethod {
+  override def toString: String = "STREAM"
+}
+case object Download extends DistributionMethod {
+  override def toString: String = "DOWNLOAD"
+}
 
 case class ChannelPedagogy(
                             subjectNames: Option[List[String]],

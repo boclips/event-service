@@ -225,7 +225,8 @@ class VideoFormatterTest extends Test {
       ),
       ingest = ChannelIngest(
         _type = "MRSS",
-        deliveryFrequency = Some(Period.ofMonths(2))
+        deliveryFrequency = Some(Period.ofMonths(2)),
+        distributionMethods = Some(Set(Streaming, Download))
       ),
       pedagogy = ChannelPedagogy(
         subjectNames = Some(List("Maths")),
@@ -264,6 +265,7 @@ class VideoFormatterTest extends Test {
 
     channelJson.getString("ingestType") shouldBe "MRSS"
     channelJson.getString("ingestDeliveryFrequency") shouldBe "P2M"
+    channelJson.getStringList("ingestDistributionMethods") shouldBe List("STREAM", "DOWNLOAD")
 
     channelJson.getStringList("pedagogySubjects") shouldBe List("Maths")
     channelJson.getInt("pedagogyAgeRangeMin") shouldBe 5
