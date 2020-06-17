@@ -25,13 +25,11 @@ case class AnonymousUserIdentity(
   override def boclipsId: Option[UserId] = None
 }
 
-sealed trait UniqueUserIdentifier
-
-case class UserId(value: String) extends Ordered[UserId] with UniqueUserIdentifier {
+case class UserId(value: String) extends Ordered[UserId] {
   override def compare(that: UserId): Int = value.compare(that.value)
 }
 
-case class DeviceId(value: String) extends UniqueUserIdentifier
+case class DeviceId(value: String)
 
 case class User(
                  id: UserId,
