@@ -28,7 +28,7 @@ case class SearchRequest
   id: String,
   url: Option[Url],
   timestamp: ZonedDateTime,
-  userId: UserId,
+  userIdentity: UserIdentity,
   query: Query,
   urlParamsKeys: Set[String],
 )

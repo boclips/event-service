@@ -4,6 +4,7 @@ import com.boclips.event.aggregator.domain.model.{Monthly, Search, VideoId}
 import com.boclips.event.aggregator.domain.service.search.SearchResultPlayback
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchInteractions, createSearchRequest}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import org.apache.spark.rdd.RDD
 
 class SearchMetricCalculatorTest extends IntegrationTest {
@@ -11,15 +12,15 @@ class SearchMetricCalculatorTest extends IntegrationTest {
   "calculateMetrics" should "calculate percentage searches leading to playback" in sparkTest { implicit spark =>
     implicit val events: RDD[Search] = rdd(
       createSearch(
-        request = createSearchRequest(userId = "aly", query = ""),
+        request = createSearchRequest(userIdentity = createBoclipsUserIdentity("aly"), query = ""),
         interactions = createSearchInteractions(videosPlayed = List(SearchResultPlayback(videoId = VideoId("123"), videoIndex = Some(2), secondsPlayed = 2)))
       ),
       createSearch(
-        request = createSearchRequest(userId = "aly", query = ""),
+        request = createSearchRequest(userIdentity = createBoclipsUserIdentity("aly"), query = ""),
         interactions = createSearchInteractions(videosPlayed = List())
       ),
       createSearch(
-        request = createSearchRequest(userId = "ben", query = ""),
+        request = createSearchRequest(userIdentity = createBoclipsUserIdentity("ben"), query = ""),
         interactions = createSearchInteractions(videosPlayed = List(SearchResultPlayback(videoId = VideoId("124"), videoIndex = Some(3), secondsPlayed = 2)))
       ),
     )
@@ -32,11 +33,11 @@ class SearchMetricCalculatorTest extends IntegrationTest {
   it should "calculate percentage of searches with playbacks coming from top 3 results" in sparkTest { implicit spark =>
     implicit val events: RDD[Search] = rdd(
       createSearch(
-        request = createSearchRequest(userId = "aly", query = ""),
+        request = createSearchRequest(userIdentity = createBoclipsUserIdentity("aly"), query = ""),
         interactions = createSearchInteractions(videosPlayed = List(SearchResultPlayback(videoId = VideoId("123"), videoIndex = Some(2), secondsPlayed = 2)))
       ),
       createSearch(
-        request = createSearchRequest(userId = "bob", query = ""),
+        request = createSearchRequest(userIdentity = createBoclipsUserIdentity("bob"), query = ""),
         interactions = createSearchInteractions(videosPlayed = List(SearchResultPlayback(videoId = VideoId("124"), videoIndex = Some(3), secondsPlayed = 2)))
       ),
     )
@@ -49,11 +50,11 @@ class SearchMetricCalculatorTest extends IntegrationTest {
   it should "exclude searches without playback from the top3 metric" in sparkTest { implicit spark =>
     implicit val events: RDD[Search] = rdd(
       createSearch(
-        request = createSearchRequest(userId = "aly", query = ""),
+        request = createSearchRequest(userIdentity = createBoclipsUserIdentity("aly"), query = ""),
         interactions = createSearchInteractions(videosPlayed = List(SearchResultPlayback(videoId = VideoId("123"), videoIndex = Some(2), secondsPlayed = 2)))
       ),
       createSearch(
-        request = createSearchRequest(userId = "bob", query = ""),
+        request = createSearchRequest(userIdentity = createBoclipsUserIdentity("bob"), query = ""),
         interactions = createSearchInteractions(videosPlayed = List())
       ),
     )

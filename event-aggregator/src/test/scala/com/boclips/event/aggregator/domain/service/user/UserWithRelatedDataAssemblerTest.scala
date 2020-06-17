@@ -72,7 +72,7 @@ class UserWithRelatedDataAssemblerTest extends IntegrationTest {
   it should "assemble all searches for one user" in sparkTest { implicit spark =>
     val users = rdd(user)
     val playbacks = rdd[Playback]()
-    val searches = rdd(createSearch(request = createSearchRequest(timestamp = today, userId = userId.value)))
+    val searches = rdd(createSearch(request = createSearchRequest(timestamp = today, userIdentity = userIdentity)))
     val sessions = rdd[Session]()
 
     val usersWithRelatedData = UserWithRelatedDataAssembler(users, playbacks, searches, sessions).collect().toList

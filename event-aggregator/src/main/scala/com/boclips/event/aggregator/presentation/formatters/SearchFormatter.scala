@@ -15,7 +15,7 @@ object SearchFormatter extends SingleRowFormatter[Search] {
     val collectionInteractionCount = response.collectionResults.count(_.interaction)
 
     json.addProperty("timestamp", request.timestamp.format(ISO_OFFSET_DATE_TIME))
-    json.addProperty("userId", request.userId.value)
+    json.addProperty("userId", request.userIdentity.id.map(_.value))
     json.addProperty("query", request.query.normalized())
     json.addProperty("resultPagesSeen", interactions.resultPagesSeen)
     json.addProperty("videosPlayed", interactions.videosPlayed.size)

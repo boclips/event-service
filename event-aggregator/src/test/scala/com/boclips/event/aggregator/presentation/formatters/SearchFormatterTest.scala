@@ -6,11 +6,12 @@ import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.service.search.SearchResultPlayback
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchInteractions, createSearchRequest, createSearchResponse}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 class SearchFormatterTest extends Test {
 
   it should "write user id" in {
-    val json = SearchFormatter formatRow createSearch(request = createSearchRequest(userId = "user-1"))
+    val json = SearchFormatter formatRow createSearch(request = createSearchRequest(userIdentity = createBoclipsUserIdentity("user-1")))
 
     json.get("userId").getAsString shouldBe "user-1"
   }

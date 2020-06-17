@@ -13,7 +13,7 @@ object VideoSearchResultImpressionFormatter extends SingleRowFormatter[VideoSear
     json.addProperty("videoId", impression.videoId.value)
     json.addProperty("interaction", impression.interaction)
     json.addProperty("query", impression.search.query.normalized())
-    json.addProperty("userId", impression.search.userId.value)
+    json.addProperty("userId", impression.search.userIdentity.id.map(_.value))
     json.addProperty("urlHost", impression.search.url.map(_.host))
     json.addProperty("id", UUID.randomUUID().toString)
   }

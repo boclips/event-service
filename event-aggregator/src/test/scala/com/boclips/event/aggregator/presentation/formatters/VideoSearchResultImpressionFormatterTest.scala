@@ -5,6 +5,8 @@ import java.time.{ZoneOffset, ZonedDateTime}
 import com.boclips.event.aggregator.domain.model.{Url, VideoId}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory._
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 class VideoSearchResultImpressionFormatterTest extends Test {
   it should "write timestamp" in {
@@ -35,7 +37,7 @@ class VideoSearchResultImpressionFormatterTest extends Test {
   }
 
   it should "write user id" in {
-    val impression = createVideoSearchResultImpression(search = createSearchRequest(userId = "dave"))
+    val impression = createVideoSearchResultImpression(search = createSearchRequest(userIdentity = createBoclipsUserIdentity("dave")))
 
     val json = VideoSearchResultImpressionFormatter formatRow impression
 

@@ -23,7 +23,7 @@ class SessionSearchAssemblerTest extends Test {
     val highLevelEvents = new SessionSearchAssembler() assembleSearchesInSession events
 
     highLevelEvents should have size 1
-    highLevelEvents.head.request.userId shouldBe UserId("user id")
+    highLevelEvents.head.request.userIdentity.id should contain (UserId("user id"))
     highLevelEvents.head.request.timestamp shouldBe timestamp
     highLevelEvents.head.request.query shouldBe Query("the query")
   }

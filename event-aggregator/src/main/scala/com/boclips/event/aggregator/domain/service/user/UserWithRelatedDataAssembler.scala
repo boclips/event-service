@@ -20,7 +20,7 @@ object UserWithRelatedDataAssembler {
       .groupByKey()
 
     val searchesByUser: RDD[(UserIdentity, Iterable[Search])] = searches
-      .keyBy[UserIdentity](it => BoclipsUserIdentity(it.request.userId))
+      .keyBy[UserIdentity](it => it.request.userIdentity)
       .groupByKey()
 
     val activeMonthsByUser: RDD[(UserIdentity, Iterable[YearMonth])] = playbacks

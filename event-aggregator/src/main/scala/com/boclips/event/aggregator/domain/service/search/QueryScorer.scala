@@ -10,7 +10,7 @@ class QueryScorer(priorHits: Int, priorMisses: Int) {
     val prior = BetaDistribution(priorHits, priorMisses)
 
     searchEvents
-      .map(event => ((timePeriodDuration.dateRangeOf(event.request.timestamp), event.request.query.normalized(), event.request.userId), event.interactions.videosPlayed.nonEmpty))
+      .map(event => ((timePeriodDuration.dateRangeOf(event.request.timestamp), event.request.query.normalized(), event.request.userIdentity), event.interactions.videosPlayed.nonEmpty))
       .groupByKey()
       .mapValues(anyPlaybacks => anyPlaybacks.toList.contains(true))
       .map { case ((timePeriod, query, _), hit) => ((timePeriod, query), hit) }

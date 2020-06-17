@@ -17,7 +17,7 @@ object CollectionSearchResultImpressionFormatter extends SingleRowFormatter[Coll
     json.addProperty("urlPath", impression.search.url.map(_.path))
     json.addProperty("urlRawParams", impression.search.url.map(_.rawParams))
     json.addProperty("id", UUID.randomUUID().toString)
-    json.addProperty("userId", impression.search.userId.value)
+    json.addProperty("userId", impression.search.userIdentity.id.map(_.value))
   }
 }
 

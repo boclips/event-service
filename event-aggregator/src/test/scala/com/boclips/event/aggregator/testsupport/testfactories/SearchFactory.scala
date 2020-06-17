@@ -11,7 +11,7 @@ object SearchFactory {
 
   def createSearchRequest(
                            id: String = "id",
-                           userId: String = "userId",
+                           userIdentity: UserIdentity = UserFactory.createBoclipsUserIdentity(),
                            query: String = "query",
                            timestamp: ZonedDateTime = ZonedDateTime.now(),
                            url: Option[Url] = None,
@@ -20,7 +20,7 @@ object SearchFactory {
     SearchRequest(
       id = id,
       timestamp = timestamp,
-      userId = UserId(userId),
+      userIdentity = userIdentity,
       query = Query(query),
       url = url,
       urlParamsKeys = urlParamsKeys,

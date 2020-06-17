@@ -8,7 +8,7 @@ import com.boclips.event.infrastructure.EventFields
 case class VideosSearchedEvent
 (
   timestamp: ZonedDateTime,
-  userIdentity: BoclipsUserIdentity,
+  userIdentity: UserIdentity,
   query: Query,
   url: Option[Url],
   videoResults: Option[Iterable[VideoId]],

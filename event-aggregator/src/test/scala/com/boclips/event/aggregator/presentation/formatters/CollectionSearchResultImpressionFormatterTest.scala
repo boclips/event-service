@@ -5,6 +5,8 @@ import java.time.{ZoneOffset, ZonedDateTime}
 import com.boclips.event.aggregator.domain.model.{CollectionId, CollectionSearchResultImpression, Url}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory._
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 class CollectionSearchResultImpressionFormatterTest extends Test {
   it should "write timestamp" in {
@@ -25,7 +27,7 @@ class CollectionSearchResultImpressionFormatterTest extends Test {
   }
 
   it should "write user id" in {
-    val impression = createCollectionSearchResultImpression(search = createSearchRequest(userId = "dave"))
+    val impression = createCollectionSearchResultImpression(search = createSearchRequest(userIdentity = createBoclipsUserIdentity("dave")))
 
     val json = CollectionSearchResultImpressionFormatter formatRow impression
 
