@@ -73,7 +73,7 @@ object EventFactory {
   }
 
   def createVideoSegmentPlayedEventDocument(
-                                             id: String = "5cded765a22ace42b322a49e",
+                                             id: String = new ObjectId().toHexString,
                                              userId: Option[String] = Some("userId"),
                                              externalUserId: Option[String] = None,
                                              url: String = "http://example.com",

@@ -27,7 +27,7 @@ import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
 import com.boclips.event.aggregator.presentation.assemblers.{CollectionTableRowAssembler, UserTableRowAssembler, VideoTableRowAssembler}
 import com.boclips.event.aggregator.presentation.formatters.{ChannelFormatter, CollectionFormatter, ContractFormatter, DataVersionFormatter, VideoFormatter}
-import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableWriter}
+import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableNames, TableWriter}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.slf4j.{Logger, LoggerFactory}
@@ -77,7 +77,7 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos, playbacks, users, orders, channels, contracts, impressions, videoInteractions
     )
-    writeTable(videosWithRelatedData, "videos")(VideoFormatter, implicitly)
+    writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
 
     logProcessingStart(s"Updating contracts")
     writeTable(contracts, "contracts")(ContractFormatter, implicitly)
