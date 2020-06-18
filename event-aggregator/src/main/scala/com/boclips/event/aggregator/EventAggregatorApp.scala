@@ -14,17 +14,18 @@ import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.model.videos.{Video, VideoStorageCharge}
 import com.boclips.event.aggregator.domain.service.Data
-import com.boclips.event.aggregator.domain.service.collection.{CollectionAssembler, CollectionInteractionEventAssembler, CollectionSearchResultImpressionAssembler}
+import com.boclips.event.aggregator.domain.service.collection.{CollectionInteractionEventAssembler, CollectionSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.domain.service.navigation.{PagesRenderedAssembler, PlatformInteractedWithEventAssembler}
 import com.boclips.event.aggregator.domain.service.okr.OkrService
 import com.boclips.event.aggregator.domain.service.playback.PlaybackAssembler
 import com.boclips.event.aggregator.domain.service.search.{QueryScorer, SearchAssembler}
 import com.boclips.event.aggregator.domain.service.session.SessionAssembler
 import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembler
-import com.boclips.event.aggregator.domain.service.user.{UserAssembler, UserWithRelatedDataAssembler}
-import com.boclips.event.aggregator.domain.service.video.{VideoAssembler, VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
+import com.boclips.event.aggregator.domain.service.user.UserAssembler
+import com.boclips.event.aggregator.domain.service.video.{VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
+import com.boclips.event.aggregator.presentation.assemblers.{CollectionTableRowAssembler, UserTableRowAssembler, VideoTableRowAssembler}
 import com.boclips.event.aggregator.presentation.formatters.{ChannelFormatter, CollectionFormatter, ContractFormatter, DataVersionFormatter, VideoFormatter}
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableWriter}
 import org.apache.spark.rdd.RDD
@@ -73,7 +74,7 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     logProcessingStart(s"Updating videos")
     val impressions = VideoSearchResultImpressionAssembler(searches)
     val videoInteractions = VideoInteractionAssembler(events)
-    val videosWithRelatedData = VideoAssembler.assembleVideosWithRelatedData(
+    val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos, playbacks, users, orders, channels, contracts, impressions, videoInteractions
     )
     writeTable(videosWithRelatedData, "videos")(VideoFormatter, implicitly)
@@ -87,7 +88,7 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     logProcessingStart(s"Updating collections")
     val collectionImpressions = CollectionSearchResultImpressionAssembler(searches)
     val collectionInteractions: RDD[CollectionInteractedWithEvent] = CollectionInteractionEventAssembler(events)
-    val collectionsWithRelatedData = CollectionAssembler.assembleCollectionsWithRelatedData(collections, collectionImpressions, collectionInteractions)
+    val collectionsWithRelatedData = CollectionTableRowAssembler.assembleCollectionsWithRelatedData(collections, collectionImpressions, collectionInteractions)
     writeTable(collectionsWithRelatedData, "collections")(CollectionFormatter, implicitly)
 
     logProcessingStart(s"Updating video impressions")
@@ -104,7 +105,7 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     writeTable(queryScorer.scoreQueries(searches, Weekly()), "query_scores_weekly")
 
     logProcessingStart(s"Updating users")
-    val usersWithStatus = UserWithRelatedDataAssembler(users, playbacks, searches, sessions)
+    val usersWithStatus = UserTableRowAssembler(users, playbacks, searches, sessions)
     writeTable(usersWithStatus, "users")
 
     logProcessingStart(s"Updating user navigation")

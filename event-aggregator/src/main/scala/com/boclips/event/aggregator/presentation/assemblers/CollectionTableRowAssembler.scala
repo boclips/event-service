@@ -1,15 +1,14 @@
-package com.boclips.event.aggregator.domain.service.collection
+package com.boclips.event.aggregator.presentation.assemblers
 
-import com.boclips.event.aggregator.domain.model.events.CollectionInteractedWithEvent
 import com.boclips.event.aggregator.domain.model.collections.{Collection, CollectionId}
+import com.boclips.event.aggregator.domain.model.events.CollectionInteractedWithEvent
 import com.boclips.event.aggregator.domain.model.search.CollectionSearchResultImpression
-import com.boclips.event.aggregator.presentation
 import com.boclips.event.aggregator.presentation.model
 import com.boclips.event.aggregator.presentation.model.CollectionTableRow
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 
-object CollectionAssembler {
+object CollectionTableRowAssembler {
 
   def assembleCollectionsWithRelatedData(collections: RDD[Collection],
                                          impressions: RDD[CollectionSearchResultImpression],

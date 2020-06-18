@@ -2,6 +2,7 @@ package com.boclips.event.aggregator.domain.service.user
 
 import com.boclips.event.aggregator.domain.model.events.Event
 import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, ExternalUserId, ExternalUserIdentity, UserId}
+import com.boclips.event.aggregator.domain.service.user
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser
@@ -21,7 +22,7 @@ class UserAssemblerTest extends IntegrationTest {
   }
 
   it should "create user clones for each external user id" in sparkTest { implicit spark =>
-    val users = UserAssembler(
+    val users = user.UserAssembler(
       users = rdd(
         createUser(identity = BoclipsUserIdentity(UserId("user1")))
       ),
@@ -38,7 +39,7 @@ class UserAssemblerTest extends IntegrationTest {
   }
 
   it should "create exactly one user clone for each external user id" in sparkTest { implicit spark =>
-    val users = UserAssembler(
+    val users = user.UserAssembler(
       users = rdd(
         createUser(identity = BoclipsUserIdentity(UserId("user1")))
       ),

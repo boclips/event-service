@@ -1,4 +1,4 @@
-package com.boclips.event.aggregator.domain.service.video
+package com.boclips.event.aggregator.presentation.assemblers
 
 import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelDetails, ChannelId, ContractId}
 import com.boclips.event.aggregator.domain.model.orders.OrderId
@@ -15,7 +15,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.createVideoSearchResultImpression
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
 
-class VideoAssemblerIntegrationTest extends IntegrationTest {
+class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
 
   it should "include relevant order items in videos" in sparkTest { implicit spark =>
     val videos = rdd(
@@ -65,7 +65,7 @@ class VideoAssemblerIntegrationTest extends IntegrationTest {
       createVideoInteractedWithEvent(videoId = "v2"),
     )
 
-    val videosWithRelatedData = VideoAssembler.assembleVideosWithRelatedData(
+    val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
       playbacks,
       users,

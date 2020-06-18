@@ -1,12 +1,12 @@
-package com.boclips.event.aggregator.domain.service.user
+package com.boclips.event.aggregator.presentation.assemblers
 
 import java.time.{YearMonth, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, User, UserId, UserIdentity}
+import com.boclips.event.aggregator.presentation.assemblers
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
@@ -30,7 +30,7 @@ class UserTableRowAssemblerTest extends IntegrationTest {
     val searches = rdd[Search]()
     val sessions = rdd[Session]()
 
-    val usersWithRelatedData = UserWithRelatedDataAssembler(users, playbacks, searches, sessions).collect().toList
+    val usersWithRelatedData = UserTableRowAssembler(users, playbacks, searches, sessions).collect().toList
 
     usersWithRelatedData should have size 1
     usersWithRelatedData.head.monthlyActiveStatus should have size 1
@@ -43,7 +43,7 @@ class UserTableRowAssemblerTest extends IntegrationTest {
     val searches = rdd[Search]()
     val sessions = rdd[Session]()
 
-    val usersWithRelatedData = UserWithRelatedDataAssembler(users, playbacks, searches, sessions).collect().toList
+    val usersWithRelatedData = assemblers.UserTableRowAssembler(users, playbacks, searches, sessions).collect().toList
 
     usersWithRelatedData should have size 1
     usersWithRelatedData.head.playbacks should have size 1
@@ -55,7 +55,7 @@ class UserTableRowAssemblerTest extends IntegrationTest {
     val searches = rdd[Search]()
     val sessions = rdd[Session]()
 
-    val usersWithRelatedData = UserWithRelatedDataAssembler(users, playbacks, searches, sessions).collect().toList
+    val usersWithRelatedData = assemblers.UserTableRowAssembler(users, playbacks, searches, sessions).collect().toList
 
     usersWithRelatedData should have size 1
     usersWithRelatedData.head.referredPlaybacks should have size 1
@@ -67,7 +67,7 @@ class UserTableRowAssemblerTest extends IntegrationTest {
     val searches = rdd[Search]()
     val sessions = rdd[Session]()
 
-    val usersWithRelatedData = UserWithRelatedDataAssembler(users, playbacks, searches, sessions).collect().toList
+    val usersWithRelatedData = assemblers.UserTableRowAssembler(users, playbacks, searches, sessions).collect().toList
 
     usersWithRelatedData should have size 1
     usersWithRelatedData.head.referredPlaybacks should have size 0
@@ -79,7 +79,7 @@ class UserTableRowAssemblerTest extends IntegrationTest {
     val searches = rdd(createSearch(request = createSearchRequest(timestamp = today, userIdentity = userIdentity)))
     val sessions = rdd[Session]()
 
-    val usersWithRelatedData = UserWithRelatedDataAssembler(users, playbacks, searches, sessions).collect().toList
+    val usersWithRelatedData = assemblers.UserTableRowAssembler(users, playbacks, searches, sessions).collect().toList
 
     usersWithRelatedData should have size 1
     usersWithRelatedData.head.searches should have size 1
@@ -94,7 +94,7 @@ class UserTableRowAssemblerTest extends IntegrationTest {
       createSession(user = createAnonymousUserIdentity(), events = List(createVideoSegmentPlayedEvent())),
     )
 
-    val usersWithRelatedData = UserWithRelatedDataAssembler(users, playbacks, searches, sessions).collect().toList
+    val usersWithRelatedData = assemblers.UserTableRowAssembler(users, playbacks, searches, sessions).collect().toList
 
     usersWithRelatedData should have size 1
     usersWithRelatedData.head.sessions should have size 1

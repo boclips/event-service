@@ -1,4 +1,4 @@
-package com.boclips.event.aggregator.domain.service.collection
+package com.boclips.event.aggregator.presentation.assemblers
 
 import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.testsupport.IntegrationTest
@@ -6,7 +6,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.CollectionFactory.
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createCollectionInteractedWithEvent
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createCollectionSearchResultImpression, createSearchRequest}
 
-class CollectionAssemblerTest extends IntegrationTest {
+class CollectionTableRowAssemblerTest extends IntegrationTest {
 
   it should "relevant collection items" in sparkTest { implicit spark =>
 
@@ -25,7 +25,7 @@ class CollectionAssemblerTest extends IntegrationTest {
       createCollectionInteractedWithEvent(collectionId = "c1", subtype = Some("NAVIGATE_TO_COLLECTION_DETAILS")),
     )
 
-    val collectionsWithRelatedData = CollectionAssembler.assembleCollectionsWithRelatedData(
+    val collectionsWithRelatedData = CollectionTableRowAssembler.assembleCollectionsWithRelatedData(
       collections = collections,
       impressions = impressions,
       interactions = interactions).collect().toList.sortBy(_.collection.id.value)
@@ -58,7 +58,7 @@ class CollectionAssemblerTest extends IntegrationTest {
       createCollectionInteractedWithEvent(collectionId = "c1", subtype = Some("NAVIGATE_TO_COLLECTION_DETAILS")),
     )
 
-    val collectionsWithRelatedData = CollectionAssembler.assembleCollectionsWithRelatedData(
+    val collectionsWithRelatedData = CollectionTableRowAssembler.assembleCollectionsWithRelatedData(
       collections = collections,
       impressions = impressions,
       interactions = interactions).collect().toList.sortBy(_.collection.id.value)

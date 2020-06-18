@@ -1,9 +1,7 @@
-package com.boclips.event.aggregator.domain.service.user
+package com.boclips.event.aggregator.presentation.assemblers
 
 import java.time.{LocalDate, YearMonth}
 
-import com.boclips.event.aggregator._
-import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
@@ -11,7 +9,9 @@ import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, Use
 import com.boclips.event.aggregator.presentation.model.UserTableRow
 import org.apache.spark.rdd.RDD
 
-object UserWithRelatedDataAssembler {
+import com.boclips.event.aggregator._
+
+object UserTableRowAssembler {
 
   def apply(users: RDD[User], playbacks: RDD[Playback], searches: RDD[Search], sessions: RDD[Session]): RDD[UserTableRow] = {
 

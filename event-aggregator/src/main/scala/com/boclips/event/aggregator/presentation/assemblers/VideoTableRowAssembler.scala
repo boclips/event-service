@@ -1,4 +1,4 @@
-package com.boclips.event.aggregator.domain.service.video
+package com.boclips.event.aggregator.presentation.assemblers
 
 import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
 import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
@@ -11,7 +11,7 @@ import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 
-object VideoAssembler {
+object VideoTableRowAssembler {
 
   def assembleVideosWithRelatedData(
                                      videos: RDD[Video],
@@ -90,5 +90,3 @@ object VideoAssembler {
       .persist(StorageLevel.DISK_ONLY)
   }
 }
-
-
