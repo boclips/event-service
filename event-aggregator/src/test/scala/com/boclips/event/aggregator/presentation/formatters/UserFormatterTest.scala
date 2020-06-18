@@ -6,7 +6,7 @@ import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
-import com.boclips.event.aggregator.domain.model.users.{ExternalUserId, ExternalUserIdentity, SCHOOL_ORGANISATION, User, UserActiveStatus, UserId}
+import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, DeviceId, ExternalUserId, ExternalUserIdentity, SCHOOL_ORGANISATION, User, UserActiveStatus, UserId}
 import com.boclips.event.aggregator.presentation
 import com.boclips.event.aggregator.presentation.model
 import com.boclips.event.aggregator.presentation.model.UserTableRow
@@ -34,33 +34,42 @@ class UserFormatterTest extends Test {
   it should "write user id when boclips user" in {
     val json = UserFormatter formatRow createUser(identity = createBoclipsUserIdentity("user-id"))
 
-    json.get("id").getAsString shouldBe "user-id"
+    json.getString("id") shouldBe "user-id"
+    json.getString("identity") shouldBe "BOCLIPS"
   }
 
   it should "write user id when external user" in {
     val json = UserFormatter formatRow createUser(identity = ExternalUserIdentity(UserId("user1"), ExternalUserId("external1")))
 
-    json.get("id").getAsString shouldBe "user1/external1"
+    json.getString("id") shouldBe "user1/external1"
+    json.getString("identity") shouldBe "EXTERNAL"
+  }
+
+  it should "write user id when anonymous user" in {
+    val json = UserFormatter formatRow createUser(identity = AnonymousUserIdentity(Some(DeviceId("123"))))
+
+    json.getString("id") shouldBe "device:123"
+    json.getString("identity") shouldBe "ANONYMOUS"
   }
 
   it should "write user personal information" in {
     val json = UserFormatter formatRow createUser(firstName = Some("Jack"), lastName = Some("Jackson"), email = Some("jack@jackson.com"))
 
-    json.get("firstName").getAsString shouldBe "Jack"
-    json.get("lastName").getAsString shouldBe "Jackson"
-    json.get("email").getAsString shouldBe "jack@jackson.com"
+    json.getString("firstName") shouldBe "Jack"
+    json.getString("lastName") shouldBe "Jackson"
+    json.getString("email") shouldBe "jack@jackson.com"
   }
 
   it should "write organisation name" in {
     val json = UserFormatter formatRow createUser(organisation = Option(createOrganisation(name = "Sesame Street School")))
 
-    json.get("organisationName").getAsString shouldBe "Sesame Street School"
+    json.getString("organisationName") shouldBe "Sesame Street School"
   }
 
   it should "write organisation type" in {
     val json = UserFormatter formatRow createUser(organisation = Option(createOrganisation(typeName = SCHOOL_ORGANISATION)))
 
-    json.get("organisationType").getAsString shouldBe "SCHOOL"
+    json.getString("organisationType") shouldBe "SCHOOL"
   }
 
   it should "write  hasOptedIntoMarketing" in {
@@ -78,26 +87,26 @@ class UserFormatterTest extends Test {
   it should "write parent organisation name" in {
     val json = UserFormatter formatRow createUser(organisation = Option(createOrganisation(parent = Option(createOrganisation(name = "Putnam district")))))
 
-    json.get("parentOrganisationName").getAsString shouldBe "Putnam district"
+    json.getString("parentOrganisationName") shouldBe "Putnam district"
   }
 
   it should "write user creation date" in {
     val json = UserFormatter formatRow createUser(createdAt = ZonedDateTime.parse("2017-12-03T10:15:30Z"))
 
-    json.get("creationDate").getAsString shouldBe "2017-12-03"
+    json.getString("creationDate") shouldBe "2017-12-03"
   }
 
   it should "write organisation postcode when present" in {
     val json = UserFormatter formatRow createUser(organisation = Option(createOrganisation(postcode = Option("SW4"))))
 
-    json.get("organisationPostcode").getAsString shouldBe "SW4"
+    json.getString("organisationPostcode") shouldBe "SW4"
   }
 
   it should "write organisation state and countryCode when present" in {
     val json = UserFormatter formatRow createUser(organisation = Option(createOrganisation(state = Option("LU"), countryCode = Option("GZ"))))
 
-    json.get("organisationState").getAsString shouldBe "LU"
-    json.get("organisationCountryCode").getAsString shouldBe "GZ"
+    json.getString("organisationState") shouldBe "LU"
+    json.getString("organisationCountryCode") shouldBe "GZ"
   }
 
   it should "write organisation tags" in {
@@ -144,20 +153,20 @@ class UserFormatterTest extends Test {
   it should "handle organisation state and countryCode when None" in {
     val json = UserFormatter formatRow createUser(organisation = Option(createOrganisation(state = None, countryCode = None)))
 
-    json.get("organisationState").getAsString shouldBe "UNKNOWN"
-    json.get("organisationCountryCode").getAsString shouldBe "UNKNOWN"
+    json.getString("organisationState") shouldBe "UNKNOWN"
+    json.getString("organisationCountryCode") shouldBe "UNKNOWN"
   }
 
   it should "write user role when present" in {
     val json = UserFormatter formatRow createUser(role = Option("paramedic"))
 
-    json.get("role").getAsString shouldBe "paramedic"
+    json.getString("role") shouldBe "paramedic"
   }
 
   it should "write organisation postcode when absent" in {
     val json = UserFormatter formatRow createUser(organisation = Option(createOrganisation(postcode = None)))
 
-    json.get("organisationPostcode").getAsString shouldBe "UNKNOWN"
+    json.getString("organisationPostcode") shouldBe "UNKNOWN"
   }
 
   it should "write user subjects" in {

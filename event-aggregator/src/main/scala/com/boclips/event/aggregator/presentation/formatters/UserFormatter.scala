@@ -2,20 +2,22 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.util.UUID
 
-import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, ExternalUserIdentity, SCHOOL_ORGANISATION, User}
+import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, ExternalUserIdentity, SCHOOL_ORGANISATION, User}
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.boclips.event.aggregator.presentation.model.UserTableRow
 import com.google.gson.JsonObject
 
 object SimpleUserFormatter extends SingleRowFormatter[User] {
   override def writeRow(user: User, json: JsonObject): Unit = {
-    val id = user.identity match {
-      case BoclipsUserIdentity(id) => id.value
-      case ExternalUserIdentity(id, externalId) => s"${id.value}/${externalId.value}"
-      case _ => ""
+    val (id, identity) = user.identity match {
+      case BoclipsUserIdentity(id) => (id.value, "BOCLIPS")
+      case ExternalUserIdentity(id, externalId) => (s"${id.value}/${externalId.value}", "EXTERNAL")
+      case AnonymousUserIdentity(Some(deviceId)) => (s"device:${deviceId.value}", "ANONYMOUS")
+      case AnonymousUserIdentity(None) => throw new IllegalArgumentException()
     }
 
     json.addProperty("id", id)
+    json.addProperty("identity", identity)
     json.addProperty("firstName", user.firstName)
     json.addProperty("lastName", user.lastName)
     json.addProperty("email", user.email)

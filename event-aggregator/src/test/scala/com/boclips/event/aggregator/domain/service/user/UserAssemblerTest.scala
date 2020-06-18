@@ -1,7 +1,9 @@
 package com.boclips.event.aggregator.domain.service.user
 
+import java.time.ZonedDateTime
+
 import com.boclips.event.aggregator.domain.model.events.Event
-import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, ExternalUserId, ExternalUserIdentity, UserId}
+import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, DeviceId, ExternalUserId, ExternalUserIdentity, User, UserId}
 import com.boclips.event.aggregator.domain.service.user
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
@@ -22,7 +24,7 @@ class UserAssemblerTest extends IntegrationTest {
   }
 
   it should "create user clones for each external user id" in sparkTest { implicit spark =>
-    val users = user.UserAssembler(
+    val users = UserAssembler(
       users = rdd(
         createUser(identity = BoclipsUserIdentity(UserId("user1")))
       ),
@@ -39,7 +41,7 @@ class UserAssemblerTest extends IntegrationTest {
   }
 
   it should "create exactly one user clone for each external user id" in sparkTest { implicit spark =>
-    val users = user.UserAssembler(
+    val users = UserAssembler(
       users = rdd(
         createUser(identity = BoclipsUserIdentity(UserId("user1")))
       ),
@@ -52,5 +54,33 @@ class UserAssemblerTest extends IntegrationTest {
     users should have size 2
     users.map(_.identity) should contain(BoclipsUserIdentity(UserId("user1")))
     users.map(_.identity) should contain(ExternalUserIdentity(UserId("user1"), ExternalUserId("e1")))
+  }
+
+  it should "create user objects for anonymous identities with device id" in sparkTest { implicit spark =>
+    val identity = AnonymousUserIdentity(Some(DeviceId("123")))
+    val now = ZonedDateTime.now()
+    val users = UserAssembler(
+      users = rdd[User](),
+      events = rdd(
+        createVideoSegmentPlayedEvent(userIdentity = identity, timestamp = now.plusDays(1)),
+        createVideoSegmentPlayedEvent(userIdentity = identity, timestamp = now),
+        createVideoSegmentPlayedEvent(userIdentity = identity, timestamp = now.plusDays(1)),
+      )
+    ).collect().toList
+
+    users should have size 1
+    users.head.identity shouldBe identity
+    users.head.createdAt shouldBe now
+  }
+
+  it should "not create user objects for anonymous identities without device id" in sparkTest { implicit spark =>
+    val users = UserAssembler(
+      users = rdd[User](),
+      events = rdd(
+        createVideoSegmentPlayedEvent(userIdentity = AnonymousUserIdentity(None)),
+      )
+    ).collect().toList
+
+    users should have size 0
   }
 }

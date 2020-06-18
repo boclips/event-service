@@ -1,7 +1,9 @@
 package com.boclips.event.aggregator.domain.service.user
 
+import java.time.ZonedDateTime
+
 import com.boclips.event.aggregator.domain.model.events.Event
-import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, ExternalUserIdentity, User, UserIdentity}
+import com.boclips.event.aggregator.domain.model.users._
 import org.apache.spark.rdd.RDD
 
 object UserAssembler {
@@ -23,7 +25,34 @@ object UserAssembler {
         case (user, externalUserIdentity) => user.copy(identity = externalUserIdentity)
       }
 
-    users union usersWithExternalIdentities
+    val usersWithAnonymousIdentities = events
+      .map(event => (event.userIdentity, event.timestamp))
+      .flatMap {
+        case (AnonymousUserIdentity(Some(deviceId)), timestamp) => Some((AnonymousUserIdentity(Some(deviceId)), timestamp))
+        case _ => None
+      }
+      .reduceByKey((t1, t2) => if(t1.compareTo(t2) > 0) t2 else t1)
+      .map {
+        case (identity, timestamp) => anonymousUser(identity, timestamp)
+      }
+
+    users union usersWithExternalIdentities union usersWithAnonymousIdentities
+  }
+
+  def anonymousUser(identity: AnonymousUserIdentity, firstEventTimestamp: ZonedDateTime): User = {
+    User(
+      identity = identity,
+      createdAt = firstEventTimestamp,
+      firstName = None,
+      lastName = None,
+      email = None,
+      role = None,
+      subjects = Nil,
+      ages = Nil,
+      organisation = None,
+      isBoclipsEmployee = false,
+      hasOptedIntoMarketing = None,
+    )
   }
 
 }
