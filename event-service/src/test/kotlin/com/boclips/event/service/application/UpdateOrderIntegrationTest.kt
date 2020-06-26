@@ -5,6 +5,7 @@ import com.boclips.event.service.domain.OrderRepository
 import com.boclips.event.service.infrastructure.mongodb.MongoOrderRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.OrderFactory.createOrder
+import com.boclips.event.service.testsupport.OrderUserFactory
 import com.boclips.eventbus.events.order.OrderCreated
 import com.boclips.eventbus.events.order.OrderUpdated
 import org.assertj.core.api.Assertions.assertThat
@@ -27,9 +28,10 @@ class UpdateOrderIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun `update an order when one is updated`() {
-        val order = createOrder(id = "order-id", customerOrganisationName = "prev name")
+        val orderUser = OrderUserFactory.createOrderUser()
+        val order = createOrder(id = "order-id", customerOrganisationName = "prev name", requestingUser = orderUser)
         orderRepository.saveOrder(order)
-        val updatedOrder = createOrder(id = "order-id", customerOrganisationName = "new name")
+        val updatedOrder = createOrder(id = "order-id", customerOrganisationName = "new name", requestingUser = orderUser)
 
         eventBus.publish(OrderUpdated.builder().order(updatedOrder).build())
 

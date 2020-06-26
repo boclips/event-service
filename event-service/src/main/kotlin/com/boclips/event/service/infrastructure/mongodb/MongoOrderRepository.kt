@@ -2,8 +2,10 @@ package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.infrastructure.order.OrderDocument
 import com.boclips.event.infrastructure.order.OrderItemDocument
+import com.boclips.event.infrastructure.order.OrderUserDocument
 import com.boclips.event.service.domain.OrderRepository
 import com.boclips.eventbus.events.order.Order
+import com.boclips.eventbus.events.order.OrderUser
 import com.mongodb.MongoClient
 import com.mongodb.client.model.ReplaceOptions
 import mu.KLogging
@@ -18,6 +20,8 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
     }
 
     override fun saveOrder(order: Order) {
+        val requestingUserDoc = order.requestingUser?.let(this::orderUserDocument)
+        val authorisingUserDoc = order.authorisingUser?.let(this::orderUserDocument)
         write(
             OrderDocument.builder()
                 .id(order.id)
@@ -33,6 +37,12 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
                             .build()
                     }
                 )
+                    .requestingUser(requestingUserDoc)
+                    .authorisingUser(authorisingUserDoc)
+                    .fxRateToGbp(order.fxRateToGbp)
+                    .currency(order.currency.currencyCode)
+                    .isThroughPlatform(order.isThroughPlatform)
+                    .isbnOrProductNumber(order.isbnOrProductNumber)
                 .build()
         )
     }
@@ -47,4 +57,14 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
 
     private fun getCollection() =
         mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<OrderDocument>(COLLECTION_NAME)
+
+    private fun orderUserDocument(user: OrderUser): OrderUserDocument {
+        return OrderUserDocument.builder()
+                .email(user.email)
+                .firstName(user.firstName)
+                .lastName(user.lastName)
+                .legacyUserId(user.legacyUserId)
+                .label(user.label)
+                .build()
+    }
 }

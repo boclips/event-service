@@ -2,6 +2,8 @@ package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.OrderFactory.createOrder
+import com.boclips.event.service.testsupport.OrderUserFactory
+import com.boclips.event.service.testsupport.OrderUserFactory.createOrderUser
 import com.boclips.eventbus.domain.video.VideoId
 import com.boclips.eventbus.events.order.OrderItem
 import com.boclips.eventbus.events.order.OrderStatus
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.math.BigDecimal
 import java.time.ZonedDateTime
+import java.util.*
 
 class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
 
@@ -28,7 +31,13 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
                 customerOrganisationName = "pearson",
                 items = listOf(
                     OrderItem.builder().priceGbp(BigDecimal("10.50")).videoId(VideoId("the-video-id")).build()
-                )
+                ),
+                    authorisingUser = createOrderUser(email = "louis@hop.com"),
+                    requestingUser = createOrderUser(email = "requester@hop.com"),
+                    fxRateToGbp = BigDecimal.TEN,
+                    currency = Currency.getInstance("USD"),
+                    isThroughPlatform = true,
+                    isbnOrProductNumber = "jaba-2"
             )
         )
 
@@ -41,6 +50,7 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(
             document.get("items", List::class.java).first()
         ).isEqualTo(Document(mapOf("videoId" to "the-video-id", "priceGbp" to "10.50")))
+        assertThat(document.getString("isbnOrProductNumber")).isEqualTo("jaba-2")
     }
 
     @Test
