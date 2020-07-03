@@ -4,17 +4,15 @@ import java.time.{Duration, LocalDate, Period, ZonedDateTime}
 import java.util.{Currency, Locale}
 
 import com.boclips.event.aggregator.domain.model._
-import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelDetails, ChannelIngest, ChannelMarketing, ChannelPedagogy, ContractCosts, ContractDates, ContractRestrictions, ContractRoyaltySplit, Download, Streaming}
+import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.domain.model.orders.{OrderId, VideoItemWithOrder}
 import com.boclips.event.aggregator.domain.model.videos.Dimensions
-import com.boclips.event.aggregator.presentation
 import com.boclips.event.aggregator.presentation.model
-import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
 import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
-import com.boclips.event.aggregator.testsupport.testfactories.{ContractFactory, EventFactory, UserFactory}
-import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem}
+import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
+import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem, createOrderUser}
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createVideoSearchResultImpression}
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideo, createVideoAsset}
@@ -201,6 +199,18 @@ class VideoFormatterTest extends Test {
         customerOrganisationName = "Pearson",
         createdAt = ZonedDateTime.parse("2010-10-20T00:00:00Z"),
         updatedAt = ZonedDateTime.parse("2010-10-21T00:00:00Z"),
+        requestingUser = createOrderUser(
+          firstName = Some("Bryan"),
+          lastName = Some("Adams"),
+          email = Some("ba@rock.com"),
+          legacyUserId = Some("luid"),
+          label = None,
+        ),
+        isbnOrProductNumber = Some("covid-19"),
+        isThroughPlatform = false,
+        currency = Some(Currency.getInstance("USD")),
+        fxRateToGbp = Some(BigDecimal(10.0)),
+
       ))
     )
 
@@ -213,6 +223,37 @@ class VideoFormatterTest extends Test {
     orderJson.getString("customerOrganisationName") shouldBe "Pearson"
     orderJson.getString("orderCreatedAt") shouldBe "2010-10-20T00:00:00Z"
     orderJson.getString("orderUpdatedAt") shouldBe "2010-10-21T00:00:00Z"
+    orderJson.getString("requestingUserFirstName") shouldBe "Bryan"
+    orderJson.getString("requestingUserLastName") shouldBe "Adams"
+    orderJson.getString("requestingUserEmail") shouldBe "ba@rock.com"
+    orderJson.getString("requestingUserLegacyUserId") shouldBe "luid"
+    orderJson.getString("requestingUserLabel") shouldBe "UNKNOWN"
+    orderJson.getString("isbnOrProductNumber") shouldBe "covid-19"
+    orderJson.getString("currency") shouldBe "USD"
+    orderJson.get("fxRateToGbp").getAsDouble shouldBe 10.0
+    orderJson.getBool("isThroughPlatform") shouldBe false
+  }
+
+  it should "write nested order null values gracefully" in {
+    val video = createVideo()
+    val orders = List(VideoItemWithOrder(
+      item = createOrderItem(priceGbp = BigDecimal(50)),
+      order = createOrder(
+        isbnOrProductNumber = None,
+        currency = None,
+        fxRateToGbp = None,
+        authorisingUser = None
+
+      ))
+    )
+
+    val json = VideoFormatter formatRow model.VideoTableRow(video = video, orders = orders)
+
+    val orderJson = json.get("orders").getAsJsonArray.get(0).getAsJsonObject
+    orderJson.getString("isbnOrProductNumber") shouldBe "UNKNOWN"
+    orderJson.getString("currency") shouldBe "UNKNOWN"
+    orderJson.get("fxRateToGbp").getAsDouble shouldBe 1
+    orderJson.getString("authorisingUserFirstName") shouldBe "UNKNOWN"
   }
 
   it should "write nested channel" in {

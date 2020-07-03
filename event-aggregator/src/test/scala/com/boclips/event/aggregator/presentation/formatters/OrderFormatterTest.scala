@@ -1,11 +1,12 @@
 package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.ZonedDateTime
+import java.util.Currency
 
 import com.boclips.event.aggregator.domain.model.orders.{OrderId, OrderItem}
 import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.createOrder
+import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderUser}
 
 class OrderFormatterTest extends Test {
 
@@ -41,4 +42,63 @@ class OrderFormatterTest extends Test {
     json.getObjectList("items").head.getDouble("priceGbp") shouldBe 20.3
   }
 
+  it should "write authorising user details" in {
+    val json = OrderFormatter formatRow createOrder(authorisingUser = Some(createOrderUser(
+      firstName = Some("Bryan"),
+      lastName = Some("Adams"),
+      email = Some("ba@rock.com"),
+      legacyUserId = Some("luid"),
+      label = None,
+    )))
+
+    json.getString("authorisingUserFirstName") shouldBe "Bryan"
+    json.getString("authorisingUserLastName") shouldBe "Adams"
+    json.getString("authorisingUserEmail") shouldBe "ba@rock.com"
+    json.getString("authorisingUserLegacyUserId") shouldBe "luid"
+    json.getString("authorisingUserLabel") shouldBe "UNKNOWN"
+  }
+
+  it should "write requesting user details" in {
+    val json = OrderFormatter formatRow createOrder(requestingUser = createOrderUser(
+      firstName = Some("Bryan"),
+      lastName = Some("Adams"),
+      email = Some("ba@rock.com"),
+      legacyUserId = Some("luid"),
+      label = None,
+    ))
+
+    json.getString("requestingUserFirstName") shouldBe "Bryan"
+    json.getString("requestingUserLastName") shouldBe "Adams"
+    json.getString("requestingUserEmail") shouldBe "ba@rock.com"
+    json.getString("requestingUserLegacyUserId") shouldBe "luid"
+    json.getString("requestingUserLabel") shouldBe "UNKNOWN"
+  }
+  it should "write extra properties" in {
+    val json = OrderFormatter formatRow createOrder(
+      isbnOrProductNumber = Some("covid-19"),
+      isThroughPlatform = false,
+      currency = Some(Currency.getInstance("USD")),
+      fxRateToGbp = Some(BigDecimal(10.0)),
+    )
+
+    json.getString("isbnOrProductNumber") shouldBe "covid-19"
+    json.getString("currency") shouldBe "USD"
+    json.get("fxRateToGbp").getAsDouble shouldBe 10.0
+    json.getBool("isThroughPlatform") shouldBe false
+
+  }
+
+  it should "handle nulls gracefully" in {
+    val json = OrderFormatter formatRow createOrder(
+      isbnOrProductNumber = None,
+      currency = None,
+      fxRateToGbp = None,
+      authorisingUser = None
+    )
+
+    json.getString("isbnOrProductNumber") shouldBe "UNKNOWN"
+    json.getString("currency") shouldBe "UNKNOWN"
+    json.get("fxRateToGbp").getAsDouble shouldBe 1
+    json.getString("authorisingUserFirstName") shouldBe "UNKNOWN"
+  }
 }

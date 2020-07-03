@@ -7,7 +7,7 @@ import com.boclips.event.aggregator.domain.model.orders.VideoItemWithOrder
 import com.boclips.event.aggregator.domain.model.videos.Video
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.boclips.event.aggregator.presentation.model.VideoTableRow
-import com.google.gson.{JsonArray, JsonElement, JsonObject}
+import com.google.gson.JsonObject
 
 object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
   override def writeRow(obj: VideoItemWithOrder, json: JsonObject): Unit = {
@@ -17,6 +17,20 @@ object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
     json.addProperty("customerOrganisationName", obj.order.customerOrganisationName)
     json.addDateTimeProperty("orderCreatedAt", obj.order.createdAt)
     json.addDateTimeProperty("orderUpdatedAt", obj.order.updatedAt)
+    json.addProperty("authorisingUserFirstName", obj.order.authorisingUser.flatMap(_.firstName))
+    json.addProperty("authorisingUserLastName", obj.order.authorisingUser.flatMap(_.lastName))
+    json.addProperty("authorisingUserEmail", obj.order.authorisingUser.flatMap(_.email))
+    json.addProperty("authorisingUserLegacyUserId", obj.order.authorisingUser.flatMap(_.legacyUserId))
+    json.addProperty("authorisingUserLabel", obj.order.authorisingUser.flatMap(_.label))
+    json.addProperty("requestingUserFirstName", obj.order.requestingUser.firstName)
+    json.addProperty("requestingUserLastName", obj.order.requestingUser.lastName)
+    json.addProperty("requestingUserEmail", obj.order.requestingUser.email)
+    json.addProperty("requestingUserLegacyUserId", obj.order.requestingUser.legacyUserId)
+    json.addProperty("requestingUserLabel", obj.order.requestingUser.label)
+    json.addProperty("isThroughPlatform",obj.order.isThroughPlatform)
+    json.addProperty("isbnOrProductNumber",obj.order.isbnOrProductNumber)
+    json.addProperty("currency",obj.order.currency.map(_.getCurrencyCode))
+    json.addProperty("fxRateToGbp", obj.order.fxRateToGbp.getOrElse(BigDecimal(1.0)).toDouble)
   }
 }
 
