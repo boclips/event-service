@@ -52,6 +52,7 @@ object UserAssembler {
       organisation = None,
       isBoclipsEmployee = false,
       hasOptedIntoMarketing = None,
+      profileSchool = None
     )
   }
 

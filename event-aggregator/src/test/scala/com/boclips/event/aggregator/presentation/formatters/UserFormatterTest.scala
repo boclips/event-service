@@ -2,19 +2,17 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.{Month, YearMonth, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
-import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, DeviceId, ExternalUserId, ExternalUserIdentity, SCHOOL_ORGANISATION, User, UserActiveStatus, UserId}
-import com.boclips.event.aggregator.presentation
+import com.boclips.event.aggregator.domain.model.users._
 import com.boclips.event.aggregator.presentation.model
 import com.boclips.event.aggregator.presentation.model.UserTableRow
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchRequest}
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createDeal, createOrganisation, createUser}
-import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory, UserFactory}
+import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory}
 
 class UserFormatterTest extends Test {
 
@@ -155,6 +153,58 @@ class UserFormatterTest extends Test {
 
     json.getString("organisationState") shouldBe "UNKNOWN"
     json.getString("organisationCountryCode") shouldBe "UNKNOWN"
+  }
+
+  it should "write Profile Organisation attributes when present" in {
+    val json = UserFormatter formatRow createUser(profileSchool = Some(
+    createOrganisation(
+      name = "Academy",
+      typeName = SCHOOL_ORGANISATION,
+      tags = Set("tago"),
+      parent = None,
+      postcode = Some("32005"),
+      state = Some("SC"),
+      countryCode = Some("CA"),
+        )
+      )
+    )
+    json.getString("profileOrganisationName") shouldBe "Academy"
+    json.getString("profileOrganisationType") shouldBe "SCHOOL"
+    json.getString("profileOrganisationState") shouldBe "SC"
+    json.getString("profileOrganisationCountryCode") shouldBe "CA"
+    json.getString("profileOrganisationPostcode") shouldBe "32005"
+    json.get("profileOrganisationTags").getAsJsonArray.size() shouldBe 1
+    json.get("profileOrganisationTags").getAsJsonArray.get(0).getAsString shouldBe "tago"
+  }
+
+  it should "write Profile Organisation attributes when not present" in {
+    val json = UserFormatter formatRow createUser(profileSchool = None)
+
+    json.getString("profileOrganisationName") shouldBe "UNKNOWN"
+    json.getString("profileOrganisationType") shouldBe "SCHOOL"
+    json.getString("profileOrganisationState") shouldBe "UNKNOWN"
+    json.getString("profileOrganisationCountryCode") shouldBe "UNKNOWN"
+    json.getString("profileOrganisationPostcode") shouldBe "UNKNOWN"
+    json.get("profileOrganisationTags").getAsJsonArray.size() shouldBe 0
+    json.getString("profileParentOrganisationName") shouldBe "UNKNOWN"
+  }
+
+  it should "write Parent Profile Organisation attributes when present" in {
+    val json = UserFormatter formatRow createUser(
+      profileSchool = Some(createOrganisation(parent = Some(
+        createOrganisation(name = "Geppetto")
+      ))))
+
+    json.getString("profileParentOrganisationName") shouldBe "Geppetto"
+  }
+
+
+  it should "write Parent Profile Organisation attributes not when present" in {
+    val json = UserFormatter formatRow createUser(
+      profileSchool = Some(createOrganisation(parent = None))
+    )
+
+    json.getString("profileParentOrganisationName") shouldBe "UNKNOWN"
   }
 
   it should "write user role when present" in {

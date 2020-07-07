@@ -18,6 +18,7 @@ case class User(
                  ages: List[Int],
                  createdAt: ZonedDateTime,
                  organisation: Option[Organisation],
+                 profileSchool: Option[Organisation],
                  isBoclipsEmployee: Boolean,
                  hasOptedIntoMarketing: Option[Boolean]
                )

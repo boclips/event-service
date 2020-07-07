@@ -3,8 +3,8 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.ZonedDateTime
 import java.util
 
-import com.boclips.event.aggregator.domain.model.{users, _}
-import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, Deal, Organisation, OrganisationType, User, UserId}
+import com.boclips.event.aggregator.domain.model.users
+import com.boclips.event.aggregator.domain.model.users._
 import com.boclips.event.infrastructure.user.{OrganisationDocument, UserDocument}
 
 import scala.collection.JavaConverters._
@@ -28,6 +28,7 @@ object DocumentToUserConverter {
       organisation = Option(document.getOrganisation).map(convertOrganisation),
       isBoclipsEmployee = document.getBoclipsEmployee,
       hasOptedIntoMarketing = Option(document.getHasOptedIntoMarketing),
+      profileSchool = Option(document.getProfileSchool).map(convertOrganisation),
     )
   }
 
@@ -42,6 +43,12 @@ object DocumentToUserConverter {
       document.getBilling
     }
 
+    val dealExpiresAt: Option[ZonedDateTime] = if (document.getDealExpiresAt == null) {
+      None
+    } else {
+      Some(ZonedDateTime.parse(document.getDealExpiresAt))
+    }
+
     users.Organisation(
       name = document.getName,
       `type` = OrganisationType.from(document.getType),
@@ -50,7 +57,10 @@ object DocumentToUserConverter {
       state = Option(document.getState),
       tags = tags,
       countryCode = Option(document.getCountryCode),
-      deal = Deal(isBilling),
+      deal = Deal(
+        billing = isBilling,
+        dealExpiresAt = dealExpiresAt,
+    )
     )
   }
 }

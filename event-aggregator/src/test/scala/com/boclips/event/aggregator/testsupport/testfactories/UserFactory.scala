@@ -2,8 +2,8 @@ package com.boclips.event.aggregator.testsupport.testfactories
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.{users, _}
-import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, Deal, DeviceId, Organisation, OrganisationType, SCHOOL_ORGANISATION, User, UserId, UserIdentity}
+import com.boclips.event.aggregator.domain.model.users
+import com.boclips.event.aggregator.domain.model.users._
 
 object UserFactory {
 
@@ -24,10 +24,12 @@ object UserFactory {
   }
 
   def createDeal(
-                  billing: Boolean = false
+                  billing: Boolean = false,
+                  dealExpiresAt: Option[ZonedDateTime] = None
                 ): Deal = {
     Deal(
-      billing = billing
+      billing = billing,
+      dealExpiresAt = dealExpiresAt
     )
   }
 
@@ -63,6 +65,7 @@ object UserFactory {
                   ages: List[Int] = List(),
                   isBoclipsEmployee: Boolean = false,
                   organisation: Option[Organisation] = None,
+                  profileSchool: Option[Organisation] = None,
                   createdAt: ZonedDateTime = ZonedDateTime.now(),
                   hasOptedIntoMarketing: Option[Boolean] = None,
                 ): User = {
@@ -77,6 +80,7 @@ object UserFactory {
       createdAt = createdAt,
       isBoclipsEmployee = isBoclipsEmployee,
       organisation = organisation,
+      profileSchool = profileSchool,
       hasOptedIntoMarketing = hasOptedIntoMarketing
     )
   }
