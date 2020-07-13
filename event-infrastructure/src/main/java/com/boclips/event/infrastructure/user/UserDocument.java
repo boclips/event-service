@@ -25,6 +25,11 @@ public class UserDocument {
     @NonNull
     private Boolean boclipsEmployee;
     private Boolean hasOptedIntoMarketing;
+    private String marketingUtmSource;
+    private String marketingUtmTerm;
+    private String marketingUtmCampaign;
+    private String marketingUtmMedium;
+    private String marketingUtmContent;
 
     public static UserDocument.UserDocumentBuilder sample() {
         return UserDocument.builder()
@@ -39,6 +44,12 @@ public class UserDocument {
                 .profileSchool(OrganisationDocument.sample().build())
                 .role("my role")
                 .boclipsEmployee(true)
-                .hasOptedIntoMarketing(null);
+                .hasOptedIntoMarketing(null)
+                .marketingUtmSource("Of truth")
+                .marketingUtmContent("surprise")
+                .marketingUtmTerm("mine")
+                .marketingUtmMedium("plasma")
+                .marketingUtmCampaign("India")
+                ;
     }
 }

@@ -31,6 +31,11 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
             .role(user.profile.role)
             .boclipsEmployee(user.isBoclipsEmployee)
                 .hasOptedIntoMarketing(user.profile.hasOptedIntoMarketing)
+                .marketingUtmCampaign(user.profile.marketingTracking.utmCampaign)
+                .marketingUtmSource(user.profile.marketingTracking.utmSource)
+                .marketingUtmTerm(user.profile.marketingTracking.utmTerm)
+                .marketingUtmContent(user.profile.marketingTracking.utmContent)
+                .marketingUtmMedium(user.profile.marketingTracking.utmMedium)
             .profileSchool(user.profile.school?.let(this::organisationDocument))
             .build()
 

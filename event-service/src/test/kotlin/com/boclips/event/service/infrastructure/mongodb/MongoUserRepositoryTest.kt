@@ -5,6 +5,7 @@ import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
 import com.boclips.event.service.testsupport.OrganisationFactory.createAddress
 import com.boclips.event.service.testsupport.OrganisationFactory.createDeal
 import com.boclips.event.service.testsupport.OrganisationFactory.createOrganisation
+import com.boclips.event.service.testsupport.UserFactory.createMarketingTracking
 import com.boclips.event.service.testsupport.UserFactory.createUser
 import com.boclips.event.service.testsupport.UserFactory.createUserProfile
 import org.assertj.core.api.Assertions.assertThat
@@ -127,6 +128,29 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
         )
 
         assertThat(userDocument().createdAt).isEqualTo("2019-06-08T10:12:23.100Z")
+    }
+
+    @Test
+    fun `saveUser saves marketing tracking details`() {
+        userRepository.saveUser(
+                createUser(
+                        profile = createUserProfile(
+                                marketingTracking = createMarketingTracking(
+                                        utmSource = "web",
+                                        utmTerm = "Fall",
+                                        utmMedium = "Gas",
+                                        utmContent = "cat",
+                                        utmCampaign = "yes we can"
+                                )
+                        )
+                )
+        )
+
+        assertThat(userDocument().marketingUtmSource).isEqualTo("web")
+        assertThat(userDocument().marketingUtmTerm).isEqualTo("Fall")
+        assertThat(userDocument().marketingUtmMedium).isEqualTo("Gas")
+        assertThat(userDocument().marketingUtmContent).isEqualTo("cat")
+        assertThat(userDocument().marketingUtmCampaign).isEqualTo("yes we can")
     }
 
     fun userDocument() = document<UserDocument>(MongoUserRepository.COLLECTION_NAME)
