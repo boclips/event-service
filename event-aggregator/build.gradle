@@ -18,6 +18,9 @@ dependencies {
     implementation "com.google.cloud.bigdataoss:gcs-connector:hadoop3-2.1.3"
     implementation "org.scalactic:scalactic_2.12:3.0.5"
     implementation "io.sentry:sentry-log4j:1.7.30"
+    implementation "org.neo4j.driver:neo4j-java-driver:4.0.2"
+    implementation "com.dimafeng:testcontainers-scala-scalatest_2.12:0.37.0"
+    implementation "com.dimafeng:testcontainers-scala-neo4j_2.12:0.37.0"
 
     testImplementation 'org.scalatest:scalatest_2.12:3.0.5'
     testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0"

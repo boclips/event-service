@@ -26,9 +26,9 @@ object VideoTableRowAssembler {
 
     val playbacksByVideoId: RDD[(VideoId, Iterable[(Playback, Option[User])])] = (
       playbacks.keyBy(_.user) leftOuterJoin users.keyBy(_.identity)
-    )
+      )
       .values
-      .keyBy { case (playback, _) => playback.videoId}
+      .keyBy { case (playback, _) => playback.videoId }
       .groupByKey()
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Playbacks by video ID")

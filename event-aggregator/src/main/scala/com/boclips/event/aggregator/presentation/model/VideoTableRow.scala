@@ -9,11 +9,11 @@ import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.model.videos.Video
 
 case class VideoTableRow(
-                                 video: Video,
-                                 playbacks: List[(Playback, Option[User])] = Nil,
-                                 orders: List[VideoItemWithOrder] = Nil,
-                                 channel: Option[Channel] = None,
-                                 contract: Option[Contract] = None,
-                                 impressions: List[VideoSearchResultImpression] = Nil,
-                                 interactions: List[VideoInteractedWithEvent] = Nil
-                               )
+                          video: Video,
+                          playbacks: List[(Playback, Option[User])] = Nil,
+                          orders: List[VideoItemWithOrder] = Nil,
+                          channel: Option[Channel] = None,
+                          contract: Option[Contract] = None,
+                          impressions: List[VideoSearchResultImpression] = Nil,
+                          interactions: List[VideoInteractedWithEvent] = Nil
+                        )

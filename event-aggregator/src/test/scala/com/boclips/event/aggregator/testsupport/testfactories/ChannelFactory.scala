@@ -1,7 +1,6 @@
 package com.boclips.event.aggregator.testsupport.testfactories
 
-import com.boclips.event.aggregator.domain.model._
-import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, ChannelDetails, ChannelId, ChannelIngest, ChannelMarketing, ChannelPedagogy}
+import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
 
 object ChannelFactory {

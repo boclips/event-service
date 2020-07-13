@@ -2,9 +2,9 @@ package com.boclips.event.aggregator
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.config.{BigQueryConfig, MongoConfig, SparkConfig}
+import com.boclips.event.aggregator.config.{BigQueryConfig, MongoConfig, Neo4jConfig, SparkConfig}
 import com.boclips.event.aggregator.domain.model.collections.Collection
-import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
+import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent, PlatformInteractedWithEvent}
 import com.boclips.event.aggregator.domain.model.okrs.{Monthly, Weekly}
 import com.boclips.event.aggregator.domain.model.orders.Order
@@ -25,6 +25,7 @@ import com.boclips.event.aggregator.domain.service.user.UserAssembler
 import com.boclips.event.aggregator.domain.service.video.{VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
+import com.boclips.event.aggregator.infrastructure.neo4j.Neo4jVideoRowGraphWriter
 import com.boclips.event.aggregator.presentation.assemblers.{CollectionTableRowAssembler, UserTableRowAssembler, VideoTableRowAssembler}
 import com.boclips.event.aggregator.presentation.formatters.{ChannelFormatter, CollectionFormatter, ContractFormatter, DataVersionFormatter, VideoFormatter}
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableNames, TableWriter}
@@ -41,11 +42,16 @@ object EventAggregatorApp {
     implicit val session: SparkSession = sparkConfig.session
     val writer = new BigQueryTableWriter(BigQueryConfig())
     val mongoSparkProvider = new SparkMongoClient(MongoConfig())
-    new EventAggregatorApp(writer, mongoSparkProvider).run()
+    val neo4jConfig = Neo4jConfig.fromEnv
+    new EventAggregatorApp(writer, mongoSparkProvider, EventAggregatorConfiguration(Some(neo4jConfig))).run()
   }
 }
 
-class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoClient)(implicit val session: SparkSession) {
+class EventAggregatorApp(
+                          val writer: TableWriter,
+                          val mongoClient: SparkMongoClient,
+                          val configuration: EventAggregatorConfiguration = EventAggregatorConfiguration(None)
+                        )(implicit val session: SparkSession) {
 
   val log: Logger = LoggerFactory.getLogger(classOf[EventAggregatorApp])
 
@@ -77,6 +83,29 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos, playbacks, users, orders, channels, contracts, impressions, videoInteractions
     )
+
+    configuration.neo4jConfig.foreach { neo4jConfig =>
+      logProcessingStart(s"Writing video rows to graph database")
+      var nchunk = 0
+      videosWithRelatedData
+        .filter(_.video.contentType.contains("INSTRUCTIONAL"))
+        .coalesce(1)
+        .foreachPartition {
+          rows => {
+            val graphWriter = new Neo4jVideoRowGraphWriter(neo4jConfig.spawnDriver)
+            try {
+              rows.grouped(10000).foreach { chunk =>
+                println("Writing data chunk to graph: " + nchunk)
+                nchunk = nchunk + 1
+
+                graphWriter.write(chunk.toList)
+              }
+
+            } finally graphWriter.cleanUp()
+          }
+        }
+    }
+
     writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
 
     logProcessingStart(s"Updating contracts")
@@ -116,7 +145,6 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
     val platformInteractedWithEvents: RDD[PlatformInteractedWithEvent] = new PlatformInteractedWithEventAssembler(events).assemblePlatformInteractedWithEvents()
     writeTable(platformInteractedWithEvents, "platform_interacted_with_events")
 
-
     logProcessingStart(s"Updating collection interaction")
     val collectionInteractionEvents: RDD[CollectionInteractedWithEvent] = CollectionInteractionEventAssembler(events)
     writeTable(collectionInteractionEvents, "collection_interactions")
@@ -132,5 +160,6 @@ class EventAggregatorApp(val writer: TableWriter, val mongoClient: SparkMongoCli
   }
 }
 
-
-
+case class EventAggregatorConfiguration(
+                                         neo4jConfig: Option[Neo4jConfig]
+                                       )

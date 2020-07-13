@@ -10,7 +10,10 @@ import com.boclips.event.infrastructure.video.VideoDocument
 class EventAggregatorAppIntegrationTest extends IntegrationTest {
 
   it should "calculate and write results with no error when there is no data" in mongoSparkTest { (spark, mongo) =>
-    val app = new EventAggregatorApp(new TestTableWriter(), mongo)(spark)
+    val app = new EventAggregatorApp(
+      new TestTableWriter(),
+      mongo
+    )(spark)
 
     app.run()
   }
@@ -30,7 +33,9 @@ class EventAggregatorAppIntegrationTest extends IntegrationTest {
     )
 
     val tableWriter = new TestTableWriter()
-    val app = new EventAggregatorApp(tableWriter, mongo)(spark)
+    val app = new EventAggregatorApp(
+      tableWriter,
+      mongo)(spark)
 
     app.run()
 
