@@ -68,6 +68,11 @@ object UserFactory {
                   profileSchool: Option[Organisation] = None,
                   createdAt: ZonedDateTime = ZonedDateTime.now(),
                   hasOptedIntoMarketing: Option[Boolean] = None,
+                  marketingUtmCampaign : Option[String] = None,
+                  marketingUtmContent : Option[String] = None,
+                  marketingUtmMedium : Option[String] = None,
+                  marketingUtmSource : Option[String] = None,
+                  marketingUtmTerm : Option[String] = None,
                 ): User = {
     User(
       identity = identity,
@@ -81,7 +86,12 @@ object UserFactory {
       isBoclipsEmployee = isBoclipsEmployee,
       organisation = organisation,
       profileSchool = profileSchool,
-      hasOptedIntoMarketing = hasOptedIntoMarketing
+      hasOptedIntoMarketing = hasOptedIntoMarketing,
+      marketingUtmCampaign = marketingUtmCampaign,
+      marketingUtmContent = marketingUtmContent,
+      marketingUtmMedium = marketingUtmMedium,
+      marketingUtmSource = marketingUtmSource,
+      marketingUtmTerm = marketingUtmTerm,
     )
   }
 

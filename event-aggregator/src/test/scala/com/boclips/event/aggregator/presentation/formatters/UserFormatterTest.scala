@@ -189,6 +189,38 @@ class UserFormatterTest extends Test {
     json.getString("profileParentOrganisationName") shouldBe "UNKNOWN"
   }
 
+  it should "write marketing utm details when present" in {
+    val json = UserFormatter formatRow createUser(
+      marketingUtmCampaign = Some("Campaign"),
+      marketingUtmContent = Some("Content"),
+      marketingUtmMedium = Some("Medium"),
+      marketingUtmSource = Some("Source"),
+      marketingUtmTerm = Some("Term"),
+    )
+
+    json.getString("marketingUtmCampaign") shouldBe "Campaign"
+    json.getString("marketingUtmContent") shouldBe "Content"
+    json.getString("marketingUtmMedium") shouldBe "Medium"
+    json.getString("marketingUtmSource") shouldBe "Source"
+    json.getString("marketingUtmTerm") shouldBe "Term"
+  }
+
+  it should "write marketing utm details when not present" in {
+    val json = UserFormatter formatRow createUser(
+      marketingUtmCampaign = None,
+      marketingUtmContent = None,
+      marketingUtmMedium = None,
+      marketingUtmSource = None,
+      marketingUtmTerm = None,
+    )
+
+    json.getString("marketingUtmCampaign") shouldBe "UNKNOWN"
+    json.getString("marketingUtmContent") shouldBe "UNKNOWN"
+    json.getString("marketingUtmMedium") shouldBe "UNKNOWN"
+    json.getString("marketingUtmSource") shouldBe "UNKNOWN"
+    json.getString("marketingUtmTerm") shouldBe "UNKNOWN"
+  }
+
   it should "write Parent Profile Organisation attributes when present" in {
     val json = UserFormatter formatRow createUser(
       profileSchool = Some(createOrganisation(parent = Some(

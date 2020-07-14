@@ -20,7 +20,12 @@ case class User(
                  organisation: Option[Organisation],
                  profileSchool: Option[Organisation],
                  isBoclipsEmployee: Boolean,
-                 hasOptedIntoMarketing: Option[Boolean]
+                 hasOptedIntoMarketing: Option[Boolean],
+                 marketingUtmSource: Option[String],
+                 marketingUtmTerm: Option[String],
+                 marketingUtmCampaign: Option[String],
+                 marketingUtmMedium: Option[String],
+                 marketingUtmContent: Option[String],
                )
 
 case class UserActiveStatus(month: YearMonth, isActive: Boolean)

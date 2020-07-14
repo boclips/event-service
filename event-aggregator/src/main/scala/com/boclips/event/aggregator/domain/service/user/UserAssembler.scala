@@ -52,7 +52,12 @@ object UserAssembler {
       organisation = None,
       isBoclipsEmployee = false,
       hasOptedIntoMarketing = None,
-      profileSchool = None
+      profileSchool = None,
+      marketingUtmCampaign = None,
+      marketingUtmContent = None,
+      marketingUtmMedium = None,
+      marketingUtmSource = None,
+      marketingUtmTerm = None,
     )
   }
 

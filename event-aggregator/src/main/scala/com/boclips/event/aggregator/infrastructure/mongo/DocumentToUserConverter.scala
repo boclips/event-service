@@ -29,6 +29,11 @@ object DocumentToUserConverter {
       isBoclipsEmployee = document.getBoclipsEmployee,
       hasOptedIntoMarketing = Option(document.getHasOptedIntoMarketing),
       profileSchool = Option(document.getProfileSchool).map(convertOrganisation),
+      marketingUtmCampaign = Option(document.getMarketingUtmCampaign),
+      marketingUtmContent = Option(document.getMarketingUtmContent),
+      marketingUtmMedium = Option(document.getMarketingUtmMedium),
+      marketingUtmSource = Option(document.getMarketingUtmSource),
+      marketingUtmTerm = Option(document.getMarketingUtmTerm),
     )
   }
 

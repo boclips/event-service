@@ -332,4 +332,39 @@ class DocumentToUserConverterTest extends Test {
     user.profileSchool.get.deal.dealExpiresAt shouldBe None
   }
 
+  it should "convert utm marketing properties" in {
+    val document = UserDocument.sample
+      .marketingUtmCampaign("yes we can")
+      .marketingUtmContent("Buzzwords")
+      .marketingUtmMedium("Oracle")
+      .marketingUtmTerm("Mid")
+      .marketingUtmSource("of life")
+      .build()
+  val user = DocumentToUserConverter convert document
+
+    user.marketingUtmCampaign shouldBe Some("yes we can")
+    user.marketingUtmContent shouldBe Some("Buzzwords")
+    user.marketingUtmMedium shouldBe Some("Oracle")
+    user.marketingUtmTerm shouldBe Some("Mid")
+    user.marketingUtmSource shouldBe Some("of life")
+  }
+
+  it should "handle null utm marketing properties" in {
+    val document = UserDocument.sample
+      .marketingUtmCampaign(null)
+      .marketingUtmContent(null)
+      .marketingUtmMedium(null)
+      .marketingUtmTerm(null)
+      .marketingUtmSource(null)
+      .build()
+    val user = DocumentToUserConverter convert document
+
+    user.marketingUtmCampaign shouldBe None
+    user.marketingUtmContent shouldBe None
+    user.marketingUtmMedium shouldBe None
+    user.marketingUtmTerm shouldBe None
+    user.marketingUtmSource shouldBe None
+  }
+
+
 }
