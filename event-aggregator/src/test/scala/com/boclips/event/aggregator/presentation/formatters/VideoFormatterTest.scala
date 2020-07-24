@@ -10,6 +10,7 @@ import com.boclips.event.aggregator.domain.model.videos.Dimensions
 import com.boclips.event.aggregator.presentation.model
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
+import com.boclips.event.aggregator.testsupport.testfactories.CollectionFactory.createCollection
 import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem, createOrderUser}
@@ -329,6 +330,15 @@ class VideoFormatterTest extends Test {
     channelJson.getStringList("marketingSampleVideos") shouldBe List("http://sampleVideos.com")
   }
 
+  it should "write nested collection" in {
+    val video = createVideo()
+    val collections = List(createCollection(id = "1"), createCollection(id = "2"))
+    val json = VideoFormatter formatRow model.VideoTableRow(video = video, collections = collections)
+
+    val collectionsJson = json.getAsJsonArray("collections")
+    collectionsJson.size() shouldBe 2
+  }
+
   it should "write nested contract" in {
     val video = createVideo()
     val contract = createFullContract(
@@ -388,7 +398,7 @@ class VideoFormatterTest extends Test {
     contractJson.getString("minimumPriceDescription") shouldBe "minimum price"
     contractJson.getString("remittanceCurrency") shouldBe "USD"
 
-    contractJson.getStringList("clientFacingRestrictions") should contain ("client-facing")
+    contractJson.getStringList("clientFacingRestrictions") should contain("client-facing")
     contractJson.getString("territoryRestrictions") shouldBe "territory"
     contractJson.getString("licensingRestrictions") shouldBe "licensing"
     contractJson.getString("editingRestrictions") shouldBe "editing"

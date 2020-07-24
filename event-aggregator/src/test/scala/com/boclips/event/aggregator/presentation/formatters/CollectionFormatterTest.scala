@@ -15,7 +15,6 @@ class CollectionFormatterTest extends Test {
   it should "write collection id" in {
     val collection = createCollection(id = "col-id")
 
-
     val json = CollectionFormatter formatRow model.CollectionTableRow(collection, List(), List())
 
     json.get("id").getAsString shouldBe "col-id"

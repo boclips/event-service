@@ -1,5 +1,6 @@
 package com.boclips.event.aggregator.presentation.model
 
+import com.boclips.event.aggregator.domain.model.collections.Collection
 import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
 import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
 import com.boclips.event.aggregator.domain.model.orders.VideoItemWithOrder
@@ -14,6 +15,7 @@ case class VideoTableRow(
                           orders: List[VideoItemWithOrder] = Nil,
                           channel: Option[Channel] = None,
                           contract: Option[Contract] = None,
+                          collections: List[Collection] = Nil,
                           impressions: List[VideoSearchResultImpression] = Nil,
                           interactions: List[VideoInteractedWithEvent] = Nil
                         )

@@ -81,7 +81,15 @@ class EventAggregatorApp(
     val impressions = VideoSearchResultImpressionAssembler(searches)
     val videoInteractions = VideoInteractionAssembler(events)
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
-      videos, playbacks, users, orders, channels, contracts, impressions, videoInteractions
+      videos,
+      playbacks,
+      users,
+      orders,
+      channels,
+      contracts,
+      collections,
+      impressions,
+      videoInteractions
     )
 
     configuration.neo4jConfig.foreach { neo4jConfig =>

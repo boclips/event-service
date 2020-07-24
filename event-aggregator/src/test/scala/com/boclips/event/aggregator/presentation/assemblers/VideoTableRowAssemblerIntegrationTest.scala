@@ -1,5 +1,6 @@
 package com.boclips.event.aggregator.presentation.assemblers
 
+import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelDetails, ChannelId, ContractId}
 import com.boclips.event.aggregator.domain.model.orders.OrderId
 import com.boclips.event.aggregator.domain.model.users.User
@@ -7,11 +8,12 @@ import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
+import com.boclips.event.aggregator.testsupport.testfactories.CollectionFactory.createCollection
 import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoInteractedWithEvent
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem}
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
-import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory
+import com.boclips.event.aggregator.testsupport.testfactories.{CollectionFactory, SearchFactory}
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.createVideoSearchResultImpression
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
 
@@ -54,6 +56,24 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
       createFullContract(id = "unused-contract")
     )
 
+    val collections = rdd(
+      createCollection(
+        id = "unused-collection-1"
+      ),
+      createCollection(
+        id = "unused-collection-2",
+        videoIds = List("nonexistent-id")
+      ),
+      createCollection(
+        id = "collection-1",
+        videoIds = List("v1", "v2")
+      ),
+      createCollection(
+        id = "collection-2",
+        videoIds = List("v1")
+      )
+    )
+
     val impressions = rdd(
       createVideoSearchResultImpression(videoId = VideoId("v1"), search = SearchFactory.createSearchRequest(query = "maths")),
       createVideoSearchResultImpression(videoId = VideoId("v1"), search = SearchFactory.createSearchRequest(query = "physics")),
@@ -72,6 +92,7 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
       orders,
       channels,
       contracts,
+      collections,
       impressions,
       interactions
     ).collect().toList.sortBy(_.video.id.value)
@@ -83,6 +104,10 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
     videosWithRelatedData.head.channel.map(_.id) should contain(ChannelId("channel-1"))
     videosWithRelatedData.head.contract.map(_.id) should contain(ContractId("contract-1"))
     videosWithRelatedData.head.interactions should have size 2
+    videosWithRelatedData.head.collections.map(_.id) shouldBe List(
+      CollectionId("collection-1"),
+      CollectionId("collection-2")
+    )
 
     val v1Orders = videosWithRelatedData.head.orders.sortBy(_.order.id.value)
     v1Orders.head.order.id shouldBe OrderId("o1")

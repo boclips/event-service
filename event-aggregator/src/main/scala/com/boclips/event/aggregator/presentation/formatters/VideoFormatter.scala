@@ -7,7 +7,7 @@ import com.boclips.event.aggregator.domain.model.orders.VideoItemWithOrder
 import com.boclips.event.aggregator.domain.model.videos.Video
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.boclips.event.aggregator.presentation.model.VideoTableRow
-import com.google.gson.JsonObject
+import com.google.gson.{JsonArray, JsonObject}
 
 object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
   override def writeRow(obj: VideoItemWithOrder, json: JsonObject): Unit = {
@@ -27,9 +27,9 @@ object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
     json.addProperty("requestingUserEmail", obj.order.requestingUser.email)
     json.addProperty("requestingUserLegacyUserId", obj.order.requestingUser.legacyUserId)
     json.addProperty("requestingUserLabel", obj.order.requestingUser.label)
-    json.addProperty("isThroughPlatform",obj.order.isThroughPlatform)
-    json.addProperty("isbnOrProductNumber",obj.order.isbnOrProductNumber)
-    json.addProperty("currency",obj.order.currency.map(_.getCurrencyCode))
+    json.addProperty("isThroughPlatform", obj.order.isThroughPlatform)
+    json.addProperty("isbnOrProductNumber", obj.order.isbnOrProductNumber)
+    json.addProperty("currency", obj.order.currency.map(_.getCurrencyCode))
     json.addProperty("fxRateToGbp", obj.order.fxRateToGbp.getOrElse(BigDecimal(1.0)).toDouble)
   }
 }
@@ -37,7 +37,7 @@ object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
 object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
   override def writeRow(obj: VideoTableRow, json: JsonObject): Unit = {
 
-    val VideoTableRow(video, playbacks, orders, channel, contract, impressions, interactions) = obj
+    val VideoTableRow(video, playbacks, orders, channel, contract, collections, impressions, interactions) = obj
     val highestResolutionAsset = video.largestAsset()
 
     json.addProperty("id", video.id.value)
@@ -57,6 +57,9 @@ object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
 
     val contractJson: JsonObject = contract.map(ContractFormatter.formatRow).orNull
     json.add("contract", contractJson)
+
+    val collectionsJson = collections.map(o => NestedCollectionFormatter.formatRow(o))
+    json.addJsonArrayProperty(property = "collections", collectionsJson)
 
     val impressionsJson = impressions.map(o => VideoSearchResultImpressionFormatter.formatRow(o))
     json.addJsonArrayProperty(property = "impressions", impressionsJson)

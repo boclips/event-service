@@ -13,6 +13,12 @@ abstract class SingleRowFormatter[T] extends RowFormatter[T] {
     json
   }
 
+  def extendRow(obj: T, existingJson: JsonObject): JsonObject = {
+    val json = existingJson
+    writeRow(obj, json)
+    json
+  }
+
   def writeRow(obj: T, json: JsonObject): Unit
 
 }
