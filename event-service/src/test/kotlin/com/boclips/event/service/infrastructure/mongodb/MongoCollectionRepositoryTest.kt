@@ -31,7 +31,8 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
                 updatedTime = ZonedDateTime.of(2019, 11, 15, 10, 11, 12, 0, ZoneOffset.UTC),
                 bookmarks = listOf("anotheruser@example.com"),
                 isDiscoverable = false,
-                isDefault = true
+                isDefault = true,
+                promoted = true
             )
         )
 
@@ -50,6 +51,7 @@ class MongoCollectionRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getBoolean("discoverable")).isEqualTo(false)
         assertThat(document.getBoolean("createdForOwner")).isEqualTo(true)
         assertThat(document.getBoolean("deleted")).isEqualTo(false)
+        assertThat(document.getBoolean("promoted")).isEqualTo(true)
     }
 
     @Test

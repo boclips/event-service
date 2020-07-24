@@ -26,7 +26,8 @@ object VideoFactory {
         releasedOn: LocalDate = LocalDate.now(),
         type: VideoType = VideoType.INSTRUCTIONAL,
         originalDimensions: Dimensions? = Dimensions(640, 480),
-        assets: List<VideoAsset>? = listOf()
+        assets: List<VideoAsset>? = listOf(),
+        promoted: Boolean = false
     ): Video {
         return Video
             .builder()
@@ -43,6 +44,7 @@ object VideoFactory {
             .types(listOf(type))
             .originalDimensions(originalDimensions)
             .assets(assets)
+            .promoted(promoted)
             .build()
     }
 }

@@ -13,7 +13,7 @@ object DocumentToVideoConverter {
 
   def convert(document: VideoDocument): Video = {
     videos.Video(
-      id = VideoId(document.getId()),
+      id = VideoId(document.getId),
       title = document.getTitle,
       channelId = ChannelId(document.getChannelId),
       playbackProvider = document.getPlaybackProviderType,
@@ -31,6 +31,7 @@ object DocumentToVideoConverter {
         case (width, height) => Some(Dimensions(width, height))
       },
       ageRange = AgeRange(integerOption(document.getAgeRangeMin), integerOption(document.getAgeRangeMax)),
+      promoted = document.getPromoted
     )
   }
 

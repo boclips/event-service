@@ -34,6 +34,8 @@ public class VideoDocument implements Serializable {
     private Integer originalWidth;
     private Integer originalHeight;
     private List<VideoAssetDocument> assets;
+    @NonNull
+    private Boolean promoted;
 
     public static VideoDocumentBuilder sample() {
         return VideoDocument.builder()
@@ -50,6 +52,7 @@ public class VideoDocument implements Serializable {
                 .type("videotype")
                 .originalWidth(1920)
                 .originalHeight(1080)
-                .assets(Collections.singletonList(VideoAssetDocument.sample().build()));
+                .assets(Collections.singletonList(VideoAssetDocument.sample().build()))
+                .promoted(false);
     }
 }

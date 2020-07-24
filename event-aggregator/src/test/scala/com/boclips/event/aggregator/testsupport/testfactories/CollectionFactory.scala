@@ -21,7 +21,8 @@ object CollectionFactory {
                         createdTime: ZonedDateTime = ZonedDateTime.now(),
                         updatedTime: ZonedDateTime = ZonedDateTime.now(),
                         deleted: Boolean = false,
-                        public: Boolean = true
+                        public: Boolean = true,
+                        promoted: Boolean = false
                       ): Collection =
     collections.Collection(
       id = CollectionId(id),
@@ -35,6 +36,7 @@ object CollectionFactory {
       createdTime = createdTime,
       updatedTime = updatedTime,
       public = public,
-      deleted = deleted
+      deleted = deleted,
+      promoted = promoted,
     )
 }

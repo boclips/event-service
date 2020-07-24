@@ -34,6 +34,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
             .originalHeight(video.originalDimensions?.height)
             .originalWidth(video.originalDimensions?.width)
             .assets(convertVideoAssetToVideoAssetDocument(video.assets))
+            .promoted(video.promoted)
             .build()
 
         write(document)

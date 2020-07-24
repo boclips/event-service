@@ -2,10 +2,10 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.domain.model.{collections, _}
 import com.boclips.event.aggregator.domain.model.collections.{Collection, CollectionId}
 import com.boclips.event.aggregator.domain.model.users.UserId
 import com.boclips.event.aggregator.domain.model.videos.VideoId
+import com.boclips.event.aggregator.domain.model.{collections, _}
 import com.boclips.event.infrastructure.collection.CollectionDocument
 
 import scala.collection.JavaConverters._
@@ -40,6 +40,7 @@ object DocumentToCollectionConverter {
       updatedTime = updatedTime,
       public = document.getDiscoverable,
       deleted = document.getDeleted,
+      promoted = document.getPromoted,
     )
   }
 }

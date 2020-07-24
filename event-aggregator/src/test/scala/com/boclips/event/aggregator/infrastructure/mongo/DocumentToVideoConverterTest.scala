@@ -105,4 +105,9 @@ class DocumentToVideoConverterTest extends Test {
     video.assets shouldBe empty
   }
 
+  it should "convert promoted flag" in {
+    val video = DocumentToVideoConverter convert VideoDocument.sample.promoted(true).build
+
+    video.promoted shouldBe true
+  }
 }

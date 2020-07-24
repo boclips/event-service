@@ -44,7 +44,8 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                         .id("my-id")
                         .bitrateKbps(128)
                         .build()
-                )
+                ),
+                promoted = true
             )
         )
 
@@ -68,6 +69,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.assets.first().height).isEqualTo(320)
         assertThat(document.assets.first().bitrateKbps).isEqualTo(128)
         assertThat(document.assets.first().sizeKb).isEqualTo(1024)
+        assertThat(document.promoted).isEqualTo(true)
     }
 
     @Test

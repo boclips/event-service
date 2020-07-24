@@ -3,9 +3,7 @@ package com.boclips.event.aggregator.presentation.formatters
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.AgeRange
-import com.boclips.event.aggregator.presentation
 import com.boclips.event.aggregator.presentation.model
-import com.boclips.event.aggregator.presentation.model.CollectionTableRow
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.CollectionFactory.createCollection
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createCollectionInteractedWithEvent
@@ -108,6 +106,12 @@ class CollectionFormatterTest extends Test {
     val json = CollectionFormatter formatRow model.CollectionTableRow(collection, List(), List(interaction))
 
     json.getAsJsonArray("interactions").size shouldBe 1
+  }
 
+  it should "write promoted flag" in {
+    val collection = createCollection(promoted = true)
+    val json = CollectionFormatter formatRow model.CollectionTableRow(collection, Nil, Nil)
+
+    json.get("promoted").getAsBoolean shouldBe true
   }
 }

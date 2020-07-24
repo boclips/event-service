@@ -3,10 +3,10 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import java.time.{ZoneOffset, ZonedDateTime}
 import java.util.Date
 
-import com.boclips.event.aggregator.domain.model.users.UserId
-import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.domain.model.AgeRange
 import com.boclips.event.aggregator.domain.model.collections.CollectionId
+import com.boclips.event.aggregator.domain.model.users.UserId
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.infrastructure.collection.CollectionDocument
 
@@ -126,5 +126,12 @@ class DocumentToCollectionConverterTest extends Test {
       convert
       CollectionDocument.sample.discoverable(false).build()
       ).public shouldBe false
+  }
+
+  it should "convert promoted flag" in {
+    val collection =
+      DocumentToCollectionConverter convert CollectionDocument.sample.promoted(true).build
+
+    collection.promoted shouldBe true
   }
 }

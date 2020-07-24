@@ -6,7 +6,6 @@ import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.contentpartners.ChannelId
 
 
-
 case class Video(
                   id: VideoId,
                   releasedOn: LocalDate,
@@ -19,7 +18,8 @@ case class Video(
                   originalDimensions: Option[Dimensions],
                   assets: List[VideoAsset],
                   ageRange: AgeRange,
-                  duration: Duration
+                  duration: Duration,
+                  promoted: Boolean,
                 ) {
 
   def monthlyStorageCostGbp(): Double = {

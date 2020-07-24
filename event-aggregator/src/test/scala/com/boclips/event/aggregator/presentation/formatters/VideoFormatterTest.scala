@@ -113,6 +113,14 @@ class VideoFormatterTest extends Test {
     jsonObject.get("type").getAsString shouldBe "UNKNOWN"
   }
 
+  it should "write promoted flag" in {
+    val video = createVideo(promoted = true)
+
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
+
+    jsonObject.get("promoted").getAsBoolean shouldBe true
+  }
+
   it should "write release and ingestion time info" in {
     val video = createVideo(
       releasedOn = LocalDate.parse("2016-10-02"),

@@ -7,7 +7,6 @@ import com.boclips.event.aggregator.domain.model.users.UserId
 import com.boclips.event.aggregator.domain.model.videos.VideoId
 
 
-
 case class Collection(
                        id: CollectionId,
                        title: String,
@@ -20,7 +19,8 @@ case class Collection(
                        createdTime: ZonedDateTime,
                        updatedTime: ZonedDateTime,
                        public: Boolean,
-                       deleted: Boolean
+                       promoted: Boolean,
+                       deleted: Boolean,
                      )
 
 

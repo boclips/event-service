@@ -23,7 +23,8 @@ object CollectionFactory {
         updatedTime: ZonedDateTime = ZonedDateTime.now(),
         bookmarks: List<String> = emptyList(),
         isDiscoverable: Boolean = true,
-        isDefault: Boolean = false
+        isDefault: Boolean = false,
+        promoted: Boolean = false
     ): Collection {
         return Collection.builder()
             .id(CollectionId(id))
@@ -38,6 +39,7 @@ object CollectionFactory {
             .bookmarks(bookmarks.map { UserId(it) })
             .isDiscoverable(isDiscoverable)
             .isDefault(isDefault)
+            .promoted(promoted)
             .build()
     }
 }

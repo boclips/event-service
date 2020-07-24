@@ -20,6 +20,7 @@ object NestedCollectionFormatter extends SingleRowFormatter[Collection] {
     json.addDateTimeProperty("updatedAt", obj.updatedTime)
     json.addProperty("deleted", obj.deleted)
     json.addProperty("public", obj.public)
+    json.addProperty("promoted", obj.promoted)
   }
 }
 

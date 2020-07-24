@@ -20,7 +20,8 @@ object VideoFactory {
                    assets: List[VideoAsset] = List(),
                    originalDimensions: Option[Dimensions] = None,
                    ageRange: AgeRange = AgeRange(Some(5), Some(7)),
-                   duration: Duration = Duration.ofSeconds(180)
+                   duration: Duration = Duration.ofSeconds(180),
+                   promoted: Boolean = false,
                  ): Video = {
     videos.Video(
       id = VideoId(id),
@@ -34,7 +35,8 @@ object VideoFactory {
       originalDimensions = originalDimensions,
       subjects = subjects.map(name => Subject(name)),
       ageRange = ageRange,
-      duration = duration
+      duration = duration,
+      promoted = promoted,
     )
   }
 
