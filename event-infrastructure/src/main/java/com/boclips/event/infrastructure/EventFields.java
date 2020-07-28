@@ -18,6 +18,7 @@ public class EventFields {
         public final static String USER_EXPIRED = "USER_EXPIRED";
         public final static String PLATFORM_INTERACTED_WITH = "PLATFORM_INTERACTED_WITH";
         public final static String PAGE_RENDERED = "PAGE_RENDERED";
+        public final static String SEARCH_QUERY_COMPLETIONS_SUGGESTED = "SEARCH_QUERY_COMPLETIONS_SUGGESTED";
     }
 
     public final static String TYPE = "type";
@@ -62,4 +63,8 @@ public class EventFields {
 
     public final static String COLLECTION_AGE_RANGE_CHANGED_RANGE_MIN = "rangeMin";
     public final static String COLLECTION_AGE_RANGE_CHANGED_RANGE_MAX = "rangeMax";
+
+    public final static String COMPLETION_ID = "completionId";
+    public final static String IMPRESSIONS = "impressions";
+    public final static String COMPONENT_ID = "componentId";
 }

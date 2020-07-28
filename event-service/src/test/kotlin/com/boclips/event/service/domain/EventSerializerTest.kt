@@ -1,35 +1,6 @@
 package com.boclips.event.service.domain
 
-import com.boclips.event.infrastructure.EventFields.COLLECTION_AGE_RANGE_CHANGED_RANGE_MAX
-import com.boclips.event.infrastructure.EventFields.COLLECTION_AGE_RANGE_CHANGED_RANGE_MIN
-import com.boclips.event.infrastructure.EventFields.COLLECTION_BOOKMARK_CHANGED_IS_BOOKMARKED
-import com.boclips.event.infrastructure.EventFields.COLLECTION_ID
-import com.boclips.event.infrastructure.EventFields.COLLECTION_SUBJECTS_CHANGED_SUBJECTS
-import com.boclips.event.infrastructure.EventFields.COLLECTION_VISIBILITY_CHANGED_IS_DISCOVERABLE
-import com.boclips.event.infrastructure.EventFields.DEVICE_ID
-import com.boclips.event.infrastructure.EventFields.EXTERNAL_USER_ID
-import com.boclips.event.infrastructure.EventFields.ORGANISATION_ID
-import com.boclips.event.infrastructure.EventFields.ORGANISATION_PARENT_ID
-import com.boclips.event.infrastructure.EventFields.ORGANISATION_PARENT_TYPE
-import com.boclips.event.infrastructure.EventFields.ORGANISATION_TYPE
-import com.boclips.event.infrastructure.EventFields.PAYLOAD
-import com.boclips.event.infrastructure.EventFields.PLAYBACK_SEGMENT_END_SECONDS
-import com.boclips.event.infrastructure.EventFields.PLAYBACK_SEGMENT_START_SECONDS
-import com.boclips.event.infrastructure.EventFields.PLAYBACK_VIDEO_INDEX
-import com.boclips.event.infrastructure.EventFields.PLAYER_INTERACTED_WITH_CURRENT_TIME
-import com.boclips.event.infrastructure.EventFields.SEARCH_QUERY
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESOURCE_TYPE
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_INDEX
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_RESOURCE_IDS
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_SIZE
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_VIDEO_IDS
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_TOTAL
-import com.boclips.event.infrastructure.EventFields.SUBTYPE
-import com.boclips.event.infrastructure.EventFields.TIMESTAMP
-import com.boclips.event.infrastructure.EventFields.TYPE
-import com.boclips.event.infrastructure.EventFields.URL
-import com.boclips.event.infrastructure.EventFields.USER_ID
-import com.boclips.event.infrastructure.EventFields.VIDEO_ID
+import com.boclips.event.infrastructure.EventFields.*
 import com.boclips.event.service.testsupport.EventFactory.createCollectionAgeRangeChanged
 import com.boclips.event.service.testsupport.EventFactory.createCollectionBookmarkChanged
 import com.boclips.event.service.testsupport.EventFactory.createCollectionInteractedWith
@@ -48,6 +19,7 @@ import com.boclips.eventbus.domain.ResourceType
 import com.boclips.eventbus.events.base.AbstractEventWithUserId
 import com.boclips.eventbus.events.collection.CollectionInteractionType
 import com.boclips.eventbus.events.resource.ResourcesSearched
+import com.boclips.eventbus.events.searchsuggestions.SearchQueryCompletionsSuggested
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoSegmentPlayed
 import com.boclips.eventbus.events.video.VideosSearched
@@ -491,6 +463,30 @@ class EventSerializerTest {
         assertThat(document[SEARCH_RESULTS_PAGE_SIZE]).isEqualTo(7)
         assertThat(document[SEARCH_RESULTS_TOTAL]).isEqualTo(23L)
         assertThat(document[SEARCH_RESULTS_PAGE_RESOURCE_IDS]).asList().containsExactly("id-1", "id-2")
+        assertThat(document[TIMESTAMP]).isEqualTo(Date.from(ZonedDateTime.parse("2023-05-12T12:14:15Z").toInstant()))
+    }
+
+    @Test
+    fun `convert SearchQueryCompletionsSuggested`() {
+        val event = SearchQueryCompletionsSuggested.builder()
+                .userId("user-id")
+                .url("www.example.com")
+                .searchQuery("bio")
+                .completionId("completion-id")
+                .impressions(listOf("biology", "biodiversity"))
+                .componentId("component-id")
+                .timestamp(ZonedDateTime.of(2023, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC)).build()
+
+        val document = EventSerializer.convertSearchQueryCompletionsSuggested(event)
+
+        assertThat(document[TYPE]).isEqualTo("SEARCH_QUERY_COMPLETIONS_SUGGESTED")
+        assertThat(document[USER_ID]).isEqualTo("user-id")
+        assertThat(document[URL]).isEqualTo("www.example.com")
+        assertThat(document[SEARCH_QUERY]).isEqualTo("bio")
+        assertThat(document[COMPLETION_ID]).isEqualTo("completion-id")
+        assertThat(document[IMPRESSIONS]).asList().containsExactly("biology", "biodiversity")
+        assertThat(document[COMPONENT_ID]).isEqualTo("component-id")
+
         assertThat(document[TIMESTAMP]).isEqualTo(Date.from(ZonedDateTime.parse("2023-05-12T12:14:15Z").toInstant()))
     }
 }

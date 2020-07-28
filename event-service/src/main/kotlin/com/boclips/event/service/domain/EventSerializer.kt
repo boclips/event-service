@@ -1,36 +1,6 @@
 package com.boclips.event.service.domain
 
-import com.boclips.event.infrastructure.EventFields.COLLECTION_AGE_RANGE_CHANGED_RANGE_MAX
-import com.boclips.event.infrastructure.EventFields.COLLECTION_AGE_RANGE_CHANGED_RANGE_MIN
-import com.boclips.event.infrastructure.EventFields.COLLECTION_BOOKMARK_CHANGED_IS_BOOKMARKED
-import com.boclips.event.infrastructure.EventFields.COLLECTION_ID
-import com.boclips.event.infrastructure.EventFields.COLLECTION_SUBJECTS_CHANGED_SUBJECTS
-import com.boclips.event.infrastructure.EventFields.COLLECTION_VISIBILITY_CHANGED_IS_DISCOVERABLE
-import com.boclips.event.infrastructure.EventFields.DEVICE_ID
-import com.boclips.event.infrastructure.EventFields.EXTERNAL_USER_ID
-import com.boclips.event.infrastructure.EventFields.ORGANISATION_ID
-import com.boclips.event.infrastructure.EventFields.ORGANISATION_PARENT_ID
-import com.boclips.event.infrastructure.EventFields.ORGANISATION_PARENT_TYPE
-import com.boclips.event.infrastructure.EventFields.ORGANISATION_TYPE
-import com.boclips.event.infrastructure.EventFields.PAYLOAD
-import com.boclips.event.infrastructure.EventFields.PLAYBACK_SEGMENT_END_SECONDS
-import com.boclips.event.infrastructure.EventFields.PLAYBACK_SEGMENT_START_SECONDS
-import com.boclips.event.infrastructure.EventFields.PLAYBACK_VIDEO_INDEX
-import com.boclips.event.infrastructure.EventFields.PLAYER_INTERACTED_WITH_CURRENT_TIME
-import com.boclips.event.infrastructure.EventFields.SEARCH_QUERY
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESOURCE_TYPE
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_INDEX
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_RESOURCE_IDS
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_SIZE
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_PAGE_VIDEO_IDS
-import com.boclips.event.infrastructure.EventFields.SEARCH_RESULTS_TOTAL
-import com.boclips.event.infrastructure.EventFields.SUBTYPE
-import com.boclips.event.infrastructure.EventFields.TIMESTAMP
-import com.boclips.event.infrastructure.EventFields.TYPE
-import com.boclips.event.infrastructure.EventFields.Type
-import com.boclips.event.infrastructure.EventFields.URL
-import com.boclips.event.infrastructure.EventFields.USER_ID
-import com.boclips.event.infrastructure.EventFields.VIDEO_ID
+import com.boclips.event.infrastructure.EventFields.*
 import com.boclips.eventbus.events.base.AbstractCollectionEvent
 import com.boclips.eventbus.events.base.AbstractEventWithUserId
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
@@ -43,6 +13,7 @@ import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
 import com.boclips.eventbus.events.resource.ResourcesSearched
+import com.boclips.eventbus.events.searchsuggestions.SearchQueryCompletionsSuggested
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerEvent
@@ -207,5 +178,13 @@ object EventSerializer {
         }
 
         return convertedEvent
+    }
+
+    fun convertSearchQueryCompletionsSuggested(event: SearchQueryCompletionsSuggested): Map<String, Any> {
+        return convertUserEvent(event, type = Type.SEARCH_QUERY_COMPLETIONS_SUGGESTED) +
+                (SEARCH_QUERY to event.searchQuery) +
+                (COMPLETION_ID to event.completionId) +
+                (IMPRESSIONS to event.impressions) +
+                (COMPONENT_ID to event.componentId)
     }
 }

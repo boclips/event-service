@@ -12,6 +12,7 @@ import com.boclips.event.service.testsupport.EventFactory.createPageRendered
 import com.boclips.event.service.testsupport.EventFactory.createPlatformInteractedWith
 import com.boclips.event.service.testsupport.EventFactory.createPlatformInteractedWithAnonymous
 import com.boclips.event.service.testsupport.EventFactory.createResourcesSearched
+import com.boclips.event.service.testsupport.EventFactory.createSearchQueryCompletionsSuggested
 import com.boclips.event.service.testsupport.EventFactory.createVideoAddedToCollection
 import com.boclips.event.service.testsupport.EventFactory.createVideoInteractedWith
 import com.boclips.event.service.testsupport.EventFactory.createVideoPlayerInteractedWith
@@ -158,6 +159,13 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
         eventBus.publish(event)
         assertThat(document().toJson()).contains("PLATFORM_INTERACTED_WITH")
         assertThat(document().toJson()).contains("ONBOARDING_PAGE_2_STARTED")
+    }
+
+    @Test
+    fun searchQueryCompletionsSuggested() {
+        val event = createSearchQueryCompletionsSuggested(searchQuery = "maths")
+        eventBus.publish(event)
+        assertThat(document().toJson()).contains("maths")
     }
 
     private fun document(): Document {

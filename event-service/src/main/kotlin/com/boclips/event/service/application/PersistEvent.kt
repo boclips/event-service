@@ -12,6 +12,7 @@ import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
 import com.boclips.eventbus.events.resource.ResourcesSearched
+import com.boclips.eventbus.events.searchsuggestions.SearchQueryCompletionsSuggested
 import com.boclips.eventbus.events.user.UserExpired
 import com.boclips.eventbus.events.video.VideoInteractedWith
 import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
@@ -93,5 +94,10 @@ class PersistEvent(private val eventRepository: EventRepository) {
     @BoclipsEventListener
     fun userExpired(event: UserExpired) {
         eventRepository.saveUserExpired(event)
+    }
+
+    @BoclipsEventListener
+    fun searchQueryCompletionsSuggested(event: SearchQueryCompletionsSuggested) {
+        eventRepository.saveSearchQueryCompletionsSuggested(event)
     }
 }

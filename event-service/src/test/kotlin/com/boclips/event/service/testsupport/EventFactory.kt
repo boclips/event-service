@@ -14,6 +14,7 @@ import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
 import com.boclips.eventbus.events.resource.ResourcesSearched
+import com.boclips.eventbus.events.searchsuggestions.SearchQueryCompletionsSuggested
 import com.boclips.eventbus.events.user.UserCreated
 import com.boclips.eventbus.events.user.UserUpdated
 import com.boclips.eventbus.events.video.VideoInteractedWith
@@ -255,5 +256,25 @@ object EventFactory {
             .totalResults(totalResults)
             .pageResourceIds(pageResourceIds)
             .timestamp(timestamp).build()
+    }
+
+    fun createSearchQueryCompletionsSuggested(
+            userId: String = "happy-user",
+            url: String = "http://bbc.co.uk",
+            searchQuery: String = "bio",
+            completionId: String = "completion-id",
+            impressions: List<String> = listOf("biology", "biodiversity"),
+            componentId: String = "component-id",
+            timestamp: ZonedDateTime = ZonedDateTime.now()
+    ): SearchQueryCompletionsSuggested {
+        return SearchQueryCompletionsSuggested.builder()
+                .userId(userId)
+                .url(url)
+                .searchQuery(searchQuery)
+                .completionId(completionId)
+                .impressions(impressions)
+                .componentId(componentId)
+                .timestamp(timestamp)
+                .build()
     }
 }
