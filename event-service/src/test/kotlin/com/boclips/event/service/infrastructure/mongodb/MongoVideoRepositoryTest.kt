@@ -7,14 +7,17 @@ import com.boclips.eventbus.domain.AgeRange
 import com.boclips.eventbus.domain.video.Dimensions
 import com.boclips.eventbus.domain.video.PlaybackProviderType
 import com.boclips.eventbus.domain.video.VideoAsset
+import com.boclips.eventbus.domain.video.VideoTopic
 import com.boclips.eventbus.domain.video.VideoType
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
+import java.util.Locale
 
 class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
@@ -45,7 +48,27 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                         .bitrateKbps(128)
                         .build()
                 ),
-                promoted = true
+                promoted = true,
+                topics = listOf(
+                    VideoTopic.builder()
+                        .name("topic")
+                        .confidence(0.5)
+                        .language(Locale.FRENCH)
+                        .parent(
+                            VideoTopic.builder()
+                                .name("topic-parent")
+                                .confidence(0.76)
+                                .language(Locale.ENGLISH)
+                                .parent(
+                                    VideoTopic.builder()
+                                        .name("topic-grandparent")
+                                        .confidence(0.2)
+                                        .language(Locale.ITALIAN)
+                                        .build()
+                                )
+                                .build()
+                        ).build()
+                )
             )
         )
 
@@ -70,6 +93,21 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.assets.first().bitrateKbps).isEqualTo(128)
         assertThat(document.assets.first().sizeKb).isEqualTo(1024)
         assertThat(document.promoted).isEqualTo(true)
+
+        val firstTopic = document.topics.first()
+        assertThat(firstTopic.name).isEqualTo("topic")
+        assertThat(firstTopic.confidence).isEqualTo(0.5)
+        assertThat(firstTopic.language).isEqualTo("fr")
+        val parentTopic = firstTopic.parent
+        assertNotNull(parentTopic)
+        assertThat(parentTopic.name).isEqualTo("topic-parent")
+        assertThat(parentTopic.confidence).isEqualTo(0.76)
+        assertThat(parentTopic.language).isEqualTo("en")
+        val grandparentTopic = parentTopic.parent
+        assertNotNull(grandparentTopic)
+        assertThat(grandparentTopic.name).isEqualTo("topic-grandparent")
+        assertThat(grandparentTopic.confidence).isEqualTo(0.2)
+        assertThat(grandparentTopic.language).isEqualTo("it")
     }
 
     @Test
@@ -140,7 +178,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
     private fun document(): VideoDocument {
         return mongoClient.getDatabase(DatabaseConstants.DB_NAME)
-            .getCollection<VideoDocument>(MongoVideoRepository.COLLECTION_NAME, VideoDocument::class.java)
+            .getCollection(MongoVideoRepository.COLLECTION_NAME, VideoDocument::class.java)
             .find().toList().single()
     }
 }

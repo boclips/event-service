@@ -2,9 +2,11 @@ package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.infrastructure.video.VideoAssetDocument
 import com.boclips.event.infrastructure.video.VideoDocument
+import com.boclips.event.infrastructure.video.VideoTopicDocument
 import com.boclips.event.service.domain.VideoRepository
 import com.boclips.eventbus.domain.video.Video
 import com.boclips.eventbus.domain.video.VideoAsset
+import com.boclips.eventbus.domain.video.VideoTopic
 import com.mongodb.MongoClient
 import com.mongodb.client.model.ReplaceOptions
 import mu.KLogging
@@ -35,6 +37,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
             .originalWidth(video.originalDimensions?.width)
             .assets(convertVideoAssetToVideoAssetDocument(video.assets))
             .promoted(video.promoted)
+            .topics(video.topics.map(this::topicToDocument))
             .build()
 
         write(document)
@@ -64,6 +67,31 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
                 .build()
 
         }
+    }
+
+    private fun topicToDocument(
+        topic: VideoTopic
+    ): VideoTopicDocument {
+        val topicChain: MutableList<VideoTopic> = mutableListOf()
+        var currentTopic: VideoTopic? = topic
+        while (currentTopic != null) {
+            topicChain.add(currentTopic)
+            currentTopic = currentTopic.parent
+        }
+        val convertNext = { thisTopic: VideoTopic, parent: VideoTopicDocument? ->
+            VideoTopicDocument.builder()
+                .name(thisTopic.name)
+                .confidence(thisTopic.confidence)
+                .language(thisTopic.language.toLanguageTag())
+                .parent(parent)
+                .build()
+        }
+        return topicChain
+            .dropLast(1)
+            .foldRight(
+                initial = convertNext(topicChain.last(), null),
+                operation = convertNext
+            )
     }
 }
 

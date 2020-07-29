@@ -5,13 +5,13 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class VideoDocument implements Serializable {
     @NonNull
     private String id;
@@ -36,6 +36,8 @@ public class VideoDocument implements Serializable {
     private List<VideoAssetDocument> assets;
     @NonNull
     private Boolean promoted;
+    @NonNull
+    private List<VideoTopicDocument> topics;
 
     public static VideoDocumentBuilder sample() {
         return VideoDocument.builder()
@@ -53,6 +55,19 @@ public class VideoDocument implements Serializable {
                 .originalWidth(1920)
                 .originalHeight(1080)
                 .assets(Collections.singletonList(VideoAssetDocument.sample().build()))
-                .promoted(false);
+                .promoted(false)
+                .topics(Collections.singletonList(VideoTopicDocument.builder()
+                        .name("topic")
+                        .confidence(0.2)
+                        .language(Locale.ENGLISH.toLanguageTag())
+                        .parent(
+                                VideoTopicDocument.builder()
+                                        .name("parent-topic")
+                                        .confidence(0.5)
+                                        .language(Locale.FRENCH.toLanguageTag())
+                                        .build()
+                        )
+                        .build()
+                ));
     }
 }

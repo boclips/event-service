@@ -8,6 +8,7 @@ import com.boclips.eventbus.domain.video.PlaybackProviderType
 import com.boclips.eventbus.domain.video.Video
 import com.boclips.eventbus.domain.video.VideoAsset
 import com.boclips.eventbus.domain.video.VideoId
+import com.boclips.eventbus.domain.video.VideoTopic
 import com.boclips.eventbus.domain.video.VideoType
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -27,7 +28,8 @@ object VideoFactory {
         type: VideoType = VideoType.INSTRUCTIONAL,
         originalDimensions: Dimensions? = Dimensions(640, 480),
         assets: List<VideoAsset>? = listOf(),
-        promoted: Boolean = false
+        promoted: Boolean = false,
+        topics: List<VideoTopic> = listOf()
     ): Video {
         return Video
             .builder()
@@ -45,6 +47,7 @@ object VideoFactory {
             .originalDimensions(originalDimensions)
             .assets(assets)
             .promoted(promoted)
+            .topics(topics)
             .build()
     }
 }
