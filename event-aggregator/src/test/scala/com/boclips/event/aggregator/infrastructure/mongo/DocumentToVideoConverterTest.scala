@@ -2,11 +2,14 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.time.{Duration, ZonedDateTime}
 import java.util.Collections.{singleton, singletonList}
+import java.util.Locale
 
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.videos.{Dimensions, VideoAsset, VideoId}
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument}
+import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument, VideoTopicDocument}
+
+import scala.collection.JavaConverters._
 
 class DocumentToVideoConverterTest extends Test {
 
@@ -100,14 +103,53 @@ class DocumentToVideoConverterTest extends Test {
   }
 
   it should "handle missing assets" in {
-    val video = DocumentToVideoConverter convert VideoDocument.sample().assets(null).build()
+    val video = DocumentToVideoConverter.convert(
+      VideoDocument.sample().assets(null).build
+    )
 
     video.assets shouldBe empty
   }
 
   it should "convert promoted flag" in {
-    val video = DocumentToVideoConverter convert VideoDocument.sample.promoted(true).build
+    val video = DocumentToVideoConverter.convert(
+      VideoDocument.sample.promoted(true).build
+    )
 
     video.promoted shouldBe true
+  }
+
+  it should "convert topics" in {
+    val video = DocumentToVideoConverter
+      .convert(
+        VideoDocument
+          .sample
+          .topics(
+            List(
+              VideoTopicDocument.builder()
+                .name("topic")
+                .confidence(0.5)
+                .language("fr")
+                .parent(
+                  VideoTopicDocument.builder()
+                    .name("parent-topic")
+                    .confidence(0.8)
+                    .language("it")
+                    .build
+                )
+                .build
+            ).asJava
+          )
+          .build
+      )
+
+    val firstTopic = video.topics.head
+    firstTopic.name shouldBe "topic"
+    firstTopic.confidence shouldBe 0.5
+    firstTopic.language shouldBe Locale.FRENCH
+    val parentTopic = firstTopic.parent.orNull
+    parentTopic.name shouldBe "parent-topic"
+    parentTopic.confidence shouldBe 0.8
+    parentTopic.language shouldBe Locale.ITALIAN
+    parentTopic.parent shouldBe None
   }
 }

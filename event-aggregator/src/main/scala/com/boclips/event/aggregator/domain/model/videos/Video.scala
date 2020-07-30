@@ -20,6 +20,7 @@ case class Video(
                   ageRange: AgeRange,
                   duration: Duration,
                   promoted: Boolean,
+                  topics: List[VideoTopic]
                 ) {
 
   def monthlyStorageCostGbp(): Double = {

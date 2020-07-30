@@ -1,11 +1,12 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.time.{Duration, LocalDate, ZonedDateTime}
+import java.util.Locale
 
 import com.boclips.event.aggregator.domain.model.contentpartners.ChannelId
+import com.boclips.event.aggregator.domain.model.videos._
 import com.boclips.event.aggregator.domain.model.{videos, _}
-import com.boclips.event.aggregator.domain.model.videos.{Dimensions, Video, VideoAsset, VideoId}
-import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument}
+import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument, VideoTopicDocument}
 
 import scala.collection.JavaConverters._
 
@@ -31,7 +32,8 @@ object DocumentToVideoConverter {
         case (width, height) => Some(Dimensions(width, height))
       },
       ageRange = AgeRange(integerOption(document.getAgeRangeMin), integerOption(document.getAgeRangeMax)),
-      promoted = document.getPromoted
+      promoted = document.getPromoted,
+      topics = document.getTopics.asScala.toList.map(convertTopic)
     )
   }
 
@@ -41,5 +43,26 @@ object DocumentToVideoConverter {
       bitrateKbps = document.getBitrateKbps,
       dimensions = Dimensions(document.getWidth, document.getHeight)
     )
+  }
+
+  private def convertTopic(document: VideoTopicDocument): VideoTopic = {
+    val convert = (singleTopicDocument: VideoTopicDocument) => VideoTopic(
+      name = singleTopicDocument.getName,
+      confidence = singleTopicDocument.getConfidence,
+      language = Locale.forLanguageTag(singleTopicDocument.getLanguage),
+      parent = None
+    )
+
+    var tempChain: List[Option[VideoTopic]] = List()
+    var currentTopic: Option[VideoTopicDocument] = Some(document)
+    while (currentTopic.isDefined) {
+      tempChain = currentTopic.map(convert) :: tempChain
+      currentTopic = currentTopic.flatMap(it => Option(it.getParent))
+    }
+    val convertedChain: List[VideoTopic] = tempChain.flatten
+
+    convertedChain.reduceLeft((childTopic: VideoTopic, parentTopic: VideoTopic) => {
+      parentTopic.copy(parent = Some(childTopic))
+    })
   }
 }

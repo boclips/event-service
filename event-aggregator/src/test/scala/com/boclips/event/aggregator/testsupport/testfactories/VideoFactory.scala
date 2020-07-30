@@ -4,7 +4,7 @@ import java.time.{Duration, LocalDate, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.contentpartners.ChannelId
 import com.boclips.event.aggregator.domain.model.{videos, _}
-import com.boclips.event.aggregator.domain.model.videos.{Dimensions, Video, VideoAsset, VideoId, VideoStorageCharge}
+import com.boclips.event.aggregator.domain.model.videos.{Dimensions, Video, VideoAsset, VideoId, VideoStorageCharge, VideoTopic}
 
 object VideoFactory {
 
@@ -22,6 +22,7 @@ object VideoFactory {
                    ageRange: AgeRange = AgeRange(Some(5), Some(7)),
                    duration: Duration = Duration.ofSeconds(180),
                    promoted: Boolean = false,
+                   topics: List[VideoTopic] = List()
                  ): Video = {
     videos.Video(
       id = VideoId(id),
@@ -37,6 +38,7 @@ object VideoFactory {
       ageRange = ageRange,
       duration = duration,
       promoted = promoted,
+      topics = topics
     )
   }
 
