@@ -46,10 +46,10 @@ object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
     val storageCharges = video.storageCharges(to = LocalDate.now()).map(StorageChargeFormatter.formatRow)
     json.addJsonArrayProperty("storageCharges", storageCharges)
 
-    val ps = playbacks.map(p => PlaybackFormatter.formatRow(p))
+    val ps = playbacks.map(PlaybackFormatter.formatRow)
     json.addJsonArrayProperty("playbacks", ps)
 
-    val ordersJson = orders.map(o => NestedOrderFormatter.formatRow(o))
+    val ordersJson = orders.map(NestedOrderFormatter.formatRow)
     json.addJsonArrayProperty(property = "orders", ordersJson)
 
     val channelJson: JsonObject = channel.map(ChannelFormatter.formatRow).orNull
@@ -58,14 +58,17 @@ object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
     val contractJson: JsonObject = contract.map(ContractFormatter.formatRow).orNull
     json.add("contract", contractJson)
 
-    val collectionsJson = collections.map(o => NestedCollectionFormatter.formatRow(o))
+    val collectionsJson = collections.map(NestedCollectionFormatter.formatRow)
     json.addJsonArrayProperty(property = "collections", collectionsJson)
 
-    val impressionsJson = impressions.map(o => VideoSearchResultImpressionFormatter.formatRow(o))
+    val impressionsJson = impressions.map(VideoSearchResultImpressionFormatter.formatRow)
     json.addJsonArrayProperty(property = "impressions", impressionsJson)
 
-    val interactionsJson = interactions.map(o => VideoInteractionEventsFormatter.formatRow(o))
+    val interactionsJson = interactions.map(VideoInteractionEventsFormatter.formatRow)
     json.addJsonArrayProperty(property = "interactions", interactionsJson)
+
+    val topicsJson = video.topics.map(VideoTopicThreeLevelFormatter.formatRow)
+    json.addJsonArrayProperty(property = "topics", topicsJson)
 
     json.addProperty("playbackProvider", video.playbackProvider)
     json.addJsonArrayProperty("subjects", getAllSubjectsOf(video).map(SubjectFormatter.formatRow))

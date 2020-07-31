@@ -6,5 +6,5 @@ case class VideoTopic(
                       name: String,
                       confidence: Double,
                       language: Locale,
-                      parent: Option[VideoTopic]
+                      parent: Option[VideoTopic] = None
                      )

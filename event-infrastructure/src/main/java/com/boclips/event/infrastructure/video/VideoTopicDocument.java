@@ -10,9 +10,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class VideoTopicDocument implements Serializable {
     @NonNull
-    Double confidence;
-    @NonNull
     private String name;
+    @NonNull
+    Double confidence;
     @NonNull
     private String language;
     private VideoTopicDocument parent;
