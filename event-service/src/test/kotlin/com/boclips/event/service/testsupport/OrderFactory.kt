@@ -13,6 +13,7 @@ object OrderFactory {
 
     fun createOrder(
             id: String = "order-123",
+            legacyOrderId:String = "other-id",
             status: OrderStatus? = OrderStatus.COMPLETED,
             createdAt: ZonedDateTime = ZonedDateTime.now(),
             updatedAt: ZonedDateTime = ZonedDateTime.now(),
@@ -27,6 +28,7 @@ object OrderFactory {
     ): Order {
         return Order.builder()
             .id(id)
+                .legacyOrderId(legacyOrderId)
             .status(status)
             .createdAt(createdAt)
             .updatedAt(updatedAt)

@@ -16,6 +16,7 @@ object OrderFormatter extends SingleRowFormatter[Order] {
     }).foreach(items.add(_))
 
     json.addProperty("id", obj.id.value)
+    json.addProperty("legacyOrderId", obj.legacyOrderId)
     json.addDateTimeProperty("createdAt", obj.createdAt)
     json.addDateTimeProperty("updatedAt", obj.updatedAt)
     json.addProperty("customerOrganisationName", obj.customerOrganisationName)

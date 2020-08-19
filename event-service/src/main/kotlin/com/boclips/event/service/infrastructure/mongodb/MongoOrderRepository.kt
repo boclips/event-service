@@ -25,6 +25,7 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
         write(
             OrderDocument.builder()
                 .id(order.id)
+                    .legacyOrderId(order.legacyOrderId)
                 .status(order.status?.name ?: "UNKNOWN")
                 .createdAt(Date.from(order.createdAt.toInstant()))
                 .updatedAt(Date.from(order.updatedAt.toInstant()))

@@ -16,6 +16,8 @@ public final class OrderDocument {
     @NonNull
     private String id;
     @NonNull
+    private String legacyOrderId;
+    @NonNull
     private String status;
     @NonNull
     private Date createdAt;
@@ -41,6 +43,7 @@ public final class OrderDocument {
     public static OrderDocumentBuilder sample() {
         return OrderDocument.builder()
                 .id("order-id")
+                .legacyOrderId("leg-order-id")
                 .status("my status")
                 .createdAt(new Date())
                 .updatedAt(new Date())

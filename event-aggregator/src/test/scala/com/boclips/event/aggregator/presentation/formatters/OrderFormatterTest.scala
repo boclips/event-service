@@ -16,6 +16,12 @@ class OrderFormatterTest extends Test {
     json.getString("id") shouldBe "order-id"
   }
 
+  it should "write legacy order id" in {
+    val json = OrderFormatter formatRow createOrder(legacyOrderId = "order-1984")
+
+    json.getString("legacyOrderId")  shouldBe  "order-1984"
+  }
+
   it should "write creation date" in {
     val json = OrderFormatter formatRow createOrder(createdAt = ZonedDateTime.parse("2019-11-20T20:21:22Z"))
 

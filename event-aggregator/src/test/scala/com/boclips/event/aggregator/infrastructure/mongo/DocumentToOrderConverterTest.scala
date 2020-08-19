@@ -19,6 +19,13 @@ class DocumentToOrderConverterTest extends Test {
 
     order.id shouldBe OrderId("the-order-id")
   }
+  it should "convert legacy id" in {
+    val document = OrderDocument.sample().legacyOrderId("the-legacy-id").build()
+
+    val order = DocumentToOrderConverter.convert(document)
+
+    order.legacyOrderId shouldBe "the-legacy-id"
+  }
 
   it should "convert creation date" in {
     val document = OrderDocument.sample().createdAt(Date.from(Instant.parse("2019-10-11T05:11:15Z"))).build()

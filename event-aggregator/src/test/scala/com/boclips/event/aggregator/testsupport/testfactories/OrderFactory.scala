@@ -11,6 +11,7 @@ object OrderFactory {
 
   def createOrder(
                    id: OrderId = OrderId("order-id"),
+                   legacyOrderId: String = "leg-id",
                    createdAt: ZonedDateTime = ZonedDateTime.now(),
                    updatedAt: ZonedDateTime = ZonedDateTime.now(),
                    customerOrganisationName: String = "customer name",
@@ -24,6 +25,7 @@ object OrderFactory {
                  ): Order = {
     orders.Order(
       id = id,
+      legacyOrderId = legacyOrderId,
       createdAt = createdAt,
       updatedAt = updatedAt,
       customerOrganisationName = customerOrganisationName,

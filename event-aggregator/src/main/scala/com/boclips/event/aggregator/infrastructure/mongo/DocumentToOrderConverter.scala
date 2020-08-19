@@ -15,6 +15,7 @@ object DocumentToOrderConverter {
   def convert(document: OrderDocument): Order = {
     orders.Order(
       id = OrderId(document.getId),
+      legacyOrderId = document.getLegacyOrderId,
       createdAt = ZonedDateTime.ofInstant(document.getCreatedAt.toInstant, ZoneOffset.UTC),
       updatedAt = ZonedDateTime.ofInstant(document.getUpdatedAt.toInstant, ZoneOffset.UTC),
       customerOrganisationName = document.getCustomerOrganisationName,

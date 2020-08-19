@@ -26,6 +26,7 @@ case class OrderUser(
 
 case class Order(
                   id: OrderId,
+                  legacyOrderId: String,
                   createdAt: ZonedDateTime,
                   updatedAt: ZonedDateTime,
                   customerOrganisationName: String,
