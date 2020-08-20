@@ -7,12 +7,13 @@ import com.boclips.event.aggregator.domain.model.orders.VideoItemWithOrder
 import com.boclips.event.aggregator.domain.model.videos.Video
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.boclips.event.aggregator.presentation.model.VideoTableRow
-import com.google.gson.{JsonArray, JsonObject}
+import com.google.gson.JsonObject
 
 object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
   override def writeRow(obj: VideoItemWithOrder, json: JsonObject): Unit = {
     json.addProperty("id", obj.order.id.value + "_" + obj.item.videoId.value)
     json.addProperty("orderId", obj.order.id.value)
+    json.addProperty("legacyOrderId", obj.order.legacyOrderId)
     json.addProperty("priceGbp", obj.item.priceGbp)
     json.addProperty("customerOrganisationName", obj.order.customerOrganisationName)
     json.addDateTimeProperty("orderCreatedAt", obj.order.createdAt)
