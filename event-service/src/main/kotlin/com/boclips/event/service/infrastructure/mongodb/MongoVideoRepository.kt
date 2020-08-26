@@ -28,6 +28,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
             .title(video.title)
             .channelId(video.channelId.value)
             .playbackProviderType(video.playbackProviderType.name)
+            .playbackId(video.playbackId)
             .subjects(video.subjects.map { it.name }.toSet())
             .ageRangeMin(video.ageRange.min)
             .ageRangeMax(video.ageRange.max)

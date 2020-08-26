@@ -25,6 +25,8 @@ public class VideoDocument implements Serializable {
     @NonNull
     private String playbackProviderType;
     @NonNull
+    private String playbackId;
+    @NonNull
     private Set<String> subjects;
     private Integer ageRangeMin;
     private Integer ageRangeMax;
@@ -47,6 +49,7 @@ public class VideoDocument implements Serializable {
                 .title("video title")
                 .channelId("channel id")
                 .playbackProviderType("providertype")
+                .playbackId("playbackId")
                 .subjects(Collections.singleton("subject"))
                 .ageRangeMin(5)
                 .ageRangeMax(13)

@@ -32,6 +32,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                 title = "the title",
                 channelId = "channel id",
                 playbackProviderType = PlaybackProviderType.YOUTUBE,
+                playbackId = "playback id",
                 subjectNames = listOf("Maths"),
                 ageRange = AgeRange(5, 11),
                 type = VideoType.NEWS,
@@ -77,6 +78,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.title).isEqualTo("the title")
         assertThat(document.channelId).isEqualTo("channel id")
         assertThat(document.playbackProviderType).isEqualTo("YOUTUBE")
+        assertThat(document.playbackId).isEqualTo("playback id")
         assertThat(document.subjects).containsExactly("Maths")
         assertThat(document.ageRangeMin).isEqualTo(5)
         assertThat(document.ageRangeMax).isEqualTo(11)

@@ -20,6 +20,7 @@ object VideoFactory {
         title: String = "",
         channelId: String = "",
         playbackProviderType: PlaybackProviderType = PlaybackProviderType.KALTURA,
+        playbackId: String = "",
         subjectNames: List<String> = emptyList(),
         ageRange: AgeRange = AgeRange(),
         durationSeconds: Int = 180,
@@ -39,6 +40,7 @@ object VideoFactory {
             .title(title)
             .channelId(ChannelId(channelId))
             .playbackProviderType(playbackProviderType)
+            .playbackId(playbackId)
             .subjects(createSubjects(subjectNames))
             .ageRange(ageRange)
             .durationSeconds(durationSeconds)
