@@ -6,7 +6,7 @@ import java.util.{Currency, Locale}
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.domain.model.orders.{OrderId, VideoItemWithOrder}
-import com.boclips.event.aggregator.domain.model.videos.{Dimensions, VideoTopic}
+import com.boclips.event.aggregator.domain.model.videos.{Dimensions, VideoId, VideoTopic, YouTubeVideoStats}
 import com.boclips.event.aggregator.presentation.model
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
@@ -22,89 +22,6 @@ import scala.collection.JavaConverters._
 
 
 class VideoFormatterTest extends Test {
-  it should "write topics" in {
-    val video = createVideo(
-      topics = List(
-        VideoTopic(
-          name = "1-1",
-          confidence = 1.1,
-          language = Locale.ENGLISH,
-          parent =
-            Some(
-              VideoTopic(
-                name = "1-2",
-                confidence = 1.2,
-                language = Locale.FRENCH,
-                parent =
-                  Some(
-                    VideoTopic(
-                      name = "1-3",
-                      confidence = 1.3,
-                      language = Locale.ITALIAN,
-                      parent =
-                        Some(
-                          VideoTopic(
-                            name = "1-4",
-                            confidence = 1.4,
-                            language = Locale.JAPAN,
-                            parent =
-                              Some(
-                                VideoTopic(
-                                  name = "1-5",
-                                  confidence = 1.5,
-                                  language = Locale.GERMANY
-                                )
-                              )
-                          )
-                        )
-                    )
-                  )
-              )
-            )
-        ),
-        VideoTopic(
-          name = "2-1",
-          confidence = 2.1,
-          language = Locale.TRADITIONAL_CHINESE
-        )
-      )
-    )
-
-    val json = VideoFormatter formatRow model.VideoTableRow(video)
-
-    val topicsArray = json.get("topics").getAsJsonArray
-    topicsArray should have size 2
-
-    val firstTopicGroup = topicsArray.get(0).getAsJsonObject
-    val firstBaseTopic = firstTopicGroup.getAsJsonObject("topic")
-    val firstParentTopic = firstTopicGroup.getAsJsonObject("parentTopic")
-    val firstGrandparentTopic = firstTopicGroup.getAsJsonObject("grandparentTopic")
-
-    val secondTopicGroup = topicsArray.get(1).getAsJsonObject
-    val secondBaseTopic = secondTopicGroup.getAsJsonObject("topic")
-    val secondParentTopic = secondTopicGroup.get("parentTopic")
-    val secondGrandparentTopic = secondTopicGroup.get("grandparentTopic")
-
-    firstBaseTopic.getString("name") shouldBe "1-1"
-    firstBaseTopic.getDouble("confidence") shouldBe 1.1
-    firstBaseTopic.getString("language") shouldBe "en"
-
-    firstParentTopic.getString("name") shouldBe "1-2"
-    firstParentTopic.getDouble("confidence") shouldBe 1.2
-    firstParentTopic.getString("language") shouldBe "fr"
-
-    firstGrandparentTopic.getString("name") shouldBe "1-3"
-    firstGrandparentTopic.getDouble("confidence") shouldBe 1.3
-    firstGrandparentTopic.getString("language") shouldBe "it"
-
-    secondBaseTopic.getString("name") shouldBe "2-1"
-    secondBaseTopic.getDouble("confidence") shouldBe 2.1
-    secondBaseTopic.getString("language") shouldBe "zh-TW"
-
-    secondParentTopic shouldBe null
-    secondGrandparentTopic shouldBe null
-  }
-
   it should "write subjects" in {
     val video = createVideo(
       subjects = List("maths", "physics")
@@ -550,5 +467,104 @@ class VideoFormatterTest extends Test {
     interactionsJson.getString("subtype") shouldBe "COOL-EVENT"
     interactionsJson.getString("query") shouldBe "maths"
     interactionsJson.getString("id") should not be empty
+  }
+
+  it should "write topics" in {
+    val video = createVideo(
+      topics = List(
+        VideoTopic(
+          name = "1-1",
+          confidence = 1.1,
+          language = Locale.ENGLISH,
+          parent =
+            Some(
+              VideoTopic(
+                name = "1-2",
+                confidence = 1.2,
+                language = Locale.FRENCH,
+                parent =
+                  Some(
+                    VideoTopic(
+                      name = "1-3",
+                      confidence = 1.3,
+                      language = Locale.ITALIAN,
+                      parent =
+                        Some(
+                          VideoTopic(
+                            name = "1-4",
+                            confidence = 1.4,
+                            language = Locale.JAPAN,
+                            parent =
+                              Some(
+                                VideoTopic(
+                                  name = "1-5",
+                                  confidence = 1.5,
+                                  language = Locale.GERMANY
+                                )
+                              )
+                          )
+                        )
+                    )
+                  )
+              )
+            )
+        ),
+        VideoTopic(
+          name = "2-1",
+          confidence = 2.1,
+          language = Locale.TRADITIONAL_CHINESE
+        )
+      )
+    )
+
+    val json = VideoFormatter formatRow model.VideoTableRow(video)
+
+    val topicsArray = json.get("topics").getAsJsonArray
+    topicsArray should have size 2
+
+    val firstTopicGroup = topicsArray.get(0).getAsJsonObject
+    val firstBaseTopic = firstTopicGroup.getAsJsonObject("topic")
+    val firstParentTopic = firstTopicGroup.getAsJsonObject("parentTopic")
+    val firstGrandparentTopic = firstTopicGroup.getAsJsonObject("grandparentTopic")
+
+    val secondTopicGroup = topicsArray.get(1).getAsJsonObject
+    val secondBaseTopic = secondTopicGroup.getAsJsonObject("topic")
+    val secondParentTopic = secondTopicGroup.get("parentTopic")
+    val secondGrandparentTopic = secondTopicGroup.get("grandparentTopic")
+
+    firstBaseTopic.getString("name") shouldBe "1-1"
+    firstBaseTopic.getDouble("confidence") shouldBe 1.1
+    firstBaseTopic.getString("language") shouldBe "en"
+
+    firstParentTopic.getString("name") shouldBe "1-2"
+    firstParentTopic.getDouble("confidence") shouldBe 1.2
+    firstParentTopic.getString("language") shouldBe "fr"
+
+    firstGrandparentTopic.getString("name") shouldBe "1-3"
+    firstGrandparentTopic.getDouble("confidence") shouldBe 1.3
+    firstGrandparentTopic.getString("language") shouldBe "it"
+
+    secondBaseTopic.getString("name") shouldBe "2-1"
+    secondBaseTopic.getDouble("confidence") shouldBe 2.1
+    secondBaseTopic.getString("language") shouldBe "zh-TW"
+
+    secondParentTopic shouldBe null
+    secondGrandparentTopic shouldBe null
+  }
+
+  it should "write youtube stats" in {
+    val video = createVideo(id = "1")
+    val stats = YouTubeVideoStats(
+      videoId = VideoId("1"),
+      viewCount = 120555
+    )
+
+    val json = VideoFormatter formatRow model.VideoTableRow(
+      video,
+      youTubeStats = Some(stats)
+    )
+
+    val statsObject = json.getAsJsonObject("youTubeStats")
+    statsObject.getInt("viewCount") shouldBe 120555
   }
 }

@@ -4,7 +4,7 @@ import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelDetails, ChannelId, ContractId}
 import com.boclips.event.aggregator.domain.model.orders.OrderId
 import com.boclips.event.aggregator.domain.model.users.User
-import com.boclips.event.aggregator.domain.model.videos.VideoId
+import com.boclips.event.aggregator.domain.model.videos.{VideoId, YouTubeVideoStats}
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
@@ -13,7 +13,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.cr
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoInteractedWithEvent
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem}
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
-import com.boclips.event.aggregator.testsupport.testfactories.{CollectionFactory, SearchFactory}
+import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.createVideoSearchResultImpression
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.createVideo
 
@@ -85,6 +85,15 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
       createVideoInteractedWithEvent(videoId = "v2"),
     )
 
+    val youTubeStats = rdd(
+      YouTubeVideoStats(
+        videoId = VideoId("v1"), viewCount = 1111
+      ),
+      YouTubeVideoStats(
+        videoId = VideoId("unused"), viewCount = 5555
+      )
+    )
+
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
       playbacks,
@@ -94,11 +103,13 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
       contracts,
       collections,
       impressions,
-      interactions
+      interactions,
+      youTubeStats
     ).collect().toList.sortBy(_.video.id.value)
 
     videosWithRelatedData should have size 2
     videosWithRelatedData.head.video.id shouldBe VideoId("v1")
+    videosWithRelatedData.head.youTubeStats.map(_.viewCount) should contain (1111)
     videosWithRelatedData.head.playbacks should have size 2
     videosWithRelatedData.head.orders should have size 2
     videosWithRelatedData.head.channel.map(_.id) should contain(ChannelId("channel-1"))

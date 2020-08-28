@@ -7,10 +7,11 @@ import com.boclips.event.aggregator.domain.model.orders.VideoItemWithOrder
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.VideoSearchResultImpression
 import com.boclips.event.aggregator.domain.model.users.User
-import com.boclips.event.aggregator.domain.model.videos.Video
+import com.boclips.event.aggregator.domain.model.videos.{Video, YouTubeVideoStats}
 
 case class VideoTableRow(
                           video: Video,
+                          youTubeStats: Option[YouTubeVideoStats] = None,
                           playbacks: List[(Playback, Option[User])] = Nil,
                           orders: List[VideoItemWithOrder] = Nil,
                           channel: Option[Channel] = None,

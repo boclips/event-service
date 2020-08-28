@@ -18,6 +18,7 @@ object DocumentToVideoConverter {
       title = document.getTitle,
       channelId = ChannelId(document.getChannelId),
       playbackProvider = document.getPlaybackProviderType,
+      playbackId = document.getPlaybackId,
       contentType = Option(document.getType),
       subjects = document.getSubjects.asScala.map(name => Subject(name)).toList,
       duration = Duration.ofSeconds(document.getDurationSeconds.toLong),

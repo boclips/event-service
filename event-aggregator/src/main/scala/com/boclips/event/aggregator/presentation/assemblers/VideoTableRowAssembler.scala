@@ -7,7 +7,7 @@ import com.boclips.event.aggregator.domain.model.orders.{Order, VideoItemWithOrd
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.VideoSearchResultImpression
 import com.boclips.event.aggregator.domain.model.users.User
-import com.boclips.event.aggregator.domain.model.videos.{Video, VideoId}
+import com.boclips.event.aggregator.domain.model.videos.{Video, VideoId, YouTubeVideoStats}
 import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
@@ -24,8 +24,8 @@ object VideoTableRowAssembler {
                                      collections: RDD[Collection],
                                      impressions: RDD[VideoSearchResultImpression],
                                      interactions: RDD[VideoInteractedWithEvent],
+                                     youTubeVideoStats: RDD[YouTubeVideoStats],
                                    ): RDD[VideoTableRow] = {
-
     val playbacksByVideoId: RDD[(VideoId, Iterable[(Playback, Option[User])])] = (
       playbacks.keyBy(_.user) leftOuterJoin users.keyBy(_.identity)
       )
@@ -73,6 +73,9 @@ object VideoTableRowAssembler {
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Interaction Events by video ID")
 
+    val youTubeStatsByVideoId: RDD[(VideoId, YouTubeVideoStats)] =
+      youTubeVideoStats.keyBy(_.videoId)
+
     videos
       .keyBy(_.id)
       .leftOuterJoin(playbacksByVideoId)
@@ -82,10 +85,11 @@ object VideoTableRowAssembler {
       .leftOuterJoin(collectionListsByVideoId)
       .leftOuterJoin(impressionsByVideoId)
       .leftOuterJoin(interactionsByVideoId)
+      .leftOuterJoin(youTubeStatsByVideoId)
       .values
       .map {
         case
-          (((((((
+          ((((((((
             video
             , videoPlaybacks
             ), videoOrders
@@ -94,9 +98,11 @@ object VideoTableRowAssembler {
             ), collections
             ), videoImpressions
             ), videoInteractions
+            ), youTubeStats
             ) =>
           VideoTableRow(
             video = video,
+            youTubeStats = youTubeStats,
             playbacks = videoPlaybacks,
             orders = videoOrders,
             channel = videoChannel,

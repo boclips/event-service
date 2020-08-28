@@ -13,6 +13,7 @@ case class Video(
                   title: String,
                   channelId: ChannelId,
                   playbackProvider: String,
+                  playbackId: String,
                   subjects: List[Subject],
                   contentType: Option[String],
                   originalDimensions: Option[Dimensions],

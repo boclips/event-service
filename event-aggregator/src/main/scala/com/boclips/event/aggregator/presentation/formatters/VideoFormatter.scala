@@ -36,55 +36,62 @@ object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
 }
 
 object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
-  override def writeRow(obj: VideoTableRow, json: JsonObject): Unit = {
+  override def writeRow(row: VideoTableRow, json: JsonObject): Unit = {
+    val highestResolutionAsset = row.video.largestAsset()
 
-    val VideoTableRow(video, playbacks, orders, channel, contract, collections, impressions, interactions) = obj
-    val highestResolutionAsset = video.largestAsset()
+    json.addProperty("id", row.video.id.value)
+    json.addDateTimeProperty("ingestedAt", row.video.ingestedAt)
 
-    json.addProperty("id", video.id.value)
-    json.addDateTimeProperty("ingestedAt", video.ingestedAt)
-
-    val storageCharges = video.storageCharges(to = LocalDate.now()).map(StorageChargeFormatter.formatRow)
+    val storageCharges = row.video.storageCharges(to = LocalDate.now()).map(StorageChargeFormatter.formatRow)
     json.addJsonArrayProperty("storageCharges", storageCharges)
 
-    val ps = playbacks.map(PlaybackFormatter.formatRow)
+    val ps = row.playbacks.map(PlaybackFormatter.formatRow)
     json.addJsonArrayProperty("playbacks", ps)
 
-    val ordersJson = orders.map(NestedOrderFormatter.formatRow)
+    val ordersJson = row.orders.map(NestedOrderFormatter.formatRow)
     json.addJsonArrayProperty(property = "orders", ordersJson)
 
-    val channelJson: JsonObject = channel.map(ChannelFormatter.formatRow).orNull
+    val channelJson: JsonObject = row.channel.map(ChannelFormatter.formatRow).orNull
     json.add("channel", channelJson)
 
-    val contractJson: JsonObject = contract.map(ContractFormatter.formatRow).orNull
+    val contractJson: JsonObject = row.contract.map(ContractFormatter.formatRow).orNull
     json.add("contract", contractJson)
 
-    val collectionsJson = collections.map(NestedCollectionFormatter.formatRow)
+    val collectionsJson = row.collections.map(NestedCollectionFormatter.formatRow)
     json.addJsonArrayProperty(property = "collections", collectionsJson)
 
-    val impressionsJson = impressions.map(VideoSearchResultImpressionFormatter.formatRow)
+    val impressionsJson = row.impressions.map(VideoSearchResultImpressionFormatter.formatRow)
     json.addJsonArrayProperty(property = "impressions", impressionsJson)
 
-    val interactionsJson = interactions.map(VideoInteractionEventsFormatter.formatRow)
+    val interactionsJson = row.interactions.map(VideoInteractionEventsFormatter.formatRow)
     json.addJsonArrayProperty(property = "interactions", interactionsJson)
 
-    val topicsJson = video.topics.map(VideoTopicThreeLevelFormatter.formatRow)
+    val topicsJson = row.video.topics.map(VideoTopicThreeLevelFormatter.formatRow)
     json.addJsonArrayProperty(property = "topics", topicsJson)
 
-    json.addProperty("playbackProvider", video.playbackProvider)
-    json.addJsonArrayProperty("subjects", getAllSubjectsOf(video).map(SubjectFormatter.formatRow))
-    json.addStringArrayProperty("ages", AgeFormatter.formatAges(video.ageRange))
-    json.addProperty("durationSeconds", video.duration.getSeconds)
-    json.addProperty("title", video.title)
-    json.addProperty("type", video.contentType)
-    json.addProperty("monthlyStorageCostGbp", video.monthlyStorageCostGbp())
-    json.addProperty("storageCostSoFarGbp", video.storageCostSoFarGbp())
-    json.addProperty("originalWidth", video.originalDimensions.map(d => d.width).getOrElse(0))
-    json.addProperty("originalHeight", video.originalDimensions.map(d => d.height).getOrElse(0))
+    val youTubeStatsJson = row.youTubeStats.map(_.viewCount) match {
+      case Some(count) =>
+        val obj = new JsonObject
+        obj.addProperty("viewCount", count)
+        obj
+      case _ => null
+    }
+    json.add("youTubeStats", youTubeStatsJson)
+
+    json.addProperty("playbackProvider", row.video.playbackProvider)
+    json.addJsonArrayProperty("subjects", getAllSubjectsOf(row.video).map(SubjectFormatter.formatRow))
+    json.addStringArrayProperty("ages", AgeFormatter.formatAges(row.video.ageRange))
+    json.addProperty("durationSeconds", row.video.duration.getSeconds)
+    json.addProperty("title", row.video.title)
+    json.addProperty("type", row.video.contentType)
+    json.addProperty("monthlyStorageCostGbp", row.video.monthlyStorageCostGbp())
+    json.addProperty("storageCostSoFarGbp", row.video.storageCostSoFarGbp())
+    json.addProperty("originalWidth", row.video.originalDimensions.map(d => d.width).getOrElse(0))
+    json.addProperty("originalHeight", row.video.originalDimensions.map(d => d.height).getOrElse(0))
     json.addProperty("assetWidth", highestResolutionAsset.map(a => a.dimensions.width).getOrElse(0))
     json.addProperty("assetHeight", highestResolutionAsset.map(a => a.dimensions.height).getOrElse(0))
     json.addProperty("assetSizeKb", highestResolutionAsset.map(a => a.sizeKb).getOrElse(0))
-    json.addProperty("promoted", video.promoted)
+    json.addProperty("promoted", row.video.promoted)
   }
 
   private def getAllSubjectsOf(video: Video): List[Subject] = {

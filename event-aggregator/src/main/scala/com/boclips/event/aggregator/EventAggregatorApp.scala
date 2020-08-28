@@ -2,9 +2,9 @@ package com.boclips.event.aggregator
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.config.{BigQueryConfig, MongoConfig, Neo4jConfig, SparkConfig}
+import com.boclips.event.aggregator.config._
 import com.boclips.event.aggregator.domain.model.collections.Collection
-import com.boclips.event.aggregator.domain.model.contentpartners._
+import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent, PlatformInteractedWithEvent}
 import com.boclips.event.aggregator.domain.model.okrs.{Monthly, Weekly}
 import com.boclips.event.aggregator.domain.model.orders.Order
@@ -12,7 +12,7 @@ import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.User
-import com.boclips.event.aggregator.domain.model.videos.{Video, VideoStorageCharge}
+import com.boclips.event.aggregator.domain.model.videos.{Video, VideoId, VideoStorageCharge, YouTubeVideoStats}
 import com.boclips.event.aggregator.domain.service.Data
 import com.boclips.event.aggregator.domain.service.collection.{CollectionInteractionEventAssembler, CollectionSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.domain.service.navigation.{PagesRenderedAssembler, PlatformInteractedWithEventAssembler}
@@ -26,8 +26,10 @@ import com.boclips.event.aggregator.domain.service.video.{VideoInteractionAssemb
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
 import com.boclips.event.aggregator.infrastructure.neo4j.Neo4jVideoRowGraphWriter
+import com.boclips.event.aggregator.infrastructure.youtube.YouTubeService
 import com.boclips.event.aggregator.presentation.assemblers.{CollectionTableRowAssembler, UserTableRowAssembler, VideoTableRowAssembler}
 import com.boclips.event.aggregator.presentation.formatters.{ChannelFormatter, CollectionFormatter, ContractFormatter, DataVersionFormatter, VideoFormatter}
+import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableNames, TableWriter}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
@@ -36,21 +38,25 @@ import org.slf4j.{Logger, LoggerFactory}
 import scala.reflect.runtime.universe.TypeTag
 
 object EventAggregatorApp {
-
   def main(args: Array[String]): Unit = {
     val sparkConfig: SparkConfig = SparkConfig()
     implicit val session: SparkSession = sparkConfig.session
     val writer = new BigQueryTableWriter(BigQueryConfig())
     val mongoSparkProvider = new SparkMongoClient(MongoConfig())
     val neo4jConfig = Neo4jConfig.fromEnv
-    new EventAggregatorApp(writer, mongoSparkProvider, EventAggregatorConfiguration(Some(neo4jConfig))).run()
+    val youTubeConfig = YouTubeConfig.fromEnv
+    new EventAggregatorApp(
+      writer,
+      mongoSparkProvider,
+      EventAggregatorConfig(Some(neo4jConfig), Some(youTubeConfig))
+    ).run()
   }
 }
 
 class EventAggregatorApp(
                           val writer: TableWriter,
                           val mongoClient: SparkMongoClient,
-                          val configuration: EventAggregatorConfiguration = EventAggregatorConfiguration(None)
+                          val configuration: EventAggregatorConfig = EventAggregatorConfig()
                         )(implicit val session: SparkSession) {
 
   val log: Logger = LoggerFactory.getLogger(classOf[EventAggregatorApp])
@@ -69,15 +75,9 @@ class EventAggregatorApp(
   val searches: RDD[Search] = new SearchAssembler(sessions).assembleSearches()
   val storageCharges: RDD[VideoStorageCharge] = new StorageChargesAssembler(videos).assembleStorageCharges
 
-  private def writeTable[T](data: RDD[T], tableName: String)(implicit formatter: RowFormatter[T], typeTag: TypeTag[T]): Unit = {
-    val tableFormatter = new TableFormatter[T](formatter)
-    val jsonData = tableFormatter.formatRowsAsJson(data)
-    val schema = tableFormatter.schema()
-    writer.writeTable(jsonData, schema, tableName)
-  }
-
   def run(): Unit = {
     logProcessingStart(s"Updating videos")
+    val youtubeStatsByVideoPlaybackId: RDD[YouTubeVideoStats] = getYoutubeVideoStats
     val impressions = VideoSearchResultImpressionAssembler(searches)
     val videoInteractions = VideoInteractionAssembler(events)
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
@@ -89,30 +89,10 @@ class EventAggregatorApp(
       contracts,
       collections,
       impressions,
-      videoInteractions
+      videoInteractions,
+      youtubeStatsByVideoPlaybackId
     )
-
-    configuration.neo4jConfig.foreach { neo4jConfig =>
-      logProcessingStart(s"Writing video rows to graph database")
-      var nchunk = 0
-      videosWithRelatedData
-        .filter(_.video.contentType.contains("INSTRUCTIONAL"))
-        .coalesce(1)
-        .foreachPartition {
-          rows => {
-            val graphWriter = new Neo4jVideoRowGraphWriter(neo4jConfig.spawnDriver)
-            try {
-              rows.grouped(10000).foreach { chunk =>
-                println("Writing data chunk to graph: " + nchunk)
-                nchunk = nchunk + 1
-
-                graphWriter.write(chunk.toList)
-              }
-
-            } finally graphWriter.cleanUp()
-          }
-        }
-    }
+    writeVideosToGraph(videosWithRelatedData)
 
     writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
 
@@ -150,7 +130,8 @@ class EventAggregatorApp(
     writeTable(pagesRendered, "user_navigation")
 
     logProcessingStart(s"Updating Platform Generic Interactions")
-    val platformInteractedWithEvents: RDD[PlatformInteractedWithEvent] = new PlatformInteractedWithEventAssembler(events).assemblePlatformInteractedWithEvents()
+    val platformInteractedWithEvents: RDD[PlatformInteractedWithEvent] =
+      new PlatformInteractedWithEventAssembler(events).assemblePlatformInteractedWithEvents()
     writeTable(platformInteractedWithEvents, "platform_interacted_with_events")
 
     logProcessingStart(s"Updating collection interaction")
@@ -162,12 +143,57 @@ class EventAggregatorApp(
     writeTable(timestampInRdd, "data_version")(DataVersionFormatter, implicitly)
   }
 
+  private def writeTable[T](
+                             data: RDD[T],
+                             tableName: String
+                           )(implicit formatter: RowFormatter[T], typeTag: TypeTag[T]): Unit = {
+    val tableFormatter = new TableFormatter[T](formatter)
+    val jsonData = tableFormatter.formatRowsAsJson(data)
+    val schema = tableFormatter.schema()
+    writer.writeTable(jsonData, schema, tableName)
+  }
+
+  private def getYoutubeVideoStats: RDD[YouTubeVideoStats] =
+    configuration.youTubeConfig.map { youTubeConfig =>
+      val youtubeVideoIdsByPlaybackId: RDD[(String, VideoId)] =
+        videos
+          .filter(_.playbackProvider == "YOUTUBE")
+          .map(v => (v.playbackId, v.id))
+      youtubeVideoIdsByPlaybackId
+        .mapPartitions(idPairs => {
+          YouTubeService(
+            youTubeConfig
+          ).getVideoStats(
+            idPairs.toMap
+          ).iterator
+        })
+    }.getOrElse(session.sparkContext.parallelize(List()))
+
+  private def writeVideosToGraph(videosWithRelatedData: RDD[VideoTableRow]): Unit =
+    configuration.neo4jConfig.foreach { neo4jConfig =>
+      logProcessingStart(s"Writing video rows to graph database")
+      var nchunk = 0
+      videosWithRelatedData
+        .filter(_.video.contentType.contains("INSTRUCTIONAL"))
+        .coalesce(1)
+        .foreachPartition {
+          rows => {
+            val graphWriter = new Neo4jVideoRowGraphWriter(neo4jConfig.spawnDriver)
+            try {
+              rows.grouped(10000).foreach { chunk =>
+                println("Writing data chunk to graph: " + nchunk)
+                nchunk = nchunk + 1
+
+                graphWriter.write(chunk.toList)
+              }
+
+            } finally graphWriter.cleanUp()
+          }
+        }
+    }
+
   private def logProcessingStart(name: String): Unit = {
     log.info(name)
     session.sparkContext.setJobGroup(name, name)
   }
 }
-
-case class EventAggregatorConfiguration(
-                                         neo4jConfig: Option[Neo4jConfig]
-                                       )

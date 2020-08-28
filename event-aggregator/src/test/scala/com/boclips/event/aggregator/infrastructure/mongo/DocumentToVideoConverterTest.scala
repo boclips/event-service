@@ -39,6 +39,12 @@ class DocumentToVideoConverterTest extends Test {
     video.playbackProvider shouldBe "YOUTUBE"
   }
 
+  it should "convert the playback ID" in {
+    val video = DocumentToVideoConverter convert VideoDocument.sample().playbackId("cool playback id").build()
+
+    video.playbackId shouldBe "cool playback id"
+  }
+
   it should "convert the subjects" in {
     val video = DocumentToVideoConverter convert VideoDocument.sample().subjects(singleton("Maths")).build()
 
