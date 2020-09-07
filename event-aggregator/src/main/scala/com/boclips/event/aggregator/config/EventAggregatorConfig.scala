@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.config
 
 case class EventAggregatorConfig(
-                                  neo4jConfig: Option[Neo4jConfig] = None,
+                                  neo4jEnabled: Boolean = false,
                                   youTubeConfig: Option[YouTubeConfig] = None
                                 )

@@ -4,7 +4,7 @@ import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.config._
 import com.boclips.event.aggregator.domain.model.collections.Collection
-import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
+import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent, PlatformInteractedWithEvent}
 import com.boclips.event.aggregator.domain.model.okrs.{Monthly, Weekly}
 import com.boclips.event.aggregator.domain.model.orders.Order
@@ -12,7 +12,7 @@ import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.User
-import com.boclips.event.aggregator.domain.model.videos.{Video, VideoId, VideoStorageCharge, YouTubeVideoStats}
+import com.boclips.event.aggregator.domain.model.videos._
 import com.boclips.event.aggregator.domain.service.Data
 import com.boclips.event.aggregator.domain.service.collection.{CollectionInteractionEventAssembler, CollectionSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.domain.service.navigation.{PagesRenderedAssembler, PlatformInteractedWithEventAssembler}
@@ -25,14 +25,14 @@ import com.boclips.event.aggregator.domain.service.user.UserAssembler
 import com.boclips.event.aggregator.domain.service.video.{VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
-import com.boclips.event.aggregator.infrastructure.neo4j.Neo4jVideoRowGraphWriter
 import com.boclips.event.aggregator.infrastructure.youtube.YouTubeService
 import com.boclips.event.aggregator.presentation.assemblers.{CollectionTableRowAssembler, UserTableRowAssembler, VideoTableRowAssembler}
 import com.boclips.event.aggregator.presentation.formatters.{ChannelFormatter, CollectionFormatter, ContractFormatter, DataVersionFormatter, VideoFormatter}
-import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableNames, TableWriter}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.{StringType, StructField, StructType}
+import org.apache.spark.sql.{Row, SparkSession}
+import org.neo4j.spark.dataframe.Neo4jDataFrame
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.reflect.runtime.universe.TypeTag
@@ -43,12 +43,11 @@ object EventAggregatorApp {
     implicit val session: SparkSession = sparkConfig.session
     val writer = new BigQueryTableWriter(BigQueryConfig())
     val mongoSparkProvider = new SparkMongoClient(MongoConfig())
-    val neo4jConfig = Neo4jConfig.fromEnv
     val youTubeConfig = YouTubeConfig.fromEnv
     new EventAggregatorApp(
       writer,
       mongoSparkProvider,
-      EventAggregatorConfig(Some(neo4jConfig), Some(youTubeConfig))
+      EventAggregatorConfig(neo4jEnabled = true, youTubeConfig = Some(youTubeConfig))
     ).run()
   }
 }
@@ -58,7 +57,6 @@ class EventAggregatorApp(
                           val mongoClient: SparkMongoClient,
                           val configuration: EventAggregatorConfig = EventAggregatorConfig()
                         )(implicit val session: SparkSession) {
-
   val log: Logger = LoggerFactory.getLogger(classOf[EventAggregatorApp])
 
   val userLoader = new MongoUserLoader(mongoClient)
@@ -92,7 +90,8 @@ class EventAggregatorApp(
       videoInteractions,
       youtubeStatsByVideoPlaybackId
     )
-    writeVideosToGraph(videosWithRelatedData)
+    if (configuration.neo4jEnabled)
+      writeVideosToGraph(videos, channels)
 
     writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
 
@@ -169,28 +168,47 @@ class EventAggregatorApp(
         })
     }.getOrElse(session.sparkContext.parallelize(List()))
 
-  private def writeVideosToGraph(videosWithRelatedData: RDD[VideoTableRow]): Unit =
-    configuration.neo4jConfig.foreach { neo4jConfig =>
-      logProcessingStart(s"Writing video rows to graph database")
-      var nchunk = 0
-      videosWithRelatedData
-        .filter(_.video.contentType.contains("INSTRUCTIONAL"))
-        .coalesce(1)
-        .foreachPartition {
-          rows => {
-            val graphWriter = new Neo4jVideoRowGraphWriter(neo4jConfig.spawnDriver)
-            try {
-              rows.grouped(10000).foreach { chunk =>
-                println("Writing data chunk to graph: " + nchunk)
-                nchunk = nchunk + 1
+  private def writeVideosToGraph(videos: RDD[Video], channels: RDD[Channel]): Unit = {
+    val videoRow: RDD[Row] = videos.map(video =>
+      Row(video.id.value, video.channelId.value)
+    )
+    val videoStructType: StructType = StructType(List(
+      StructField("videoId", StringType, nullable = false),
+      StructField("channelId", StringType)
+    ))
+    val videoFrame = session.createDataFrame(
+      videoRow,
+      videoStructType
+    )
 
-                graphWriter.write(chunk.toList)
-              }
+    val channelRow: RDD[Row] = channels.map(channel =>
+      Row(channel.id.value, channel.id.value)
+    )
+    val channelStructType: StructType = StructType(List(
+      StructField("channelId", StringType, nullable = false)
+    ))
+    val channelFrame = session.createDataFrame(
+      channelRow,
+      channelStructType
+    )
 
-            } finally graphWriter.cleanUp()
-          }
-        }
-    }
+    val joinedFrame = videoFrame.join(
+      channelFrame,
+      List("channelId")
+    )
+
+    Neo4jDataFrame.mergeEdgeList(
+      session.sparkContext,
+      joinedFrame,
+      source = ("Video", Seq("videoId")),
+      relationship = ("BELONGS_TO_CHANNEL", Nil),
+      target = ("Channel", Seq("channelId")),
+      renamedColumns = Map(
+        ("videoId", "uuid"),
+        ("channelId", "uuid")
+      )
+    )
+  }
 
   private def logProcessingStart(name: String): Unit = {
     log.info(name)
