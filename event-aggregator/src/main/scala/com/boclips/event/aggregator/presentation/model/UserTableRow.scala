@@ -44,10 +44,10 @@ object UserTableRow {
 }
 
 case class UserTableRow(
-                                user: User,
-                                monthlyActiveStatus: List[UserActiveStatus],
-                                playbacks: List[Playback],
-                                referredPlaybacks: List[Playback],
-                                searches: List[Search],
-                                sessions: List[Session],
-                              )
+                         user: User,
+                         monthlyActiveStatus: List[UserActiveStatus],
+                         playbacks: List[Playback],
+                         referredPlaybacks: List[Playback],
+                         searches: List[Search],
+                         sessions: List[Session],
+                       )

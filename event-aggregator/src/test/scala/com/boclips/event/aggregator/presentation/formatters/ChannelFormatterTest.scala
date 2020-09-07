@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.presentation.formatters
 import java.time.Period
 import java.util.Locale
 
-import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelDetails, ChannelIngest, ChannelMarketing, ChannelPedagogy, Download, Streaming}
+import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
 import com.google.gson.JsonNull

@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.domain.service.search
 import java.time.{Month, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.okrs.Monthly
-import com.boclips.event.aggregator.testsupport.testfactories.{SearchFactory, UserFactory}
+import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchInteractions, createSearchRequest}
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.aggregator.testsupport.{IntegrationTest, TestTimestamps}

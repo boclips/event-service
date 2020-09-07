@@ -2,10 +2,9 @@ package com.boclips.event.aggregator.domain.service.search
 
 import java.util.UUID
 
-import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.domain.model.events._
-import com.boclips.event.aggregator.domain.model.search.{CollectionImpression, Query, Search, SearchImpression, SearchInteractions, SearchRequest, SearchResponse}
+import com.boclips.event.aggregator.domain.model.search._
 import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.videos.VideoId
 

@@ -1,8 +1,8 @@
 package com.boclips.event.aggregator.domain.service.okr
 
+import com.boclips.event.aggregator.domain.model.okrs
 import com.boclips.event.aggregator.domain.model.okrs.{DateRange, SearchMetric, TimePeriodDuration}
 import com.boclips.event.aggregator.domain.model.search.Search
-import com.boclips.event.aggregator.domain.model.okrs
 import org.apache.spark.rdd.RDD
 
 object SearchMetricCalculator {

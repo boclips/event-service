@@ -340,7 +340,7 @@ class DocumentToUserConverterTest extends Test {
       .marketingUtmTerm("Mid")
       .marketingUtmSource("of life")
       .build()
-  val user = DocumentToUserConverter convert document
+    val user = DocumentToUserConverter convert document
 
     user.marketingUtmCampaign shouldBe Some("yes we can")
     user.marketingUtmContent shouldBe Some("Buzzwords")

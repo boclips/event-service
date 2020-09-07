@@ -3,9 +3,9 @@ package com.boclips.event.aggregator.testsupport.testfactories
 import java.time.Month.{APRIL, MAY}
 import java.time.{LocalDate, ZoneOffset}
 
-import com.boclips.event.aggregator.domain.model.okrs.{ActiveUserCounts, DateRange, KeyResults, PlaybackMetric, SearchMetric, UserMetric}
-import com.boclips.event.aggregator.domain.model.{okrs, users, _}
+import com.boclips.event.aggregator.domain.model.okrs._
 import com.boclips.event.aggregator.domain.model.users.UserTotals
+import com.boclips.event.aggregator.domain.model.{okrs, users}
 import com.boclips.event.aggregator.testsupport.TestTimestamps.thisYearWhole
 
 object MetricsFactory {

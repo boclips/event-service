@@ -3,8 +3,8 @@ package com.boclips.event.aggregator.testsupport.testfactories
 import java.time.{Duration, LocalDate, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.contentpartners.ChannelId
+import com.boclips.event.aggregator.domain.model.videos._
 import com.boclips.event.aggregator.domain.model.{videos, _}
-import com.boclips.event.aggregator.domain.model.videos.{Dimensions, Video, VideoAsset, VideoId, VideoStorageCharge, VideoTopic}
 
 object VideoFactory {
 

@@ -2,7 +2,6 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createCollectionInteractedWithEvent
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 class CollectionInteractionEventsFormatterTest extends Test {

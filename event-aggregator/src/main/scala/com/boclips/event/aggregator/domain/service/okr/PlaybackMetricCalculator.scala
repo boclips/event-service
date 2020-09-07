@@ -1,8 +1,8 @@
 package com.boclips.event.aggregator.domain.service.okr
 
 import com.boclips.event.aggregator.domain.model.events.{Event, VideoSegmentPlayedEvent}
-import com.boclips.event.aggregator.domain.model.okrs.{DateRange, PlaybackMetric, TimePeriodDuration}
 import com.boclips.event.aggregator.domain.model.okrs
+import com.boclips.event.aggregator.domain.model.okrs.{DateRange, PlaybackMetric, TimePeriodDuration}
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
 import org.apache.spark.rdd.RDD
 

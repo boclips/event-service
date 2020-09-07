@@ -2,7 +2,7 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.util.UUID
 
-import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, ExternalUserIdentity, SCHOOL_ORGANISATION, User}
+import com.boclips.event.aggregator.domain.model.users._
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.boclips.event.aggregator.presentation.model.UserTableRow
 import com.google.gson.JsonObject
@@ -48,8 +48,8 @@ object SimpleUserFormatter extends SingleRowFormatter[User] {
     json.addProperty("hasOptedIntoMarketing", user.hasOptedIntoMarketing.getOrElse(false))
     json.addProperty("marketingUtmCampaign", user.marketingUtmCampaign)
     json.addProperty("marketingUtmContent", user.marketingUtmContent)
-    json.addProperty("marketingUtmMedium",user.marketingUtmMedium)
-    json.addProperty("marketingUtmSource",user.marketingUtmSource)
+    json.addProperty("marketingUtmMedium", user.marketingUtmMedium)
+    json.addProperty("marketingUtmSource", user.marketingUtmSource)
     json.addProperty("marketingUtmTerm", user.marketingUtmTerm)
   }
 }

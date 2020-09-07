@@ -28,13 +28,14 @@ object DocumentToOrderConverter {
       fxRateToGbp = Option(document.getFxRateToGbp).map(BigDecimal(_)),
     )
   }
+
   private def convertOrderUser(document: OrderUserDocument): OrderUser = {
-     OrderUser(
-       firstName = Option(document.getFirstName),
-       lastName = Option(document.getLastName),
-       email = Option(document.getEmail),
-       legacyUserId = Option(document.getLegacyUserId),
-       label = Option(document.getLabel),
-     )
+    OrderUser(
+      firstName = Option(document.getFirstName),
+      lastName = Option(document.getLastName),
+      email = Option(document.getEmail),
+      legacyUserId = Option(document.getLegacyUserId),
+      label = Option(document.getLabel),
+    )
   }
 }

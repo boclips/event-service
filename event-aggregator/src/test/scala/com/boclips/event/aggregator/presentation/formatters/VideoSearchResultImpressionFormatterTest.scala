@@ -6,7 +6,6 @@ import com.boclips.event.aggregator.domain.model.Url
 import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory._
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 class VideoSearchResultImpressionFormatterTest extends Test {

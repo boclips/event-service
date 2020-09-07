@@ -19,7 +19,7 @@ class OrderFormatterTest extends Test {
   it should "write legacy order id" in {
     val json = OrderFormatter formatRow createOrder(legacyOrderId = "order-1984")
 
-    json.getString("legacyOrderId")  shouldBe  "order-1984"
+    json.getString("legacyOrderId") shouldBe "order-1984"
   }
 
   it should "write creation date" in {

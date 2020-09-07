@@ -30,9 +30,9 @@ object OrderFormatter extends SingleRowFormatter[Order] {
     json.addProperty("requestingUserEmail", obj.requestingUser.email)
     json.addProperty("requestingUserLegacyUserId", obj.requestingUser.legacyUserId)
     json.addProperty("requestingUserLabel", obj.requestingUser.label)
-    json.addProperty("isThroughPlatform",obj.isThroughPlatform)
-    json.addProperty("isbnOrProductNumber",obj.isbnOrProductNumber)
-    json.addProperty("currency",obj.currency.map(_.getCurrencyCode))
+    json.addProperty("isThroughPlatform", obj.isThroughPlatform)
+    json.addProperty("isbnOrProductNumber", obj.isbnOrProductNumber)
+    json.addProperty("currency", obj.currency.map(_.getCurrencyCode))
     json.addProperty("fxRateToGbp", obj.fxRateToGbp.getOrElse(BigDecimal(1.0)).toDouble)
     json.add("items", items)
   }

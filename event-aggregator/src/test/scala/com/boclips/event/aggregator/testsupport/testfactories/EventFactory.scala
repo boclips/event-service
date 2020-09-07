@@ -95,10 +95,10 @@ object EventFactory {
       (EventFields.PLAYBACK_SEGMENT_END_SECONDS, Long.box(segmentEndSeconds)),
     ) ++ (
       userId.map(it => (EventFields.USER_ID, it))
-      ++ externalUserId.map(it => (EventFields.EXTERNAL_USER_ID, it))
-      ++ deviceId.map(device => (EventFields.DEVICE_ID, device))
-      ++ videoIndex.map(index => (EventFields.PLAYBACK_VIDEO_INDEX, Int.box(index)))
-    )
+        ++ externalUserId.map(it => (EventFields.EXTERNAL_USER_ID, it))
+        ++ deviceId.map(device => (EventFields.DEVICE_ID, device))
+        ++ videoIndex.map(index => (EventFields.PLAYBACK_VIDEO_INDEX, Int.box(index)))
+      )
 
     new Document(properties.asJava)
   }
@@ -220,10 +220,10 @@ object EventFactory {
   }
 
   def createPlatformInteractedWithEventDocument(
-                                               timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-                                               userId: String = "User-666",
-                                               subtype: String= "MODAL_CLICKED",
-                                               url: String = "http://test.com",
+                                                 timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+                                                 userId: String = "User-666",
+                                                 subtype: String = "MODAL_CLICKED",
+                                                 url: String = "http://test.com",
                                                ): Document = {
     val documentProperties = Map[String, Object](
       (EventFields.TYPE, "PLATFORM_INTERACTED_WITH"),
@@ -236,10 +236,10 @@ object EventFactory {
   }
 
   def createAnonymousPlatformInteractedWithEventDocument(
-                                                 timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
-                                                 subtype: String= "MODAL_CLICKED",
-                                                 url: String = "http://test.com",
-                                               ): Document = {
+                                                          timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
+                                                          subtype: String = "MODAL_CLICKED",
+                                                          url: String = "http://test.com",
+                                                        ): Document = {
     val documentProperties = Map[String, Object](
       (EventFields.TYPE, "PLATFORM_INTERACTED_WITH"),
       (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),

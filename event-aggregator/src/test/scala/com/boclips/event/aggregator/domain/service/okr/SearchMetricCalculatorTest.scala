@@ -1,8 +1,8 @@
 package com.boclips.event.aggregator.domain.service.okr
 
 import com.boclips.event.aggregator.domain.model.okrs.Monthly
-import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.domain.service.search.SearchResultPlayback
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchInteractions, createSearchRequest}

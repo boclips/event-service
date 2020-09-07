@@ -3,7 +3,6 @@ package com.boclips.event.aggregator.domain.service.okr
 import com.boclips.event.aggregator.domain.model.events.VideoSegmentPlayedEvent
 import com.boclips.event.aggregator.domain.model.okrs.Monthly
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import org.apache.spark.rdd.RDD

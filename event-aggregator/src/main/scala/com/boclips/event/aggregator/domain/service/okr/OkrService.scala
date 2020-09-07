@@ -1,8 +1,8 @@
 package com.boclips.event.aggregator.domain.service.okr
 
-import com.boclips.event.aggregator.domain.model.{okrs, _}
 import com.boclips.event.aggregator.domain.model.events.Event
-import com.boclips.event.aggregator.domain.model.okrs.{DateRange, KeyResults, Metric, PlaybackMetric, SearchMetric, TimePeriodDuration, UserMetric}
+import com.boclips.event.aggregator.domain.model.okrs
+import com.boclips.event.aggregator.domain.model.okrs._
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.User

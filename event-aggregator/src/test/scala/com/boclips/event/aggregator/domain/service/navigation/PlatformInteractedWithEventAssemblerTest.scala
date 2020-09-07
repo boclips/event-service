@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.domain.service.navigation
 
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.{createPageRenderedEvent, createVideoSegmentPlayedEvent, createVideosSearchedEvent, createPlatformInteractedWithEvent}
+import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.{createPageRenderedEvent, createPlatformInteractedWithEvent, createVideoSegmentPlayedEvent, createVideosSearchedEvent}
 
 class PlatformInteractedWithEventAssemblerTest extends IntegrationTest {
   "Platform Interacted With Event Assembler " should "extract relevant events" in sparkTest { implicit spark =>

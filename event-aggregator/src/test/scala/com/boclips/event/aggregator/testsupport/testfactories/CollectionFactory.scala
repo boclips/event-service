@@ -2,10 +2,10 @@ package com.boclips.event.aggregator.testsupport.testfactories
 
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.{collections, _}
 import com.boclips.event.aggregator.domain.model.collections.{Collection, CollectionId}
 import com.boclips.event.aggregator.domain.model.users.UserId
 import com.boclips.event.aggregator.domain.model.videos.VideoId
+import com.boclips.event.aggregator.domain.model.{collections, _}
 
 object CollectionFactory {
 

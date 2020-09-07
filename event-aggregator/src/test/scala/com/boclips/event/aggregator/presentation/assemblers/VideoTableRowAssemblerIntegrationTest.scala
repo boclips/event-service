@@ -109,7 +109,7 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
 
     videosWithRelatedData should have size 2
     videosWithRelatedData.head.video.id shouldBe VideoId("v1")
-    videosWithRelatedData.head.youTubeStats.map(_.viewCount) should contain (1111)
+    videosWithRelatedData.head.youTubeStats.map(_.viewCount) should contain(1111)
     videosWithRelatedData.head.playbacks should have size 2
     videosWithRelatedData.head.orders should have size 2
     videosWithRelatedData.head.channel.map(_.id) should contain(ChannelId("channel-1"))

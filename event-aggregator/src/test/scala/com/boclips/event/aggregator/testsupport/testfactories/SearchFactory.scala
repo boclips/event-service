@@ -3,12 +3,12 @@ package com.boclips.event.aggregator.testsupport.testfactories
 import java.time.Month.APRIL
 import java.time.ZonedDateTime
 
-import com.boclips.event.aggregator.domain.model.{search, _}
 import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.domain.model.okrs.DateRange
-import com.boclips.event.aggregator.domain.model.search.{CollectionImpression, CollectionSearchResultImpression, Query, QueryScore, Search, SearchImpression, SearchInteractions, SearchRequest, SearchResponse, VideoSearchResultImpression}
+import com.boclips.event.aggregator.domain.model.search._
 import com.boclips.event.aggregator.domain.model.users.UserIdentity
 import com.boclips.event.aggregator.domain.model.videos.VideoId
+import com.boclips.event.aggregator.domain.model.{search, _}
 import com.boclips.event.aggregator.domain.service.search.SearchResultPlayback
 import com.boclips.event.aggregator.testsupport.TestTimestamps.thisYearWhole
 

@@ -10,6 +10,7 @@ import com.boclips.event.infrastructure.order.{OrderDocument, OrderItemDocument,
 
 import scala.collection.JavaConverters._
 import scala.math.BigDecimal
+
 class DocumentToOrderConverterTest extends Test {
 
   it should "convert id" in {
@@ -67,18 +68,18 @@ class DocumentToOrderConverterTest extends Test {
 
   it should "convert requesting user" in {
     val document = OrderDocument.sample().requestingUser(OrderUserDocument.sample()
-        .firstName("requester")
-        .lastName("askingson")
-        .email("e@mail.com")
-        .legacyUserId("chevi-10")
-        .label(null).build()).build()
+      .firstName("requester")
+      .lastName("askingson")
+      .email("e@mail.com")
+      .legacyUserId("chevi-10")
+      .label(null).build()).build()
 
     val order = DocumentToOrderConverter.convert(document)
 
-    order.requestingUser.firstName should contain ("requester")
-    order.requestingUser.lastName should contain ("askingson")
-    order.requestingUser.email should contain ("e@mail.com")
-    order.requestingUser.legacyUserId should contain ("chevi-10")
+    order.requestingUser.firstName should contain("requester")
+    order.requestingUser.lastName should contain("askingson")
+    order.requestingUser.email should contain("e@mail.com")
+    order.requestingUser.legacyUserId should contain("chevi-10")
     order.requestingUser.label shouldBe None
   }
 
@@ -96,7 +97,7 @@ class DocumentToOrderConverterTest extends Test {
     order.requestingUser.lastName shouldBe None
     order.requestingUser.email shouldBe None
     order.requestingUser.legacyUserId shouldBe None
-    order.requestingUser.label should contain ("red")
+    order.requestingUser.label should contain("red")
   }
 
   it should "convert authorising user" in {
@@ -109,10 +110,10 @@ class DocumentToOrderConverterTest extends Test {
 
     val order = DocumentToOrderConverter.convert(document)
 
-    order.authorisingUser.get.firstName should contain ("requester")
-    order.authorisingUser.get.lastName should contain ("askingson")
-    order.authorisingUser.get.email should contain ("e@mail.com")
-    order.authorisingUser.get.legacyUserId should contain ("chevi-10")
+    order.authorisingUser.get.firstName should contain("requester")
+    order.authorisingUser.get.lastName should contain("askingson")
+    order.authorisingUser.get.email should contain("e@mail.com")
+    order.authorisingUser.get.legacyUserId should contain("chevi-10")
     order.authorisingUser.get.label shouldBe None
   }
 
@@ -121,7 +122,7 @@ class DocumentToOrderConverterTest extends Test {
 
     val order = DocumentToOrderConverter.convert(document)
 
-    order.isbnOrProductNumber should contain ("pn-1")
+    order.isbnOrProductNumber should contain("pn-1")
   }
 
   it should "convert is through platform" in {
@@ -136,7 +137,7 @@ class DocumentToOrderConverterTest extends Test {
     val document = OrderDocument.sample().currency("USD").build()
     val order = DocumentToOrderConverter.convert(document)
     Option(order.currency).isInstanceOf[Currency]
-    order.currency.map(_.getCurrencyCode) should contain ("USD")
+    order.currency.map(_.getCurrencyCode) should contain("USD")
   }
 
   it should "convert fxRate when exists" in {

@@ -5,7 +5,7 @@ import java.time.ZonedDateTime
 import com.boclips.event.aggregator.domain.service.session.SessionService
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchedEvent
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createUser}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 class SessionServiceTest extends Test {
   "separateEventsIntoSessions" should "put events in the same session when they are close in time" in {

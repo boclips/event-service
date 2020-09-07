@@ -1,8 +1,8 @@
 package com.boclips.event.aggregator.domain.service.search
 
 import com.boclips.event.aggregator.domain.model.okrs.TimePeriodDuration
-import com.boclips.event.aggregator.domain.model.search.{QueryScore, Search}
 import com.boclips.event.aggregator.domain.model.search
+import com.boclips.event.aggregator.domain.model.search.{QueryScore, Search}
 import org.apache.spark.rdd.RDD
 
 class QueryScorer(priorHits: Int, priorMisses: Int) {

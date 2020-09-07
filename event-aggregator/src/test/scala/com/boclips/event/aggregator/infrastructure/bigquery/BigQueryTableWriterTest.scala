@@ -3,15 +3,14 @@ package com.boclips.event.aggregator.infrastructure.bigquery
 import java.io.FileInputStream
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
-
-import com.boclips.event.aggregator.config.{BigQueryConfig, Env}
-import com.boclips.event.aggregator.presentation.formatters.schema.{NullableFieldMode, Schema, SchemaField, StringFieldType}
-import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.google.cloud.bigquery.{BigQueryOptions, Job, JobId, JobInfo, QueryJobConfiguration}
-import com.google.gson.JsonObject
 import java.util.UUID
 
+import com.boclips.event.aggregator.config.BigQueryConfig
+import com.boclips.event.aggregator.presentation.formatters.schema.{NullableFieldMode, Schema, SchemaField, StringFieldType}
+import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.google.auth.oauth2.ServiceAccountCredentials
+import com.google.cloud.bigquery._
+import com.google.gson.JsonObject
 import org.scalatest.BeforeAndAfterEach
 
 import scala.collection.JavaConverters._

@@ -4,7 +4,7 @@ import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
-import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory, UserFactory}
+import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory}
 import com.boclips.event.infrastructure.EventFields
 
 class SessionFormatterTest extends Test {

@@ -3,8 +3,7 @@ package com.boclips.event.aggregator.domain.service.user
 import java.time.ZonedDateTime
 
 import com.boclips.event.aggregator.domain.model.events.Event
-import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, DeviceId, ExternalUserId, ExternalUserIdentity, User, UserId}
-import com.boclips.event.aggregator.domain.service.user
+import com.boclips.event.aggregator.domain.model.users._
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createUser

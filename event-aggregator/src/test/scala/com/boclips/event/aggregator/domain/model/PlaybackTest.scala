@@ -5,8 +5,7 @@ import java.time.Duration
 import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, DeviceId}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createUser}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 class PlaybackTest extends Test {
 

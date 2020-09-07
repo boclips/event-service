@@ -7,7 +7,7 @@ import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.collections.CollectionId
 import com.boclips.event.aggregator.domain.model.events._
 import com.boclips.event.aggregator.domain.model.search.Query
-import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, DeviceId, ExternalUserId, ExternalUserIdentity, UserId}
+import com.boclips.event.aggregator.domain.model.users._
 import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
@@ -37,7 +37,7 @@ class DocumentToEventConverterTest extends Test {
 
     val event = DocumentToEventConverter convert document
 
-    event.userIdentity.id should contain (UserId("user"))
+    event.userIdentity.id should contain(UserId("user"))
   }
 
   it should "convert query" in {

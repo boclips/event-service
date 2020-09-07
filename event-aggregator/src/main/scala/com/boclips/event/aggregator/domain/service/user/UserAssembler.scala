@@ -31,7 +31,7 @@ object UserAssembler {
         case (AnonymousUserIdentity(Some(deviceId)), timestamp) => Some((AnonymousUserIdentity(Some(deviceId)), timestamp))
         case _ => None
       }
-      .reduceByKey((t1, t2) => if(t1.compareTo(t2) > 0) t2 else t1)
+      .reduceByKey((t1, t2) => if (t1.compareTo(t2) > 0) t2 else t1)
       .map {
         case (identity, timestamp) => anonymousUser(identity, timestamp)
       }

@@ -3,9 +3,9 @@ package com.boclips.event.aggregator.presentation.formatters
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.domain.model.collections.CollectionId
-import com.boclips.event.aggregator.domain.model.{search, _}
 import com.boclips.event.aggregator.domain.model.search.{CollectionImpression, SearchImpression}
 import com.boclips.event.aggregator.domain.model.videos.VideoId
+import com.boclips.event.aggregator.domain.model.{search, _}
 import com.boclips.event.aggregator.domain.service.search.SearchResultPlayback
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchInteractions, createSearchRequest, createSearchResponse}

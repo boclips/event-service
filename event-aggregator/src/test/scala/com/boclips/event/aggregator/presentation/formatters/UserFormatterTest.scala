@@ -157,16 +157,16 @@ class UserFormatterTest extends Test {
 
   it should "write Profile Organisation attributes when present" in {
     val json = UserFormatter formatRow createUser(profileSchool = Some(
-    createOrganisation(
-      name = "Academy",
-      typeName = SCHOOL_ORGANISATION,
-      tags = Set("tago"),
-      parent = None,
-      postcode = Some("32005"),
-      state = Some("SC"),
-      countryCode = Some("CA"),
-        )
+      createOrganisation(
+        name = "Academy",
+        typeName = SCHOOL_ORGANISATION,
+        tags = Set("tago"),
+        parent = None,
+        postcode = Some("32005"),
+        state = Some("SC"),
+        countryCode = Some("CA"),
       )
+    )
     )
     json.getString("profileOrganisationName") shouldBe "Academy"
     json.getString("profileOrganisationType") shouldBe "SCHOOL"

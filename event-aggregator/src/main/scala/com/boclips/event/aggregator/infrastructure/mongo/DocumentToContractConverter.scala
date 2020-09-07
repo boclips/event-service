@@ -2,8 +2,8 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.util.Currency
 
-import com.boclips.event.aggregator.domain.model.{contentpartners, _}
-import com.boclips.event.aggregator.domain.model.contentpartners.{Contract, ContractCosts, ContractDates, ContractId, ContractRestrictions, ContractRoyaltySplit}
+import com.boclips.event.aggregator.domain.model.contentpartners
+import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.infrastructure.contract.ContractDocument
 
 import scala.collection.JavaConverters._

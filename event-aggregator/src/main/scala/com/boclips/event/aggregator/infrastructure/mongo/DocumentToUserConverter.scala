@@ -65,7 +65,7 @@ object DocumentToUserConverter {
       deal = Deal(
         billing = isBilling,
         dealExpiresAt = dealExpiresAt,
-    )
+      )
     )
   }
 }

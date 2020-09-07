@@ -18,8 +18,8 @@ case class BoclipsUserIdentity(
 case class ExternalUserId(value: String)
 
 case class ExternalUserIdentity(
-                                boclipsId: UserId,
-                                externalId: ExternalUserId,
+                                 boclipsId: UserId,
+                                 externalId: ExternalUserId,
                                ) extends UserIdentity {
   override def id: Option[UserId] = Some(boclipsId)
 

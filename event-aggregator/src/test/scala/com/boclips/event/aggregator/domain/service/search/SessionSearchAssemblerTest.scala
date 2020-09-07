@@ -11,7 +11,6 @@ import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory._
 import com.boclips.event.aggregator.testsupport.testfactories.SessionFactory.createSession
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 
 //noinspection RedundantDefaultArgument
@@ -27,7 +26,7 @@ class SessionSearchAssemblerTest extends Test {
     val highLevelEvents = new SessionSearchAssembler() assembleSearchesInSession events
 
     highLevelEvents should have size 1
-    highLevelEvents.head.request.userIdentity.id should contain (UserId("user id"))
+    highLevelEvents.head.request.userIdentity.id should contain(UserId("user id"))
     highLevelEvents.head.request.timestamp shouldBe timestamp
     highLevelEvents.head.request.query shouldBe Query("the query")
   }

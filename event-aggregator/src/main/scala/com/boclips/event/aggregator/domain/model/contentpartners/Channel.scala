@@ -33,9 +33,11 @@ case class ChannelIngest(
                         )
 
 sealed trait DistributionMethod
+
 case object Streaming extends DistributionMethod {
   override def toString: String = "STREAM"
 }
+
 case object Download extends DistributionMethod {
   override def toString: String = "DOWNLOAD"
 }

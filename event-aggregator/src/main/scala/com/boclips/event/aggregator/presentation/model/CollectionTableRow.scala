@@ -5,7 +5,7 @@ import com.boclips.event.aggregator.domain.model.events.CollectionInteractedWith
 import com.boclips.event.aggregator.domain.model.search.CollectionSearchResultImpression
 
 case class CollectionTableRow(
-                                      collection: Collection,
-                                      impressions: List[CollectionSearchResultImpression],
-                                      interactions: List[CollectionInteractedWithEvent],
-                                    )
+                               collection: Collection,
+                               impressions: List[CollectionSearchResultImpression],
+                               interactions: List[CollectionInteractedWithEvent],
+                             )

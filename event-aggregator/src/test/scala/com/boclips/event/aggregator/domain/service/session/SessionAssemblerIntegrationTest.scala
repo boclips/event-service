@@ -3,7 +3,7 @@ package com.boclips.event.aggregator.domain.service.session
 import com.boclips.event.aggregator.domain.model.users.{DeviceId, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.{createVideoSegmentPlayedEvent, createVideosSearchedEvent}
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity, createUser}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity}
 
 class SessionAssemblerIntegrationTest extends IntegrationTest {
 
@@ -20,10 +20,10 @@ class SessionAssemblerIntegrationTest extends IntegrationTest {
 
     val anonymousUserSession :: loggedInUserSession :: _ = sessions
 
-    anonymousUserSession.user.deviceId should contain (DeviceId("device-1"))
+    anonymousUserSession.user.deviceId should contain(DeviceId("device-1"))
     anonymousUserSession.events should have length 1
 
-    loggedInUserSession.user.id should contain (UserId("user-1"))
+    loggedInUserSession.user.id should contain(UserId("user-1"))
     loggedInUserSession.events should have length 2
   }
 

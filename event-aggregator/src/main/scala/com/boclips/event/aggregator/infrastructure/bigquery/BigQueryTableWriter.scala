@@ -1,6 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.bigquery
 
-import com.boclips.event.aggregator.config.{BigQueryConfig, Env}
+import com.boclips.event.aggregator.config.BigQueryConfig
 import com.boclips.event.aggregator.presentation.TableWriter
 import com.boclips.event.aggregator.presentation.formatters.schema.Schema
 import com.google.cloud.hadoop.io.bigquery.output.{BigQueryOutputConfiguration, IndirectBigQueryOutputFormat}

@@ -8,7 +8,6 @@ import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.TestTimestamps.{oneDayThis, thisYearIn, thisYearWhole}
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchedEvent
-import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, UserFactory}
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createUser}
 import org.apache.spark.rdd.RDD
 
