@@ -39,7 +39,8 @@ import scala.reflect.runtime.universe.TypeTag
 
 object EventAggregatorApp {
   def main(args: Array[String]): Unit = {
-    val sparkConfig: SparkConfig = SparkConfig()
+    val neo4jConfig = Neo4jConfig.fromEnv
+    val sparkConfig: SparkConfig = SparkConfig(neo4jConfig)
     implicit val session: SparkSession = sparkConfig.session
     val writer = new BigQueryTableWriter(BigQueryConfig())
     val mongoSparkProvider = new SparkMongoClient(MongoConfig())
@@ -47,7 +48,7 @@ object EventAggregatorApp {
     new EventAggregatorApp(
       writer,
       mongoSparkProvider,
-      EventAggregatorConfig(neo4jEnabled = true, youTubeConfig = Some(youTubeConfig))
+      EventAggregatorConfig(neo4jConfig, youTube = Some(youTubeConfig))
     ).run()
   }
 }
@@ -90,7 +91,7 @@ class EventAggregatorApp(
       videoInteractions,
       youtubeStatsByVideoPlaybackId
     )
-    if (configuration.neo4jEnabled)
+    if (configuration.neo4j.isDefined)
       writeVideosToGraph(videos, channels)
 
     writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
@@ -153,7 +154,7 @@ class EventAggregatorApp(
   }
 
   private def getYoutubeVideoStats: RDD[YouTubeVideoStats] =
-    configuration.youTubeConfig.map { youTubeConfig =>
+    configuration.youTube.map { youTubeConfig =>
       val youtubeVideoIdsByPlaybackId: RDD[(String, VideoId)] =
         videos
           .filter(_.playbackProvider == "YOUTUBE")

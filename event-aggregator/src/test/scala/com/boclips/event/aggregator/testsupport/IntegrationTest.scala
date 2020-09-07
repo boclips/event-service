@@ -46,7 +46,7 @@ trait IntegrationTest extends Test {
     var sparkSession: SparkSession = null
 
     try {
-      sparkSession = new SparkConfig(4).session
+      sparkSession = new SparkConfig(None, 4).session
 
       testMethod(sparkSession, mongo)
     } finally {

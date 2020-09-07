@@ -2,18 +2,24 @@ package com.boclips.event.aggregator.config
 
 import org.apache.spark.sql.SparkSession
 
-class SparkConfig(private val numberLocalExecutors: Int) {
+case class SparkConfig(
+                        neo4jConfig: Option[Neo4jConfig],
+                        numberLocalExecutors: Int = 5
+                      ) {
   lazy val session: SparkSession = {
-    SparkSession.builder()
+
+    var builder = SparkSession.builder()
       .master(s"local[$numberLocalExecutors]")
-      .config("spark.neo4j.url", Env("NEO4J_BOLT_URI"))
-      .config("spark.neo4j.user", Env("NEO4J_USERNAME"))
-      .config("spark.neo4j.password", Env("NEO4J_PASSWORD"))
+
+    builder = neo4jConfig.map(config =>
+      builder
+        .config("spark.neo4j.url", config.boltUri)
+        .config("spark.neo4j.user", config.username)
+        .config("spark.neo4j.password", config.password)
+    ).getOrElse(builder)
+
+    builder
       .appName("EventAggregator")
       .getOrCreate()
   }
-}
-
-object SparkConfig {
-  def apply(): SparkConfig = new SparkConfig(numberLocalExecutors = 5)
 }

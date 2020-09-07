@@ -17,10 +17,14 @@ case class Neo4jConfig(
 }
 
 object Neo4jConfig {
-  def fromEnv: Neo4jConfig =
-    Neo4jConfig(
-      username = Env("NEO4J_USERNAME"),
-      password = Env("NEO4J_PASSWORD"),
-      boltUri = Env("NEO4J_BOLT_URI")
-    )
+  def fromEnv: Option[Neo4jConfig] =
+    try {
+      Some(Neo4jConfig(
+        username = Env("NEO4J_USERNAME"),
+        password = Env("NEO4J_PASSWORD"),
+        boltUri = Env("NEO4J_BOLT_URI")
+      ))
+    } catch {
+      case _: IllegalStateException => None
+    }
 }
