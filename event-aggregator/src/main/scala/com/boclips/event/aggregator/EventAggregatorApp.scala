@@ -28,6 +28,7 @@ import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, Mo
 import com.boclips.event.aggregator.infrastructure.youtube.YouTubeService
 import com.boclips.event.aggregator.presentation.assemblers.{CollectionTableRowAssembler, UserTableRowAssembler, VideoTableRowAssembler}
 import com.boclips.event.aggregator.presentation.formatters.{ChannelFormatter, CollectionFormatter, ContractFormatter, DataVersionFormatter, VideoFormatter}
+import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableNames, TableWriter}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
@@ -92,7 +93,7 @@ class EventAggregatorApp(
       youtubeStatsByVideoPlaybackId
     )
     if (configuration.neo4j.isDefined)
-      writeVideosToGraph(videos, channels)
+      writeToGraph(videosWithRelatedData)
 
     writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
 
@@ -169,44 +170,90 @@ class EventAggregatorApp(
         })
     }.getOrElse(session.sparkContext.parallelize(List()))
 
-  private def writeVideosToGraph(videos: RDD[Video], channels: RDD[Channel]): Unit = {
-    val videoRow: RDD[Row] = videos.map(video =>
-      Row(video.id.value, video.channelId.value)
+  private def writeToGraph(rows: RDD[VideoTableRow]): Unit = {
+    val videoRows: RDD[Row] = rows.map(row =>
+      Row(
+        row.video.id.value,
+        row.video.title,
+        row.channel.map(_.id.value).orNull,
+        row.channel.map(_.name).orNull
+      )
     )
-    val videoStructType: StructType = StructType(List(
+    val structType = StructType(List(
       StructField("videoId", StringType, nullable = false),
-      StructField("channelId", StringType)
+      StructField("videoTitle", StringType, nullable = false),
+      StructField("channelId", StringType),
+      StructField("channelName", StringType),
     ))
-    val videoFrame = session.createDataFrame(
-      videoRow,
-      videoStructType
-    )
-
-    val channelRow: RDD[Row] = channels.map(channel =>
-      Row(channel.id.value, channel.id.value)
-    )
-    val channelStructType: StructType = StructType(List(
-      StructField("channelId", StringType, nullable = false)
-    ))
-    val channelFrame = session.createDataFrame(
-      channelRow,
-      channelStructType
-    )
-
-    val joinedFrame = videoFrame.join(
-      channelFrame,
-      List("channelId")
-    )
-
+    val videoDataFrame = session.createDataFrame(videoRows, structType)
     Neo4jDataFrame.mergeEdgeList(
       session.sparkContext,
-      joinedFrame,
-      source = ("Video", Seq("videoId")),
+      videoDataFrame.where("channelId IS NOT NULL"),
+      source = ("Video", Seq("videoId", "videoTitle")),
       relationship = ("BELONGS_TO_CHANNEL", Nil),
-      target = ("Channel", Seq("channelId")),
+      target = ("Channel", Seq("channelId", "channelName")),
       renamedColumns = Map(
         ("videoId", "uuid"),
-        ("channelId", "uuid")
+        ("videoTitle", "title"),
+        ("channelId", "uuid"),
+        ("channelName", "name"),
+      )
+    )
+
+    val topicRows = rows.flatMap(row =>
+      row.video.topics.map(topic => {
+        val parent = topic.parent
+        val grandparent = parent.flatMap(_.parent)
+        Row(
+          row.video.id.value,
+          topic.name,
+          parent.map(_.name).orNull,
+          grandparent.map(_.name).orNull,
+        )
+      })
+    )
+    val topicStructType = StructType(List(
+      StructField("videoId", StringType, nullable = false),
+      StructField("topic", StringType),
+      StructField("parent", StringType),
+      StructField("grandparent", StringType)
+    ))
+    val topicDataFrame = session.createDataFrame(topicRows, topicStructType)
+    Neo4jDataFrame.mergeEdgeList(
+      session.sparkContext,
+      topicDataFrame.where("topic IS NOT NULL"),
+      source = ("Video", Seq("videoId")),
+      relationship = ("HAS_TOPIC", Nil),
+      target = ("Topic", Seq("topic")),
+      renamedColumns = Map(
+        ("videoId", "uuid"),
+        ("topic", "name")
+      )
+    )
+    Neo4jDataFrame.mergeEdgeList(
+      session.sparkContext,
+      topicDataFrame.where(
+        "topic IS NOT NULL AND parent IS NOT NULL"
+      ),
+      source = ("Topic", Seq("topic")),
+      relationship = ("HAS_PARENT_TOPIC", Nil),
+      target = ("Topic", Seq("parent")),
+      renamedColumns = Map(
+        ("topic", "name"),
+        ("parent", "name")
+      )
+    )
+    Neo4jDataFrame.mergeEdgeList(
+      session.sparkContext,
+      topicDataFrame.where(
+        "parent IS NOT NULL AND grandparent IS NOT NULL"
+      ),
+      source = ("Topic", Seq("parent")),
+      relationship = ("HAS_PARENT_TOPIC", Nil),
+      target = ("Topic", Seq("grandparent")),
+      renamedColumns = Map(
+        ("parent", "name"),
+        ("grandparent", "name")
       )
     )
   }
