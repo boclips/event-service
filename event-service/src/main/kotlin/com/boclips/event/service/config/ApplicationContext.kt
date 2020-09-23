@@ -1,19 +1,7 @@
 package com.boclips.event.service.config
 
-import com.boclips.event.service.application.PersistEvent
-import com.boclips.event.service.application.UpdateChannel
-import com.boclips.event.service.application.UpdateCollection
-import com.boclips.event.service.application.UpdateContract
-import com.boclips.event.service.application.UpdateOrder
-import com.boclips.event.service.application.UpdateUser
-import com.boclips.event.service.application.UpdateVideo
-import com.boclips.event.service.domain.ChannelRepository
-import com.boclips.event.service.domain.CollectionRepository
-import com.boclips.event.service.domain.ContractRepository
-import com.boclips.event.service.domain.EventRepository
-import com.boclips.event.service.domain.OrderRepository
-import com.boclips.event.service.domain.UserRepository
-import com.boclips.event.service.domain.VideoRepository
+import com.boclips.event.service.application.*
+import com.boclips.event.service.domain.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -25,7 +13,8 @@ class ApplicationContext(
     private val userRepository: UserRepository,
     private val orderRepository: OrderRepository,
     private val channelRepository: ChannelRepository,
-    private val contractRepository: ContractRepository
+    private val contractRepository: ContractRepository,
+    private val contractLegalRestrictionsRepository: ContractLegalRestrictionsRepository
 ) {
 
     @Bean
@@ -60,5 +49,9 @@ class ApplicationContext(
     @Bean
     fun updateOrder(): UpdateOrder {
         return UpdateOrder(orderRepository)
+    }
+    @Bean
+    fun updateContractLegalRestriction(): UpdatedContractLegalRestriction {
+        return UpdatedContractLegalRestriction(contractLegalRestrictionsRepository)
     }
 }
