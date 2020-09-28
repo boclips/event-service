@@ -61,4 +61,25 @@ object ContractFactory {
         recoupable = None
       )
     )
+
+  def createContractRestrictions(
+                                 clientFacing: Option[List[String]] = None,
+                                 territory: Option[String] = None,
+                                 licensing: Option[String] = None,
+                                 editing: Option[String] = None,
+                                 marketing: Option[String] = None,
+                                 companies: Option[String] = None,
+                                 payout: Option[String] = None,
+                                 other: Option[String] = None,
+                               ): ContractRestrictions =
+    ContractRestrictions(
+      clientFacing = clientFacing,
+      territory = territory,
+      licensing = licensing,
+      editing = editing,
+      marketing = marketing,
+      companies = companies,
+      payout = payout,
+      other = other
+    )
 }
