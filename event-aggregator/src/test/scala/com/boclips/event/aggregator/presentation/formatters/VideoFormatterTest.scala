@@ -11,7 +11,7 @@ import com.boclips.event.aggregator.presentation.model
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
 import com.boclips.event.aggregator.testsupport.testfactories.CollectionFactory.createCollection
-import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.createFullContract
+import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.{createContractRestriction, createFullContract, createFullTableRowContract}
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem, createOrderUser}
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createVideoSearchResultImpression}
@@ -349,7 +349,7 @@ class VideoFormatterTest extends Test {
 
   it should "write nested contract" in {
     val video = createVideo()
-    val contract = createFullContract(
+    val contract = createFullTableRowContract(createFullContract(
       id = "my-contract-id",
       channelName = "my channel name",
       contractDocumentLink = "http://mysite.com",
@@ -383,7 +383,9 @@ class VideoFormatterTest extends Test {
         technicalFee = Some(88),
         recoupable = Some(true)
       )
-    )
+    ),
+    List(createContractRestriction(id="client-facing", text = "madre mia")
+    ))
 
     val json = VideoFormatter formatRow model.VideoTableRow(
       video = video,
@@ -406,7 +408,7 @@ class VideoFormatterTest extends Test {
     contractJson.getString("minimumPriceDescription") shouldBe "minimum price"
     contractJson.getString("remittanceCurrency") shouldBe "USD"
 
-    contractJson.getStringList("clientFacingRestrictions") should contain("client-facing")
+    contractJson.getStringList("clientFacingRestrictions") should contain("madre mia")
     contractJson.getString("territoryRestrictions") shouldBe "territory"
     contractJson.getString("licensingRestrictions") shouldBe "licensing"
     contractJson.getString("editingRestrictions") shouldBe "editing"

@@ -2,8 +2,10 @@ package com.boclips.event.aggregator.testsupport.testfactories
 
 import java.util.Currency
 
+import com.boclips.event.aggregator.domain.model.ContractLegalRestriction
 import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
+import com.boclips.event.aggregator.presentation.model.ContractTableRow
 
 object ContractFactory {
   def createFullContract(
@@ -63,15 +65,15 @@ object ContractFactory {
     )
 
   def createContractRestrictions(
-                                 clientFacing: Option[List[String]] = None,
-                                 territory: Option[String] = None,
-                                 licensing: Option[String] = None,
-                                 editing: Option[String] = None,
-                                 marketing: Option[String] = None,
-                                 companies: Option[String] = None,
-                                 payout: Option[String] = None,
-                                 other: Option[String] = None,
-                               ): ContractRestrictions =
+                                  clientFacing: Option[List[String]] = None,
+                                  territory: Option[String] = None,
+                                  licensing: Option[String] = None,
+                                  editing: Option[String] = None,
+                                  marketing: Option[String] = None,
+                                  companies: Option[String] = None,
+                                  payout: Option[String] = None,
+                                  other: Option[String] = None,
+                                ): ContractRestrictions =
     ContractRestrictions(
       clientFacing = clientFacing,
       territory = territory,
@@ -81,5 +83,24 @@ object ContractFactory {
       companies = companies,
       payout = payout,
       other = other
+    )
+
+  def createContractRestriction(
+                                 id: String = "id-998",
+                                 text: String = "rules allowed"
+                               ): ContractLegalRestriction =
+    ContractLegalRestriction(
+      id = id,
+      text = text
+    )
+
+  def createFullTableRowContract(
+                                  contract: Contract = createFullContract(),
+                                  clientFacingRestrictions: List[ContractLegalRestriction] = List(createContractRestriction())
+
+  ) : ContractTableRow =
+    ContractTableRow(
+      contract = contract,
+      clientFacingRestrictions = clientFacingRestrictions
     )
 }

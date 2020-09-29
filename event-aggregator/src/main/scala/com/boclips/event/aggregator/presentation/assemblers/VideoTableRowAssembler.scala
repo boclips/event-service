@@ -8,7 +8,7 @@ import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.VideoSearchResultImpression
 import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.model.videos.{Video, VideoId, YouTubeVideoStats}
-import com.boclips.event.aggregator.presentation.model.VideoTableRow
+import com.boclips.event.aggregator.presentation.model.{ContractTableRow, VideoTableRow}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 
@@ -20,7 +20,7 @@ object VideoTableRowAssembler {
                                      users: RDD[User],
                                      orders: RDD[Order],
                                      channels: RDD[Channel],
-                                     contracts: RDD[Contract],
+                                     contracts: RDD[ContractTableRow],
                                      collections: RDD[Collection],
                                      impressions: RDD[VideoSearchResultImpression],
                                      interactions: RDD[VideoInteractedWithEvent],
@@ -54,9 +54,9 @@ object VideoTableRowAssembler {
           case _ => Nil
         }
       }
-      .join(contracts.keyBy(_.id.value))
+      .join(contracts.keyBy(_.contract.id.value))
       .values
-      .map { case ((videoId: VideoId, _), contract: Contract) => (videoId, contract) }
+      .map { case ((videoId: VideoId, _), contract: ContractTableRow) => (videoId, contract) }
 
     val collectionListsByVideoId: RDD[(VideoId, Iterable[Collection])] = collections
       .flatMap(collection => collection.videoIds.map(videoId => (videoId, collection)))

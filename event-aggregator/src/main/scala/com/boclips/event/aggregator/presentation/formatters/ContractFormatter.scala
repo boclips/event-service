@@ -1,28 +1,29 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import com.boclips.event.aggregator.domain.model.contentpartners.Contract
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
+import com.boclips.event.aggregator.presentation.model.ContractTableRow
 import com.google.gson.{JsonArray, JsonObject}
 
-object ContractFormatter extends SingleRowFormatter[Contract] {
-  override def writeRow(obj: Contract, json: JsonObject): Unit = {
-    json.addProperty("id", obj.id.value)
-    json.addProperty("name", obj.name)
-    json.addProperty("contractDocumentLink", obj.contractDocumentLink.orNull)
-    json.addProperty("contractIsRolling", obj.contractIsRolling.map(Boolean.box).orNull)
-    json.addDateProperty("contractStartDate", obj.contractDates.flatMap(_.start).orNull)
-    json.addDateProperty("contractEndDate", obj.contractDates.flatMap(_.end).orNull)
-    json.addProperty("daysBeforeTerminationWarning", obj.daysBeforeTerminationWarning.map(Int.box).orNull)
-    json.addProperty("yearsForMaximumLicense", obj.yearsForMaximumLicense.map(Int.box).orNull)
-    json.addProperty("daysForSellOffPeriod", obj.daysForSellOffPeriod.map(Int.box).orNull)
-    json.addProperty("downloadRoyaltySplit", obj.royaltySplit.flatMap(_.download).map(Float.box).orNull)
-    json.addProperty("streamingRoyaltySplit", obj.royaltySplit.flatMap(_.streaming).map(Float.box).orNull)
-    json.addProperty("minimumPriceDescription", obj.minimumPriceDescription.orNull)
-    json.addProperty("remittanceCurrency", obj.remittanceCurrency.map(_.toString).orNull)
+object ContractFormatter extends SingleRowFormatter[ContractTableRow] {
+  override def writeRow(obj: ContractTableRow, json: JsonObject): Unit = {
+    val contract = obj.contract
+    json.addProperty("id", contract.id.value)
+    json.addProperty("name", contract.name)
+    json.addProperty("contractDocumentLink", contract.contractDocumentLink.orNull)
+    json.addProperty("contractIsRolling", contract.contractIsRolling.map(Boolean.box).orNull)
+    json.addDateProperty("contractStartDate", contract.contractDates.flatMap(_.start).orNull)
+    json.addDateProperty("contractEndDate", contract.contractDates.flatMap(_.end).orNull)
+    json.addProperty("daysBeforeTerminationWarning", contract.daysBeforeTerminationWarning.map(Int.box).orNull)
+    json.addProperty("yearsForMaximumLicense", contract.yearsForMaximumLicense.map(Int.box).orNull)
+    json.addProperty("daysForSellOffPeriod", contract.daysForSellOffPeriod.map(Int.box).orNull)
+    json.addProperty("downloadRoyaltySplit", contract.royaltySplit.flatMap(_.download).map(Float.box).orNull)
+    json.addProperty("streamingRoyaltySplit", contract.royaltySplit.flatMap(_.streaming).map(Float.box).orNull)
+    json.addProperty("minimumPriceDescription", contract.minimumPriceDescription.orNull)
+    json.addProperty("remittanceCurrency", contract.remittanceCurrency.map(_.toString).orNull)
 
-    obj.restrictions match {
+    contract.restrictions match {
       case Some(restrictions) =>
-        json.addStringArrayProperty("clientFacingRestrictions", restrictions.clientFacing.orNull)
+        json.addStringArrayProperty("clientFacingRestrictions", obj.clientFacingRestrictions.map(_.text))
         json.addProperty("territoryRestrictions", restrictions.territory.orNull)
         json.addProperty("licensingRestrictions", restrictions.licensing.orNull)
         json.addProperty("editingRestrictions", restrictions.editing.orNull)
@@ -33,10 +34,10 @@ object ContractFormatter extends SingleRowFormatter[Contract] {
       case None =>
     }
 
-    val costs = obj.costs
+    val costs = contract.costs
 
     val minimumGuarantees = new JsonArray()
-    obj.costs.minimumGuarantee.zipWithIndex.foreach { case (mg: BigDecimal, index: Int) =>
+    contract.costs.minimumGuarantee.zipWithIndex.foreach { case (mg: BigDecimal, index: Int) =>
       val thisJson = new JsonObject()
       thisJson.addProperty("amount", mg)
       thisJson.addProperty("contractYear", index + 1)

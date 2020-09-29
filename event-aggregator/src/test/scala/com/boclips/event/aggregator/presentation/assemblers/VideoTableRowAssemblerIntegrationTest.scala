@@ -6,6 +6,7 @@ import com.boclips.event.aggregator.domain.model.orders.OrderId
 import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.model.videos.{VideoId, YouTubeVideoStats}
 import com.boclips.event.aggregator.presentation.formatters.schema.base.ExampleInstance
+import com.boclips.event.aggregator.presentation.model.ContractTableRow
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
 import com.boclips.event.aggregator.testsupport.testfactories.CollectionFactory.createCollection
@@ -52,8 +53,8 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
     )
 
     val contracts = rdd(
-      createFullContract(id = "contract-1"),
-      createFullContract(id = "unused-contract")
+      ContractTableRow(createFullContract(id = "contract-1"),clientFacingRestrictions = Nil),
+      ContractTableRow(createFullContract(id = "unused-contract"),clientFacingRestrictions = Nil)
     )
 
     val collections = rdd(
@@ -113,7 +114,7 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
     videosWithRelatedData.head.playbacks should have size 2
     videosWithRelatedData.head.orders should have size 2
     videosWithRelatedData.head.channel.map(_.id) should contain(ChannelId("channel-1"))
-    videosWithRelatedData.head.contract.map(_.id) should contain(ContractId("contract-1"))
+    videosWithRelatedData.head.contract.map(_.contract.id) should contain(ContractId("contract-1"))
     videosWithRelatedData.head.interactions should have size 2
     videosWithRelatedData.head.collections.map(_.id) shouldBe List(
       CollectionId("collection-1"),

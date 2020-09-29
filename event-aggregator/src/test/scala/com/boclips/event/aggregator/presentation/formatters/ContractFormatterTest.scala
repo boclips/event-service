@@ -5,7 +5,7 @@ import java.util.Currency
 
 import com.boclips.event.aggregator.domain.model.contentpartners.{ContractCosts, ContractDates, ContractRestrictions, ContractRoyaltySplit}
 import com.boclips.event.aggregator.testsupport.Test
-import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.{createEmptyContract, createFullContract}
+import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.{createContractRestriction, createEmptyContract, createFullContract, createFullTableRowContract}
 import com.google.gson.JsonNull
 
 import scala.collection.JavaConverters._
@@ -47,8 +47,10 @@ class ContractFormatterTest extends Test {
         recoupable = Some(true)
       )
     )
+    val contractWithRestrictions = createFullTableRowContract(contract,
+      List(createContractRestriction(id = "client-facing", text = "see it, say it, sorted")))
 
-    val json = ContractFormatter formatRow contract
+    val json = ContractFormatter formatRow contractWithRestrictions
 
     json.getString("id") shouldBe "my-contract-id"
     json.getString("name") shouldBe "my channel name"
@@ -65,7 +67,7 @@ class ContractFormatterTest extends Test {
     json.getString("minimumPriceDescription") shouldBe "minimum price"
     json.getString("remittanceCurrency") shouldBe "USD"
 
-    json.getStringList("clientFacingRestrictions") should contain("client-facing")
+    json.getStringList("clientFacingRestrictions") should contain("see it, say it, sorted")
     json.getString("territoryRestrictions") shouldBe "territory"
     json.getString("licensingRestrictions") shouldBe "licensing"
     json.getString("editingRestrictions") shouldBe "editing"
@@ -89,7 +91,9 @@ class ContractFormatterTest extends Test {
       channelName = "my channel name"
     )
 
-    val json = ContractFormatter formatRow contract
+    val contractWithRestrictions = createFullTableRowContract(contract, Nil)
+
+    val json = ContractFormatter formatRow contractWithRestrictions
 
     json.getString("id") shouldBe "my-contract-id"
     json.getString("name") shouldBe "my channel name"

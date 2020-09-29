@@ -3,6 +3,7 @@ package com.boclips.event.aggregator
 import java.time.{ZoneOffset, ZonedDateTime}
 
 import com.boclips.event.aggregator.config._
+import com.boclips.event.aggregator.domain.model.ContractLegalRestriction
 import com.boclips.event.aggregator.domain.model.collections.Collection
 import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent, PlatformInteractedWithEvent}
@@ -24,11 +25,11 @@ import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembl
 import com.boclips.event.aggregator.domain.service.user.UserAssembler
 import com.boclips.event.aggregator.domain.service.video.{VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
-import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
+import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLegalRestrictionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
 import com.boclips.event.aggregator.infrastructure.youtube.YouTubeService
-import com.boclips.event.aggregator.presentation.assemblers.{CollectionTableRowAssembler, UserTableRowAssembler, VideoTableRowAssembler}
+import com.boclips.event.aggregator.presentation.assemblers.{CollectionTableRowAssembler, ContractTableRowAssembler, UserTableRowAssembler, VideoTableRowAssembler}
 import com.boclips.event.aggregator.presentation.formatters.{ChannelFormatter, CollectionFormatter, ContractFormatter, DataVersionFormatter, VideoFormatter}
-import com.boclips.event.aggregator.presentation.model.VideoTableRow
+import com.boclips.event.aggregator.presentation.model.{ContractTableRow, VideoTableRow}
 import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableNames, TableWriter}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
@@ -69,24 +70,27 @@ class EventAggregatorApp(
   val channels: RDD[Channel] = new MongoChannelLoader(mongoClient).load()
   val contracts: RDD[Contract] = new MongoContractLoader(mongoClient).load()
   val orders: RDD[Order] = new MongoOrderLoader(mongoClient).load()
+  val contractLegalRestrictions: RDD[ContractLegalRestriction] = new MongoContractLegalRestrictionLoader(mongoClient).load()
 
   val sessions: RDD[Session] = new SessionAssembler(events, "all data").assembleSessions()
   val playbacks: RDD[Playback] = new PlaybackAssembler(sessions, videos).assemblePlaybacks()
   val searches: RDD[Search] = new SearchAssembler(sessions).assembleSearches()
   val storageCharges: RDD[VideoStorageCharge] = new StorageChargesAssembler(videos).assembleStorageCharges
 
+
   def run(): Unit = {
     logProcessingStart(s"Updating videos")
     val youtubeStatsByVideoPlaybackId: RDD[YouTubeVideoStats] = getYoutubeVideoStats
     val impressions = VideoSearchResultImpressionAssembler(searches)
     val videoInteractions = VideoInteractionAssembler(events)
+    val contractsWithRelatedData = ContractTableRowAssembler.assembleContractsWithRelatedData(contracts, contractLegalRestrictions)
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
       playbacks,
       users,
       orders,
       channels,
-      contracts,
+      contractsWithRelatedData,
       collections,
       impressions,
       videoInteractions,
@@ -98,7 +102,7 @@ class EventAggregatorApp(
     writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
 
     logProcessingStart(s"Updating contracts")
-    writeTable(contracts, "contracts")(ContractFormatter, implicitly)
+    writeTable(contractsWithRelatedData, "contracts")(ContractFormatter, implicitly)
 
     logProcessingStart(s"Updating channels")
     writeTable(channels, "channels")(ChannelFormatter, implicitly)
