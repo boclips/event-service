@@ -96,8 +96,9 @@ class EventAggregatorApp(
       videoInteractions,
       youtubeStatsByVideoPlaybackId
     )
-    if (configuration.neo4j.isDefined)
-      writeToGraph(videosWithRelatedData)
+    // commented out to unblock pipeline
+    //    if (configuration.neo4j.isDefined)
+    //      writeToGraph(videosWithRelatedData)
 
     writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
 
