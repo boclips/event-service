@@ -14,7 +14,8 @@ class ApplicationContext(
     private val orderRepository: OrderRepository,
     private val channelRepository: ChannelRepository,
     private val contractRepository: ContractRepository,
-    private val contractLegalRestrictionsRepository: ContractLegalRestrictionsRepository
+    private val contractLegalRestrictionsRepository: ContractLegalRestrictionsRepository,
+    private val contentPackageRepository: ContentPackageRepository
 ) {
 
     @Bean
@@ -30,6 +31,11 @@ class ApplicationContext(
     @Bean
     fun updateUser(): UpdateUser {
         return UpdateUser(userRepository)
+    }
+
+    @Bean
+    fun updateContentPackage(): UpdateContentPackage {
+        return UpdateContentPackage(contentPackageRepository)
     }
 
     @Bean

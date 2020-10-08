@@ -36,6 +36,10 @@ class InfrastructureContext(val mongoProperties: MongoProperties) {
         MongoContractRepository(mongoClient())
 
     @Bean
+    fun contentPackageRepository(): ContentPackageRepository =
+        MongoContentPackageRepository(mongoClient())
+
+    @Bean
     fun collectionRepository(): CollectionRepository {
         return MongoCollectionRepository(mongoClient())
     }
