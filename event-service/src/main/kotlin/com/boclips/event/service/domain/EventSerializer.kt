@@ -110,6 +110,7 @@ object EventSerializer {
             EXTERNAL_USER_ID to event.externalUserId,
             DEVICE_ID to event.deviceId,
             TIMESTAMP to Date.from(event.timestamp.toInstant()),
+            SEARCH_QUERY to event.query,
             URL to event.url
         )
     }

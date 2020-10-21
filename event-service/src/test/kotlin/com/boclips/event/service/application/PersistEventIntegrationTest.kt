@@ -37,11 +37,12 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun videoSegmentPlayed() {
-        val event = createVideoSegmentPlayed(videoId = "123")
+        val event = createVideoSegmentPlayed(videoId = "123", query = "cats")
 
         eventBus.publish(event)
 
         assertThat(document().toJson()).contains("123")
+        assertThat(document().toJson()).contains("cats")
     }
 
     @Test

@@ -100,6 +100,7 @@ object EventFactory {
         segmentStartSeconds: Long = 5,
         videoId: String = "123",
         videoIndex: Int = 1,
+        query: String? = null,
         user: User = createUser()
     ): VideoSegmentPlayed {
         return VideoSegmentPlayed
@@ -108,6 +109,7 @@ object EventFactory {
             .segmentStartSeconds(segmentStartSeconds)
             .videoId(videoId)
             .videoIndex(videoIndex)
+            .query(query)
             .userId(user.id)
             .build()
     }
