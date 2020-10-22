@@ -97,7 +97,8 @@ class EventAggregatorApp(
       youtubeStatsByVideoPlaybackId
     )
     if (configuration.neo4j.isDefined)
-      writeToGraph(videosWithRelatedData)
+      logProcessingStart(s"Writing to Neo4j currently turned off.")
+      // writeToGraph(videosWithRelatedData)
 
     writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
 
