@@ -63,7 +63,7 @@ class EventAggregatorApp(
   val log: Logger = LoggerFactory.getLogger(classOf[EventAggregatorApp])
 
   val userLoader = new MongoUserLoader(mongoClient)
-  val events: RDD[Event] = new MongoEventLoader(mongoClient, userLoader.loadBoclipsEmployees).load
+  val events: RDD[Event] = new MongoEventLoader(mongoClient, userLoader.loadAllUsers, userLoader.loadBoclipsEmployees).load
   val users: RDD[User] = UserAssembler(userLoader.loadAllUsers, events)
   val videos: RDD[Video] = new MongoVideoLoader(mongoClient).load()
   val collections: RDD[Collection] = new MongoCollectionLoader(mongoClient).load()

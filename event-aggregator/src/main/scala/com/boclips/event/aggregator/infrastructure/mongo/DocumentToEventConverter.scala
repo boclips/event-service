@@ -28,10 +28,13 @@ object DocumentToEventConverter {
         .map(ExternalUserId)
       val deviceIdOption = Option(event.getString(EventFields.DEVICE_ID))
         .map(DeviceId)
-      (userIdOption, externalUserIdOption, deviceIdOption) match {
-        case (Some(userId), None, _) => BoclipsUserIdentity(userId)
-        case (Some(userId), Some(externalUserId), _) => ExternalUserIdentity(userId, externalUserId)
-        case (_, _, deviceId) => AnonymousUserIdentity(deviceId)
+      val overrideUserIdOption = event.getBoolean("overrideUserId", false)
+
+      (userIdOption, externalUserIdOption, deviceIdOption, overrideUserIdOption) match {
+        case (Some(userId), Some(externalUserId), _, true) => BoclipsUserIdentity(boclipsId = UserId(externalUserId.value))
+        case (Some(userId), None, _, _) => BoclipsUserIdentity(userId)
+        case (Some(userId), Some(externalUserId), _, _) => ExternalUserIdentity(userId, externalUserId)
+        case (_, _, deviceId, _) => AnonymousUserIdentity(deviceId)
       }
     }
   }
