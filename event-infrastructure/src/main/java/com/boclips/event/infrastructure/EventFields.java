@@ -33,6 +33,8 @@ public class EventFields {
     public final static String USER_ID = "userId";
     public final static String EXTERNAL_USER_ID = "externalUserId";
     public final static String DEVICE_ID = "deviceId";
+    public final static String EXTERNAL_USER_EXISTS = "externalUserExists";
+
 
     public final static String ORGANISATION_ID = "organisationId";
     public final static String ORGANISATION_TYPE = "organisationType";

@@ -12,6 +12,7 @@ import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchEventDocument
+import com.boclips.event.infrastructure.EventFields
 
 class DocumentToEventConverterTest extends Test {
 
@@ -125,6 +126,17 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter convert document
 
     event.userIdentity shouldBe ExternalUserIdentity(UserId("the user"), ExternalUserId("pearson-user-1"))
+  }
+
+  it should "override userId when externalUserId is present and ExternalUserId Exists flag is true" in {
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(
+      userId = Some("the user"),
+      externalUserId = Some("pearson-user-1"),
+    ).append(EventFields.EXTERNAL_USER_EXISTS,true)
+
+    val event = DocumentToEventConverter convert document
+
+    event.userIdentity shouldBe BoclipsUserIdentity(UserId("pearson-user-1"))
   }
 
   it should "create anonymous user identity for events with device id" in {
