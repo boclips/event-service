@@ -160,6 +160,14 @@ class DocumentToEventConverterTest extends Test {
   }
 
   it should "convert query when it is populated" in {
+    val document = EventFactory.createVideoSegmentPlayedEventDocument(query = Some("cats"))
+
+    val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
+
+    event.query should be(Some(Query("cats")))
+  }
+
+  it should "convert query from url, when query is missing" in {
     val document = EventFactory.createVideoSegmentPlayedEventDocument(url = "https://example.com/abc/def?q=the%20query")
 
     val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]
@@ -168,7 +176,7 @@ class DocumentToEventConverterTest extends Test {
     event.query should be(Some(Query("the query")))
   }
 
-  it should "convert query when it is not populated" in {
+  it should "convert query when it is not populated and not in the url" in {
     val document = EventFactory.createVideoSegmentPlayedEventDocument(url = "https://example.com")
 
     val event = DocumentToEventConverter.convert(document).asInstanceOf[VideoSegmentPlayedEvent]

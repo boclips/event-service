@@ -77,6 +77,7 @@ object EventFactory {
                                              userId: Option[String] = Some("userId"),
                                              externalUserId: Option[String] = None,
                                              url: String = "http://example.com",
+                                             query: Option[String] = None,
                                              videoId: String = "videoId",
                                              videoIndex: Option[Int] = None,
                                              timestamp: ZonedDateTime = ZonedDateTime.now(),
@@ -97,6 +98,7 @@ object EventFactory {
       userId.map(it => (EventFields.USER_ID, it))
         ++ externalUserId.map(it => (EventFields.EXTERNAL_USER_ID, it))
         ++ deviceId.map(device => (EventFields.DEVICE_ID, device))
+        ++ query.map(q => (EventFields.SEARCH_QUERY, q))
         ++ videoIndex.map(index => (EventFields.PLAYBACK_VIDEO_INDEX, Int.box(index)))
       )
 

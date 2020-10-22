@@ -64,12 +64,17 @@ object DocumentToEventConverter {
     if (videoId.value == null) {
       convertOtherEvent(document, "OTHER_PLAYBACK")
     } else {
+      val query = document.getStringOption(EventFields.SEARCH_QUERY) match {
+        case None => None
+        case Some(queryString) => Some(Query(queryString))
+      }
+
       VideoSegmentPlayedEvent(
         id = document.getObjectId("_id").toHexString,
         timestamp = ZonedDateTime.ofInstant(document.getDate(EventFields.TIMESTAMP).toInstant, ZoneOffset.UTC),
         userIdentity = userIdentity,
         url = url,
-        query = url.flatMap(_.param("q")).map(Query),
+        query = if (query.isDefined) query else url.flatMap(_.param("q")).map(Query),
         refererId = url.flatMap(_.param("referer")).map(UserId),
         videoId = videoId,
         videoIndex = videoIndex,

@@ -93,6 +93,7 @@ class EventSerializerTest {
             .timestamp(ZonedDateTime.parse("2019-05-31T13:45:59Z"))
             .userId("user-1")
             .url("http://example.com/video")
+            .query("cats")
             .segmentStartSeconds(10)
             .segmentEndSeconds(20)
             .videoIndex(10)
@@ -109,6 +110,7 @@ class EventSerializerTest {
         assertThat(document[PLAYBACK_VIDEO_INDEX]).isEqualTo(10)
         assertThat(document[VIDEO_ID]).isEqualTo("123")
         assertThat(document[DEVICE_ID]).isEqualTo("device-id")
+        assertThat(document[SEARCH_QUERY]).isEqualTo("cats")
         assertThat((document[TIMESTAMP] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(
             ZonedDateTime.of(
                 2019,
