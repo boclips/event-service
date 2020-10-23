@@ -29,7 +29,7 @@ class MongoEventLoader(
 
     mongoClient
       .collectionRDD(EVENTS_COLLECTION)
-      .map(event => EventEnricher.markExternalUserExists(event, allUserIds))
+      .map(event => EventIdentityExtractor.toEventDocumentWithIdentity(event, allUserIds))
       .map(DocumentToEventConverter.convert)
       .filter(event => event.userIdentity.id.isEmpty || !boclipsEmployeeIds.contains(event.userIdentity))
       .persist(StorageLevel.MEMORY_AND_DISK)

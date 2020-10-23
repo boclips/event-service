@@ -8,55 +8,37 @@ import com.boclips.event.aggregator.domain.model.events._
 import com.boclips.event.aggregator.domain.model.search.Query
 import com.boclips.event.aggregator.domain.model.users._
 import com.boclips.event.aggregator.domain.model.videos.VideoId
+import com.boclips.event.aggregator.infrastructure.model.EventDocumentWithIdentity
 import com.boclips.event.infrastructure.EventFields._
 import org.bson.Document
 
 object DocumentToEventConverter {
 
-  final val LEGACY_ANONYMOUS_USER_ID: String = "anonymousUser"
-
-  implicit class DocumentExtensions(event: Document) {
-    def url: Option[Url] = Option(event.getString(URL)).map(Url.parse)
+  implicit class DocumentExtensions(document: Document) {
+    def url: Option[Url] = Option(document.getString(URL)).map(Url.parse)
 
     def queryFromUrl: Option[Query] = url.flatMap(_.param("q")).map(Query)
-
-    def userIdentity: UserIdentity = {
-      val userIdOption = Option(event.getString(USER_ID))
-        .filter(_ != LEGACY_ANONYMOUS_USER_ID)
-        .map(UserId)
-      val externalUserIdOption = Option(event.getString(EXTERNAL_USER_ID))
-        .map(ExternalUserId)
-      val deviceIdOption = Option(event.getString(DEVICE_ID))
-        .map(DeviceId)
-      val overrideUserIdOption = event.getBoolean(EXTERNAL_USER_EXISTS, false)
-
-      (userIdOption, externalUserIdOption, deviceIdOption, overrideUserIdOption) match {
-        case (Some(_), Some(externalUserId), _, true) => BoclipsUserIdentity(boclipsId = UserId(externalUserId.value))
-        case (Some(userId), None, _, _) => BoclipsUserIdentity(userId)
-        case (Some(userId), Some(externalUserId), _, _) => ExternalUserIdentity(userId, externalUserId)
-        case (_, _, deviceId, _) => AnonymousUserIdentity(deviceId)
-      }
-    }
   }
 
-  def convert(event: Document): Event = {
-    val eventType = event.getString(TYPE)
+  def convert(eventWrapper: EventDocumentWithIdentity): Event = {
+    val eventType = eventWrapper.eventDocument.getString(TYPE)
     eventType match {
-      case Type.VIDEOS_SEARCHED => convertSearchEvent(event)
-      case Type.RESOURCES_SEARCHED => convertCollectionsSearched(event)
-      case Type.VIDEO_SEGMENT_PLAYED => convertVideoSegmentPlayedEvent(event)
-      case Type.VIDEO_INTERACTED_WITH => convertVideoInteractedWithEvent(event)
-      case Type.VIDEO_ADDED_TO_COLLECTION => convertVideoAddedToCollectionEvent(event)
-      case Type.PAGE_RENDERED => convertPageRenderedEvent(event)
-      case Type.COLLECTION_INTERACTED_WITH => convertCollectionInteractedWithEvent(event)
-      case Type.PLATFORM_INTERACTED_WITH => convertPlatformInteractedWithEvent(event)
-      case _ => convertOtherEvent(event, eventType)
+      case Type.VIDEOS_SEARCHED => convertSearchEvent(eventWrapper)
+      case Type.RESOURCES_SEARCHED => convertCollectionsSearched(eventWrapper)
+      case Type.VIDEO_SEGMENT_PLAYED => convertVideoSegmentPlayedEvent(eventWrapper)
+      case Type.VIDEO_INTERACTED_WITH => convertVideoInteractedWithEvent(eventWrapper)
+      case Type.VIDEO_ADDED_TO_COLLECTION => convertVideoAddedToCollectionEvent(eventWrapper)
+      case Type.PAGE_RENDERED => convertPageRenderedEvent(eventWrapper)
+      case Type.COLLECTION_INTERACTED_WITH => convertCollectionInteractedWithEvent(eventWrapper)
+      case Type.PLATFORM_INTERACTED_WITH => convertPlatformInteractedWithEvent(eventWrapper)
+      case _ => convertOtherEvent(eventWrapper, eventType)
     }
   }
 
-  def convertVideoSegmentPlayedEvent(document: Document): Event = {
+  def convertVideoSegmentPlayedEvent(eventDocumentWithIdentity: EventDocumentWithIdentity): Event = {
+    val document = eventDocumentWithIdentity.eventDocument
     val url = document.url
-    val userIdentity = document.userIdentity
+    val userIdentity = eventDocumentWithIdentity.userIdentity
     val videoIndex = document.getInteger(PLAYBACK_VIDEO_INDEX) match {
       case null => None
       case index => Some(index.toInt)
@@ -65,7 +47,7 @@ object DocumentToEventConverter {
     val videoId = VideoId(document.getString(VIDEO_ID))
 
     if (videoId.value == null) {
-      convertOtherEvent(document, "OTHER_PLAYBACK")
+      convertOtherEvent(eventDocumentWithIdentity, "OTHER_PLAYBACK")
     } else {
       VideoSegmentPlayedEvent(
         id = document.getObjectId("_id").toHexString,
@@ -81,14 +63,15 @@ object DocumentToEventConverter {
     }
   }
 
-  def convertSearchEvent(document: Document): Event = {
+  def convertSearchEvent(eventDocumentWithIdentity: EventDocumentWithIdentity): Event = {
+    val document = eventDocumentWithIdentity.eventDocument
     val query = document.getString(SEARCH_QUERY)
     if (query == null) {
-      convertOtherEvent(document, "OTHER_SEARCH")
+      convertOtherEvent(eventDocumentWithIdentity, "OTHER_SEARCH")
     } else {
       VideosSearchedEvent(
         timestamp = ZonedDateTime.ofInstant(document.getDate(TIMESTAMP).toInstant, ZoneOffset.UTC),
-        userIdentity = document.userIdentity,
+        userIdentity = eventDocumentWithIdentity.userIdentity,
         query = Query(query),
         url = document.url,
         videoResults = document.getListOption[String](SEARCH_RESULTS_PAGE_VIDEO_IDS).map(_.map(VideoId)),
@@ -98,11 +81,12 @@ object DocumentToEventConverter {
     }
   }
 
-  def convertCollectionsSearched(document: Document): Event = {
+  def convertCollectionsSearched(eventDocumentWithIdentity: EventDocumentWithIdentity): Event = {
+    val document = eventDocumentWithIdentity.eventDocument
     CollectionSearchedEvent(
       timestamp = ZonedDateTime.ofInstant(document.getDate(TIMESTAMP).toInstant, ZoneOffset.UTC),
       query = Query(document.getString(SEARCH_QUERY)),
-      userIdentity = document.userIdentity,
+      userIdentity = eventDocumentWithIdentity.userIdentity,
       url = document.url,
       collectionResults = document.getScalaList[String](SEARCH_RESULTS_PAGE_RESOURCE_IDS).map(CollectionId),
       pageIndex = document.getInteger(SEARCH_RESULTS_PAGE_INDEX),
@@ -112,33 +96,35 @@ object DocumentToEventConverter {
 
   }
 
-  def convertOtherEvent(document: Document, eventType: String) = OtherEvent(
-    timestamp = ZonedDateTime.ofInstant(document.getDate(TIMESTAMP).toInstant, ZoneOffset.UTC),
-    userIdentity = document.userIdentity,
+  def convertOtherEvent(eventDocumentWithIdentity: EventDocumentWithIdentity, eventType: String) = OtherEvent(
+    timestamp = ZonedDateTime.ofInstant(eventDocumentWithIdentity.eventDocument.getDate(TIMESTAMP).toInstant, ZoneOffset.UTC),
+    userIdentity = eventDocumentWithIdentity.userIdentity,
     typeName = eventType
   )
 
-  def convertVideoInteractedWithEvent(document: Document): VideoInteractedWithEvent = {
+  def convertVideoInteractedWithEvent(eventDocumentWithIdentity: EventDocumentWithIdentity): VideoInteractedWithEvent = {
+    val document = eventDocumentWithIdentity.eventDocument
     val timestamp = ZonedDateTime.ofInstant(document.getDate(TIMESTAMP).toInstant, ZoneOffset.UTC)
     val url = document.url
     VideoInteractedWithEvent(
       url = url,
       timestamp = timestamp,
-      userIdentity = document.userIdentity,
+      userIdentity = eventDocumentWithIdentity.userIdentity,
       videoId = VideoId(document.getString(VIDEO_ID)),
       query = document.queryFromUrl,
       subtype = document.getStringOption(SUBTYPE)
     )
   }
 
-  def convertCollectionInteractedWithEvent(document: Document): CollectionInteractedWithEvent = {
+  def convertCollectionInteractedWithEvent(eventDocumentWithIdentity: EventDocumentWithIdentity): CollectionInteractedWithEvent = {
+    val document = eventDocumentWithIdentity.eventDocument
     val timestamp = ZonedDateTime.ofInstant(document.getDate(TIMESTAMP).toInstant, ZoneOffset.UTC)
     val url = document.url
 
     CollectionInteractedWithEvent(
       url = url,
       timestamp = timestamp,
-      userIdentity = document.userIdentity,
+      userIdentity = eventDocumentWithIdentity.userIdentity,
       query = document.queryFromUrl,
       subtype = document.getStringOption(SUBTYPE),
       collectionId = CollectionId(document.getString(COLLECTION_ID))
@@ -146,30 +132,33 @@ object DocumentToEventConverter {
   }
 
 
-  def convertVideoAddedToCollectionEvent(document: Document): VideoAddedToCollectionEvent = {
+  def convertVideoAddedToCollectionEvent(eventDocumentWithIdentity: EventDocumentWithIdentity): VideoAddedToCollectionEvent = {
+    val document = eventDocumentWithIdentity.eventDocument
     val timestamp = ZonedDateTime.ofInstant(document.getDate(TIMESTAMP).toInstant, ZoneOffset.UTC)
     VideoAddedToCollectionEvent(
       timestamp = timestamp,
-      userIdentity = document.userIdentity.asInstanceOf[BoclipsUserIdentity],
+      userIdentity = eventDocumentWithIdentity.userIdentity.asInstanceOf[BoclipsUserIdentity],
       videoId = VideoId(document.getString(VIDEO_ID)),
       url = document.url,
       query = document.queryFromUrl
     )
   }
 
-  def convertPageRenderedEvent(document: Document): PageRenderedEvent = {
+  def convertPageRenderedEvent(eventDocumentWithIdentity: EventDocumentWithIdentity): PageRenderedEvent = {
+    val document = eventDocumentWithIdentity.eventDocument
     val timestamp = ZonedDateTime.ofInstant(document.getDate(TIMESTAMP).toInstant, ZoneOffset.UTC)
     PageRenderedEvent(
       timestamp = timestamp,
-      userIdentity = document.userIdentity,
+      userIdentity = eventDocumentWithIdentity.userIdentity,
       url = document.url
     )
   }
 
-  def convertPlatformInteractedWithEvent(document: Document): PlatformInteractedWithEvent = {
+  def convertPlatformInteractedWithEvent(eventDocumentWithIdentity: EventDocumentWithIdentity): PlatformInteractedWithEvent = {
+    val document = eventDocumentWithIdentity.eventDocument
     val timestamp = ZonedDateTime.ofInstant(document.getDate(TIMESTAMP).toInstant, ZoneOffset.UTC)
     PlatformInteractedWithEvent(
-      userIdentity = document.userIdentity,
+      userIdentity = eventDocumentWithIdentity.userIdentity,
       timestamp = timestamp,
       url = document.url,
       subtype = document.getStringOption(SUBTYPE),
