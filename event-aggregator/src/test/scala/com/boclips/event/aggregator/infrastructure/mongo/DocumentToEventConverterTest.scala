@@ -14,13 +14,19 @@ import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideosSearchEventDocument
 import com.boclips.event.infrastructure.EventFields
-import com.boclips.event.infrastructure.EventFields.URL
 import org.bson.Document
 
 class DocumentToEventConverterTest extends Test {
 
   implicit class DocumentExtensions(document: Document) {
-    def asBoclipsUser(id: String = "boclips-id") = EventDocumentWithIdentity(document, BoclipsUserIdentity(UserId(id)))
+    def asBoclipsUser() = EventDocumentWithIdentity(
+      document,
+      BoclipsUserIdentity(UserId(Option(document.getString(EventFields.USER_ID)).getOrElse("boclips-id")))
+    )
+    def asAnonymous() = EventDocumentWithIdentity(
+      document,
+      AnonymousUserIdentity(Option(DeviceId(Option(document.getString(EventFields.DEVICE_ID)).getOrElse("device-id"))))
+    )
   }
 
   "transforming SEARCH event" should "convert documents with type 'SEARCH'" in {
@@ -41,7 +47,7 @@ class DocumentToEventConverterTest extends Test {
   }
 
   it should "convert userId" in {
-    val document = createVideosSearchEventDocument(userId = "user").asBoclipsUser("user")
+    val document = createVideosSearchEventDocument(userId = "user").asBoclipsUser()
 
     val event = DocumentToEventConverter convert document
 
@@ -111,63 +117,6 @@ class DocumentToEventConverterTest extends Test {
     val event = DocumentToEventConverter convert document
 
     event.asInstanceOf[VideoSegmentPlayedEvent].id shouldBe "5e1278800000000000000000"
-  }
-
-  it should "convert user identity when boclips id specified and no external id" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(
-      userId = Some("the user"),
-      externalUserId = None,
-    ).asBoclipsUser()
-
-    val event = DocumentToEventConverter convert document
-
-    event.userIdentity shouldBe BoclipsUserIdentity(UserId("the user"))
-  }
-
-  it should "convert user identity when both boclips id and external id specified" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(
-      userId = Some("the user"),
-      externalUserId = Some("pearson-user-1"),
-    ).asBoclipsUser()
-
-    val event = DocumentToEventConverter convert document
-
-    event.userIdentity shouldBe ExternalUserIdentity(UserId("the user"), ExternalUserId("pearson-user-1"))
-  }
-
-//  it should "override userId when externalUserId is present and ExternalUserId Exists flag is true" in {
-//    val document = EventFactory.createVideoSegmentPlayedEventDocument(
-//      userId = Some("the user"),
-//      externalUserId = Some("pearson-user-1"),
-//    ).append(EventFields.EXTERNAL_USER_EXISTS,true)
-//
-//    val event = DocumentToEventConverter convert document
-//
-//    event.userIdentity shouldBe BoclipsUserIdentity(UserId("pearson-user-1"))
-//  }
-
-  it should "create anonymous user identity for events with device id" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(
-      userId = None,
-      externalUserId = None,
-      deviceId = Some("device"),
-    ).asBoclipsUser()
-
-    val event = DocumentToEventConverter convert document
-
-    event.userIdentity shouldBe AnonymousUserIdentity(Some(DeviceId("device")))
-  }
-
-  it should "create anonymous user identity for events without device id" in {
-    val document = EventFactory.createVideoSegmentPlayedEventDocument(
-      userId = None,
-      externalUserId = None,
-      deviceId = None,
-    ).asBoclipsUser()
-
-    val event = DocumentToEventConverter convert document
-
-    event.userIdentity shouldBe AnonymousUserIdentity(None)
   }
 
   it should "convert videoId" in {
@@ -373,7 +322,7 @@ class DocumentToEventConverterTest extends Test {
       timestamp = timestamp,
       subtype = "EXIT",
       url = "https://teachers.boclips.com/videos?page=1&q=queries"
-    ).asBoclipsUser()
+    ).asAnonymous()
 
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[PlatformInteractedWithEvent] shouldBe true
