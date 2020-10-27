@@ -28,6 +28,5 @@ object SessionFormatter extends SingleRowFormatter[Session] {
 
       eventJson
     })
-    //json.addJsonArrayProperty("events", sessionEventsJson)
   }
 }
