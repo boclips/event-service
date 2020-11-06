@@ -62,6 +62,7 @@ class EventSerializerTest {
             .query("hello")
             .pageVideoIds(listOf("v1", "v2"))
             .totalResults(100)
+            .queryParams(mapOf<String,List<String>>(Pair("age_facets", listOf("01-03","05-07"))))
             .build()
 
         val document = EventSerializer.convertVideosSearched(videosSearched = event)
@@ -73,6 +74,7 @@ class EventSerializerTest {
         assertThat(document[SEARCH_RESULTS_PAGE_SIZE]).isEqualTo(10)
         assertThat(document[SEARCH_RESULTS_TOTAL]).isEqualTo(100L)
         assertThat(document[SEARCH_RESULTS_PAGE_VIDEO_IDS]).asList().containsExactly("v1", "v2")
+        assertThat(document[SEARCH_QUERY_PARAMS]).isEqualTo(event.queryParams)
         assertThat((document[TIMESTAMP] as Date).toInstant().atZone(ZoneOffset.UTC)).isEqualTo(
             ZonedDateTime.of(
                 2018,
@@ -453,7 +455,9 @@ class EventSerializerTest {
             .pageSize(7)
             .totalResults(23)
             .pageResourceIds(listOf("id-1", "id-2"))
-            .timestamp(ZonedDateTime.of(2023, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC)).build()
+            .timestamp(ZonedDateTime.of(2023, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC))
+            .queryParams(mapOf<String,List<String>>(Pair("age_facets", listOf("01-03","05-07"))))
+            .build()
 
         val document = EventSerializer.convertResourcesSearched(event)
         assertThat(document[TYPE]).isEqualTo("RESOURCES_SEARCHED")
@@ -465,6 +469,7 @@ class EventSerializerTest {
         assertThat(document[SEARCH_RESULTS_PAGE_SIZE]).isEqualTo(7)
         assertThat(document[SEARCH_RESULTS_TOTAL]).isEqualTo(23L)
         assertThat(document[SEARCH_RESULTS_PAGE_RESOURCE_IDS]).asList().containsExactly("id-1", "id-2")
+        assertThat(document[SEARCH_QUERY_PARAMS]).isEqualTo(event.queryParams)
         assertThat(document[TIMESTAMP]).isEqualTo(Date.from(ZonedDateTime.parse("2023-05-12T12:14:15Z").toInstant()))
     }
 

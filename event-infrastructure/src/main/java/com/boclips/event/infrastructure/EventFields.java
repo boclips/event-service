@@ -54,6 +54,7 @@ public class EventFields {
     public final static String SEARCH_RESULTS_PAGE_RESOURCE_IDS = "pageResourceIds";
     public final static String SEARCH_RESULTS_PAGE_VIDEO_IDS = "pageVideoIds";
     public final static String SEARCH_RESULTS_TOTAL = "totalResults";
+    public final static String SEARCH_QUERY_PARAMS = "queryParams";
 
     public final static String COLLECTION_BOOKMARK_CHANGED_IS_BOOKMARKED = "isBookmarked";
 

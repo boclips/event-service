@@ -30,7 +30,9 @@ object EventSerializer {
             (SEARCH_RESULTS_PAGE_INDEX to videosSearched.pageIndex) +
             (SEARCH_RESULTS_PAGE_SIZE to videosSearched.pageSize) +
             (SEARCH_RESULTS_PAGE_VIDEO_IDS to videosSearched.pageVideoIds) +
-            (SEARCH_RESULTS_TOTAL to videosSearched.totalResults)
+            (SEARCH_RESULTS_TOTAL to videosSearched.totalResults) +
+            (SEARCH_QUERY_PARAMS to videosSearched.queryParams)
+
     }
 
     fun convertVideoSegmentPlayed(videoSegmentPlayed: VideoSegmentPlayed): Map<String, Any> {
@@ -163,7 +165,8 @@ object EventSerializer {
             (SEARCH_RESULTS_PAGE_SIZE to event.pageSize) +
             (SEARCH_RESULTS_PAGE_RESOURCE_IDS to event.pageResourceIds) +
             (SEARCH_RESULTS_TOTAL to event.totalResults) +
-            (SEARCH_RESOURCE_TYPE to event.resourceType)
+            (SEARCH_RESOURCE_TYPE to event.resourceType) +
+            (SEARCH_QUERY_PARAMS to event.queryParams)
     }
 
     fun convertPlatformInteractedWith(event: PlatformInteractedWith): Map<String, Any> {
