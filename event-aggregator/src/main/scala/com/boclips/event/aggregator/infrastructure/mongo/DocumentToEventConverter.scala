@@ -13,6 +13,8 @@ import com.boclips.event.infrastructure.EventFields
 import com.boclips.event.infrastructure.EventFields._
 import org.bson.Document
 
+import scala.collection.JavaConverters.{iterableAsScalaIterableConverter, mapAsScalaMapConverter}
+
 object DocumentToEventConverter {
 
   implicit class DocumentExtensions(document: Document) {
@@ -82,8 +84,22 @@ object DocumentToEventConverter {
         url = document.url,
         videoResults = document.getListOption[String](SEARCH_RESULTS_PAGE_VIDEO_IDS).map(_.map(VideoId)),
         pageIndex = document.getInteger(SEARCH_RESULTS_PAGE_INDEX, 0),
-        totalResults = document.getLong(SEARCH_RESULTS_TOTAL).toInt
+        totalResults = document.getLong(SEARCH_RESULTS_TOTAL).toInt,
+        queryParams = convertQueryParams(document)
       )
+    }
+  }
+
+  def convertQueryParams(document: Document): Option[collection.mutable.Map[String, Iterable[String]]] = {
+    document.getObjectOption(SEARCH_QUERY_PARAMS) match {
+      case None => None
+      case Some(queryParams) =>
+        val valuesAsAnyMap: Map[String, AnyRef] = queryParams.asScala.toMap
+
+        val valuesAsListMap: Map[String, Iterable[String]] = valuesAsAnyMap.mapValues(
+          value => value.asInstanceOf[java.util.List[String]].asScala.toList
+        )
+        Some(collection.mutable.Map(valuesAsListMap.toSeq: _*))
     }
   }
 
@@ -99,7 +115,6 @@ object DocumentToEventConverter {
       pageSize = document.getInteger(SEARCH_RESULTS_PAGE_SIZE),
       totalResults = document.getLong(SEARCH_RESULTS_TOTAL).toInt
     )
-
   }
 
   def convertOtherEvent(eventDocumentWithIdentity: EventDocumentWithIdentity, eventType: String) = OtherEvent(

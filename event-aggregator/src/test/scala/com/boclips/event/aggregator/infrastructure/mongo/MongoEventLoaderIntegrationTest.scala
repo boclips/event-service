@@ -1,5 +1,6 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
+import com.boclips.event.aggregator.domain.model.events.VideosSearchedEvent
 import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, ExternalUserId, ExternalUserIdentity, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.{createVideoSegmentPlayedEventDocument, createVideosSearchEventDocument}
@@ -11,17 +12,22 @@ class MongoEventLoaderIntegrationTest extends IntegrationTest {
 
   "load" should "read events" in mongoSparkTest { (spark: SparkSession, mongo) =>
     val collection = mongo collection "events"
-    collection.insertOne(createVideosSearchEventDocument(userId = "dave@gmail.com"))
-    collection.insertOne(createVideosSearchEventDocument(userId = "dave@gmail.com"))
-    collection.insertOne(createVideosSearchEventDocument(userId = "john@boclips.com"))
+    collection.insertOne(createVideosSearchEventDocument(userId = "dave@boclips.com"))
+    collection.insertOne(createVideosSearchEventDocument(userId = "dave@boclips.com"))
+    collection.insertOne(createVideosSearchEventDocument(userId = "john@gmail.com",
+      queryParams = Some(Map[String, List[String]](("facet", List("01", "02"))))))
 
     implicit val session: SparkSession = spark
 
-    val boclipsEmployees = rdd(createUser(identity = UserFactory.createBoclipsUserIdentity("john@boclips.com"), isBoclipsEmployee = true))
+    val boclipsEmployees = rdd(createUser(
+      identity = UserFactory.createBoclipsUserIdentity("dave@boclips.com"), isBoclipsEmployee = true)
+    )
 
     val events = new MongoEventLoader(mongo, rdd(),boclipsEmployees).load.collect()
 
-    events should have length 2
+    events should have length 1
+    events(0).asInstanceOf[VideosSearchedEvent].queryParams.get should have size 1
+    events(0).asInstanceOf[VideosSearchedEvent].queryParams.get.getOrElse("facet", List()) should have size 2
   }
 
   "load" should "read events and override existing external user ids if they exist" in mongoSparkTest { (spark: SparkSession, mongo) =>

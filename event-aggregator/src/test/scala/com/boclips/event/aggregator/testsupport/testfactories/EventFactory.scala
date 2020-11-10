@@ -135,7 +135,8 @@ object EventFactory {
                                       page: java.lang.Integer = 1,
                                       timestamp: ZonedDateTime = ZonedDateTime.now(),
                                       pageVideoIds: List[String] = List("id1", "id2"),
-                                      totalResults: Long = 6669
+                                      totalResults: Long = 6669,
+                                      queryParams: Option[Map[String, List[String]]] = None,
                                      ): Document = {
     new Document(Map[String, Object](
       (EventFields.TYPE, EventFields.Type.VIDEOS_SEARCHED),
@@ -144,7 +145,11 @@ object EventFactory {
       (EventFields.SEARCH_QUERY, query),
       (EventFields.SEARCH_RESULTS_PAGE_INDEX, page),
       (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
-      (EventFields.SEARCH_RESULTS_TOTAL, Long.box(totalResults))
+      (EventFields.SEARCH_RESULTS_TOTAL, Long.box(totalResults)),
+      (EventFields.SEARCH_QUERY_PARAMS, queryParams match {
+        case None => null
+        case Some(queryParams) => queryParams.mapValues(x => x.asJava).asJava
+      })
     ).asJava)
   }
 
@@ -155,7 +160,8 @@ object EventFactory {
                                  videoResults: Option[Iterable[String]] = None,
                                  pageIndex: Int = 0,
                                  totalResults: Int = 6669,
-                                 url: Url = Url.parse("https://teachers.boclips.com/videos?page=1&q=shark")
+                                 url: Url = Url.parse("https://teachers.boclips.com/videos?page=1&q=shark"),
+                                 queryParams: collection.mutable.Map[String, Iterable[String]] = null,
                                ): VideosSearchedEvent = {
     VideosSearchedEvent(
       timestamp = timestamp,
@@ -164,7 +170,8 @@ object EventFactory {
       query = Query(query),
       videoResults = videoResults.map(_.map(VideoId)),
       pageIndex = pageIndex,
-      totalResults = totalResults
+      totalResults = totalResults,
+      queryParams = Option(queryParams)
     )
   }
 

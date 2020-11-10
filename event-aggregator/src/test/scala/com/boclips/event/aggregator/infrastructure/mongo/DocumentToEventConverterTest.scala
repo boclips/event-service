@@ -94,12 +94,20 @@ class DocumentToEventConverterTest extends Test {
     event.videoResults should be(None)
   }
 
-  it should "convert total search results when they exist" in {
-    val document = createVideosSearchEventDocument(totalResults = 8889).asBoclipsUser()
+  it should "convert query parameter when they exist" in {
+    val queryParams = Map[String, List[String]](("facet", List("01","02")))
+    val document = createVideosSearchEventDocument(queryParams = Some(queryParams)).asBoclipsUser()
+
+    val event = DocumentToEventConverter.convert(document).asInstanceOf[VideosSearchedEvent]
+    event.queryParams shouldBe(Some(queryParams))
+  }
+
+  it should "convert query parameter when do not exist" in {
+    val document = createVideosSearchEventDocument(queryParams = None).asBoclipsUser()
 
     val event = DocumentToEventConverter.convert(document).asInstanceOf[VideosSearchedEvent]
 
-    event.totalResults should be(8889)
+    event.queryParams shouldBe None
   }
 
   "transforming PLAYBACK event" should "convert date" in {

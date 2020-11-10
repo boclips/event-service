@@ -8,6 +8,8 @@ import com.boclips.event.aggregator.domain.model.users.UserIdentity
 import com.boclips.event.aggregator.domain.model.videos.VideoId
 import com.boclips.event.infrastructure.EventFields
 
+import scala.collection.mutable
+
 case class VideosSearchedEvent
 (
   timestamp: ZonedDateTime,
@@ -16,7 +18,8 @@ case class VideosSearchedEvent
   url: Option[Url],
   videoResults: Option[Iterable[VideoId]],
   pageIndex: Int,
-  totalResults: Int
+  totalResults: Int,
+  queryParams: Option[mutable.Map[String, Iterable[String]]],
 ) extends Event {
   override val typeName: String = EventFields.Type.VIDEOS_SEARCHED
   override val subtype: Option[String] = None

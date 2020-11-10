@@ -23,6 +23,13 @@ package object mongo {
         .getOrElse(List())
     }
 
+    def getObjectOption(property: String): Option[Document] = {
+      Option(document.get(property)) match {
+        case Some(documentObj) => Option(new Document(documentObj.asInstanceOf[java.util.Map[String, Object]]))
+        case None => None
+      }
+    }
+
     def getListOption[T](property: String): Option[List[T]] = {
       Option(document.get(property).asInstanceOf[java.util.List[T]])
         .map(_.asScala.toList)
@@ -40,7 +47,6 @@ package object mongo {
       Option(document.getBoolean(property)).map(_.asInstanceOf[Boolean])
     }
   }
-
 
   def integerOption(x: java.lang.Integer): Option[Int] = {
     x match {
