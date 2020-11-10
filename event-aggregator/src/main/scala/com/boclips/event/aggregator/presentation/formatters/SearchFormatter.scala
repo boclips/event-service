@@ -30,6 +30,11 @@ object SearchFormatter extends SingleRowFormatter[Search] {
     json.addProperty("urlPath", request.url.map(_.path))
     json.addStringArrayProperty("urlParamKeys", request.urlParamsKeys.toList)
     json.addProperty("id", request.id)
-
+    json.addJsonArrayProperty("queryParams", request.queryParams.map( queryParam => {
+      val paramsJsonObject = new JsonObject
+      paramsJsonObject.addProperty("key", queryParam._1)
+      paramsJsonObject.addStringArrayProperty("values", queryParam._2.toList)
+      paramsJsonObject
+    }).toList)
   }
 }

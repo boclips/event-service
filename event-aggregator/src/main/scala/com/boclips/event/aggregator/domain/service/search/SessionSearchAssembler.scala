@@ -46,7 +46,10 @@ class SessionSearchAssembler() {
     val pagesSeen = searchEvents.map(_.pageIndex).toSet.size
     val totalResults = searchEvents.map(_.totalResults).toSet.max
     val minResults = searchEvents.map(_.totalResults).toSet.min
-    val urlParamsKeys = searchEvents.flatMap(_.url.map(_.params)).map(_.keys).flatten.toSet
+
+    val mergedQueryParams = getMergedUrlAndQueryParams(searchEvents)
+    val urlParamsKeys = mergedQueryParams.keys.toSet
+
     val videosWithInteractions: Set[VideoId] = playbackEvents.map(_.videoId).toSet ++ videoInteractedWithEvents.map(_.videoId) ++ videoAddedToCollectionEvent.map(_.videoId)
     val videoResults = searchEvents.flatMap(_.videoResults.getOrElse(List()))
       .map(videoId => SearchImpression(videoId = videoId, interaction = videosWithInteractions.contains(videoId)))
@@ -69,6 +72,7 @@ class SessionSearchAssembler() {
         query = searchEvent.query,
         url = searchEvent.url,
         urlParamsKeys = urlParamsKeys,
+        queryParams = mergedQueryParams,
       ),
       response = SearchResponse(
         videoResults = videoResults,
@@ -100,5 +104,14 @@ class SessionSearchAssembler() {
       .mapValues(events => events.map {
         case (event, _) => event
       })
+  }
+
+  def getMergedUrlAndQueryParams(searchEvents: Iterable[VideosSearchedEvent]) = {
+    val urlParamsKeys = searchEvents.flatMap(_.url.map(_.params)).flatMap(_.keys).toSet
+    val paramsByKey = searchEvents.flatMap(_.queryParams).flatten.groupBy(_._1).mapValues(_.map(_._2).flatten.toSet)
+    val mergedQueryParams = collection.mutable.Map(paramsByKey.toSeq: _*)
+
+    urlParamsKeys.diff(mergedQueryParams.keys.toSet).foreach(urlKey => mergedQueryParams.put(urlKey, Set()))
+    mergedQueryParams.toMap
   }
 }

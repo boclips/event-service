@@ -35,6 +35,7 @@ case class SearchRequest
   userIdentity: UserIdentity,
   query: Query,
   urlParamsKeys: Set[String],
+  queryParams: collection.immutable.Map[String, Iterable[String]]
 )
 
 case class SearchResponse

@@ -100,10 +100,30 @@ class SearchFormatterTest extends Test {
     json.getString("urlHost") shouldBe "example.com"
     json.getString("urlPath") shouldBe "/a"
   }
+
   it should "url param keys" in {
 
     val json = SearchFormatter formatRow createSearch(request = createSearchRequest(urlParamsKeys = Set("age_range", "page", "q")))
     json.getStringList("urlParamKeys") shouldBe List("age_range", "page", "q")
   }
 
+  it should "write query params" in {
+
+    val json = SearchFormatter formatRow createSearch(request = createSearchRequest(
+      queryParams = Map("sort" -> Set("sort1","sort2"),"age_range" ->Set("age1","age2")
+    )))
+    json.getAsJsonArray("queryParams").size() shouldBe  2
+    json.getAsJsonArray("queryParams").get(0).getAsJsonObject.getString("key") shouldBe "sort"
+    json.getAsJsonArray("queryParams").get(0).getAsJsonObject.getStringList("values") shouldBe List("sort1","sort2")
+    json.getAsJsonArray("queryParams").get(1).getAsJsonObject.getStringList("values") shouldBe List("age1","age2")
+    json.getAsJsonArray("queryParams").get(1).getAsJsonObject.getString("key") shouldBe "age_range"
+  }
+
+  it should "write handle empty query params" in {
+
+    val json = SearchFormatter formatRow createSearch(request = createSearchRequest(
+      queryParams = Map()
+    ))
+    json.getAsJsonArray("queryParams").size() shouldBe  0
+  }
 }

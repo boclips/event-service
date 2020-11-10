@@ -166,6 +166,50 @@ class SessionSearchAssemblerTest extends Test {
     searches.head.request.urlParamsKeys shouldBe Set("age_range", "duration", "q", "page", "test")
   }
 
+  it should "should uniquely merge 'queryParams' field and url query params across events" in {
+    val events = createSession(events = List(
+      createVideosSearchedEvent(url = (Url.parse("https://teachers.boclips.com/videos?age_range=3-5&duration=0-120&page=1&q=my%20query"))),
+      createVideosSearchedEvent(url = (Url.parse("https://teachers.boclips.com/videos?q=my%20query"))),
+      createVideosSearchedEvent(url = (Url.parse("https://teachers.boclips.com/videos?q=my%20query&duration=5&test=5"))),
+      createVideosSearchedEvent(queryParams = collection.mutable.Map("sort_by" -> List("sort1", "sort2"))),
+    ))
+
+    val searches = new SessionSearchAssembler() assembleSearchesInSession events
+
+    searches should have size 1
+    searches.head.request.queryParams.keys shouldBe Set("age_range", "duration", "q", "page", "test", "sort_by")
+    searches.head.request.queryParams.get("sort_by").orNull shouldBe Set("sort1","sort2")
+    searches.head.request.queryParams.get("duration").orNull shouldBe Set()
+  }
+
+  it should "should handle multiple combinations of params" in {
+    val events = createSession(events = List(
+      createVideosSearchedEvent(url= Url.parse("https://boclips.com/videos"), queryParams = collection.mutable.Map("sort_by" -> List("sort1", "sort2"))),
+      createVideosSearchedEvent(url = Url.parse("https://boclips.com/videos"), queryParams = collection.mutable.Map("sort_by" -> List("sort2","sort3"))),
+    ))
+
+    val searches = new SessionSearchAssembler() assembleSearchesInSession events
+
+    searches should have size 1
+    searches.head.request.queryParams.keys shouldBe Set("sort_by")
+    searches.head.request.queryParams.get("sort_by").orNull shouldBe Set("sort1","sort2","sort3")
+  }
+
+  it should "should handle multiple parameters" in {
+    val events = createSession(events = List(
+      createVideosSearchedEvent(url= Url.parse("https://boclips.com/videos"), queryParams = collection.mutable.Map("sort_by" -> List("sort1", "sort2"),
+        "age_range" -> List("01","02"))),
+      createVideosSearchedEvent(url = Url.parse("https://boclips.com/videos"), queryParams = collection.mutable.Map("sort_by" -> List("sort2","sort3"))),
+    ))
+
+    val searches = new SessionSearchAssembler() assembleSearchesInSession events
+
+    searches should have size 1
+    searches.head.request.queryParams.keys shouldBe Set("sort_by","age_range")
+    searches.head.request.queryParams.get("sort_by").orNull shouldBe Set("sort1","sort2","sort3")
+    searches.head.request.queryParams.get("age_range").orNull shouldBe Set("01","02")
+  }
+
   it should "include collection impressions" in {
     val events = createSession(events = List(
       createVideosSearchedEvent(query = "a query"),
