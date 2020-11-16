@@ -20,8 +20,7 @@ object SearchFactory {
                            query: String = "query",
                            timestamp: ZonedDateTime = ZonedDateTime.now(),
                            url: Option[Url] = None,
-                           urlParamsKeys: Set[String] = Set(),
-                           queryParams: collection.immutable.Map[String, Iterable[String]] = Map()
+                           queryParams: Map[String, Iterable[String]] = Map()
                          ): SearchRequest = {
     SearchRequest(
       id = id,
@@ -29,7 +28,6 @@ object SearchFactory {
       userIdentity = userIdentity,
       query = Query(query),
       url = url,
-      urlParamsKeys = urlParamsKeys,
       queryParams = queryParams
     )
   }

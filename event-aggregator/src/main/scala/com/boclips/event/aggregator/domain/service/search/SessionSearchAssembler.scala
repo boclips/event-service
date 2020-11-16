@@ -48,7 +48,6 @@ class SessionSearchAssembler() {
     val minResults = searchEvents.map(_.totalResults).toSet.min
 
     val mergedQueryParams = getMergedUrlAndQueryParams(searchEvents)
-    val urlParamsKeys = mergedQueryParams.keys.toSet
 
     val videosWithInteractions: Set[VideoId] = playbackEvents.map(_.videoId).toSet ++ videoInteractedWithEvents.map(_.videoId) ++ videoAddedToCollectionEvent.map(_.videoId)
     val videoResults = searchEvents.flatMap(_.videoResults.getOrElse(List()))
@@ -71,7 +70,6 @@ class SessionSearchAssembler() {
         userIdentity = searchEvent.userIdentity,
         query = searchEvent.query,
         url = searchEvent.url,
-        urlParamsKeys = urlParamsKeys,
         queryParams = mergedQueryParams,
       ),
       response = SearchResponse(

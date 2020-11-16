@@ -101,12 +101,6 @@ class SearchFormatterTest extends Test {
     json.getString("urlPath") shouldBe "/a"
   }
 
-  it should "url param keys" in {
-
-    val json = SearchFormatter formatRow createSearch(request = createSearchRequest(urlParamsKeys = Set("age_range", "page", "q")))
-    json.getStringList("urlParamKeys") shouldBe List("age_range", "page", "q")
-  }
-
   it should "write query params" in {
 
     val json = SearchFormatter formatRow createSearch(request = createSearchRequest(

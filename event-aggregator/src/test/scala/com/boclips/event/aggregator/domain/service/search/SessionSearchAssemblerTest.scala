@@ -163,7 +163,7 @@ class SessionSearchAssemblerTest extends Test {
     val searches = new SessionSearchAssembler() assembleSearchesInSession events
 
     searches should have size 1
-    searches.head.request.urlParamsKeys shouldBe Set("age_range", "duration", "q", "page", "test")
+    searches.head.request.queryParams.keys.toSet shouldBe Set("age_range", "duration", "q", "page", "test")
   }
 
   it should "should uniquely merge 'queryParams' field and url query params across events" in {

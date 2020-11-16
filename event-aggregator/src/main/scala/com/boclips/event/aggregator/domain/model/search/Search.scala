@@ -34,8 +34,7 @@ case class SearchRequest
   timestamp: ZonedDateTime,
   userIdentity: UserIdentity,
   query: Query,
-  urlParamsKeys: Set[String],
-  queryParams: collection.immutable.Map[String, Iterable[String]]
+  queryParams: Map[String, Iterable[String]]
 )
 
 case class SearchResponse
