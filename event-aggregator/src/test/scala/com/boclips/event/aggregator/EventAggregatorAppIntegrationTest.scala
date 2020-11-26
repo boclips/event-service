@@ -1,5 +1,6 @@
 package com.boclips.event.aggregator
 
+import com.boclips.event.aggregator.config.EventAggregatorConfig
 import com.boclips.event.aggregator.infrastructure.mongo.MongoEventLoader.EVENTS_COLLECTION
 import com.boclips.event.aggregator.infrastructure.mongo.MongoVideoLoader.VIDEOS_COLLECTION
 import com.boclips.event.aggregator.presentation.TableNames
@@ -35,7 +36,8 @@ class EventAggregatorAppIntegrationTest extends IntegrationTest {
     val tableWriter = new TestTableWriter()
     val app = new EventAggregatorApp(
       tableWriter,
-      mongo)(spark)
+      mongo
+    )(spark)
 
     app.run()
 

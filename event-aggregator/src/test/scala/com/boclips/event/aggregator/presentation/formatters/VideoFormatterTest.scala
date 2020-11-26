@@ -17,6 +17,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{crea
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createVideoSearchResultImpression}
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideo, createVideoAsset}
+import com.google.gson.JsonObject
 
 import scala.collection.JavaConverters._
 
@@ -384,8 +385,8 @@ class VideoFormatterTest extends Test {
         recoupable = Some(true)
       )
     ),
-    List(createContractRestriction(id="client-facing", text = "madre mia")
-    ))
+      List(createContractRestriction(id = "client-facing", text = "madre mia")
+      ))
 
     val json = VideoFormatter formatRow model.VideoTableRow(
       video = video,
@@ -568,5 +569,15 @@ class VideoFormatterTest extends Test {
 
     val statsObject = json.getAsJsonObject("youTubeStats")
     statsObject.getInt("viewCount") shouldBe 120555
+  }
+
+  it should "write contained content packges" in {
+    val tableRow = model.VideoTableRow(
+      createVideo(id = "1"),
+      contentPackageNames = List("pack-1", "pack-2")
+    )
+    val result: JsonObject = VideoFormatter formatRow tableRow
+    val contentPackageNames = result.getStringList("contentPackageNames")
+    contentPackageNames.shouldBe(List("pack-1", "pack-2"))
   }
 }

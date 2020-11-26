@@ -5,6 +5,7 @@ plugins {
 repositories {
     mavenCentral()
     maven { url "http://dl.bintray.com/spark-packages/maven" }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -25,6 +26,9 @@ dependencies {
     implementation "com.google.apis:google-api-services-youtube:v3-rev20200618-1.30.9"
     compile group: 'com.google.oauth-client', name: 'google-oauth-client', version: '1.30.6'
     compile group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.31.0'
+    compile group: 'com.softwaremill.sttp.client3', name: 'core_2.12', version: '3.0.0-RC9'
+    compile group: 'com.softwaremill.sttp.client3', name: 'circe_2.12', version: '3.0.0-RC9'
+    compile group: 'io.circe', name: 'circe-generic_2.12', version: '0.13.0'
 
     testImplementation 'org.scalatest:scalatest_2.12:3.0.5'
     testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0"

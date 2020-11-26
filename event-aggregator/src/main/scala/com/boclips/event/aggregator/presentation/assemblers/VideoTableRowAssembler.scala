@@ -1,7 +1,8 @@
 package com.boclips.event.aggregator.presentation.assemblers
 
 import com.boclips.event.aggregator.domain.model.collections.Collection
-import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
+import com.boclips.event.aggregator.domain.model.contentpackages.{ContentPackage, ContentPackageId}
+import com.boclips.event.aggregator.domain.model.contentpartners.Channel
 import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
 import com.boclips.event.aggregator.domain.model.orders.{Order, VideoItemWithOrder}
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
@@ -25,6 +26,8 @@ object VideoTableRowAssembler {
                                      impressions: RDD[VideoSearchResultImpression],
                                      interactions: RDD[VideoInteractedWithEvent],
                                      youTubeVideoStats: RDD[YouTubeVideoStats],
+                                     contentPackages: RDD[ContentPackage],
+                                     videosForContentPackages: RDD[(ContentPackageId, VideoId)]
                                    ): RDD[VideoTableRow] = {
     val playbacksByVideoId: RDD[(VideoId, Iterable[(Playback, Option[User])])] = (
       playbacks.keyBy(_.user) leftOuterJoin users.keyBy(_.identity)
@@ -76,6 +79,14 @@ object VideoTableRowAssembler {
     val youTubeStatsByVideoId: RDD[(VideoId, YouTubeVideoStats)] =
       youTubeVideoStats.keyBy(_.videoId)
 
+    val contentPackageNamesByVideoId: RDD[(VideoId, Iterable[String])] = videosForContentPackages
+      .keyBy(_._1)
+      .join(contentPackages.keyBy(_.id))
+      .values
+      .map { case ((_, videoId), contentPackage) => (videoId, contentPackage.name) }
+      .groupBy(_._1)
+      .mapValues(_.map(it => it._2))
+
     videos
       .keyBy(_.id)
       .leftOuterJoin(playbacksByVideoId)
@@ -86,10 +97,11 @@ object VideoTableRowAssembler {
       .leftOuterJoin(impressionsByVideoId)
       .leftOuterJoin(interactionsByVideoId)
       .leftOuterJoin(youTubeStatsByVideoId)
+      .leftOuterJoin(contentPackageNamesByVideoId)
       .values
       .map {
         case
-          ((((((((
+          (((((((((
             video
             , videoPlaybacks
             ), videoOrders
@@ -99,6 +111,7 @@ object VideoTableRowAssembler {
             ), videoImpressions
             ), videoInteractions
             ), youTubeStats
+            ), contentPackageNames
             ) =>
           VideoTableRow(
             video = video,
@@ -110,6 +123,7 @@ object VideoTableRowAssembler {
             collections = collections,
             impressions = videoImpressions,
             interactions = videoInteractions,
+            contentPackageNames = contentPackageNames.getOrElse(Nil).toList
           )
       }
       .setName("Videos with related data")

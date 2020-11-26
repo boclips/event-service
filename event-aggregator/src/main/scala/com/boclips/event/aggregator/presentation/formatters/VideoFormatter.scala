@@ -78,6 +78,7 @@ object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
     }
     json.add("youTubeStats", youTubeStatsJson)
 
+    json.addStringArrayProperty("contentPackageNames", row.contentPackageNames)
     json.addProperty("playbackProvider", row.video.playbackProvider)
     json.addJsonArrayProperty("subjects", getAllSubjectsOf(row.video).map(SubjectFormatter.formatRow))
     json.addStringArrayProperty("ages", AgeFormatter.formatAges(row.video.ageRange))
