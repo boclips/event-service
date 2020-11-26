@@ -39,6 +39,8 @@ public class VideoDocument implements Serializable {
     @NonNull
     private Boolean promoted;
     @NonNull
+    private List<String> keywords;
+    @NonNull
     private List<VideoTopicDocument> topics;
 
     public static VideoDocumentBuilder sample() {

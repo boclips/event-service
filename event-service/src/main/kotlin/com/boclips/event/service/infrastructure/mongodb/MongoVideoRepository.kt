@@ -39,6 +39,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
             .assets(convertVideoAssetToVideoAssetDocument(video.assets))
             .promoted(video.promoted)
             .topics(video.topics.map(this::topicToDocument))
+            .keywords(video.keywords)
             .build()
 
         write(document)

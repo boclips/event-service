@@ -28,9 +28,10 @@ object VideoFactory {
         releasedOn: LocalDate = LocalDate.now(),
         type: VideoType = VideoType.INSTRUCTIONAL,
         originalDimensions: Dimensions? = Dimensions(640, 480),
-        assets: List<VideoAsset>? = listOf(),
+        assets: List<VideoAsset>? = emptyList(),
         promoted: Boolean = false,
-        topics: List<VideoTopic> = listOf()
+        topics: List<VideoTopic> = emptyList(),
+        keywords: List<String> = emptyList()
     ): Video {
         return Video
             .builder()
@@ -50,6 +51,7 @@ object VideoFactory {
             .assets(assets)
             .promoted(promoted)
             .topics(topics)
+            .keywords(keywords)
             .build()
     }
 }
