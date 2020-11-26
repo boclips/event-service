@@ -569,17 +569,4 @@ class VideoFormatterTest extends Test {
     val statsObject = json.getAsJsonObject("youTubeStats")
     statsObject.getInt("viewCount") shouldBe 120555
   }
-
-  it should "write keywords" in {
-    val video = createVideo(
-      id = "1",
-      keywords = List(
-        "key1", "key2", "key3"
-      )
-    )
-
-    val json = VideoFormatter formatRow model.VideoTableRow(video)
-
-    json.getStringList("keywords") shouldBe List("key1", "key2", "key3")
-  }
 }
