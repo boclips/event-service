@@ -158,4 +158,22 @@ class DocumentToVideoConverterTest extends Test {
     parentTopic.language shouldBe Locale.ITALIAN
     parentTopic.parent shouldBe None
   }
+
+  it should "convert keywords" in {
+    val video = DocumentToVideoConverter
+      .convert(
+        VideoDocument
+          .sample
+          .keywords(
+            List(
+              "some",
+              "key",
+              "words"
+            ).asJava
+          )
+          .build
+      )
+
+    video.keywords should be (List("some", "key", "words"))
+  }
 }

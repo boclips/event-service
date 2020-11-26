@@ -18,12 +18,13 @@ object VideoFactory {
                    subjects: List[String] = List("English"),
                    playbackProvider: String = "KALTURA",
                    playbackId: String = "playbackId",
-                   assets: List[VideoAsset] = List(),
+                   assets: List[VideoAsset] = Nil,
                    originalDimensions: Option[Dimensions] = None,
                    ageRange: AgeRange = AgeRange(Some(5), Some(7)),
                    duration: Duration = Duration.ofSeconds(180),
                    promoted: Boolean = false,
-                   topics: List[VideoTopic] = List()
+                   topics: List[VideoTopic] = Nil,
+                   keywords: List[String] = Nil
                  ): Video = {
     videos.Video(
       id = VideoId(id),
@@ -40,7 +41,8 @@ object VideoFactory {
       ageRange = ageRange,
       duration = duration,
       promoted = promoted,
-      topics = topics
+      topics = topics,
+      keywords = keywords
     )
   }
 

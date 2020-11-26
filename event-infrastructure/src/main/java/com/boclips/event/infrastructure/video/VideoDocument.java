@@ -73,6 +73,7 @@ public class VideoDocument implements Serializable {
                                         .build()
                         )
                         .build()
-                ));
+                ))
+                .keywords(Collections.singletonList("keyword"));
     }
 }
