@@ -7,7 +7,7 @@ import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
-import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createAnonymousUserIdentity, createBoclipsUserIdentity, createUser}
+import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.{createBoclipsUserIdentity, createUser}
 
 class PlaybackFormatterTest extends Test {
 
@@ -30,12 +30,6 @@ class PlaybackFormatterTest extends Test {
     val json = PlaybackFormatter.formatRow(createPlayback(user = createBoclipsUserIdentity("user-x")))
 
     json.getString("userId") shouldBe "user-x"
-  }
-
-  it should "write anonymous user id when user is anonymous" in {
-    val json = PlaybackFormatter.formatRow(createPlayback(user = createAnonymousUserIdentity()))
-
-    json.getString("userId") shouldBe "UNKNOWN"
   }
 
   it should "write refererId when it is present" in {

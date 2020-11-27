@@ -15,6 +15,16 @@ object UserFactory {
     )
   }
 
+  def createExternalUserIdentity(
+                                boclipsId: String = "boclips-internal-user-id",
+                                externalId: String = "external-user-id"
+                                ): ExternalUserIdentity = {
+    ExternalUserIdentity(
+      boclipsId = UserId(boclipsId),
+      externalId = ExternalUserId(externalId)
+    )
+  }
+
   def createAnonymousUserIdentity(
                                    deviceId: Option[String] = None,
                                  ): AnonymousUserIdentity = {

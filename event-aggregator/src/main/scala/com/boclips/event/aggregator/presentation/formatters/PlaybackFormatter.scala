@@ -1,7 +1,7 @@
 package com.boclips.event.aggregator.presentation.formatters
 
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
-import com.boclips.event.aggregator.domain.model.users.User
+import com.boclips.event.aggregator.domain.model.users.{AnonymousUserIdentity, BoclipsUserIdentity, ExternalUserIdentity, User}
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.{JsonElement, JsonNull, JsonObject}
 
@@ -16,7 +16,12 @@ object SimplePlaybackFormatter extends SingleRowFormatter[Playback] {
     }
     val url = playback.url
 
-    val userId = playback.user.id.map(_.value)
+    val (userId, identity) = playback.user match {
+      case BoclipsUserIdentity(id) => (id.value, "BOCLIPS")
+      case ExternalUserIdentity(id, externalId) => (s"${id.value}/${externalId.value}", "EXTERNAL")
+      case AnonymousUserIdentity(Some(deviceId)) => (s"device:${deviceId.value}", "ANONYMOUS")
+      case AnonymousUserIdentity(None) => throw new IllegalArgumentException()
+    }
 
     json.addDateTimeProperty("timestamp", playback.timestamp)
     json.addProperty("userId", userId)
