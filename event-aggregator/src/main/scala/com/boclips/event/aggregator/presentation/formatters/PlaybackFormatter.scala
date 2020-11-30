@@ -16,11 +16,11 @@ object SimplePlaybackFormatter extends SingleRowFormatter[Playback] {
     }
     val url = playback.url
 
-    val (userId, identity) = playback.user match {
-      case BoclipsUserIdentity(id) => (id.value, "BOCLIPS")
-      case ExternalUserIdentity(id, externalId) => (s"${id.value}/${externalId.value}", "EXTERNAL")
-      case AnonymousUserIdentity(Some(deviceId)) => (s"device:${deviceId.value}", "ANONYMOUS")
-      case AnonymousUserIdentity(None) => throw new IllegalArgumentException()
+    val userId = playback.user match {
+      case BoclipsUserIdentity(id) => id.value
+      case ExternalUserIdentity(id, externalId) => s"${id.value}/${externalId.value}"
+      case AnonymousUserIdentity(Some(deviceId)) => s"device:${deviceId.value}"
+      case AnonymousUserIdentity(None) => "UnknownDeviceId"
     }
 
     json.addDateTimeProperty("timestamp", playback.timestamp)
