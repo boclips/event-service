@@ -1,6 +1,7 @@
 package com.boclips.event.aggregator.presentation.assemblers
 
 import com.boclips.event.aggregator.domain.model.collections.CollectionId
+import com.boclips.event.aggregator.domain.model.contentpackages.{ContentPackage, ContentPackageId}
 import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelDetails, ChannelId, ContractId}
 import com.boclips.event.aggregator.domain.model.orders.OrderId
 import com.boclips.event.aggregator.domain.model.users.User
@@ -95,6 +96,26 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
       )
     )
 
+    val contentPackages = rdd(
+      ContentPackage(
+        id = ContentPackageId("pack-1"),
+        name = "pack-1"
+      ),
+      ContentPackage(
+        id = ContentPackageId("pack-2"),
+        name = "pack-2"
+      ),
+      ContentPackage(
+        id = ContentPackageId("pack-3"),
+        name = "pack-3"
+      )
+    )
+
+    val videosForContentPackages = rdd(
+      (ContentPackageId("pack-1"), VideoId("v1")),
+      (ContentPackageId("pack-3"), VideoId("v1")),
+    )
+
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
       playbacks,
@@ -105,7 +126,9 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
       collections,
       impressions,
       interactions,
-      youTubeStats
+      youTubeStats,
+      contentPackages,
+      videosForContentPackages
     ).collect().toList.sortBy(_.video.id.value)
 
     videosWithRelatedData should have size 2
@@ -119,6 +142,10 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
     videosWithRelatedData.head.collections.map(_.id) shouldBe List(
       CollectionId("collection-1"),
       CollectionId("collection-2")
+    )
+    videosWithRelatedData.head.contentPackageNames shouldBe List(
+      "pack-1",
+      "pack-3"
     )
 
     val v1Orders = videosWithRelatedData.head.orders.sortBy(_.order.id.value)

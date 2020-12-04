@@ -2,10 +2,12 @@ package com.boclips.event.aggregator
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
+import com.boclips.event.aggregator.EventAggregatorApp.getVideoIdsForContentPackages
 import com.boclips.event.aggregator.config._
 import com.boclips.event.aggregator.domain.model.ContractLegalRestriction
 import com.boclips.event.aggregator.domain.model.collections.Collection
-import com.boclips.event.aggregator.domain.model.contentpartners._
+import com.boclips.event.aggregator.domain.model.contentpackages.{ContentPackage, ContentPackageId}
+import com.boclips.event.aggregator.domain.model.contentpartners.{Channel, Contract}
 import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWithEvent, Event, PageRenderedEvent, PlatformInteractedWithEvent}
 import com.boclips.event.aggregator.domain.model.okrs.{Monthly, Weekly}
 import com.boclips.event.aggregator.domain.model.orders.Order
@@ -25,12 +27,14 @@ import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembl
 import com.boclips.event.aggregator.domain.service.user.UserAssembler
 import com.boclips.event.aggregator.domain.service.video.{VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
-import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContractLegalRestrictionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
+import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContentPackageLoader, MongoContractLegalRestrictionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
+import com.boclips.event.aggregator.infrastructure.videoservice.ContentPackageMetricsClient
 import com.boclips.event.aggregator.infrastructure.youtube.YouTubeService
+import com.boclips.event.aggregator.presentation.TableNames.VIDEOS
 import com.boclips.event.aggregator.presentation.assemblers.{CollectionTableRowAssembler, ContractTableRowAssembler, UserTableRowAssembler, VideoTableRowAssembler}
 import com.boclips.event.aggregator.presentation.formatters.{ChannelFormatter, CollectionFormatter, ContractFormatter, DataVersionFormatter, VideoFormatter}
-import com.boclips.event.aggregator.presentation.model.{ContractTableRow, VideoTableRow}
-import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableNames, TableWriter}
+import com.boclips.event.aggregator.presentation.model.VideoTableRow
+import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, TableWriter}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{Row, SparkSession}
@@ -46,12 +50,37 @@ object EventAggregatorApp {
     implicit val session: SparkSession = sparkConfig.session
     val writer = new BigQueryTableWriter(BigQueryConfig())
     val mongoSparkProvider = new SparkMongoClient(MongoConfig())
-    val youTubeConfig = YouTubeConfig.fromEnv
     new EventAggregatorApp(
       writer,
       mongoSparkProvider,
-      EventAggregatorConfig(neo4jConfig, youTube = Some(youTubeConfig))
+      EventAggregatorConfig(
+        neo4j = neo4jConfig,
+        youTube = Some(YouTubeConfig.fromEnv),
+        contentPackageMetrics = Some(ContentPackageMetricsConfig.fromEnv)
+      )
     ).run()
+  }
+
+  def getVideoIdsForContentPackages(
+                                     session: SparkSession,
+                                     contentPackages: RDD[ContentPackage],
+                                     config: ContentPackageMetricsConfig
+                                   ): RDD[(ContentPackageId, VideoId)] = {
+    contentPackages.mapPartitions { chunk =>
+      val client = ContentPackageMetricsClient(config)
+      chunk.flatMap { contentPackage =>
+        var result = client.getVideoIdsForContentPackage(contentPackage)
+        val requestCursor = result.cursor
+        var videoIds = result.videoIds
+        var i = 1
+        while (result.videoIds.nonEmpty) {
+          result = client.getVideoIdsForContentPackage(contentPackage, requestCursor)
+          videoIds = videoIds ++ result.videoIds
+          i += 1
+        }
+        videoIds.map(videoId => (contentPackage.id, videoId))
+      }
+    }
   }
 }
 
@@ -70,6 +99,7 @@ class EventAggregatorApp(
   val channels: RDD[Channel] = new MongoChannelLoader(mongoClient).load()
   val contracts: RDD[Contract] = new MongoContractLoader(mongoClient).load()
   val orders: RDD[Order] = new MongoOrderLoader(mongoClient).load()
+  val contentPackages: RDD[ContentPackage] = new MongoContentPackageLoader(mongoClient).load()
   val contractLegalRestrictions: RDD[ContractLegalRestriction] = new MongoContractLegalRestrictionLoader(mongoClient).load()
 
   val sessions: RDD[Session] = new SessionAssembler(events, "all data").assembleSessions()
@@ -77,13 +107,20 @@ class EventAggregatorApp(
   val searches: RDD[Search] = new SearchAssembler(sessions).assembleSearches()
   val storageCharges: RDD[VideoStorageCharge] = new StorageChargesAssembler(videos).assembleStorageCharges
 
-
   def run(): Unit = {
     logProcessingStart(s"Updating videos")
     val youtubeStatsByVideoPlaybackId: RDD[YouTubeVideoStats] = getYoutubeVideoStats
     val impressions = VideoSearchResultImpressionAssembler(searches)
     val videoInteractions = VideoInteractionAssembler(events)
     val contractsWithRelatedData = ContractTableRowAssembler.assembleContractsWithRelatedData(contracts, contractLegalRestrictions)
+    val videoIdsForContentPackages = configuration.contentPackageMetrics.map(config =>
+      getVideoIdsForContentPackages(
+        session,
+        contentPackages,
+        config
+      )
+    )
+      .getOrElse(session.sparkContext.emptyRDD)
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
       playbacks,
@@ -94,13 +131,15 @@ class EventAggregatorApp(
       collections,
       impressions,
       videoInteractions,
-      youtubeStatsByVideoPlaybackId
+      youtubeStatsByVideoPlaybackId,
+      contentPackages,
+      videoIdsForContentPackages
     )
     if (configuration.neo4j.isDefined)
       logProcessingStart(s"Writing to Neo4j currently turned off.")
-      // writeToGraph(videosWithRelatedData)
+    // writeToGraph(videosWithRelatedData)
 
-    writeTable(videosWithRelatedData, TableNames.VIDEOS)(VideoFormatter, implicitly)
+    writeTable(videosWithRelatedData, VIDEOS)(VideoFormatter, implicitly)
 
     logProcessingStart(s"Updating contracts")
     writeTable(contractsWithRelatedData, "contracts")(ContractFormatter, implicitly)
