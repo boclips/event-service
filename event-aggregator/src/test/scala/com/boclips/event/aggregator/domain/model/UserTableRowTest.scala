@@ -16,7 +16,7 @@ class UserTableRowTest extends Test {
 
     val user = UserFactory.createUser(createdAt = ZonedDateTime.parse("2020-02-10T00:00:00Z"))
 
-    val userWithStatus = UserTableRow.from(user, playbacks = List(), referredPlaybacks = List(), searches = List(), sessions = List(), monthsActive = List(YearMonth.of(2020, FEBRUARY)), today)
+    val userWithStatus = UserTableRow.from(user, playbacks = List(), referredPlaybacks = List(), searches = List(), sessions = List(), monthsActive = List(YearMonth.of(2020, FEBRUARY)), interactions = List(),today)
 
     userWithStatus.monthlyActiveStatus should have size 1
     userWithStatus.monthlyActiveStatus.head.month shouldBe YearMonth.of(2020, FEBRUARY)
@@ -27,7 +27,7 @@ class UserTableRowTest extends Test {
 
     val user = UserFactory.createUser(createdAt = ZonedDateTime.parse("2020-01-10T00:00:00Z"))
 
-    val userWithStatus = UserTableRow.from(user, playbacks = List(), referredPlaybacks = List(), searches = List(), sessions = List(), monthsActive = List(YearMonth.of(2020, JANUARY)), today)
+    val userWithStatus = UserTableRow.from(user, playbacks = List(), referredPlaybacks = List(), searches = List(), sessions = List(), monthsActive = List(YearMonth.of(2020, JANUARY)), interactions = List(), today)
 
     userWithStatus.monthlyActiveStatus should have size 2
     userWithStatus.monthlyActiveStatus should contain(UserActiveStatus(month = YearMonth.of(2020, JANUARY), isActive = true))
@@ -38,7 +38,7 @@ class UserTableRowTest extends Test {
 
     val user = UserFactory.createUser(createdAt = ZonedDateTime.parse("2019-11-01T00:00:00Z"))
 
-    val userWithStatus = UserTableRow.from(user, playbacks = List(), referredPlaybacks = List(), searches = List(), sessions = List(), monthsActive = List(YearMonth.of(2019, NOVEMBER)), today)
+    val userWithStatus = UserTableRow.from(user, playbacks = List(), referredPlaybacks = List(), searches = List(), sessions = List(), monthsActive = List(YearMonth.of(2019, NOVEMBER)), interactions = List(), today)
 
     userWithStatus.monthlyActiveStatus should have size 4
     userWithStatus.monthlyActiveStatus should contain(UserActiveStatus(month = YearMonth.of(2020, JANUARY), isActive = true))

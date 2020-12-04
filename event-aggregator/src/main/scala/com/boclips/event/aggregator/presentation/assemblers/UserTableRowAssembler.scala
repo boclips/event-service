@@ -3,6 +3,7 @@ package com.boclips.event.aggregator.presentation.assemblers
 import java.time._
 
 import com.boclips.event.aggregator._
+import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
@@ -38,16 +39,24 @@ object UserTableRowAssembler {
       .keyBy(_.user)
       .groupByKey()
 
+    val interactionsByUser: RDD[(UserIdentity, Iterable[VideoInteractedWithEvent])] = sessions
+      .filter(p => p.user.id.isDefined)
+      .flatMap(p => p.events.filter(event => event.isInstanceOf[VideoInteractedWithEvent]))
+      .map(event => event.asInstanceOf[VideoInteractedWithEvent])
+      .keyBy(_.userIdentity)
+      .groupByKey()
+
     users
       .keyBy(_.identity)
       .leftOuterJoin(playbacksByUser)
       .leftOuterJoin(referredPlaybacksByUser)
       .leftOuterJoin(searchesByUser)
       .leftOuterJoin(activeMonthsByUser)
+      .leftOuterJoin(interactionsByUser)
       .leftOuterJoin(sessionsByUser)
       .values
       .map {
-        case (((((user, playbacks), referredPlaybacks), searches), monthsActive), sessions) => {
+        case ((((((user, playbacks), referredPlaybacks), searches), monthsActive), interactions), sessions) => {
           UserTableRow.from(
             user = user,
             playbacks = playbacks,
@@ -56,6 +65,7 @@ object UserTableRowAssembler {
             sessions = sessions,
             monthsActive = monthsActive,
             until = LocalDate.now(),
+            interactions = interactions,
           )
         }
       }

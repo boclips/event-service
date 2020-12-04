@@ -2,6 +2,7 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import java.time.{Month, YearMonth, ZonedDateTime}
 
+import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
@@ -23,7 +24,8 @@ class UserFormatterTest extends Test {
                     referredPlaybacks: List[Playback] = Nil,
                     searches: List[Search] = Nil,
                     sessions: List[Session] = Nil,
-                  ): UserTableRow = model.UserTableRow(user, status, playbacks, referredPlaybacks, searches, sessions)
+                    interactions: List[VideoInteractedWithEvent] = Nil,
+                  ): UserTableRow = model.UserTableRow(user, status, playbacks, referredPlaybacks, searches, sessions, interactions)
 
   }
 
@@ -298,6 +300,22 @@ class UserFormatterTest extends Test {
     val json = UserFormatter formatRow createUser().withNested(sessions = List(SessionFactory.createSession(events = List(EventFactory.createCollectionInteractedWithEvent(), EventFactory.createPageRenderedEvent())),
     ))
     json.getAsJsonArray("sessions") should have size 1
+
+  }
+
+  it should "write users video interactions" in {
+    val json = UserFormatter formatRow createUser().withNested(interactions = List(
+      EventFactory.createVideoInteractedWithEvent(subtype = Some("HI"),
+        timestamp = ZonedDateTime.parse("2017-12-03T10:15:30Z"),
+        videoId = "vid-1"
+      )))
+
+    val interactionsJson = json.getAsJsonArray("interactions")
+
+    interactionsJson should have size 1
+    interactionsJson.get(0).getAsJsonObject.getString("subtype") shouldBe "HI"
+    interactionsJson.get(0).getAsJsonObject.getString("timestamp") shouldBe "2017-12-03T10:15:30Z"
+    interactionsJson.get(0).getAsJsonObject.getString("videoId") shouldBe "vid-1"
 
   }
 

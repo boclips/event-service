@@ -58,7 +58,7 @@ object SimpleUserFormatter extends SingleRowFormatter[User] {
 object UserFormatter extends SingleRowFormatter[UserTableRow] {
 
   override def writeRow(userWithRelatedData: UserTableRow, json: JsonObject): Unit = {
-    val UserTableRow(user, monthlyActiveStatuses, playbacks, referredPlaybacks, searches, sessions) = userWithRelatedData
+    val UserTableRow(user, monthlyActiveStatuses, playbacks, referredPlaybacks, searches, sessions, interactions) = userWithRelatedData
 
     SimpleUserFormatter.writeRow(user, json)
 
@@ -73,6 +73,16 @@ object UserFormatter extends SingleRowFormatter[UserTableRow] {
 
     val sessionsJson = sessions.map(session => SessionFormatter.formatRow(session))
     json.addJsonArrayProperty("sessions", sessionsJson)
+
+    val interactionsJson = interactions.map(interaction => {
+    val interactionJson = new JsonObject
+      interactionJson.addDateTimeProperty("timestamp", interaction.timestamp)
+      interactionJson.addProperty("videoId", interaction.videoId.value)
+      interactionJson.addProperty("subtype", interaction.subtype)
+      interactionJson
+    }
+    )
+    json.addJsonArrayProperty("interactions", interactionsJson)
 
     val monthlyStatusesJson = monthlyActiveStatuses.map(status => {
       val statusJson = new JsonObject

@@ -8,7 +8,7 @@ import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, User, UserId, UserIdentity}
 import com.boclips.event.aggregator.presentation.assemblers
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEvent
+import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.{createVideoInteractedWithEvent, createVideoSegmentPlayedEvent}
 import com.boclips.event.aggregator.testsupport.testfactories.PlaybackFactory.createPlayback
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearch, createSearchRequest}
 import com.boclips.event.aggregator.testsupport.testfactories.SessionFactory.createSession
@@ -98,6 +98,23 @@ class UserTableRowAssemblerTest extends IntegrationTest {
 
     usersWithRelatedData should have size 1
     usersWithRelatedData.head.sessions should have size 1
+  }
+
+  it should "extract video interactions for every user" in sparkTest { implicit spark =>
+    val users = rdd(user)
+    val playbacks = rdd[Playback]()
+    val searches = rdd[Search]()
+    val sessions = rdd(
+      createSession(user = userIdentity, events = List(
+        createVideoSegmentPlayedEvent(userIdentity = user.identity),
+        createVideoInteractedWithEvent(userIdentity = user.identity, subtype = Some("LTI_SEARCH_AND_EMBED")),
+        createVideoInteractedWithEvent(userIdentity = user.identity, subtype = Some("LINK_SHARED")),
+      )))
+
+    val usersWithRelatedData = assemblers.UserTableRowAssembler(users, playbacks, searches, sessions).collect().toList
+
+    usersWithRelatedData should have size 1
+    usersWithRelatedData.head.interactions should have size 2
   }
 
 }

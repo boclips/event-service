@@ -2,6 +2,7 @@ package com.boclips.event.aggregator.presentation.model
 
 import java.time.{LocalDate, YearMonth}
 
+import com.boclips.event.aggregator.domain.model.events.VideoInteractedWithEvent
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
 import com.boclips.event.aggregator.domain.model.search.Search
 import com.boclips.event.aggregator.domain.model.sessions.Session
@@ -20,6 +21,7 @@ object UserTableRow {
             searches: List[Search],
             sessions: List[Session],
             monthsActive: List[YearMonth],
+            interactions: List[VideoInteractedWithEvent],
             until: LocalDate
           ): UserTableRow = {
     UserTableRow(
@@ -29,6 +31,7 @@ object UserTableRow {
       referredPlaybacks = referredPlaybacks,
       searches = searches,
       sessions = sessions,
+      interactions = interactions,
     )
   }
 
@@ -50,4 +53,5 @@ case class UserTableRow(
                          referredPlaybacks: List[Playback],
                          searches: List[Search],
                          sessions: List[Session],
+                         interactions: List[VideoInteractedWithEvent]
                        )
