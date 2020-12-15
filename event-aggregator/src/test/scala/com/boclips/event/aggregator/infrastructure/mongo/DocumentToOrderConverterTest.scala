@@ -133,6 +133,14 @@ class DocumentToOrderConverterTest extends Test {
     order.isThroughPlatform shouldBe true
   }
 
+  it should "convert status" in {
+    val document = OrderDocument.sample().status("quo").build()
+
+    val order = DocumentToOrderConverter.convert(document)
+
+    order.status shouldBe "quo"
+  }
+
   it should "convert currency when exists" in {
     val document = OrderDocument.sample().currency("USD").build()
     val order = DocumentToOrderConverter.convert(document)

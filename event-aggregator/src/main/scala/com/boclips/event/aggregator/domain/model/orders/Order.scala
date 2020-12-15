@@ -37,6 +37,7 @@ case class Order(
                   isbnOrProductNumber: Option[String],
                   currency: Option[Currency],
                   fxRateToGbp: Option[BigDecimal],
+                  status: String,
                 )
 
 case class VideoItemWithOrder(item: OrderItem, order: Order)

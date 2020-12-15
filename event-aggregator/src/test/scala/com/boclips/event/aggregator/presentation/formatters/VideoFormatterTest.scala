@@ -220,7 +220,7 @@ class VideoFormatterTest extends Test {
         isThroughPlatform = false,
         currency = Some(Currency.getInstance("USD")),
         fxRateToGbp = Some(BigDecimal(10.0)),
-
+        status = "READY"
       ))
     )
 
@@ -242,6 +242,7 @@ class VideoFormatterTest extends Test {
     orderJson.getString("currency") shouldBe "USD"
     orderJson.get("fxRateToGbp").getAsDouble shouldBe 10.0
     orderJson.getBool("isThroughPlatform") shouldBe false
+    orderJson.getString("status") shouldBe "READY"
   }
 
   it should "write nested order null values gracefully" in {

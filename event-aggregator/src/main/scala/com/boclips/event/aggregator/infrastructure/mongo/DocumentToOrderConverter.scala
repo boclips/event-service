@@ -26,6 +26,7 @@ object DocumentToOrderConverter {
       isbnOrProductNumber = Option(document.getIsbnOrProductNumber),
       currency = Option(document.getCurrency).map(Currency.getInstance),
       fxRateToGbp = Option(document.getFxRateToGbp).map(BigDecimal(_)),
+      status = document.getStatus,
     )
   }
 

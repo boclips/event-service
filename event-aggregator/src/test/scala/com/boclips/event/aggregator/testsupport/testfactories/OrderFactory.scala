@@ -21,7 +21,8 @@ object OrderFactory {
                    isThroughPlatform: Boolean = true,
                    isbnOrProductNumber: Option[String] = Some("isbn"),
                    currency: Option[Currency] = Some(Currency.getInstance("USD")),
-                   fxRateToGbp: Option[BigDecimal] = Some(10)
+                   fxRateToGbp: Option[BigDecimal] = Some(10),
+                   status: String = "status"
                  ): Order = {
     orders.Order(
       id = id,
@@ -35,7 +36,8 @@ object OrderFactory {
       isThroughPlatform = isThroughPlatform,
       isbnOrProductNumber = isbnOrProductNumber,
       currency = currency,
-      fxRateToGbp = fxRateToGbp
+      fxRateToGbp = fxRateToGbp,
+      status = status,
     )
   }
 
