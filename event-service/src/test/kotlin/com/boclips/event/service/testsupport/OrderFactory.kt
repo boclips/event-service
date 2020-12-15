@@ -14,7 +14,7 @@ object OrderFactory {
     fun createOrder(
             id: String = "order-123",
             legacyOrderId:String = "other-id",
-            status: OrderStatus? = OrderStatus.COMPLETED,
+            status: OrderStatus? = OrderStatus.DELIVERED,
             createdAt: ZonedDateTime = ZonedDateTime.now(),
             updatedAt: ZonedDateTime = ZonedDateTime.now(),
             customerOrganisationName: String = "customer organisation name",

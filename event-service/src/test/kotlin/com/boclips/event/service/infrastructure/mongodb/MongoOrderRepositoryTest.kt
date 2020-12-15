@@ -26,7 +26,7 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
             createOrder(
                 id = "123",
                 legacyOrderId = "567",
-                status = OrderStatus.COMPLETED,
+                status = OrderStatus.DELIVERED,
                 createdAt = ZonedDateTime.parse("2019-10-01T00:00:00Z"),
                 updatedAt = ZonedDateTime.parse("2020-11-01T00:00:00Z"),
                 customerOrganisationName = "pearson",
@@ -45,7 +45,7 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
         val document = document()
         assertThat(document.getString("_id")).isEqualTo("123")
         assertThat(document.getString("legacyOrderId")).isEqualTo("567")
-        assertThat(document.getString("status")).isEqualTo("COMPLETED")
+        assertThat(document.getString("status")).isEqualTo("DELIVERED")
         assertThat(document.getDate("createdAt")).isEqualTo("2019-10-01T00:00:00Z")
         assertThat(document.getDate("updatedAt")).isEqualTo("2020-11-01T00:00:00Z")
         assertThat(document.getString("customerOrganisationName")).isEqualTo("pearson")
