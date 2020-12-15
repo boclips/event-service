@@ -6,9 +6,9 @@ import org.apache.spark.sql.SparkSession
 
 class MongoOrderLoaderTest extends IntegrationTest {
 
-  it should "load orders with status COMPLETED and DELIVERED" in mongoSparkTest { (spark: SparkSession, mongo) =>
+  it should "load orders with status READY and DELIVERED" in mongoSparkTest { (spark: SparkSession, mongo) =>
     val collection = mongo.collection[OrderDocument]("orders")
-    collection insertOne OrderDocument.sample.id("order-1").status("COMPLETED").build()
+    collection insertOne OrderDocument.sample.id("order-1").status("READY").build()
     collection insertOne OrderDocument.sample.id("order-2").status("CANCELLED").build()
     collection insertOne OrderDocument.sample.id("order-3").status("DELIVERED").build()
 

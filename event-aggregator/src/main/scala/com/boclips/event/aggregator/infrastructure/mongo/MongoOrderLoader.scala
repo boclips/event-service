@@ -12,7 +12,7 @@ class MongoOrderLoader(private val mongoClient: SparkMongoClient) extends OrderL
   override def load()(implicit session: SparkSession): RDD[Order] = {
     mongoClient
       .collectionRDD[OrderDocument]("orders")
-      .filter(doc => doc.getStatus == "DELIVERED" || doc.getStatus == "COMPLETED")
+      .filter(doc => doc.getStatus == "DELIVERED" || doc.getStatus == "READY")
       .map(DocumentToOrderConverter.convert)
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Orders")
