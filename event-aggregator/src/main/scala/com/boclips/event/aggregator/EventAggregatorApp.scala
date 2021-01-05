@@ -38,6 +38,7 @@ import com.boclips.event.aggregator.presentation.{RowFormatter, TableFormatter, 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{Row, SparkSession}
+import org.apache.spark.storage.StorageLevel
 import org.neo4j.spark.dataframe.Neo4jDataFrame
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -66,21 +67,30 @@ object EventAggregatorApp {
                                      contentPackages: RDD[ContentPackage],
                                      config: ContentPackageMetricsConfig
                                    ): RDD[(ContentPackageId, VideoId)] = {
-    contentPackages.mapPartitions { chunk =>
-      val client = ContentPackageMetricsClient(config)
-      chunk.flatMap { contentPackage =>
-        var result = client.getVideoIdsForContentPackage(contentPackage)
-        val requestCursor = result.cursor
-        var videoIds = result.videoIds
-        var i = 1
-        while (result.videoIds.nonEmpty) {
-          result = client.getVideoIdsForContentPackage(contentPackage, requestCursor)
-          videoIds = videoIds ++ result.videoIds
-          i += 1
-        }
-        videoIds.map(videoId => (contentPackage.id, videoId))
-      }
+    def printContentPackagePage(name: String, page: Int, videoCount: Int): Unit = {
+      print(s"Content package ${name}, page #${page}: Got ${videoCount} videos")
     }
+
+    contentPackages
+      .mapPartitions { chunk =>
+        val client = ContentPackageMetricsClient(config)
+        chunk.flatMap { contentPackage =>
+          var result = client.getVideoIdsForContentPackage(contentPackage)
+          printContentPackagePage(contentPackage.name, 0, result.videoIds.length)
+          val requestCursor = result.cursor
+          var videoIds = result.videoIds
+          var i = 1
+          while (result.videoIds.nonEmpty) {
+            result = client.getVideoIdsForContentPackage(contentPackage, requestCursor)
+            printContentPackagePage(contentPackage.name, i, result.videoIds.length)
+            videoIds = videoIds ++ result.videoIds
+            i += 1
+          }
+          videoIds.map(videoId => (contentPackage.id, videoId))
+        }
+      }
+      .persist(StorageLevel.MEMORY_AND_DISK)
+      .setName("Content Packages")
   }
 }
 
@@ -108,11 +118,15 @@ class EventAggregatorApp(
   val storageCharges: RDD[VideoStorageCharge] = new StorageChargesAssembler(videos).assembleStorageCharges
 
   def run(): Unit = {
-    logProcessingStart(s"Updating videos")
+    logProcessingStart(s"Getting YouTube statistics")
     val youtubeStatsByVideoPlaybackId: RDD[YouTubeVideoStats] = getYoutubeVideoStats
+    logProcessingStart(s"Assembling video search results")
     val impressions = VideoSearchResultImpressionAssembler(searches)
+    logProcessingStart(s"Assembling video interactions results")
     val videoInteractions = VideoInteractionAssembler(events)
+    logProcessingStart(s"Assembling contracts")
     val contractsWithRelatedData = ContractTableRowAssembler.assembleContractsWithRelatedData(contracts, contractLegalRestrictions)
+    logProcessingStart(s"Getting content packages")
     val videoIdsForContentPackages = configuration.contentPackageMetrics.map(config =>
       getVideoIdsForContentPackages(
         session,
@@ -121,6 +135,7 @@ class EventAggregatorApp(
       )
     )
       .getOrElse(session.sparkContext.emptyRDD)
+    logProcessingStart(s"Assembling videos")
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
       playbacks,
@@ -135,9 +150,6 @@ class EventAggregatorApp(
       contentPackages,
       videoIdsForContentPackages
     )
-    if (configuration.neo4j.isDefined)
-      logProcessingStart(s"Writing to Neo4j currently turned off.")
-    // writeToGraph(videosWithRelatedData)
 
     writeTable(videosWithRelatedData, VIDEOS)(VideoFormatter, implicitly)
 
@@ -195,6 +207,7 @@ class EventAggregatorApp(
     val tableFormatter = new TableFormatter[T](formatter)
     val jsonData = tableFormatter.formatRowsAsJson(data)
     val schema = tableFormatter.schema()
+    logProcessingStart(s"Writing table ${tableName}")
     writer.writeTable(jsonData, schema, tableName)
   }
 
