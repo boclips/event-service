@@ -68,7 +68,7 @@ object EventAggregatorApp {
                                      config: ContentPackageMetricsConfig
                                    ): RDD[(ContentPackageId, VideoId)] = {
     def printContentPackagePage(name: String, page: Int, videoCount: Int): Unit = {
-      print(s"Content package ${name}, page #${page}: Got ${videoCount} videos")
+      println(s"Content package ${name}, page #${page}: Got ${videoCount} videos")
     }
 
     contentPackages
