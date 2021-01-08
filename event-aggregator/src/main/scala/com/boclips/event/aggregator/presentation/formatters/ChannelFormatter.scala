@@ -35,6 +35,13 @@ object ChannelFormatter extends SingleRowFormatter[Channel] {
     json.addProperty("marketingStatus", obj.marketing.status.orNull)
     json.addProperty("marketingOneLineIntro", obj.marketing.oneLineIntro.orNull)
     json.addStringArrayProperty("marketingLogos", obj.marketing.logos.getOrElse(Nil))
+
+    val uniqueLogo: Option[String] = obj.marketing.logos match {
+      case Some(value) => Some(value.head)
+      case None => None
+    }
+
+    json.addProperty("marketingUniqueLogo", uniqueLogo.orNull)
     json.addProperty("marketingShowreel", obj.marketing.showreel.orNull)
     json.addStringArrayProperty("marketingSampleVideos", obj.marketing.sampleVideos.getOrElse(Nil))
   }

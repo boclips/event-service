@@ -39,7 +39,7 @@ class ChannelFormatterTest extends Test {
       marketing = ChannelMarketing(
         status = Some("my status"),
         oneLineIntro = Some("my one liner"),
-        logos = Some(List("http://logo.com")),
+        logos = Some(List("http://logo.com","logo2")),
         showreel = Some("http://showreel.com"),
         sampleVideos = Some(List("http://sampleVideos.com"))
       )
@@ -72,7 +72,8 @@ class ChannelFormatterTest extends Test {
 
     json.getString("marketingStatus") shouldBe "my status"
     json.getString("marketingOneLineIntro") shouldBe "my one liner"
-    json.getStringList("marketingLogos") shouldBe List("http://logo.com")
+    json.getStringList("marketingLogos") shouldBe List("http://logo.com","logo2")
+    json.getString("marketingUniqueLogo") shouldBe "http://logo.com"
     json.getString("marketingShowreel") shouldBe "http://showreel.com"
     json.getStringList("marketingSampleVideos") shouldBe List("http://sampleVideos.com")
   }
@@ -141,6 +142,7 @@ class ChannelFormatterTest extends Test {
     json.get("marketingStatus") shouldBe JsonNull.INSTANCE
     json.get("marketingOneLineIntro") shouldBe JsonNull.INSTANCE
     json.getStringList("marketingLogos") shouldBe List()
+    json.get("marketingUniqueLogo") shouldBe JsonNull.INSTANCE
     json.get("marketingShowreel") shouldBe JsonNull.INSTANCE
     json.getStringList("marketingSampleVideos") shouldBe List()
   }
