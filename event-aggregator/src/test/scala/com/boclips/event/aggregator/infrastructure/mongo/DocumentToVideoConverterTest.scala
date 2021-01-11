@@ -176,4 +176,15 @@ class DocumentToVideoConverterTest extends Test {
 
     video.keywords should be (List("some", "key", "words"))
   }
+
+  it should "convert source video reference" in {
+    val video = DocumentToVideoConverter
+      .convert(
+        VideoDocument
+          .sample
+          .sourceVideoReference("vr")
+          .build
+      )
+    video.sourceVideoReference should be (Some("vr"))
+  }
 }

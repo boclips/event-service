@@ -24,7 +24,8 @@ object VideoFactory {
                    duration: Duration = Duration.ofSeconds(180),
                    promoted: Boolean = false,
                    topics: List[VideoTopic] = Nil,
-                   keywords: List[String] = Nil
+                   keywords: List[String] = Nil,
+                   sourceVideoReference: Option[String] = None,
                  ): Video = {
     videos.Video(
       id = VideoId(id),
@@ -42,7 +43,8 @@ object VideoFactory {
       duration = duration,
       promoted = promoted,
       topics = topics,
-      keywords = keywords
+      keywords = keywords,
+      sourceVideoReference = sourceVideoReference,
     )
   }
 

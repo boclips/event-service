@@ -35,7 +35,8 @@ object DocumentToVideoConverter {
       ageRange = AgeRange(integerOption(document.getAgeRangeMin), integerOption(document.getAgeRangeMax)),
       promoted = document.getPromoted,
       topics = document.getTopics.asScala.toList.map(convertTopic),
-      keywords = Option(document.getKeywords).map(_.asScala.toList).getOrElse(Nil)
+      keywords = Option(document.getKeywords).map(_.asScala.toList).getOrElse(Nil),
+      sourceVideoReference = Option(document.getSourceVideoReference)
     )
   }
 

@@ -42,6 +42,7 @@ public class VideoDocument implements Serializable {
     private List<String> keywords;
     @NonNull
     private List<VideoTopicDocument> topics;
+    private String sourceVideoReference;
 
     public static VideoDocumentBuilder sample() {
         return VideoDocument.builder()
@@ -74,6 +75,7 @@ public class VideoDocument implements Serializable {
                         )
                         .build()
                 ))
-                .keywords(Collections.singletonList("keyword"));
+                .keywords(Collections.singletonList("keyword"))
+                .sourceVideoReference("some-video-reference");
     }
 }

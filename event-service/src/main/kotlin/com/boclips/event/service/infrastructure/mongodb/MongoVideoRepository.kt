@@ -40,6 +40,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
             .promoted(video.promoted)
             .topics(video.topics.map(this::topicToDocument))
             .keywords(video.keywords)
+            .sourceVideoReference(video.sourceVideoReference)
             .build()
 
         write(document)

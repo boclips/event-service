@@ -577,7 +577,7 @@ class VideoFormatterTest extends Test {
     statsObject.getInt("viewCount") shouldBe 120555
   }
 
-  it should "write contained content packges" in {
+  it should "write contained content packages" in {
     val tableRow = model.VideoTableRow(
       createVideo(id = "1"),
       contentPackageNames = List("pack-1", "pack-2")
@@ -585,5 +585,17 @@ class VideoFormatterTest extends Test {
     val result: JsonObject = VideoFormatter formatRow tableRow
     val contentPackageNames = result.getStringList("contentPackageNames")
     contentPackageNames.shouldBe(List("pack-1", "pack-2"))
+  }
+
+  it should "write source video reference" in {
+    val tableRow = model.VideoTableRow(
+      createVideo(
+        id = "1",
+        sourceVideoReference = Some("source-ref")
+      )
+    )
+    val result: JsonObject = VideoFormatter formatRow tableRow
+    val sourceVideoReference = result.getString("sourceVideoReference")
+    sourceVideoReference should be("source-ref")
   }
 }

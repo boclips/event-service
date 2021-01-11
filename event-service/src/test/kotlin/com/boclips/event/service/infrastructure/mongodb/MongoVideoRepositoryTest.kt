@@ -70,7 +70,8 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                                 .build()
                         ).build()
                 ),
-                keywords = listOf("key", "words", "are", "cool")
+                keywords = listOf("key", "words", "are", "cool"),
+                sourceVideoReference = "video-reference"
             )
         )
 
@@ -97,6 +98,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.assets.first().sizeKb).isEqualTo(1024)
         assertThat(document.promoted).isEqualTo(true)
         assertThat(document.keywords).containsExactly("key", "words", "are", "cool")
+        assertThat(document.sourceVideoReference).isEqualTo("video-reference")
 
         val firstTopic = document.topics.first()
         assertThat(firstTopic.name).isEqualTo("topic")
