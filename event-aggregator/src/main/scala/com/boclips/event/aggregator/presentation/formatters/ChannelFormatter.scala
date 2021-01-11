@@ -37,6 +37,7 @@ object ChannelFormatter extends SingleRowFormatter[Channel] {
     json.addStringArrayProperty("marketingLogos", obj.marketing.logos.getOrElse(Nil))
 
     val uniqueLogo: Option[String] = obj.marketing.logos match {
+      case Some(List()) => None
       case Some(value) => Some(value.head)
       case None => None
     }

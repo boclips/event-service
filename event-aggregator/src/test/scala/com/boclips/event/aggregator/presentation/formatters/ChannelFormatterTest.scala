@@ -146,4 +146,46 @@ class ChannelFormatterTest extends Test {
     json.get("marketingShowreel") shouldBe JsonNull.INSTANCE
     json.getStringList("marketingSampleVideos") shouldBe List()
   }
+
+  it should "deal with empty list of logos" in {
+    val channel = createChannel(
+      id = "my-channel-id",
+      name = "cool channel",
+      details = ChannelDetails(
+        contentTypes = None,
+        contentCategories = None,
+        language = None,
+        hubspotId = None,
+        contractId = None,
+        awards = None,
+        notes = None
+      ),
+      ingest = ChannelIngest(
+        _type = "MRSS",
+        deliveryFrequency = None,
+        distributionMethods = None
+      ),
+      pedagogy = ChannelPedagogy(
+        subjectNames = None,
+        ageRangeMin = None,
+        ageRangeMax = None,
+        bestForTags = None,
+        curriculumAligned = None,
+        educationalResources = None,
+        transcriptProvided = None,
+      ),
+      marketing = ChannelMarketing(
+        status = None,
+        oneLineIntro = None,
+        logos = Some(List()),
+        showreel = None,
+        sampleVideos = None
+      )
+    )
+
+    val json = ChannelFormatter formatRow channel
+
+    json.getStringList("marketingLogos") shouldBe List()
+    json.get("marketingUniqueLogo") shouldBe JsonNull.INSTANCE
+  }
 }
