@@ -135,6 +135,7 @@ class EventAggregatorApp(
       )
     )
       .getOrElse(session.sparkContext.emptyRDD)
+    println(s"Completed content packages preparation. Got ${videoIdsForContentPackages.count()} content package ID pairs")
     logProcessingStart(s"Assembling videos")
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
