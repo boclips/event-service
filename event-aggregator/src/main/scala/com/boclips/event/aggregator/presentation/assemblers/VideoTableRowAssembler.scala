@@ -37,20 +37,20 @@ object VideoTableRowAssembler {
       .groupByKey()
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Playbacks by video ID")
-    print(f"playbacksByVideoId count ${playbacksByVideoId.count()}")
+    println(f"playbacksByVideoId count ${playbacksByVideoId.count()}")
 
     val orderItemsByVideoId = orders.flatMap(order => order.items.map(item => (item.videoId, VideoItemWithOrder(item, order))))
       .groupByKey()
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Order items by video ID")
-    print(f"orderItemsByVideoId count ${orderItemsByVideoId.count()}")
+    println(f"orderItemsByVideoId count ${orderItemsByVideoId.count()}")
 
     val channelsByVideoId = videos
       .keyBy(_.channelId)
       .join(channels.keyBy(_.id))
       .values
       .map { case (video, channel) => (video.id, channel) }
-    print(f"channelsByVideoId count ${channelsByVideoId.count()}")
+    println(f"channelsByVideoId count ${channelsByVideoId.count()}")
 
     val contractsByVideoId = channelsByVideoId
       .keyBy(_._2.details.contractId)
@@ -63,29 +63,29 @@ object VideoTableRowAssembler {
       .join(contracts.keyBy(_.contract.id.value))
       .values
       .map { case ((videoId: VideoId, _), contract: ContractTableRow) => (videoId, contract) }
-    print(f"contractsByVideoId count ${contractsByVideoId.count()}")
+    println(f"contractsByVideoId count ${contractsByVideoId.count()}")
 
     val collectionListsByVideoId: RDD[(VideoId, Iterable[Collection])] = collections
       .flatMap(collection => collection.videoIds.map(videoId => (videoId, collection)))
       .groupBy(_._1)
       .map(it => (it._1, it._2.map(videoCollectionPairs => videoCollectionPairs._2)))
-    print(f"collectionListsByVideoId count ${collectionListsByVideoId.count()}")
+    println(f"collectionListsByVideoId count ${collectionListsByVideoId.count()}")
 
     val impressionsByVideoId: RDD[(VideoId, Iterable[VideoSearchResultImpression])] = impressions.keyBy(_.videoId)
       .groupByKey()
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Search impressions by video ID")
-    print(f"impressionsByVideoId count ${impressionsByVideoId.count()}")
+    println(f"impressionsByVideoId count ${impressionsByVideoId.count()}")
 
     val interactionsByVideoId: RDD[(VideoId, Iterable[VideoInteractedWithEvent])] = interactions.keyBy(_.videoId)
       .groupByKey()
       .persist(StorageLevel.MEMORY_AND_DISK)
       .setName("Interaction Events by video ID")
-    print(f"interactionsByVideoId count ${interactionsByVideoId.count()}")
+    println(f"interactionsByVideoId count ${interactionsByVideoId.count()}")
 
     val youTubeStatsByVideoId: RDD[(VideoId, YouTubeVideoStats)] =
       youTubeVideoStats.keyBy(_.videoId)
-    print(f"youTubeStatsByVideoId count ${youTubeStatsByVideoId.count()}")
+    println(f"youTubeStatsByVideoId count ${youTubeStatsByVideoId.count()}")
 
     val contentPackageNamesByVideoId: RDD[(VideoId, Iterable[String])] = videosForContentPackages
       .keyBy(_._1)
@@ -94,7 +94,7 @@ object VideoTableRowAssembler {
       .map { case ((_, videoId), contentPackage) => (videoId, contentPackage.name) }
       .groupBy(_._1)
       .mapValues(_.map(it => it._2))
-    print(f"contentPackageNamesByVideoId count ${contentPackageNamesByVideoId.count()}")
+    println(f"contentPackageNamesByVideoId count ${contentPackageNamesByVideoId.count()}")
 
     videos
       .keyBy(_.id)
