@@ -71,6 +71,7 @@ object VideoTableRowAssembler {
       .map(it => (it._1, it._2.map(videoCollectionPairs => videoCollectionPairs._2)))
     println(f"collectionListsByVideoId count ${collectionListsByVideoId.count()}")
 
+    println(f"impression count ${impressions}")
     val impressionsByVideoId: RDD[(VideoId, Iterable[VideoSearchResultImpression])] = impressions.keyBy(_.videoId)
       .groupByKey()
       .persist(StorageLevel.MEMORY_AND_DISK)
