@@ -11,7 +11,7 @@ import com.mongodb.client.model.ReplaceOptions
 import mu.KLogging
 import org.bson.Document
 import org.litote.kmongo.getCollection
-import java.util.Date
+import java.util.*
 
 class MongoOrderRepository(private val mongoClient: MongoClient) : OrderRepository {
 
@@ -23,27 +23,30 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
         val requestingUserDoc = order.requestingUser?.let(this::orderUserDocument)
         val authorisingUserDoc = order.authorisingUser?.let(this::orderUserDocument)
         write(
-            OrderDocument.builder()
+            OrderDocument
+                .builder()
                 .id(order.id)
-                    .legacyOrderId(order.legacyOrderId)
+                .legacyOrderId(order.legacyOrderId)
                 .status(order.status?.name ?: "UNKNOWN")
                 .createdAt(Date.from(order.createdAt.toInstant()))
                 .updatedAt(Date.from(order.updatedAt.toInstant()))
                 .customerOrganisationName(order.customerOrganisationName)
                 .items(
                     order.items.map {
-                        OrderItemDocument.builder()
+                        OrderItemDocument
+                            .builder()
                             .videoId(it.videoId.value)
                             .priceGbp(it.priceGbp.toPlainString())
                             .build()
                     }
                 )
-                    .requestingUser(requestingUserDoc)
-                    .authorisingUser(authorisingUserDoc)
-                    .fxRateToGbp(order.fxRateToGbp)
-                    .currency(order.currency.currencyCode)
-                    .isThroughPlatform(order.isThroughPlatform)
-                    .isbnOrProductNumber(order.isbnOrProductNumber)
+                .requestingUser(requestingUserDoc)
+                .authorisingUser(authorisingUserDoc)
+                .fxRateToGbp(order.fxRateToGbp)
+                .currency(order.currency.currencyCode)
+                .isThroughPlatform(order.isThroughPlatform)
+                .orderSource(order.orderSource?.name)
+                .isbnOrProductNumber(order.isbnOrProductNumber)
                 .build()
         )
     }
@@ -57,15 +60,18 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
     }
 
     private fun getCollection() =
-        mongoClient.getDatabase(DatabaseConstants.DB_NAME).getCollection<OrderDocument>(COLLECTION_NAME)
+        mongoClient
+            .getDatabase(DatabaseConstants.DB_NAME)
+            .getCollection<OrderDocument>(COLLECTION_NAME)
 
     private fun orderUserDocument(user: OrderUser): OrderUserDocument {
-        return OrderUserDocument.builder()
-                .email(user.email)
-                .firstName(user.firstName)
-                .lastName(user.lastName)
-                .legacyUserId(user.legacyUserId)
-                .label(user.label)
-                .build()
+        return OrderUserDocument
+            .builder()
+            .email(user.email)
+            .firstName(user.firstName)
+            .lastName(user.lastName)
+            .legacyUserId(user.legacyUserId)
+            .label(user.label)
+            .build()
     }
 }

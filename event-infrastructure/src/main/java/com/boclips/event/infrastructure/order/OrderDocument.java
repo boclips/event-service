@@ -34,6 +34,8 @@ public final class OrderDocument {
     @NonNull
     private Boolean isThroughPlatform;
 
+    private String orderSource;
+
     private String isbnOrProductNumber;
 
     private String currency;
@@ -51,6 +53,7 @@ public final class OrderDocument {
                 .authorisingUser(OrderUserDocument.sample().build())
                 .requestingUser(OrderUserDocument.sample().build())
                 .isThroughPlatform(false)
+                .orderSource("MANUAL")
                 .isbnOrProductNumber("flux-cd")
                 .currency(Currency.getInstance("USD").getCurrencyCode())
                 .fxRateToGbp(BigDecimal.TEN)
