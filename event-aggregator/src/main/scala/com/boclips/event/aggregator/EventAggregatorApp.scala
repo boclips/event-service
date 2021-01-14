@@ -11,7 +11,7 @@ import com.boclips.event.aggregator.domain.model.events.{CollectionInteractedWit
 import com.boclips.event.aggregator.domain.model.okrs.{Monthly, Weekly}
 import com.boclips.event.aggregator.domain.model.orders.Order
 import com.boclips.event.aggregator.domain.model.playbacks.Playback
-import com.boclips.event.aggregator.domain.model.search.Search
+import com.boclips.event.aggregator.domain.model.search.{Search, VideoSearchResultImpression}
 import com.boclips.event.aggregator.domain.model.sessions.Session
 import com.boclips.event.aggregator.domain.model.users.User
 import com.boclips.event.aggregator.domain.model.videos._
@@ -24,7 +24,7 @@ import com.boclips.event.aggregator.domain.service.search.{QueryScorer, SearchAs
 import com.boclips.event.aggregator.domain.service.session.SessionAssembler
 import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembler
 import com.boclips.event.aggregator.domain.service.user.UserAssembler
-import com.boclips.event.aggregator.domain.service.video.{VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
+import com.boclips.event.aggregator.domain.service.video.VideoInteractionAssembler
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContentPackageLoader, MongoContractLegalRestrictionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
 import com.boclips.event.aggregator.infrastructure.videoservice.ContentPackageMetricsClient
@@ -120,7 +120,8 @@ class EventAggregatorApp(
     logProcessingStart(s"Getting YouTube statistics")
     val youtubeStatsByVideoPlaybackId: RDD[YouTubeVideoStats] = getYoutubeVideoStats
     logProcessingStart(s"Assembling video search results")
-    val impressions = VideoSearchResultImpressionAssembler(searches)
+    val impressions: RDD[VideoSearchResultImpression] =
+      session.sparkContext.emptyRDD // VideoSearchResultImpressionAssembler(searches)
     logProcessingStart(s"Assembling video interactions results")
     val videoInteractions = VideoInteractionAssembler(events)
     logProcessingStart(s"Assembling contracts")
