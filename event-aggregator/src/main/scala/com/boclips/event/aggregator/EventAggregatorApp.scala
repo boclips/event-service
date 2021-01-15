@@ -167,8 +167,8 @@ class EventAggregatorApp(
     val collectionsWithRelatedData = CollectionTableRowAssembler.assembleCollectionsWithRelatedData(collections, collectionImpressions, collectionInteractions)
     writeTable(collectionsWithRelatedData, "collections")(CollectionFormatter, implicitly)
 
-    logProcessingStart(s"Updating video impressions")
-    writeTable(impressions, "video_search_result_impressions")
+//    logProcessingStart(s"Updating video impressions")
+//    writeTable(impressions, "video_search_result_impressions")
 
     logProcessingStart(s"Updating key results")
     val schoolData = Data(events, users, videos).schoolOnly()
