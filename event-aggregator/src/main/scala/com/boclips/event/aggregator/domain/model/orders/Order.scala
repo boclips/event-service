@@ -34,6 +34,7 @@ case class Order(
                   requestingUser: OrderUser,
                   authorisingUser: Option[OrderUser],
                   isThroughPlatform: Boolean,
+                  orderSource: String,
                   isbnOrProductNumber: Option[String],
                   currency: Option[Currency],
                   fxRateToGbp: Option[BigDecimal],

@@ -34,6 +34,7 @@ public final class OrderDocument {
     @NonNull
     private Boolean isThroughPlatform;
 
+    @NonNull
     private String orderSource;
 
     private String isbnOrProductNumber;

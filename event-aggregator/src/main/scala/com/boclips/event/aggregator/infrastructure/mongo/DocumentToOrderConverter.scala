@@ -23,6 +23,7 @@ object DocumentToOrderConverter {
       requestingUser = convertOrderUser(document.getRequestingUser),
       authorisingUser = Option(document.getAuthorisingUser).map(convertOrderUser),
       isThroughPlatform = document.getIsThroughPlatform,
+      orderSource = document.getOrderSource,
       isbnOrProductNumber = Option(document.getIsbnOrProductNumber),
       currency = Option(document.getCurrency).map(Currency.getInstance),
       fxRateToGbp = Option(document.getFxRateToGbp).map(BigDecimal(_)),

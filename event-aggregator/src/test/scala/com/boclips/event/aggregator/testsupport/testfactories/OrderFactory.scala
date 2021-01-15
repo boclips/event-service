@@ -22,7 +22,8 @@ object OrderFactory {
                    isbnOrProductNumber: Option[String] = Some("isbn"),
                    currency: Option[Currency] = Some(Currency.getInstance("USD")),
                    fxRateToGbp: Option[BigDecimal] = Some(10),
-                   status: String = "status"
+                   status: String = "status",
+                   orderSource: String = "LEGACY"
                  ): Order = {
     orders.Order(
       id = id,
@@ -38,6 +39,7 @@ object OrderFactory {
       currency = currency,
       fxRateToGbp = fxRateToGbp,
       status = status,
+      orderSource = orderSource
     )
   }
 
