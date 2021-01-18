@@ -36,6 +36,14 @@ class DocumentToOrderConverterTest extends Test {
     order.createdAt shouldBe ZonedDateTime.of(2019, 10, 11, 5, 11, 15, 0, ZoneOffset.UTC)
   }
 
+  it should "convert delivery date" in {
+      val document = OrderDocument.sample().deliveryDate(Date.from(Instant.parse("2019-10-11T05:11:15Z"))).build()
+
+      val order = DocumentToOrderConverter.convert(document)
+
+      order.deliveryDate shouldBe ZonedDateTime.of(2019, 10, 11, 5, 11, 15, 0, ZoneOffset.UTC)
+    }
+
   it should "convert update date" in {
     val document = OrderDocument.sample().updatedAt(Date.from(Instant.parse("2020-10-11T05:11:15Z"))).build()
 

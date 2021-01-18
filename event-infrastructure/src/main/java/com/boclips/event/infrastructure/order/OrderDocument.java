@@ -52,6 +52,7 @@ public final class OrderDocument {
                 .status("my status")
                 .createdAt(new Date())
                 .updatedAt(new Date())
+                .deliveryDate(new Date())
                 .customerOrganisationName("my organization")
                 .authorisingUser(OrderUserDocument.sample().build())
                 .requestingUser(OrderUserDocument.sample().build())

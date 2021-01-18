@@ -18,6 +18,7 @@ object DocumentToOrderConverter {
       legacyOrderId = document.getLegacyOrderId,
       createdAt = ZonedDateTime.ofInstant(document.getCreatedAt.toInstant, ZoneOffset.UTC),
       updatedAt = ZonedDateTime.ofInstant(document.getUpdatedAt.toInstant, ZoneOffset.UTC),
+      deliveryDate = ZonedDateTime.ofInstant(document.getDeliveryDate.toInstant, ZoneOffset.UTC),
       customerOrganisationName = document.getCustomerOrganisationName,
       items = document.getItems.asScala.toList.map(item => OrderItem(videoId = VideoId(item.getVideoId), priceGbp = BigDecimal(item.getPriceGbp))),
       requestingUser = convertOrderUser(document.getRequestingUser),
