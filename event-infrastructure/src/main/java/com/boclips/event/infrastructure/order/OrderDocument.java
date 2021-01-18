@@ -24,6 +24,8 @@ public final class OrderDocument {
     @NonNull
     private Date updatedAt;
     @NonNull
+    private Date deliveryDate;
+    @NonNull
     private String customerOrganisationName;
     @NonNull
     private List<OrderItemDocument> items;

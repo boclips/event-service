@@ -29,6 +29,7 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
                 status = OrderStatus.DELIVERED,
                 createdAt = ZonedDateTime.parse("2019-10-01T00:00:00Z"),
                 updatedAt = ZonedDateTime.parse("2020-11-01T00:00:00Z"),
+                deliveryDate = ZonedDateTime.parse("2020-11-01T00:00:00Z"),
                 customerOrganisationName = "pearson",
                 items = listOf(
                     OrderItem
@@ -53,6 +54,7 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.getString("status")).isEqualTo("DELIVERED")
         assertThat(document.getDate("createdAt")).isEqualTo("2019-10-01T00:00:00Z")
         assertThat(document.getDate("updatedAt")).isEqualTo("2020-11-01T00:00:00Z")
+        assertThat(document.getDate("deliveryDate")).isEqualTo("2020-11-01T00:00:00Z")
         assertThat(document.getString("customerOrganisationName")).isEqualTo("pearson")
         assertThat(
             document
