@@ -23,7 +23,7 @@ public final class OrderDocument {
     private Date createdAt;
     @NonNull
     private Date updatedAt;
-    @NonNull
+
     private Date deliveryDate;
     @NonNull
     private String customerOrganisationName;
