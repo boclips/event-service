@@ -29,6 +29,7 @@ object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
     json.addProperty("requestingUserLegacyUserId", obj.order.requestingUser.legacyUserId)
     json.addProperty("requestingUserLabel", obj.order.requestingUser.label)
     json.addProperty("isThroughPlatform", obj.order.isThroughPlatform)
+    json.addProperty("orderSource", obj.order.orderSource)
     json.addProperty("isbnOrProductNumber", obj.order.isbnOrProductNumber)
     json.addProperty("currency", obj.order.currency.map(_.getCurrencyCode))
     json.addProperty("fxRateToGbp", obj.order.fxRateToGbp.getOrElse(BigDecimal(1.0)).toDouble)
