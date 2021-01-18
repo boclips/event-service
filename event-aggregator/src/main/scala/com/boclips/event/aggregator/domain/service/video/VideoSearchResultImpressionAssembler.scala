@@ -9,12 +9,12 @@ object VideoSearchResultImpressionAssembler {
   def apply(searches: RDD[Search]): RDD[VideoSearchResultImpression] = {
     searches
       .flatMap(search =>
-        search.response.videoResults.map(result =>
+        search.response.videoResults.take(50).map(result =>
           VideoSearchResultImpression(videoId = result.videoId, search = search.request, interaction = result.interaction)
         )
       )
-      // .repartition(256)
+      .repartition(256)
       .setName("Video search result impressions")
-      // .persist(StorageLevel.DISK_ONLY)
+      .persist(StorageLevel.DISK_ONLY)
   }
 }
