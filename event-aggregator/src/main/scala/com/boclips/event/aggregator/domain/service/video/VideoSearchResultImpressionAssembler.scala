@@ -13,8 +13,8 @@ object VideoSearchResultImpressionAssembler {
           VideoSearchResultImpression(videoId = result.videoId, search = search.request, interaction = result.interaction)
         )
       )
-      .repartition(256)
+      // .repartition(256)
       .setName("Video search result impressions")
-      .persist(StorageLevel.DISK_ONLY)
+      // .persist(StorageLevel.DISK_ONLY)
   }
 }

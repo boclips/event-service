@@ -24,7 +24,7 @@ import com.boclips.event.aggregator.domain.service.search.{QueryScorer, SearchAs
 import com.boclips.event.aggregator.domain.service.session.SessionAssembler
 import com.boclips.event.aggregator.domain.service.storage.StorageChargesAssembler
 import com.boclips.event.aggregator.domain.service.user.UserAssembler
-import com.boclips.event.aggregator.domain.service.video.VideoInteractionAssembler
+import com.boclips.event.aggregator.domain.service.video.{VideoInteractionAssembler, VideoSearchResultImpressionAssembler}
 import com.boclips.event.aggregator.infrastructure.bigquery.BigQueryTableWriter
 import com.boclips.event.aggregator.infrastructure.mongo.{MongoChannelLoader, MongoCollectionLoader, MongoContentPackageLoader, MongoContractLegalRestrictionLoader, MongoContractLoader, MongoEventLoader, MongoOrderLoader, MongoUserLoader, MongoVideoLoader, SparkMongoClient}
 import com.boclips.event.aggregator.infrastructure.videoservice.ContentPackageMetricsClient
@@ -121,7 +121,7 @@ class EventAggregatorApp(
     val youtubeStatsByVideoPlaybackId: RDD[YouTubeVideoStats] = getYoutubeVideoStats
     logProcessingStart(s"Assembling video search results")
     val impressions: RDD[VideoSearchResultImpression] =
-      session.sparkContext.emptyRDD // VideoSearchResultImpressionAssembler(searches)
+      VideoSearchResultImpressionAssembler(searches)
     logProcessingStart(s"Assembling video interactions results")
     val videoInteractions = VideoInteractionAssembler(events)
     logProcessingStart(s"Assembling contracts")
@@ -167,8 +167,8 @@ class EventAggregatorApp(
     val collectionsWithRelatedData = CollectionTableRowAssembler.assembleCollectionsWithRelatedData(collections, collectionImpressions, collectionInteractions)
     writeTable(collectionsWithRelatedData, "collections")(CollectionFormatter, implicitly)
 
-//    logProcessingStart(s"Updating video impressions")
-//    writeTable(impressions, "video_search_result_impressions")
+    logProcessingStart(s"Updating video impressions")
+    writeTable(impressions, "video_search_result_impressions")
 
     logProcessingStart(s"Updating key results")
     val schoolData = Data(events, users, videos).schoolOnly()
