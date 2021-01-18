@@ -255,8 +255,8 @@ class VideoFormatterTest extends Test {
         isbnOrProductNumber = None,
         currency = None,
         fxRateToGbp = None,
-        authorisingUser = None
-
+        authorisingUser = None,
+        deliveryDate = None
       ))
     )
 
@@ -267,6 +267,7 @@ class VideoFormatterTest extends Test {
     orderJson.getString("currency") shouldBe "UNKNOWN"
     orderJson.get("fxRateToGbp").getAsDouble shouldBe 1
     orderJson.getString("authorisingUserFirstName") shouldBe "UNKNOWN"
+    orderJson.getString("orderDeliveryDate") shouldBe "UNKNOWN"
   }
 
   it should "write nested channel" in {

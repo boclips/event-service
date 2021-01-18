@@ -23,6 +23,10 @@ package object formatters {
       json.addProperty(property, Option(dateTime).map(_.withZoneSameInstant(ZoneOffset.UTC).withFixedOffsetZone().format(ISO_DATE_TIME)).orNull)
     }
 
+    def addDateTimeProperty(property: String, dateTime: ZonedDateTime, defaultValue: String): Unit = {
+      json.addProperty(property, Option(dateTime).map(_.withZoneSameInstant(ZoneOffset.UTC).withFixedOffsetZone().format(ISO_DATE_TIME)).getOrElse(defaultValue))
+    }
+
     def addDateTimeProperty(property: String, date: LocalDate): Unit = {
       json.addProperty(property, Option(date).map(_.atStartOfDay(ZoneOffset.UTC).format(ISO_DATE_TIME)).orNull)
     }
