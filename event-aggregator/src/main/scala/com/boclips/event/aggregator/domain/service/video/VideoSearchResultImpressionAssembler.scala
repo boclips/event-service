@@ -9,7 +9,7 @@ object VideoSearchResultImpressionAssembler {
   def apply(searches: RDD[Search]): RDD[VideoSearchResultImpression] = {
     searches
       .flatMap(search =>
-        search.response.videoResults.take(50).map(result =>
+        search.response.videoResults.map(result =>
           VideoSearchResultImpression(videoId = result.videoId, search = search.request, interaction = result.interaction)
         )
       )

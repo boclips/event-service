@@ -10,6 +10,7 @@ case class SparkConfig(
 
     var builder = SparkSession.builder()
       .master(s"local[$numberLocalExecutors]")
+      .config("spark.executor.memory", "24g")
 
     builder = neo4jConfig.map(config =>
       builder
