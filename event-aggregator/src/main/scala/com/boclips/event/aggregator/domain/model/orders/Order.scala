@@ -26,7 +26,7 @@ case class OrderUser(
 
 case class Order(
                   id: OrderId,
-                  legacyOrderId: String,
+                  legacyOrderId: Option[String],
                   createdAt: ZonedDateTime,
                   updatedAt: ZonedDateTime,
                   deliveryDate: Option[ZonedDateTime],
@@ -34,7 +34,6 @@ case class Order(
                   items: List[OrderItem],
                   requestingUser: OrderUser,
                   authorisingUser: Option[OrderUser],
-                  isThroughPlatform: Boolean,
                   orderSource: String,
                   isbnOrProductNumber: Option[String],
                   currency: Option[Currency],

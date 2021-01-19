@@ -20,12 +20,13 @@ class DocumentToOrderConverterTest extends Test {
 
     order.id shouldBe OrderId("the-order-id")
   }
+
   it should "convert legacy id" in {
     val document = OrderDocument.sample().legacyOrderId("the-legacy-id").build()
 
     val order = DocumentToOrderConverter.convert(document)
 
-    order.legacyOrderId shouldBe "the-legacy-id"
+    order.legacyOrderId shouldBe Some("the-legacy-id")
   }
 
   it should "convert creation date" in {
@@ -139,14 +140,6 @@ class DocumentToOrderConverterTest extends Test {
     val order = DocumentToOrderConverter.convert(document)
 
     order.isbnOrProductNumber should contain("pn-1")
-  }
-
-  it should "convert is through platform" in {
-    val document = OrderDocument.sample().isThroughPlatform(true).build()
-
-    val order = DocumentToOrderConverter.convert(document)
-
-    order.isThroughPlatform shouldBe true
   }
 
   it should "convert status" in {

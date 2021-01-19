@@ -217,7 +217,6 @@ class VideoFormatterTest extends Test {
           label = None,
         ),
         isbnOrProductNumber = Some("covid-19"),
-        isThroughPlatform = false,
         currency = Some(Currency.getInstance("USD")),
         fxRateToGbp = Some(BigDecimal(10.0)),
         status = "READY",
@@ -242,7 +241,6 @@ class VideoFormatterTest extends Test {
     orderJson.getString("isbnOrProductNumber") shouldBe "covid-19"
     orderJson.getString("currency") shouldBe "USD"
     orderJson.get("fxRateToGbp").getAsDouble shouldBe 10.0
-    orderJson.getBool("isThroughPlatform") shouldBe false
     orderJson.getString("status") shouldBe "READY"
     orderJson.getString("orderSource") shouldBe "LEGACY"
   }
@@ -252,6 +250,7 @@ class VideoFormatterTest extends Test {
     val orders = List(VideoItemWithOrder(
       item = createOrderItem(priceGbp = BigDecimal(50)),
       order = createOrder(
+        legacyOrderId = None,
         isbnOrProductNumber = None,
         currency = None,
         fxRateToGbp = None,
@@ -268,6 +267,7 @@ class VideoFormatterTest extends Test {
     orderJson.get("fxRateToGbp").getAsDouble shouldBe 1
     orderJson.getString("authorisingUserFirstName") shouldBe "UNKNOWN"
     orderJson.getString("orderDeliveryDate") shouldBe "UNKNOWN"
+    orderJson.getString("legacyOrderId") shouldBe "UNKNOWN"
   }
 
   it should "write nested channel" in {

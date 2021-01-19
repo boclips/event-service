@@ -15,7 +15,7 @@ object DocumentToOrderConverter {
   def convert(document: OrderDocument): Order = {
     orders.Order(
       id = OrderId(document.getId),
-      legacyOrderId = document.getLegacyOrderId,
+      legacyOrderId = Option(document.getLegacyOrderId),
       createdAt = ZonedDateTime.ofInstant(document.getCreatedAt.toInstant, ZoneOffset.UTC),
       updatedAt = ZonedDateTime.ofInstant(document.getUpdatedAt.toInstant, ZoneOffset.UTC),
       deliveryDate = Option(document.getDeliveryDate).map(date => ZonedDateTime.ofInstant(date.toInstant, ZoneOffset.UTC)),
@@ -23,7 +23,6 @@ object DocumentToOrderConverter {
       items = document.getItems.asScala.toList.map(item => OrderItem(videoId = VideoId(item.getVideoId), priceGbp = BigDecimal(item.getPriceGbp))),
       requestingUser = convertOrderUser(document.getRequestingUser),
       authorisingUser = Option(document.getAuthorisingUser).map(convertOrderUser),
-      isThroughPlatform = document.getIsThroughPlatform,
       orderSource = document.getOrderSource,
       isbnOrProductNumber = Option(document.getIsbnOrProductNumber),
       currency = Option(document.getCurrency).map(Currency.getInstance),

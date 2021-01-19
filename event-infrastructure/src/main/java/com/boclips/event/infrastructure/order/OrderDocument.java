@@ -15,7 +15,6 @@ import java.util.List;
 public final class OrderDocument {
     @NonNull
     private String id;
-    @NonNull
     private String legacyOrderId;
     @NonNull
     private String status;
@@ -33,8 +32,6 @@ public final class OrderDocument {
     private OrderUserDocument requestingUser;
 
     private OrderUserDocument authorisingUser;
-    @NonNull
-    private Boolean isThroughPlatform;
 
     @NonNull
     private String orderSource;
@@ -56,7 +53,6 @@ public final class OrderDocument {
                 .customerOrganisationName("my organization")
                 .authorisingUser(OrderUserDocument.sample().build())
                 .requestingUser(OrderUserDocument.sample().build())
-                .isThroughPlatform(false)
                 .orderSource("MANUAL")
                 .isbnOrProductNumber("flux-cd")
                 .currency(Currency.getInstance("USD").getCurrencyCode())

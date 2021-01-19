@@ -11,7 +11,7 @@ object OrderFactory {
 
   def createOrder(
                    id: OrderId = OrderId("order-id"),
-                   legacyOrderId: String = "leg-id",
+                   legacyOrderId: Option[String] = Some("leg-id"),
                    createdAt: ZonedDateTime = ZonedDateTime.now(),
                    updatedAt: ZonedDateTime = ZonedDateTime.now(),
                    deliveryDate: Option[ZonedDateTime] = Some(ZonedDateTime.now()),
@@ -19,7 +19,6 @@ object OrderFactory {
                    items: List[OrderItem] = List(),
                    requestingUser: OrderUser = createOrderUser(),
                    authorisingUser: Option[OrderUser] = Some(createOrderUser()),
-                   isThroughPlatform: Boolean = true,
                    isbnOrProductNumber: Option[String] = Some("isbn"),
                    currency: Option[Currency] = Some(Currency.getInstance("USD")),
                    fxRateToGbp: Option[BigDecimal] = Some(10),
@@ -36,7 +35,6 @@ object OrderFactory {
       items = items,
       requestingUser = requestingUser,
       authorisingUser = authorisingUser,
-      isThroughPlatform = isThroughPlatform,
       isbnOrProductNumber = isbnOrProductNumber,
       currency = currency,
       fxRateToGbp = fxRateToGbp,

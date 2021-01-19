@@ -17,7 +17,7 @@ class OrderFormatterTest extends Test {
   }
 
   it should "write legacy order id" in {
-    val json = OrderFormatter formatRow createOrder(legacyOrderId = "order-1984")
+    val json = OrderFormatter formatRow createOrder(legacyOrderId = Some("order-1984"))
 
     json.getString("legacyOrderId") shouldBe "order-1984"
   }
@@ -94,7 +94,6 @@ class OrderFormatterTest extends Test {
   it should "write extra properties" in {
     val json = OrderFormatter formatRow createOrder(
       isbnOrProductNumber = Some("covid-19"),
-      isThroughPlatform = false,
       currency = Some(Currency.getInstance("USD")),
       fxRateToGbp = Some(BigDecimal(10.0)),
     )
@@ -102,7 +101,6 @@ class OrderFormatterTest extends Test {
     json.getString("isbnOrProductNumber") shouldBe "covid-19"
     json.getString("currency") shouldBe "USD"
     json.get("fxRateToGbp").getAsDouble shouldBe 10.0
-    json.getBool("isThroughPlatform") shouldBe false
 
   }
 
@@ -111,12 +109,14 @@ class OrderFormatterTest extends Test {
       isbnOrProductNumber = None,
       currency = None,
       fxRateToGbp = None,
-      authorisingUser = None
+      authorisingUser = None,
+      legacyOrderId = None
     )
 
     json.getString("isbnOrProductNumber") shouldBe "UNKNOWN"
     json.getString("currency") shouldBe "UNKNOWN"
     json.get("fxRateToGbp").getAsDouble shouldBe 1
     json.getString("authorisingUserFirstName") shouldBe "UNKNOWN"
+    json.getString("legacyOrderId") shouldBe "UNKNOWN"
   }
 }

@@ -42,7 +42,6 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
                 requestingUser = createOrderUser(email = "requester@hop.com"),
                 fxRateToGbp = BigDecimal.TEN,
                 currency = Currency.getInstance("USD"),
-                isThroughPlatform = true,
                 orderSource = OrderSource.BOCLIPS,
                 isbnOrProductNumber = "jaba-2"
             )
