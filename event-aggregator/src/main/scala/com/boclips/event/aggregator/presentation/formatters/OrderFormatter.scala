@@ -19,7 +19,7 @@ object OrderFormatter extends SingleRowFormatter[Order] {
     json.addProperty("legacyOrderId", obj.legacyOrderId)
     json.addDateTimeProperty("createdAt", obj.createdAt)
     json.addDateTimeProperty("updatedAt", obj.updatedAt)
-    json.addDateTimeProperty("deliveryDate", obj.deliveryDate.orNull, "UNKNOWN")
+    json.addDateTimeProperty("deliveryDate", obj.deliveryDate.orNull)
     json.addProperty("customerOrganisationName", obj.customerOrganisationName)
     json.addProperty("authorisingUserFirstName", obj.authorisingUser.flatMap(_.firstName))
     json.addProperty("authorisingUserLastName", obj.authorisingUser.flatMap(_.lastName))

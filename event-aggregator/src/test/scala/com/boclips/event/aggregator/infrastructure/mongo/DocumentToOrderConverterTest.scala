@@ -169,12 +169,14 @@ class DocumentToOrderConverterTest extends Test {
       .authorisingUser(null)
       .isbnOrProductNumber(null)
       .currency(null)
+      .deliveryDate(null)
       .fxRateToGbp(null)
       .build()
 
     val order = DocumentToOrderConverter.convert(document)
 
     order.authorisingUser shouldBe None
+    order.deliveryDate shouldBe None
     order.isbnOrProductNumber shouldBe None
     order.currency shouldBe None
     order.fxRateToGbp shouldBe None
