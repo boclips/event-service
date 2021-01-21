@@ -17,7 +17,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{crea
 import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createVideoSearchResultImpression}
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideo, createVideoAsset}
-import com.google.gson.JsonObject
+import com.google.gson.{JsonNull, JsonObject}
 
 import scala.collection.JavaConverters._
 
@@ -266,7 +266,7 @@ class VideoFormatterTest extends Test {
     orderJson.getString("currency") shouldBe "UNKNOWN"
     orderJson.get("fxRateToGbp").getAsDouble shouldBe 1
     orderJson.getString("authorisingUserFirstName") shouldBe "UNKNOWN"
-    orderJson.getString("orderDeliveryDate") shouldBe "UNKNOWN"
+    orderJson.get("orderDeliveryDate") shouldBe JsonNull.INSTANCE
     orderJson.getString("legacyOrderId") shouldBe "UNKNOWN"
   }
 

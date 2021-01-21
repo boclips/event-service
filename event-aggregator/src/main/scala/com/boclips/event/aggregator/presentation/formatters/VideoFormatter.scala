@@ -18,7 +18,7 @@ object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
     json.addProperty("customerOrganisationName", obj.order.customerOrganisationName)
     json.addDateTimeProperty("orderCreatedAt", obj.order.createdAt)
     json.addDateTimeProperty("orderUpdatedAt", obj.order.updatedAt)
-    json.addDateTimeProperty("orderDeliveryDate", obj.order.deliveryDate.orNull, "UNKNOWN")
+    json.addDateTimeProperty("orderDeliveryDate", obj.order.deliveryDate.orNull)
     json.addProperty("authorisingUserFirstName", obj.order.authorisingUser.flatMap(_.firstName))
     json.addProperty("authorisingUserLastName", obj.order.authorisingUser.flatMap(_.lastName))
     json.addProperty("authorisingUserEmail", obj.order.authorisingUser.flatMap(_.email))
