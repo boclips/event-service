@@ -77,8 +77,8 @@ class VideoTableRowAssemblerIntegrationTest extends IntegrationTest {
     )
 
     val impressions = rdd(
-      createVideoSearchResultImpression(videoId = VideoId("v1"), search = SearchFactory.createSearchRequest(query = "maths")),
-      createVideoSearchResultImpression(videoId = VideoId("v1"), search = SearchFactory.createSearchRequest(query = "physics")),
+      createVideoSearchResultImpression(videoId = VideoId("v1"), search = SearchFactory.createSearchRequestWithoutParams(query = "maths")),
+      createVideoSearchResultImpression(videoId = VideoId("v1"), search = SearchFactory.createSearchRequestWithoutParams(query = "physics")),
     )
 
     val interactions = rdd(

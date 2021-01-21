@@ -10,7 +10,11 @@ import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.create
 
 class VideoSearchResultImpressionFormatterTest extends Test {
   it should "write timestamp" in {
-    val impression = createVideoSearchResultImpression(search = createSearchRequest(timestamp = ZonedDateTime.of(2012, 4, 23, 18, 25, 43, 511000000, ZoneOffset.UTC)))
+    val impression = createVideoSearchResultImpression(
+      search = createSearchRequestWithoutParams(
+        timestamp = ZonedDateTime.of(2012, 4, 23, 18, 25, 43, 511000000, ZoneOffset.UTC)
+      )
+    )
 
     val json = VideoSearchResultImpressionFormatter formatRow impression
 
@@ -29,7 +33,9 @@ class VideoSearchResultImpressionFormatterTest extends Test {
 
   it should "write the normalized search query" in {
 
-    val impression = createVideoSearchResultImpression(search = createSearchRequest(query = "Richard"))
+    val impression = createVideoSearchResultImpression(
+      search = createSearchRequestWithoutParams(query = "Richard")
+    )
 
     val json = VideoSearchResultImpressionFormatter formatRow impression
 
@@ -37,7 +43,9 @@ class VideoSearchResultImpressionFormatterTest extends Test {
   }
 
   it should "write user id" in {
-    val impression = createVideoSearchResultImpression(search = createSearchRequest(userIdentity = createBoclipsUserIdentity("dave")))
+    val impression = createVideoSearchResultImpression(
+      search = createSearchRequestWithoutParams(userIdentity = createBoclipsUserIdentity("dave"))
+    )
 
     val json = VideoSearchResultImpressionFormatter formatRow impression
 
@@ -51,7 +59,9 @@ class VideoSearchResultImpressionFormatterTest extends Test {
   }
 
   it should "write url host" in {
-    val impression = createVideoSearchResultImpression(search = createSearchRequest(url = Some(Url.parse("https://boclips.com/bla"))))
+    val impression = createVideoSearchResultImpression(
+      search = createSearchRequestWithoutParams(url = Some(Url.parse("https://boclips.com/bla")))
+    )
 
     val json = VideoSearchResultImpressionFormatter formatRow impression
 

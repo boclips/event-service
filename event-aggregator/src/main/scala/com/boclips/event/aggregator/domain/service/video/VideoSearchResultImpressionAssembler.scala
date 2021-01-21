@@ -10,7 +10,11 @@ object VideoSearchResultImpressionAssembler {
     searches
       .flatMap(search =>
         search.response.videoResults.map(result =>
-          VideoSearchResultImpression(videoId = result.videoId, search = search.request, interaction = result.interaction)
+          VideoSearchResultImpression(
+            videoId = result.videoId,
+            search = search.request.withoutParams,
+            interaction = result.interaction
+          )
         )
       )
       .repartition(256)

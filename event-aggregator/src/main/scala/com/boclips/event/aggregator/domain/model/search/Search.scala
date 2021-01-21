@@ -35,6 +35,24 @@ case class SearchRequest
   userIdentity: UserIdentity,
   query: Query,
   queryParams: Map[String, Iterable[String]]
+) {
+  def withoutParams: SearchRequestWithoutParams =
+    SearchRequestWithoutParams(
+      id = this.id,
+      url = this.url,
+      timestamp = this.timestamp,
+      userIdentity = this.userIdentity,
+      query = this.query
+    )
+}
+
+case class SearchRequestWithoutParams
+(
+  id: String,
+  url: Option[Url],
+  timestamp: ZonedDateTime,
+  userIdentity: UserIdentity,
+  query: Query
 )
 
 case class SearchResponse

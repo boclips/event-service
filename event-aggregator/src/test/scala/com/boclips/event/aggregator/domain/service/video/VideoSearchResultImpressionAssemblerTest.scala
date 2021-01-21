@@ -17,7 +17,7 @@ class VideoSearchResultImpressionAssemblerTest extends IntegrationTest {
     val impressions = VideoSearchResultImpressionAssembler(searches).collect().toList
 
     impressions should have length 2
-    impressions.head.search shouldBe search.request
+    impressions.head.search shouldBe search.request.withoutParams
     impressions.map(_.videoId) shouldBe List(VideoId("v1"), VideoId("v2"))
     impressions.map(_.interaction) shouldBe List(false, true)
   }

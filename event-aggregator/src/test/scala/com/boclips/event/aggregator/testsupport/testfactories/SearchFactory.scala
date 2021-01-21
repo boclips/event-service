@@ -32,6 +32,22 @@ object SearchFactory {
     )
   }
 
+  def createSearchRequestWithoutParams(
+                           id: String = "id",
+                           userIdentity: UserIdentity = UserFactory.createBoclipsUserIdentity(),
+                           query: String = "query",
+                           timestamp: ZonedDateTime = ZonedDateTime.now(),
+                           url: Option[Url] = None
+                         ): SearchRequestWithoutParams = {
+    SearchRequestWithoutParams(
+      id = id,
+      timestamp = timestamp,
+      userIdentity = userIdentity,
+      query = Query(query),
+      url = url
+    )
+  }
+
   def createSearchResponse(
                             videoResults: Set[SearchImpression] = Set(),
                             collectionResults: Set[CollectionImpression] = Set(),
@@ -69,7 +85,7 @@ object SearchFactory {
   }
 
   def createVideoSearchResultImpression(
-                                         search: SearchRequest = createSearchRequest(),
+                                         search: SearchRequestWithoutParams = createSearchRequestWithoutParams(),
                                          videoId: VideoId = VideoId("v1"),
                                          interaction: Boolean = false
                                        ): VideoSearchResultImpression = {

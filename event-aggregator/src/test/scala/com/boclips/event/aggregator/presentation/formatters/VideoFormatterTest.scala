@@ -14,7 +14,7 @@ import com.boclips.event.aggregator.testsupport.testfactories.CollectionFactory.
 import com.boclips.event.aggregator.testsupport.testfactories.ContractFactory.{createContractRestriction, createFullContract, createFullTableRowContract}
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory
 import com.boclips.event.aggregator.testsupport.testfactories.OrderFactory.{createOrder, createOrderItem, createOrderUser}
-import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequest, createVideoSearchResultImpression}
+import com.boclips.event.aggregator.testsupport.testfactories.SearchFactory.{createSearchRequestWithoutParams, createVideoSearchResultImpression}
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideo, createVideoAsset}
 import com.google.gson.{JsonNull, JsonObject}
@@ -439,7 +439,7 @@ class VideoFormatterTest extends Test {
   it should "write nested impressions" in {
     val video = createVideo()
     val impression = createVideoSearchResultImpression(
-      search = createSearchRequest(
+      search = createSearchRequestWithoutParams(
         timestamp = ZonedDateTime.parse("2020-10-20T10:11:12Z"),
         query = "maths",
       ),
