@@ -14,7 +14,7 @@ object OrderFactory {
         status: OrderStatus? = OrderStatus.DELIVERED,
         createdAt: ZonedDateTime = ZonedDateTime.now(),
         updatedAt: ZonedDateTime = ZonedDateTime.now(),
-        deliveryDate: ZonedDateTime = ZonedDateTime.now(),
+        deliveryDate: ZonedDateTime? = ZonedDateTime.now(),
         customerOrganisationName: String = "customer organisation name",
         items: List<OrderItem> = emptyList(),
         authorisingUser: OrderUser? = createOrderUser(email = "doc@mcfly.com"),
@@ -31,7 +31,7 @@ object OrderFactory {
             .status(status)
             .createdAt(createdAt)
             .updatedAt(updatedAt)
-            .deliveryDate(updatedAt)
+            .deliveryDate(deliveryDate)
             .customerOrganisationName(customerOrganisationName)
             .items(items)
             .isbnOrProductNumber(isbnOrProductNumber)
