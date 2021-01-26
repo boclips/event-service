@@ -2,6 +2,7 @@ package com.boclips.event.aggregator
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
+import com.boclips.event.aggregator.EventAggregatorApp.getVideoIdsForContentPackages
 import com.boclips.event.aggregator.config._
 import com.boclips.event.aggregator.domain.model.ContractLegalRestriction
 import com.boclips.event.aggregator.domain.model.collections.Collection
@@ -127,15 +128,15 @@ class EventAggregatorApp(
     logProcessingStart(s"Assembling contracts")
     val contractsWithRelatedData = ContractTableRowAssembler.assembleContractsWithRelatedData(contracts, contractLegalRestrictions)
     logProcessingStart(s"Getting content packages")
-    val videoIdsForContentPackages: RDD[(ContentPackageId, VideoId)] = session.sparkContext.emptyRDD
-    //      configuration.contentPackageMetrics.map(config =>
-    //      getVideoIdsForContentPackages(
-    //        session,
-    //        contentPackages,
-    //        config
-    //      )
-    //    )
-    //      .getOrElse(session.sparkContext.emptyRDD)
+    val videoIdsForContentPackages: RDD[(ContentPackageId, VideoId)] =
+          configuration.contentPackageMetrics.map(config =>
+            getVideoIdsForContentPackages(
+              session,
+              contentPackages,
+              config
+            )
+          )
+            .getOrElse(session.sparkContext.emptyRDD)
     logProcessingStart(s"Assembling videos")
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
