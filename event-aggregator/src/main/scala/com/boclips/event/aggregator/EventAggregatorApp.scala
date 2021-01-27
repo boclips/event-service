@@ -68,7 +68,7 @@ object EventAggregatorApp {
                                      config: ContentPackageMetricsConfig
                                    ): RDD[(ContentPackageId, VideoId)] = {
     def printContentPackagePage(name: String, page: Int, videoCount: Int): Unit = {
-      println(s"Content package ${name}, page #${page}: Got ${videoCount} videos")
+      println(s"Content package $name, page #$page: Got $videoCount videos")
     }
 
     contentPackages
@@ -155,6 +155,11 @@ class EventAggregatorApp(
 
     writeTable(videosWithRelatedData, VIDEOS)(VideoFormatter, implicitly)
 
+    if (configuration.neo4j.isDefined) {
+      logProcessingStart("Writing to Neo4j")
+      writeToGraph(videosWithRelatedData)
+    }
+
     logProcessingStart(s"Updating contracts")
     writeTable(contractsWithRelatedData, "contracts")(ContractFormatter, implicitly)
 
@@ -209,7 +214,7 @@ class EventAggregatorApp(
     val tableFormatter = new TableFormatter[T](formatter)
     val jsonData = tableFormatter.formatRowsAsJson(data)
     val schema = tableFormatter.schema()
-    logProcessingStart(s"Writing table ${tableName}")
+    logProcessingStart(s"Writing table $tableName")
     writer.writeTable(jsonData, schema, tableName)
   }
 
