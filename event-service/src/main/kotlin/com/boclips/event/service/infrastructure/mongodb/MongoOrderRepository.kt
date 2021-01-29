@@ -44,7 +44,7 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
                 .requestingUser(requestingUserDoc)
                 .authorisingUser(authorisingUserDoc)
                 .fxRateToGbp(order.fxRateToGbp)
-                .currency(order.currency.currencyCode)
+                .currency(order.currency?.let { it.currencyCode })
                 .orderSource(order.orderSource.name)
                 .isbnOrProductNumber(order.isbnOrProductNumber)
                 .build()

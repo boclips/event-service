@@ -81,6 +81,14 @@ class MongoOrderRepositoryTest : AbstractSpringIntegrationTest() {
     }
 
     @Test
+    fun `deals with null currency`() {
+        orderRepository.saveOrder(createOrder(currency = null))
+
+        val document = document()
+        assertThat(document.getString("currency")).isEqualTo(null)
+    }
+
+    @Test
     fun `updating a order`() {
         orderRepository.saveOrder(createOrder(id = "1234", updatedAt = ZonedDateTime.parse("2019-10-01T00:00:00Z")))
         orderRepository.saveOrder(createOrder(id = "1234", updatedAt = ZonedDateTime.parse("2020-10-01T00:00:00Z")))
