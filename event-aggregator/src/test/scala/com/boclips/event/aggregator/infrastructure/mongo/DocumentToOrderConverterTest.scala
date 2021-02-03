@@ -38,19 +38,19 @@ class DocumentToOrderConverterTest extends Test {
   }
 
   it should "convert delivery date" in {
-      val document = OrderDocument.sample().deliveryDate(Date.from(Instant.parse("2019-10-11T05:11:15Z"))).build()
+      val document = OrderDocument.sample().deliveredAt(Date.from(Instant.parse("2019-10-11T05:11:15Z"))).build()
 
       val order = DocumentToOrderConverter.convert(document)
 
-      order.deliveryDate shouldBe Some(ZonedDateTime.of(2019, 10, 11, 5, 11, 15, 0, ZoneOffset.UTC))
+      order.deliveredAt shouldBe Some(ZonedDateTime.of(2019, 10, 11, 5, 11, 15, 0, ZoneOffset.UTC))
     }
 
   it should "convert a null delivery date" in {
-    val document = OrderDocument.sample().deliveryDate(null).build()
+    val document = OrderDocument.sample().deliveredAt(null).build()
 
     val order = DocumentToOrderConverter.convert(document)
 
-    order.deliveryDate shouldBe None
+    order.deliveredAt shouldBe None
   }
 
   it should "convert update date" in {
@@ -169,14 +169,14 @@ class DocumentToOrderConverterTest extends Test {
       .authorisingUser(null)
       .isbnOrProductNumber(null)
       .currency(null)
-      .deliveryDate(null)
+      .deliveredAt(null)
       .fxRateToGbp(null)
       .build()
 
     val order = DocumentToOrderConverter.convert(document)
 
     order.authorisingUser shouldBe None
-    order.deliveryDate shouldBe None
+    order.deliveredAt shouldBe None
     order.isbnOrProductNumber shouldBe None
     order.currency shouldBe None
     order.fxRateToGbp shouldBe None

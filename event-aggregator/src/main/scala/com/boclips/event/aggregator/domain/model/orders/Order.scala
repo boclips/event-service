@@ -29,7 +29,7 @@ case class Order(
                   legacyOrderId: Option[String],
                   createdAt: ZonedDateTime,
                   updatedAt: ZonedDateTime,
-                  deliveryDate: Option[ZonedDateTime],
+                  deliveredAt: Option[ZonedDateTime],
                   customerOrganisationName: String,
                   items: List[OrderItem],
                   requestingUser: OrderUser,

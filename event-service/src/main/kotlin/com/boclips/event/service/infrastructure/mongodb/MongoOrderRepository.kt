@@ -30,7 +30,7 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
                 .status(order.status?.name ?: "UNKNOWN")
                 .createdAt(Date.from(order.createdAt.toInstant()))
                 .updatedAt(Date.from(order.updatedAt.toInstant()))
-                .deliveryDate(order.deliveryDate?.let {Date.from(it.toInstant())})
+                .deliveredAt(order.deliveredAt?.let {Date.from(it.toInstant())})
                 .customerOrganisationName(order.customerOrganisationName)
                 .items(
                     order.items.map {

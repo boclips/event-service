@@ -35,9 +35,9 @@ class OrderFormatterTest extends Test {
   }
 
   it should "write delivery date" in {
-      val json = OrderFormatter formatRow createOrder(deliveryDate = Some(ZonedDateTime.parse("2020-11-20T20:21:22Z")))
+      val json = OrderFormatter formatRow createOrder(deliveredAt = Some(ZonedDateTime.parse("2020-11-20T20:21:22Z")))
 
-      json.getString("deliveryDate") shouldBe "2020-11-20T20:21:22Z"
+      json.getString("deliveredAt") shouldBe "2020-11-20T20:21:22Z"
     }
 
   it should "write customer organisation name" in {

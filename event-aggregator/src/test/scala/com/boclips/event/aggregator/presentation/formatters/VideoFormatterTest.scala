@@ -255,7 +255,7 @@ class VideoFormatterTest extends Test {
         currency = None,
         fxRateToGbp = None,
         authorisingUser = None,
-        deliveryDate = None
+        deliveredAt = None
       ))
     )
 
@@ -266,7 +266,7 @@ class VideoFormatterTest extends Test {
     orderJson.getString("currency") shouldBe "UNKNOWN"
     orderJson.get("fxRateToGbp").getAsDouble shouldBe 1
     orderJson.getString("authorisingUserFirstName") shouldBe "UNKNOWN"
-    orderJson.get("orderDeliveryDate") shouldBe JsonNull.INSTANCE
+    orderJson.get("orderDeliveredAt") shouldBe JsonNull.INSTANCE
     orderJson.getString("legacyOrderId") shouldBe "UNKNOWN"
   }
 

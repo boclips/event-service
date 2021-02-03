@@ -23,7 +23,7 @@ public final class OrderDocument {
     @NonNull
     private Date updatedAt;
 
-    private Date deliveryDate;
+    private Date deliveredAt;
     @NonNull
     private String customerOrganisationName;
     @NonNull
@@ -49,7 +49,7 @@ public final class OrderDocument {
                 .status("my status")
                 .createdAt(new Date())
                 .updatedAt(new Date())
-                .deliveryDate(new Date())
+                .deliveredAt(new Date())
                 .customerOrganisationName("my organization")
                 .authorisingUser(OrderUserDocument.sample().build())
                 .requestingUser(OrderUserDocument.sample().build())
