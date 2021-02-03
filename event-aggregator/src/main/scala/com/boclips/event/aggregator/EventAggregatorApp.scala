@@ -128,15 +128,15 @@ class EventAggregatorApp(
     logProcessingStart(s"Assembling contracts")
     val contractsWithRelatedData = ContractTableRowAssembler.assembleContractsWithRelatedData(contracts, contractLegalRestrictions)
     logProcessingStart(s"Getting content packages")
-    val videoIdsForContentPackages: RDD[(ContentPackageId, VideoId)] = session.sparkContext.emptyRDD
-//          configuration.contentPackageMetrics.map(config =>
-//            getVideoIdsForContentPackages(
-//              session,
-//              contentPackages,
-//              config
-//            )
-//          )
-//            .getOrElse(session.sparkContext.emptyRDD)
+    val videoIdsForContentPackages: RDD[(ContentPackageId, VideoId)] =
+          configuration.contentPackageMetrics.map(config =>
+            getVideoIdsForContentPackages(
+              session,
+              contentPackages,
+              config
+            )
+          )
+            .getOrElse(session.sparkContext.emptyRDD)
     logProcessingStart(s"Assembling videos")
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
@@ -155,10 +155,10 @@ class EventAggregatorApp(
 
     writeTable(videosWithRelatedData, VIDEOS)(VideoFormatter, implicitly)
 
-//    if (configuration.neo4j.isDefined) {
-//      logProcessingStart("Writing to Neo4j")
-//      writeToGraph(videosWithRelatedData)
-//    }
+    if (configuration.neo4j.isDefined) {
+      logProcessingStart("Writing to Neo4j")
+      writeToGraph(videosWithRelatedData)
+    }
 
     logProcessingStart(s"Updating contracts")
     writeTable(contractsWithRelatedData, "contracts")(ContractFormatter, implicitly)
@@ -218,21 +218,21 @@ class EventAggregatorApp(
     writer.writeTable(jsonData, schema, tableName)
   }
 
-  private def getYoutubeVideoStats: RDD[YouTubeVideoStats] = session.sparkContext.emptyRDD
-//    configuration.youTube.map { youTubeConfig =>
-//      val youtubeVideoIdsByPlaybackId: RDD[(String, VideoId)] =
-//        videos
-//          .filter(_.playbackProvider == "YOUTUBE")
-//          .map(v => (v.playbackId, v.id))
-//      youtubeVideoIdsByPlaybackId
-//        .mapPartitions(idPairs => {
-//          YouTubeService(
-//            youTubeConfig
-//          ).getVideoStats(
-//            idPairs.toMap
-//          ).iterator
-//        })
-//    }.getOrElse(session.sparkContext.emptyRDD)
+  private def getYoutubeVideoStats: RDD[YouTubeVideoStats] =
+    configuration.youTube.map { youTubeConfig =>
+      val youtubeVideoIdsByPlaybackId: RDD[(String, VideoId)] =
+        videos
+          .filter(_.playbackProvider == "YOUTUBE")
+          .map(v => (v.playbackId, v.id))
+      youtubeVideoIdsByPlaybackId
+        .mapPartitions(idPairs => {
+          YouTubeService(
+            youTubeConfig
+          ).getVideoStats(
+            idPairs.toMap
+          ).iterator
+        })
+    }.getOrElse(session.sparkContext.parallelize(List()))
 
   private def writeToGraph(rows: RDD[VideoTableRow]): Unit = {
     val videoRows: RDD[Row] = rows.map(row =>
