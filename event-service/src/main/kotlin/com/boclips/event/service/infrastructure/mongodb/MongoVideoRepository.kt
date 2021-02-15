@@ -41,6 +41,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
             .topics(video.topics.map(this::topicToDocument))
             .keywords(video.keywords)
             .sourceVideoReference(video.sourceVideoReference)
+            .deactivated(video.deactivated)
             .build()
 
         write(document)

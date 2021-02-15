@@ -96,6 +96,7 @@ object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
     json.addProperty("assetSizeKb", highestResolutionAsset.map(a => a.sizeKb).getOrElse(0))
     json.addProperty("promoted", row.video.promoted)
     json.addProperty("sourceVideoReference", row.video.sourceVideoReference)
+    json.addProperty("deactivated", row.video.deactivated)
   }
 
   private def getAllSubjectsOf(video: Video): List[Subject] = {

@@ -124,6 +124,22 @@ class DocumentToVideoConverterTest extends Test {
     video.promoted shouldBe true
   }
 
+  it should "convert deactivated flag" in {
+    val video = DocumentToVideoConverter.convert(
+      VideoDocument.sample.deactivated(true).build
+    )
+
+    video.deactivated shouldBe true
+  }
+
+  it should "convert a null deactivated value to false" in {
+    val video = DocumentToVideoConverter.convert(
+      VideoDocument.sample.deactivated(null).build
+    )
+
+    video.deactivated shouldBe false
+  }
+
   it should "convert topics" in {
     val video = DocumentToVideoConverter
       .convert(

@@ -36,7 +36,8 @@ object DocumentToVideoConverter {
       promoted = document.getPromoted,
       topics = document.getTopics.asScala.toList.map(convertTopic),
       keywords = Option(document.getKeywords).map(_.asScala.toList).getOrElse(Nil),
-      sourceVideoReference = Option(document.getSourceVideoReference)
+      sourceVideoReference = Option(document.getSourceVideoReference),
+      deactivated = document.getDeactivated
     )
   }
 

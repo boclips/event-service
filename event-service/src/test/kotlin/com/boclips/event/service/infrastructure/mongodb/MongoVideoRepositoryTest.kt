@@ -71,7 +71,8 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                         ).build()
                 ),
                 keywords = listOf("key", "words", "are", "cool"),
-                sourceVideoReference = "video-reference"
+                sourceVideoReference = "video-reference",
+                deactivated = true
             )
         )
 
@@ -99,6 +100,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.promoted).isEqualTo(true)
         assertThat(document.keywords).containsExactly("key", "words", "are", "cool")
         assertThat(document.sourceVideoReference).isEqualTo("video-reference")
+        assertThat(document.deactivated).isEqualTo(true)
 
         val firstTopic = document.topics.first()
         assertThat(firstTopic.name).isEqualTo("topic")
@@ -127,6 +129,18 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         val document = document()
         assertNull(document.originalWidth)
         assertNull(document.originalHeight)
+    }
+
+    @Test
+    fun `creating when deactivated is null`() {
+        videoRepository.saveVideo(
+            createVideo(
+                deactivated = null
+            )
+        )
+
+        val document = document()
+        assertNull(document.deactivated)
     }
 
     @Test

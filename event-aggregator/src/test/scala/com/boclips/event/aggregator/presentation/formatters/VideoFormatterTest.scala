@@ -601,4 +601,17 @@ class VideoFormatterTest extends Test {
     val sourceVideoReference = result.getString("sourceVideoReference")
     sourceVideoReference should be("source-ref")
   }
+
+
+  it should "write deactivated field" in {
+    val tableRow = model.VideoTableRow(
+      createVideo(
+        id = "1",
+        deactivated = true
+      )
+    )
+    val result: JsonObject = VideoFormatter formatRow tableRow
+    val deactivated = result.getBool("deactivated")
+    deactivated should be(true)
+  }
 }

@@ -26,6 +26,7 @@ object VideoFactory {
                    topics: List[VideoTopic] = Nil,
                    keywords: List[String] = Nil,
                    sourceVideoReference: Option[String] = None,
+                   deactivated: Boolean = false,
                  ): Video = {
     videos.Video(
       id = VideoId(id),
@@ -45,6 +46,7 @@ object VideoFactory {
       topics = topics,
       keywords = keywords,
       sourceVideoReference = sourceVideoReference,
+      deactivated = deactivated,
     )
   }
 

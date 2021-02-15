@@ -23,7 +23,8 @@ case class Video(
                   promoted: Boolean,
                   topics: List[VideoTopic],
                   keywords: List[String],
-                  sourceVideoReference: Option[String]
+                  sourceVideoReference: Option[String],
+                  deactivated: Boolean
                 ) {
 
   def monthlyStorageCostGbp(): Double = {
