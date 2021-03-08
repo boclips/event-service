@@ -2,7 +2,6 @@ package com.boclips.event.aggregator
 
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.boclips.event.aggregator.EventAggregatorApp.getVideoIdsForContentPackages
 import com.boclips.event.aggregator.config._
 import com.boclips.event.aggregator.domain.model.ContractLegalRestriction
 import com.boclips.event.aggregator.domain.model.collections.Collection
@@ -119,7 +118,7 @@ class EventAggregatorApp(
 
   def run(): Unit = {
     logProcessingStart(s"Getting YouTube statistics")
-    val youtubeStatsByVideoPlaybackId: RDD[YouTubeVideoStats] = getYoutubeVideoStats
+    val youtubeStatsByVideoPlaybackId: RDD[YouTubeVideoStats] = session.sparkContext.emptyRDD
     logProcessingStart(s"Assembling video search results")
     val impressions: RDD[VideoSearchResultImpression] =
       VideoSearchResultImpressionAssembler(searches)
@@ -128,15 +127,7 @@ class EventAggregatorApp(
     logProcessingStart(s"Assembling contracts")
     val contractsWithRelatedData = ContractTableRowAssembler.assembleContractsWithRelatedData(contracts, contractLegalRestrictions)
     logProcessingStart(s"Getting content packages")
-    val videoIdsForContentPackages: RDD[(ContentPackageId, VideoId)] =
-          configuration.contentPackageMetrics.map(config =>
-            getVideoIdsForContentPackages(
-              session,
-              contentPackages,
-              config
-            )
-          )
-            .getOrElse(session.sparkContext.emptyRDD)
+    val videoIdsForContentPackages: RDD[(ContentPackageId, VideoId)] = session.sparkContext.emptyRDD
     logProcessingStart(s"Assembling videos")
     val videosWithRelatedData = VideoTableRowAssembler.assembleVideosWithRelatedData(
       videos,
@@ -154,11 +145,6 @@ class EventAggregatorApp(
     )
 
     writeTable(videosWithRelatedData, VIDEOS)(VideoFormatter, implicitly)
-
-    if (configuration.neo4j.isDefined) {
-      logProcessingStart("Writing to Neo4j")
-      writeToGraph(videosWithRelatedData)
-    }
 
     logProcessingStart(s"Updating contracts")
     writeTable(contractsWithRelatedData, "contracts")(ContractFormatter, implicitly)
