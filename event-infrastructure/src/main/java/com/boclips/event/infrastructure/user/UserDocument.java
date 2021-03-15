@@ -30,6 +30,7 @@ public class UserDocument {
     private String marketingUtmCampaign;
     private String marketingUtmMedium;
     private String marketingUtmContent;
+    private String externalId;
 
     public static UserDocument.UserDocumentBuilder sample() {
         return UserDocument.builder()
@@ -50,6 +51,7 @@ public class UserDocument {
                 .marketingUtmTerm("mine")
                 .marketingUtmMedium("plasma")
                 .marketingUtmCampaign("India")
+                .externalId(null)
                 ;
     }
 }

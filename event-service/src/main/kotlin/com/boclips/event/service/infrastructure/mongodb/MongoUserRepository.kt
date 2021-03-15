@@ -37,6 +37,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
                 .marketingUtmContent(user.profile.marketingTracking?.utmContent)
                 .marketingUtmMedium(user.profile.marketingTracking?.utmMedium)
             .profileSchool(user.profile.school?.let(this::organisationDocument))
+            .externalId(user.externalUserId)
             .build()
 
         write(document)

@@ -15,7 +15,8 @@ object UserFactory {
             email: String? = null,
             profile: UserProfile = createUserProfile(),
             organisation: Organisation? = null,
-            isBoclipsEmployee: Boolean = false
+            isBoclipsEmployee: Boolean = false,
+            externalUserId: String? = null
     ): User {
         return User.builder()
                 .id(id)
@@ -24,6 +25,7 @@ object UserFactory {
                 .isBoclipsEmployee(isBoclipsEmployee)
                 .organisation(organisation)
                 .profile(profile)
+                .externalUserId(externalUserId)
                 .build()
     }
 

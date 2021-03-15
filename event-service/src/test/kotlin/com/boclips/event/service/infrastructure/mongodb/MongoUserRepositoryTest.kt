@@ -153,5 +153,12 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(userDocument().marketingUtmCampaign).isEqualTo("yes we can")
     }
 
+    @Test
+    fun `saves external id`() {
+        userRepository.saveUser(createUser(externalUserId = "hello"))
+
+        assertThat(userDocument().externalId).isEqualTo("hello")
+    }
+
     fun userDocument() = document<UserDocument>(MongoUserRepository.COLLECTION_NAME)
 }
