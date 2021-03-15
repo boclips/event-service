@@ -319,4 +319,14 @@ class UserFormatterTest extends Test {
 
   }
 
+  it should "write users video interactions url host" in {
+    val json = UserFormatter formatRow createUser().withNested(interactions = List(
+      EventFactory.createVideoInteractedWithEvent(url = "https://videos.boclips.com/"
+      )))
+
+    val interactionsJson = json.getAsJsonArray("interactions")
+
+    interactionsJson should have size 1
+    interactionsJson.get(0).getAsJsonObject.getString("urlHost") shouldBe "videos.boclips.com"
+  }
 }

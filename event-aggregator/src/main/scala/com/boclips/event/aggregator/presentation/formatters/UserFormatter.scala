@@ -79,6 +79,7 @@ object UserFormatter extends SingleRowFormatter[UserTableRow] {
       interactionJson.addDateTimeProperty("timestamp", interaction.timestamp)
       interactionJson.addProperty("videoId", interaction.videoId.value)
       interactionJson.addProperty("subtype", interaction.subtype)
+      interactionJson.addProperty("urlHost", interaction.url.map(_.host))
       interactionJson
     }
     )
