@@ -58,6 +58,7 @@ object UserAssembler {
       marketingUtmMedium = None,
       marketingUtmSource = None,
       marketingUtmTerm = None,
+      externalUserId = None,
     )
   }
 

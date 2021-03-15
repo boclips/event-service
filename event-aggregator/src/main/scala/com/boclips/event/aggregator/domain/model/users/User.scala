@@ -26,6 +26,7 @@ case class User(
                  marketingUtmCampaign: Option[String],
                  marketingUtmMedium: Option[String],
                  marketingUtmContent: Option[String],
+                 externalUserId: Option[String],
                )
 
 case class UserActiveStatus(month: YearMonth, isActive: Boolean)

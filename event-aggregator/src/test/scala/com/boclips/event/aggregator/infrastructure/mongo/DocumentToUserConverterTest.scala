@@ -366,5 +366,13 @@ class DocumentToUserConverterTest extends Test {
     user.marketingUtmSource shouldBe None
   }
 
+  it should "convert external user id" in {
+    val document = UserDocument.sample
+      .externalId("external-id")
+      .build()
 
+    val user = DocumentToUserConverter convert document
+
+    user.externalUserId shouldBe Some("external-id")
+  }
 }

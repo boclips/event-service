@@ -83,6 +83,7 @@ object UserFactory {
                   marketingUtmMedium: Option[String] = None,
                   marketingUtmSource: Option[String] = None,
                   marketingUtmTerm: Option[String] = None,
+                  externalUserId: Option[String] = None,
                 ): User = {
     User(
       identity = identity,
@@ -102,6 +103,7 @@ object UserFactory {
       marketingUtmMedium = marketingUtmMedium,
       marketingUtmSource = marketingUtmSource,
       marketingUtmTerm = marketingUtmTerm,
+      externalUserId = externalUserId,
     )
   }
 

@@ -34,6 +34,7 @@ object DocumentToUserConverter {
       marketingUtmMedium = Option(document.getMarketingUtmMedium),
       marketingUtmSource = Option(document.getMarketingUtmSource),
       marketingUtmTerm = Option(document.getMarketingUtmTerm),
+      externalUserId = Option(document.getExternalId),
     )
   }
 
