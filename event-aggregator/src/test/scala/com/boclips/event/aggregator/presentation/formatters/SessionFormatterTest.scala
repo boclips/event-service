@@ -1,7 +1,8 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import java.time.{ZoneOffset, ZonedDateTime}
+import com.boclips.event.aggregator.domain.model.Url
 
+import java.time.{ZoneOffset, ZonedDateTime}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.createBoclipsUserIdentity
 import com.boclips.event.aggregator.testsupport.testfactories.{EventFactory, SessionFactory}
@@ -17,6 +18,16 @@ class SessionFormatterTest extends Test {
 
     json.getString("start") shouldBe "2017-03-23T18:25:41.511Z"
     json.getString("end") shouldBe "2017-03-23T18:30:41.511Z"
+
+  }
+
+  it should "write the session url host" in {
+    val json = SessionFormatter formatRow SessionFactory.createSession(createBoclipsUserIdentity("id-666"),
+      List(
+        EventFactory.createVideoSegmentPlayedEvent(url = Url.parse("http://bob.co.uk/") )
+    ))
+
+    json.getString("urlHost") shouldBe "bob.co.uk"
 
   }
 }

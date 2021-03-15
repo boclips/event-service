@@ -13,8 +13,9 @@ object SessionFormatter extends SingleRowFormatter[Session] {
   override def writeRow(obj: Session, json: JsonObject): Unit = {
     json.addProperty("id", UUID.randomUUID().toString)
     json.addProperty("start", obj.start.format(ISO_OFFSET_DATE_TIME))
-    json.addProperty("end", obj.end.format(ISO_OFFSET_DATE_TIME)
-    )
+    json.addProperty("end", obj.end.format(ISO_OFFSET_DATE_TIME))
+    json.addProperty("urlHost", obj.urlHost.getOrElse("UNKNOWN"))
+
     val sessionEventsJson = obj.events.map(event => {
       val eventJson = new JsonObject
       eventJson.addProperty("id", UUID.randomUUID().toString)

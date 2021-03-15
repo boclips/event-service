@@ -29,4 +29,14 @@ class SessionTest extends Test {
     session.end shouldBe ZonedDateTime.parse("2020-02-10T10:11:12Z")
   }
 
+  "urlHost" should "deal with nulls" in {
+    val session = createSession(events = List[Event](
+      createVideoSegmentPlayedEvent(timestamp = ZonedDateTime.parse("2020-02-10T10:11:12Z"), url = Url.parse("http://event2.com/")),
+      createVideoSegmentPlayedEvent(timestamp = ZonedDateTime.parse("2020-02-10T10:11:10Z"), url = Url.parse("http://event0.com/")),
+      createVideoSegmentPlayedEvent(timestamp = ZonedDateTime.parse("2020-02-10T10:11:11Z"), url = Url.parse("http://event1.com/")),
+    ))
+
+    session.urlHost shouldBe Some("event0.com")
+  }
+  
 }

@@ -13,4 +13,6 @@ case class Session(
   def start: ZonedDateTime = events.minBy(_.timestamp.toEpochSecond).timestamp
 
   def end: ZonedDateTime = events.maxBy(_.timestamp.toEpochSecond).timestamp
+
+  def urlHost: Option[String] = events.minBy(_.timestamp.toEpochSecond).url.map(_.host)
 }
