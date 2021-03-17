@@ -117,4 +117,15 @@ class UserTableRowAssemblerTest extends IntegrationTest {
     usersWithRelatedData.head.interactions should have size 2
   }
 
+  it should "save externalUserId for users" in sparkTest { implicit spark =>
+    val users = rdd(createUser(createdAt = today, identity = BoclipsUserIdentity(userId), externalUserId = Some("test-external-id")))
+    val playbacks = rdd[Playback]()
+    val searches = rdd[Search]()
+    val sessions = rdd[Session]()
+
+    val usersWithRelatedData = assemblers.UserTableRowAssembler(users, playbacks, searches, sessions).collect().toList
+    usersWithRelatedData should have size 1
+    usersWithRelatedData.head.user.externalUserId shouldBe Some("test-external-id")
+  }
+
 }

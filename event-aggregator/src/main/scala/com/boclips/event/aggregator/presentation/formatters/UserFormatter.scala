@@ -18,6 +18,7 @@ object SimpleUserFormatter extends SingleRowFormatter[User] {
 
     json.addProperty("id", id)
     json.addProperty("identity", identity)
+    json.addProperty("externalId", user.externalUserId)
     json.addProperty("firstName", user.firstName)
     json.addProperty("lastName", user.lastName)
     json.addProperty("email", user.email)

@@ -96,6 +96,16 @@ class UserFormatterTest extends Test {
     json.getString("creationDate") shouldBe "2017-12-03"
   }
 
+  it should "write external user id" in {
+    val json = UserFormatter formatRow createUser(
+      identity = createBoclipsUserIdentity("user-id"),
+      externalUserId = Some("external-user-id")
+    )
+
+    json.getString("id") shouldBe "user-id"
+    json.getString("externalId") shouldBe "external-user-id"
+  }
+
   it should "write organisation postcode when present" in {
     val json = UserFormatter formatRow createUser(organisation = Option(createOrganisation(postcode = Option("SW4"))))
 
