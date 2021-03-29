@@ -52,6 +52,7 @@ object UserFactory {
                           tags: Set[String] = Set(),
                           typeName: OrganisationType = SCHOOL_ORGANISATION,
                           deal: Deal = createDeal(),
+                          features: Option[Map[String, Boolean]] = None
                         ): Organisation = {
     users.Organisation(
       name = name,
@@ -62,6 +63,7 @@ object UserFactory {
       tags = tags,
       parent = parent,
       deal = deal,
+      features = features
     )
   }
 

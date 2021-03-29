@@ -148,6 +148,33 @@ class UserFormatterTest extends Test {
     unbilledUser.get("parentOrganisationDealBilling").getAsBoolean shouldBe false
   }
 
+  it should "write organisation features" in {
+    val userWithFeatures = UserFormatter formatRow createUser(
+      organisation = Option(createOrganisation(
+        features = Option(Map("FEATURE_ONE" -> false, "FEATURE_TWO" -> true))
+      ))
+    )
+
+    userWithFeatures.get("organisationFeatures").getAsJsonArray.size shouldBe 1
+    userWithFeatures.get("organisationFeatures").getAsJsonArray.get(0).getAsString shouldBe "FEATURE_TWO"
+  }
+
+  it should "write organisation features as empty list when no features" in {
+    val userWithFeatures = UserFormatter formatRow createUser(
+      organisation = Option(createOrganisation(
+        features = None
+      ))
+    )
+
+    userWithFeatures.get("organisationFeatures").getAsJsonArray.size shouldBe 0
+  }
+
+  it should "write organisation features as empty list when no organisation" in {
+    val userWithFeatures = UserFormatter formatRow createUser(organisation = None)
+
+    userWithFeatures.get("organisationFeatures").getAsJsonArray.size shouldBe 0
+  }
+
   it should "write parent organisation deal billing as false when no organisation" in {
     val user = UserFormatter formatRow createUser(organisation = None)
 

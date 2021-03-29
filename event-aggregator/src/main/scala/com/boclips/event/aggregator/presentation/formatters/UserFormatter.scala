@@ -33,6 +33,7 @@ object SimpleUserFormatter extends SingleRowFormatter[User] {
     json.addProperty("organisationCountryCode", user.organisation.flatMap(_.countryCode))
     json.addProperty("organisationDealBilling", user.organisation.exists(_.deal.billing))
     json.addProperty("parentOrganisationDealBilling", user.organisation.flatMap(_.parent).exists(_.deal.billing))
+    json.addStringArrayProperty("organisationFeatures", user.organisation.flatMap(_.features).getOrElse(Map.empty).filter(_._2).keys.toList)
 
     json.addProperty("profileOrganisationName", user.profileSchool.map(_.name))
     json.addProperty("profileOrganisationType", user.profileSchool.map(_.`type`).getOrElse(SCHOOL_ORGANISATION).name)

@@ -55,6 +55,8 @@ object DocumentToUserConverter {
       Some(ZonedDateTime.parse(document.getDealExpiresAt))
     }
 
+    val features = Option(document.getFeatures).map(x => x.asScala.mapValues(_.booleanValue()).toMap)
+
     users.Organisation(
       name = document.getName,
       `type` = OrganisationType.from(document.getType),
@@ -66,7 +68,8 @@ object DocumentToUserConverter {
       deal = Deal(
         billing = isBilling,
         dealExpiresAt = dealExpiresAt,
-      )
+      ),
+      features = features
     )
   }
 }
