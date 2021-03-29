@@ -8,6 +8,7 @@ import com.boclips.event.aggregator.domain.model.users._
 import com.boclips.event.infrastructure.user.{OrganisationDocument, UserDocument}
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 
 object DocumentToUserConverter {
 
@@ -55,6 +56,8 @@ object DocumentToUserConverter {
       Some(ZonedDateTime.parse(document.getDealExpiresAt))
     }
 
+    val features: Option[Map[String, Boolean]] = Option(document.getFeatures).map(_.asScala.mapValues(_.booleanValue()).toMap)
+
     users.Organisation(
       name = document.getName,
       `type` = OrganisationType.from(document.getType),
@@ -66,7 +69,8 @@ object DocumentToUserConverter {
       deal = Deal(
         billing = isBilling,
         dealExpiresAt = dealExpiresAt,
-      )
+      ),
+      features = features
     )
   }
 }

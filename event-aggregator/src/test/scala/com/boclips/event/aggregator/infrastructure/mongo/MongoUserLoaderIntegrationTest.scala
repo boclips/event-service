@@ -2,27 +2,35 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import com.boclips.event.aggregator.domain.model.users.{BoclipsUserIdentity, User, UserId}
 import com.boclips.event.aggregator.testsupport.IntegrationTest
-import com.boclips.event.infrastructure.user.UserDocument
+import com.boclips.event.infrastructure.user.{OrganisationDocument, UserDocument}
 import com.mongodb.client.MongoCollection
 import org.apache.spark.sql.SparkSession
+
+import scala.collection.JavaConverters._
 
 class MongoUserLoaderIntegrationTest extends IntegrationTest {
 
   "loadAllUsers" should "read users" in mongoSparkTest { (spark, mongo) =>
+    val features = Map("COPY_LINK_BUTTON" -> true, "SEARCH_ENABLED" -> false).mapValues(Boolean.box).asJava
     val collection = getCollection(mongo)
-    collection insertOne UserDocument.sample.id("my-id").build()
+    collection insertOne UserDocument.sample
+      .id("my-id")
+      .organisation(OrganisationDocument.sample().features(features).build())
+      .build()
 
     val rawCollection = mongo.collection("users")
     val rawDocument = rawCollection.find().iterator().next()
     rawDocument.get("_id") shouldBe "my-id"
 
-    val document = collection.find().iterator().next;
+    val document = collection.find().iterator().next
     document.getId shouldBe "my-id"
 
     val users = loadUsers(spark, mongo)
 
     users should have length 1
     users.head.identity shouldBe BoclipsUserIdentity(UserId("my-id"))
+    users.head.organisation.get.features.get.get("COPY_LINK_BUTTON") shouldBe Some(true)
+    users.head.organisation.get.features.get.get("SEARCH_ENABLED") shouldBe Some(false)
   }
 
   it should "not ignore boclips employees" in mongoSparkTest { (spark, mongo) =>
