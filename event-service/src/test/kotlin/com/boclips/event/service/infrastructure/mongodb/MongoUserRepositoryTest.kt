@@ -27,7 +27,7 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
                     firstName = "Dave",
                     lastName = "Davidson",
                     school = createOrganisation(name = "the school"),
-                        hasOptedIntoMarketing = true
+                    hasOptedIntoMarketing = true
                 ),
                 email = "dave@example.com",
                 organisation = createOrganisation(name = "the organisation")
@@ -49,7 +49,8 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
                 organisation = createOrganisation(
                     id = "teachers",
                     type = "School",
-                    tags = setOf("DESIGN_PARTNER")
+                    tags = setOf("DESIGN_PARTNER"),
+                    features = mapOf("LTI_COPY_RESOURCE_LINK" to false)
                 )
             )
         )
@@ -57,6 +58,8 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(userDocument().organisation?.id).isEqualTo("teachers")
         assertThat(userDocument().organisation?.type).isEqualTo("School")
         assertThat(userDocument().organisation?.tags).containsExactly("DESIGN_PARTNER")
+        assertThat(userDocument().organisation?.features).isNotNull
+        assertThat(userDocument().organisation?.features!!["LTI_COPY_RESOURCE_LINK"]).isFalse()
     }
 
     @Test
@@ -133,17 +136,17 @@ class MongoUserRepositoryTest : AbstractSpringIntegrationTest() {
     @Test
     fun `saveUser saves marketing tracking details`() {
         userRepository.saveUser(
-                createUser(
-                        profile = createUserProfile(
-                                marketingTracking = createMarketingTracking(
-                                        utmSource = "web",
-                                        utmTerm = "Fall",
-                                        utmMedium = "Gas",
-                                        utmContent = "cat",
-                                        utmCampaign = "yes we can"
-                                )
-                        )
+            createUser(
+                profile = createUserProfile(
+                    marketingTracking = createMarketingTracking(
+                        utmSource = "web",
+                        utmTerm = "Fall",
+                        utmMedium = "Gas",
+                        utmContent = "cat",
+                        utmCampaign = "yes we can"
+                    )
                 )
+            )
         )
 
         assertThat(userDocument().marketingUtmSource).isEqualTo("web")

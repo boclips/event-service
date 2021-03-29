@@ -67,6 +67,7 @@ class MongoUserRepository(private val mongoClient: MongoClient) : UserRepository
             .state(organisation.address.state)
             .dealExpiresAt(organisation.deal.expiresAt?.format(ISO_DATE_TIME))
             .billing(organisation.deal.billing)
+            .features(organisation.features)
             .build()
     }
 

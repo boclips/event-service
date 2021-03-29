@@ -3,7 +3,9 @@ package com.boclips.event.infrastructure.user;
 import lombok.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -24,6 +26,7 @@ public class OrganisationDocument {
     private String state;
     private String dealExpiresAt;
     private Boolean billing;
+    private Map<String, Boolean> features;
 
     public static OrganisationDocument.OrganisationDocumentBuilder sample() {
         return OrganisationDocument.builder()
@@ -36,6 +39,7 @@ public class OrganisationDocument {
                 .countryCode("US")
                 .state("CA")
                 .dealExpiresAt("2020-05-28T16:18:17.945+01:00")
+                .features(new HashMap<>())
                 .billing(true);
     }
 }
