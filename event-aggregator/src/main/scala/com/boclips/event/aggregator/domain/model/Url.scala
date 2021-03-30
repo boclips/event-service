@@ -34,7 +34,9 @@ object Url {
       val key = maybeTuple(0)
       val value = if (maybeTuple.length == 2) maybeTuple(1) else ""
 
-      (key, URLDecoder.decode(value, StandardCharsets.UTF_8.name()))
+      val safeToDecodeValue = value.replaceAll("%(?![0-9a-fA-F]{2})", "%25")
+
+      (key, URLDecoder.decode(safeToDecodeValue, StandardCharsets.UTF_8.name()))
     })
 
     keyValuePairs.foldLeft(Map[String, String]())(_ + _)

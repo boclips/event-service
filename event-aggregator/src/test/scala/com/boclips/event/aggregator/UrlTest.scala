@@ -19,6 +19,10 @@ class UrlTest extends Test {
     Url.parse("http://example.com").params should be(Map())
   }
 
+  it should "Deal with urls that contain unencoded % sign" in {
+    Url.parse("https://teachers.boclips.com/videos/id?referer=user-id6%g8jwg8jwg8jw").params should be(Map("referer" -> "user-id6%g8jwg8jwg8jw"))
+  }
+
   it should "return an empty map if there is no query params, but a ?" in {
     Url.parse("http://example.com?").params should be(Map())
   }
