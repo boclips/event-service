@@ -17,18 +17,12 @@ public class ChannelPedagogyDocument {
     private Integer ageRangeMin;
     private Integer ageRangeMax;
     private List<String> bestForTags;
-    private String curriculumAligned;
-    private String educationalResources;
-    private Boolean transcriptProvided;
 
     public static ChannelPedagogyDocumentBuilder sample() {
         return ChannelPedagogyDocument.builder()
                 .subjectNames(Collections.singletonList("Math"))
                 .ageRangeMin(5)
                 .ageRangeMax(16)
-                .bestForTags(Collections.singletonList("Kids"))
-                .curriculumAligned("Cool curriculum")
-                .educationalResources("Educational resource")
-                .transcriptProvided(true);
+                .bestForTags(Collections.singletonList("Kids"));
     }
 }

@@ -47,9 +47,6 @@ case class ChannelPedagogy(
                             ageRangeMin: Option[Int],
                             ageRangeMax: Option[Int],
                             bestForTags: Option[List[String]],
-                            curriculumAligned: Option[String],
-                            educationalResources: Option[String],
-                            transcriptProvided: Option[Boolean]
                           )
 
 case class ChannelMarketing(

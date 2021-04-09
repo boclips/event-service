@@ -20,7 +20,7 @@ class MongoOrderRepository(private val mongoClient: MongoClient) : OrderReposito
     }
 
     override fun saveOrder(order: Order) {
-        val requestingUserDoc = order.requestingUser?.let(this::orderUserDocument)
+        val requestingUserDoc = order.requestingUser.let(this::orderUserDocument)
         val authorisingUserDoc = order.authorisingUser?.let(this::orderUserDocument)
         write(
             OrderDocument

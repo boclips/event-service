@@ -38,10 +38,7 @@ object DocumentToChannelConverter {
         subjectNames = Option(pedagogy.getSubjectNames).map(_.asScala.toList),
         ageRangeMin = integerOption(pedagogy.getAgeRangeMin),
         ageRangeMax = integerOption(pedagogy.getAgeRangeMax),
-        bestForTags = Option(pedagogy.getBestForTags).map(_.asScala.toList),
-        curriculumAligned = Option(pedagogy.getCurriculumAligned),
-        educationalResources = Option(pedagogy.getEducationalResources),
-        transcriptProvided = booleanOption(pedagogy.getTranscriptProvided)
+        bestForTags = Option(pedagogy.getBestForTags).map(_.asScala.toList)
       ),
       marketing = ChannelMarketing(
         status = Option(marketing.getStatus),

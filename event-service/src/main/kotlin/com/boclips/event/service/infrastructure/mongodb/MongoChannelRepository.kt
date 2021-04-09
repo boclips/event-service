@@ -66,14 +66,16 @@ fun ChannelIngestDetails.toDocument(): ChannelIngestDocument =
     ChannelIngestDocument.builder()
         .type(type)
         .deliveryFrequency(deliveryFrequency?.toString())
-        .distributionMethods(distributionMethods?.map { method ->
-            method?.let {
-                when (it) {
-                    DistributionMethod.DOWNLOAD -> DistributionMethodDocument.DOWNLOAD
-                    DistributionMethod.STREAM -> DistributionMethodDocument.STREAM
+        .distributionMethods(
+            distributionMethods?.map { method ->
+                method?.let {
+                    when (it) {
+                        DistributionMethod.DOWNLOAD -> DistributionMethodDocument.DOWNLOAD
+                        DistributionMethod.STREAM -> DistributionMethodDocument.STREAM
+                    }
                 }
-            }
-        }?.toSet())
+            }?.toSet()
+        )
         .build()
 
 fun ChannelPedagogyDetails.toDocument(): ChannelPedagogyDocument =
@@ -82,9 +84,6 @@ fun ChannelPedagogyDetails.toDocument(): ChannelPedagogyDocument =
         .ageRangeMin(ageRange?.min)
         .ageRangeMax(ageRange?.max)
         .bestForTags(bestForTags)
-        .curriculumAligned(curriculumAligned)
-        .educationalResources(educationalResources)
-        .transcriptProvided(transcriptProvided)
         .build()
 
 fun ChannelMarketingDetails.toDocument(): ChannelMarketingDocument =

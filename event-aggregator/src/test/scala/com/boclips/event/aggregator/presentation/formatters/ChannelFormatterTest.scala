@@ -32,9 +32,6 @@ class ChannelFormatterTest extends Test {
         ageRangeMin = Some(5),
         ageRangeMax = Some(10),
         bestForTags = Some(List("Hook")),
-        curriculumAligned = Some("ks4"),
-        educationalResources = Some("edu resources"),
-        transcriptProvided = Some(true),
       ),
       marketing = ChannelMarketing(
         status = Some("my status"),
@@ -66,9 +63,6 @@ class ChannelFormatterTest extends Test {
     json.getInt("pedagogyAgeRangeMin") shouldBe 5
     json.getInt("pedagogyAgeRangeMax") shouldBe 10
     json.getStringList("pedagogyBestForTags") shouldBe List("Hook")
-    json.getString("pedagogyCurriculumAligned") shouldBe "ks4"
-    json.getString("pedagogyEducationalResources") shouldBe "edu resources"
-    json.getBool("pedagogyTranscriptProvided") shouldBe true
 
     json.getString("marketingStatus") shouldBe "my status"
     json.getString("marketingOneLineIntro") shouldBe "my one liner"
@@ -100,10 +94,7 @@ class ChannelFormatterTest extends Test {
         subjectNames = None,
         ageRangeMin = None,
         ageRangeMax = None,
-        bestForTags = None,
-        curriculumAligned = None,
-        educationalResources = None,
-        transcriptProvided = None,
+        bestForTags = None
       ),
       marketing = ChannelMarketing(
         status = None,
@@ -135,9 +126,6 @@ class ChannelFormatterTest extends Test {
     json.get("pedagogyAgeRangeMin") shouldBe JsonNull.INSTANCE
     json.get("pedagogyAgeRangeMax") shouldBe JsonNull.INSTANCE
     json.getStringList("pedagogyBestForTags") shouldBe List()
-    json.get("pedagogyCurriculumAligned") shouldBe JsonNull.INSTANCE
-    json.get("pedagogyEducationalResources") shouldBe JsonNull.INSTANCE
-    json.get("pedagogyTranscriptProvided") shouldBe JsonNull.INSTANCE
 
     json.get("marketingStatus") shouldBe JsonNull.INSTANCE
     json.get("marketingOneLineIntro") shouldBe JsonNull.INSTANCE
@@ -169,10 +157,7 @@ class ChannelFormatterTest extends Test {
         subjectNames = None,
         ageRangeMin = None,
         ageRangeMax = None,
-        bestForTags = None,
-        curriculumAligned = None,
-        educationalResources = None,
-        transcriptProvided = None,
+        bestForTags = None
       ),
       marketing = ChannelMarketing(
         status = None,

@@ -28,9 +28,6 @@ object ChannelFormatter extends SingleRowFormatter[Channel] {
     json.addProperty("pedagogyAgeRangeMin", obj.pedagogy.ageRangeMin.map(Int.box).orNull)
     json.addProperty("pedagogyAgeRangeMax", obj.pedagogy.ageRangeMax.map(Int.box).orNull)
     json.addStringArrayProperty("pedagogyBestForTags", obj.pedagogy.bestForTags.getOrElse(Nil))
-    json.addProperty("pedagogyCurriculumAligned", obj.pedagogy.curriculumAligned.orNull)
-    json.addProperty("pedagogyEducationalResources", obj.pedagogy.educationalResources.orNull)
-    json.addProperty("pedagogyTranscriptProvided", obj.pedagogy.transcriptProvided.map(Boolean.box).orNull)
 
     json.addProperty("marketingStatus", obj.marketing.status.orNull)
     json.addProperty("marketingOneLineIntro", obj.marketing.oneLineIntro.orNull)

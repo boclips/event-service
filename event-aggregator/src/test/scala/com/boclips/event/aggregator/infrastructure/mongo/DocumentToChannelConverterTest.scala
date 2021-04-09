@@ -41,9 +41,6 @@ class DocumentToChannelConverterTest extends Test {
           .ageRangeMin(8)
           .ageRangeMax(16)
           .bestForTags(List("cool", "tag").asJava)
-          .curriculumAligned("Curriculum text")
-          .educationalResources("Educational resources text")
-          .transcriptProvided(true)
           .build()
       )
       .marketing(
@@ -78,9 +75,6 @@ class DocumentToChannelConverterTest extends Test {
     channel.pedagogy.ageRangeMin should contain(8)
     channel.pedagogy.ageRangeMax should contain(16)
     channel.pedagogy.bestForTags should contain(List("cool", "tag"))
-    channel.pedagogy.curriculumAligned should contain("Curriculum text")
-    channel.pedagogy.educationalResources should contain("Educational resources text")
-    channel.pedagogy.transcriptProvided should contain(true)
 
     channel.marketing.status should contain("Status")
     channel.marketing.oneLineIntro should contain("One line intro")
@@ -116,9 +110,6 @@ class DocumentToChannelConverterTest extends Test {
           .ageRangeMin(null)
           .ageRangeMax(null)
           .bestForTags(null)
-          .curriculumAligned(null)
-          .educationalResources(null)
-          .transcriptProvided(null)
           .build()
       )
       .marketing(
@@ -152,9 +143,6 @@ class DocumentToChannelConverterTest extends Test {
     channel.pedagogy.ageRangeMin shouldBe None
     channel.pedagogy.ageRangeMax shouldBe None
     channel.pedagogy.bestForTags shouldBe None
-    channel.pedagogy.curriculumAligned shouldBe None
-    channel.pedagogy.educationalResources shouldBe None
-    channel.pedagogy.transcriptProvided shouldBe None
 
     channel.marketing.status shouldBe None
     channel.marketing.oneLineIntro shouldBe None

@@ -79,17 +79,11 @@ object ChannelFactory {
     fun createChannelPedagogyDetails(
         subjects: List<Subject>? = null,
         ageRange: AgeRange = AgeRange.builder().min(6).max(12).build(),
-        bestForTags: List<String>? = null,
-        curriculumAligned: String? = null,
-        educationalResources: String? = null,
-        transcriptProvided: Boolean? = null
+        bestForTags: List<String>? = null
     ): ChannelPedagogyDetails =
         ChannelPedagogyDetails.builder()
             .subjects(subjects)
             .ageRange(ageRange)
             .bestForTags(bestForTags)
-            .curriculumAligned(curriculumAligned)
-            .educationalResources(educationalResources)
-            .transcriptProvided(transcriptProvided)
             .build()
 }

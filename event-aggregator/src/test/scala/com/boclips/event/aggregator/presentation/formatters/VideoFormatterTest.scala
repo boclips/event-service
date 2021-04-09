@@ -294,9 +294,6 @@ class VideoFormatterTest extends Test {
         ageRangeMin = Some(5),
         ageRangeMax = Some(10),
         bestForTags = Some(List("Hook")),
-        curriculumAligned = Some("ks4"),
-        educationalResources = Some("edu resources"),
-        transcriptProvided = Some(true),
       ),
       marketing = ChannelMarketing(
         status = Some("my status"),
@@ -332,9 +329,6 @@ class VideoFormatterTest extends Test {
     channelJson.getInt("pedagogyAgeRangeMin") shouldBe 5
     channelJson.getInt("pedagogyAgeRangeMax") shouldBe 10
     channelJson.getStringList("pedagogyBestForTags") shouldBe List("Hook")
-    channelJson.getString("pedagogyCurriculumAligned") shouldBe "ks4"
-    channelJson.getString("pedagogyEducationalResources") shouldBe "edu resources"
-    channelJson.getBool("pedagogyTranscriptProvided") shouldBe true
 
     channelJson.getString("marketingStatus") shouldBe "my status"
     channelJson.getString("marketingOneLineIntro") shouldBe "my one liner"

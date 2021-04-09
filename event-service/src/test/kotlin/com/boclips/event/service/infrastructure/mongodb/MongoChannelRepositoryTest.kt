@@ -112,10 +112,7 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
                             .build()
                     ),
                     ageRange = AgeRange.builder().min(8).max(16).build(),
-                    bestForTags = listOf("tag1", "tag2", "cooltag"),
-                    curriculumAligned = "this is not curriculum aligned!!",
-                    educationalResources = "please teach alongside world history",
-                    transcriptProvided = true
+                    bestForTags = listOf("tag1", "tag2", "cooltag")
                 )
             )
         )
@@ -128,9 +125,6 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(pedagogy.ageRangeMin).isEqualTo(8)
         assertThat(pedagogy.ageRangeMax).isEqualTo(16)
         assertThat(pedagogy.bestForTags).containsExactly("tag1", "tag2", "cooltag")
-        assertThat(pedagogy.curriculumAligned).isEqualTo("this is not curriculum aligned!!")
-        assertThat(pedagogy.educationalResources).isEqualTo("please teach alongside world history")
-        assertThat(pedagogy.transcriptProvided).isTrue()
     }
 
     @Test
