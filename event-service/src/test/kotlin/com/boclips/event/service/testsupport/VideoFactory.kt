@@ -33,7 +33,8 @@ object VideoFactory {
         topics: List<VideoTopic> = emptyList(),
         keywords: List<String> = emptyList(),
         sourceVideoReference: String? = null,
-        deactivated: Boolean? = false
+        deactivated: Boolean? = false,
+        hasTranscript: Boolean = false
     ): Video {
         return Video
             .builder()
@@ -56,6 +57,7 @@ object VideoFactory {
             .keywords(keywords)
             .sourceVideoReference(sourceVideoReference)
             .deactivated(deactivated)
+            .hasTranscript(hasTranscript)
             .build()
     }
 }

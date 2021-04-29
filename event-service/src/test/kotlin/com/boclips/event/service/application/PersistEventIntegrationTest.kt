@@ -20,6 +20,7 @@ import com.boclips.event.service.testsupport.EventFactory.createVideoRemovedFrom
 import com.boclips.event.service.testsupport.EventFactory.createVideoSegmentPlayed
 import com.boclips.event.service.testsupport.EventFactory.createVideosSearched
 import com.boclips.event.service.testsupport.UserFactory.createUser
+import com.boclips.eventbus.domain.page.Viewport
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
 import org.junit.jupiter.api.Test
@@ -134,9 +135,12 @@ class PersistEventIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Test
     fun pageRendered() {
-        val event = createPageRendered(url = "http://teachers.boclips.com/my-videos")
+        val event = createPageRendered(url = "http://teachers.boclips.com/my-videos", viewport = Viewport(1000, 5))
         eventBus.publish(event)
-        assertThat(document().toJson()).contains("http://teachers.boclips.com/my-videos")
+        val json = document().toJson()
+        assertThat(json).contains("http://teachers.boclips.com/my-videos")
+        assertThat(json).contains("1000")
+        assertThat(json).contains("5")
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.boclips.event.service.testsupport
 
 import com.boclips.event.service.testsupport.UserFactory.createUser
 import com.boclips.eventbus.domain.ResourceType
+import com.boclips.eventbus.domain.page.Viewport
 import com.boclips.eventbus.domain.user.User
 import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
 import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
@@ -202,11 +203,13 @@ object EventFactory {
     fun createPageRendered(
         userId: String = "user-12",
         url: String = "http://bbc.co.uk",
+        viewport: Viewport? = null,
         timestamp: ZonedDateTime = ZonedDateTime.now()
     ): PageRendered {
         return PageRendered.builder()
             .userId(userId)
             .url(url)
+            .viewport(viewport)
             .timestamp(timestamp)
             .build()
     }

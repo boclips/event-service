@@ -3,24 +3,14 @@ package com.boclips.event.service.domain
 import com.boclips.event.infrastructure.EventFields.*
 import com.boclips.eventbus.events.base.AbstractCollectionEvent
 import com.boclips.eventbus.events.base.AbstractEventWithUserId
-import com.boclips.eventbus.events.collection.CollectionAgeRangeChanged
-import com.boclips.eventbus.events.collection.CollectionBookmarkChanged
-import com.boclips.eventbus.events.collection.CollectionInteractedWith
-import com.boclips.eventbus.events.collection.CollectionSubjectsChanged
-import com.boclips.eventbus.events.collection.CollectionVisibilityChanged
-import com.boclips.eventbus.events.collection.VideoAddedToCollection
-import com.boclips.eventbus.events.collection.VideoRemovedFromCollection
+import com.boclips.eventbus.events.collection.*
 import com.boclips.eventbus.events.page.PageRendered
 import com.boclips.eventbus.events.platform.PlatformInteractedWith
 import com.boclips.eventbus.events.resource.ResourcesSearched
 import com.boclips.eventbus.events.searchsuggestions.SearchQueryCompletionsSuggested
 import com.boclips.eventbus.events.user.UserExpired
-import com.boclips.eventbus.events.video.VideoInteractedWith
-import com.boclips.eventbus.events.video.VideoPlayerEvent
-import com.boclips.eventbus.events.video.VideoPlayerInteractedWith
-import com.boclips.eventbus.events.video.VideoSegmentPlayed
-import com.boclips.eventbus.events.video.VideosSearched
-import java.util.Date
+import com.boclips.eventbus.events.video.*
+import java.util.*
 
 object EventSerializer {
 
@@ -118,12 +108,21 @@ object EventSerializer {
     }
 
     fun convertPageRendered(event: PageRendered): Map<String, Any> {
-        return mapOf<String, Any>(
+        val coreFields = mapOf<String, Any>(
             USER_ID to event.userId,
             TIMESTAMP to Date.from(event.timestamp.toInstant()),
             URL to event.url,
             TYPE to Type.PAGE_RENDERED
         )
+
+        val viewportFields = if (event.viewport != null) {
+            mapOf(
+                VIEWPORT_HEIGHT to event.viewport.height,
+                VIEWPORT_WIDTH to event.viewport.width
+            )
+        } else emptyMap()
+
+        return coreFields + viewportFields
     }
 
     fun convertCollectionInteractedWith(event: CollectionInteractedWith): Map<String, Any> {
@@ -186,9 +185,9 @@ object EventSerializer {
 
     fun convertSearchQueryCompletionsSuggested(event: SearchQueryCompletionsSuggested): Map<String, Any> {
         return convertUserEvent(event, type = Type.SEARCH_QUERY_COMPLETIONS_SUGGESTED) +
-                (SEARCH_QUERY to event.searchQuery) +
-                (COMPLETION_ID to event.completionId) +
-                (IMPRESSIONS to event.impressions) +
-                (COMPONENT_ID to event.componentId)
+            (SEARCH_QUERY to event.searchQuery) +
+            (COMPLETION_ID to event.completionId) +
+            (IMPRESSIONS to event.impressions) +
+            (COMPONENT_ID to event.componentId)
     }
 }

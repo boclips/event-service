@@ -16,6 +16,7 @@ import com.boclips.event.service.testsupport.EventFactory.createVideoRemovedFrom
 import com.boclips.event.service.testsupport.OrganisationFactory.createOrganisation
 import com.boclips.event.service.testsupport.UserFactory.createUser
 import com.boclips.eventbus.domain.ResourceType
+import com.boclips.eventbus.domain.page.Viewport
 import com.boclips.eventbus.events.base.AbstractEventWithUserId
 import com.boclips.eventbus.events.collection.CollectionInteractionType
 import com.boclips.eventbus.events.resource.ResourcesSearched
@@ -326,12 +327,40 @@ class EventSerializerTest {
         val event = createPageRendered(
             userId = "my-test-id",
             url = "http://teachers.boclips.com/test/page?data=123",
+            viewport = Viewport(320, 640),
             timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC)
         )
 
         val document = EventSerializer.convertPageRendered(event)
 
         assertThat(document[USER_ID]).isEqualTo("my-test-id")
+        assertThat(document[URL]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document[VIEWPORT_WIDTH]).isEqualTo(320)
+        assertThat(document[VIEWPORT_HEIGHT]).isEqualTo(640)
+        assertThat(document[URL]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document[TIMESTAMP]).isEqualTo(
+            Date.from(
+                ZonedDateTime.parse("2019-05-12T12:14:15.1Z").toInstant()
+            )
+        )
+        assertThat(document[TYPE]).isEqualTo("PAGE_RENDERED")
+    }
+
+    @Test
+    fun ignoresNullViewportWhenConvertingPageRenderedEvent() {
+        val event = createPageRendered(
+            userId = "my-test-id",
+            url = "http://teachers.boclips.com/test/page?data=123",
+            viewport = null,
+            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC)
+        )
+
+        val document = EventSerializer.convertPageRendered(event)
+
+        assertThat(document[USER_ID]).isEqualTo("my-test-id")
+        assertThat(document[URL]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document[VIEWPORT_WIDTH]).isNull()
+        assertThat(document[VIEWPORT_HEIGHT]).isNull()
         assertThat(document[URL]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
         assertThat(document[TIMESTAMP]).isEqualTo(
             Date.from(
