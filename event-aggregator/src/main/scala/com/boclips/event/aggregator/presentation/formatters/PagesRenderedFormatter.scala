@@ -13,6 +13,8 @@ object PagesRenderedFormatter extends SingleRowFormatter[PageRenderedEvent] {
     json.addProperty("urlPath", pageRendered.url.map(_.path))
     json.addProperty("urlHost", pageRendered.url.map(_.host))
     json.addProperty("urlParams", pageRendered.url.map(_.rawParams))
+    json.addProperty("viewportWidth", pageRendered.viewportWidth.map(Int.box).orNull)
+    json.addProperty("viewportHeight", pageRendered.viewportHeight.map(Int.box).orNull)
   }
 
 }

@@ -37,12 +37,16 @@ object EventFactory {
                                   timestamp: ZonedDateTime = ZonedDateTime.now(),
                                   userId: String = "user666",
                                   url: String = "the/url",
+                                  viewportWidth: Int = 10,
+                                  viewportHeight: Int = 20,
                                 ): Document = {
     val properties = Map[String, Object](
       (EventFields.TYPE, "PAGE_RENDERED"),
       (EventFields.TIMESTAMP, Date.from(timestamp.toInstant)),
       (EventFields.USER_ID, userId),
       (EventFields.URL, url),
+      (EventFields.VIEWPORT_WIDTH, Int.box(viewportWidth)),
+      (EventFields.VIEWPORT_HEIGHT, Int.box(viewportHeight)),
     )
     new Document(properties.asJava)
   }
@@ -50,11 +54,15 @@ object EventFactory {
   def createPageRenderedEvent(
                                timestamp: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC),
                                userIdentity: UserIdentity = createBoclipsUserIdentity(),
+                               viewportWidth: Option[Int] = Some(10),
+                               viewportHeight: Option[Int] = Some(20),
                                url: String = "http://test.com"): PageRenderedEvent = {
     PageRenderedEvent(
       timestamp = timestamp,
       userIdentity = userIdentity,
-      url = Some(Url.parse(url))
+      url = Some(Url.parse(url)),
+      viewportWidth = viewportWidth,
+      viewportHeight = viewportHeight,
     )
 
   }

@@ -292,12 +292,16 @@ class DocumentToEventConverterTest extends Test {
     val document = EventFactory.createPageRenderedDocument(
       timestamp = timestamp,
       userId = "renderer-user",
-      url = "https://teachers.boclips.com/videos?page=1&q=fractions"
+      url = "https://teachers.boclips.com/videos?page=1&q=fractions",
+      viewportHeight = 25,
+      viewportWidth = 30
     ).asBoclipsUser()
 
     val event = DocumentToEventConverter.convert(document)
     event.isInstanceOf[PageRenderedEvent] shouldBe true
     event.asInstanceOf[PageRenderedEvent].timestamp shouldBe timestamp
+    event.asInstanceOf[PageRenderedEvent].viewportHeight shouldBe Some(25)
+    event.asInstanceOf[PageRenderedEvent].viewportWidth shouldBe Some(30)
     event.asInstanceOf[PageRenderedEvent].userIdentity.id should contain(UserId("renderer-user"))
     event.asInstanceOf[PageRenderedEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=fractions"))
   }

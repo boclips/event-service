@@ -13,6 +13,8 @@ case class PageRenderedEvent
   timestamp: ZonedDateTime,
   userIdentity: UserIdentity,
   url: Option[Url],
+  viewportWidth: Option[Int],
+  viewportHeight: Option[Int],
 ) extends Event {
   override val typeName: String = EventFields.Type.PAGE_RENDERED
   override val subtype: Option[String] = None
