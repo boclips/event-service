@@ -20,7 +20,7 @@ dependencies {
     implementation "org.scalactic:scalactic_2.12:3.0.5"
     implementation "io.sentry:sentry-log4j:1.7.30"
     implementation "org.neo4j.driver:neo4j-java-driver:4.0.2"
-    implementation "neo4j-contrib:neo4j-spark-connector:2.4.5-M2"
+//    implementation "neo4j-contrib:neo4j-spark-connector:2.4.5-M2"
     implementation "org.apache.spark:spark-graphx_2.12:2.4.5"
     implementation "com.google.apis:google-api-services-youtube:v3-rev20200618-1.30.9"
     compile group: 'com.google.oauth-client', name: 'google-oauth-client', version: '1.30.6'
