@@ -38,15 +38,13 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{Row, SparkSession}
 import org.apache.spark.storage.StorageLevel
-import org.neo4j.spark.dataframe.Neo4jDataFrame
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.reflect.runtime.universe.TypeTag
 
 object EventAggregatorApp {
   def main(args: Array[String]): Unit = {
-    val neo4jConfig = Neo4jConfig.fromEnv
-    val sparkConfig: SparkConfig = SparkConfig(neo4jConfig)
+    val sparkConfig: SparkConfig = SparkConfig()
     implicit val session: SparkSession = sparkConfig.session
     val writer = new BigQueryTableWriter(BigQueryConfig())
     val mongoSparkProvider = new SparkMongoClient(MongoConfig())
@@ -54,7 +52,6 @@ object EventAggregatorApp {
       writer,
       mongoSparkProvider,
       EventAggregatorConfig(
-        neo4j = neo4jConfig,
         youTube = Some(YouTubeConfig.fromEnv),
         contentPackageMetrics = Some(ContentPackageMetricsConfig.fromEnv)
       )
@@ -219,94 +216,6 @@ class EventAggregatorApp(
           ).iterator
         })
     }.getOrElse(session.sparkContext.parallelize(List()))
-
-  private def writeToGraph(rows: RDD[VideoTableRow]): Unit = {
-    val videoRows: RDD[Row] = rows.map(row =>
-      Row(
-        row.video.id.value,
-        row.video.title,
-        row.channel.map(_.id.value).orNull,
-        row.channel.map(_.name).orNull
-      )
-    )
-    val structType = StructType(List(
-      StructField("videoId", StringType, nullable = false),
-      StructField("videoTitle", StringType, nullable = false),
-      StructField("channelId", StringType),
-      StructField("channelName", StringType),
-    ))
-    val videoDataFrame = session.createDataFrame(videoRows, structType)
-    Neo4jDataFrame.mergeEdgeList(
-      session.sparkContext,
-      videoDataFrame.where("channelId IS NOT NULL"),
-      source = ("Video", Seq("videoId", "videoTitle")),
-      relationship = ("BELONGS_TO_CHANNEL", Nil),
-      target = ("Channel", Seq("channelId", "channelName")),
-      renamedColumns = Map(
-        ("videoId", "uuid"),
-        ("videoTitle", "title"),
-        ("channelId", "uuid"),
-        ("channelName", "name"),
-      )
-    )
-
-    val topicRows = rows.flatMap(row =>
-      row.video.topics.map(topic => {
-        val parent = topic.parent
-        val grandparent = parent.flatMap(_.parent)
-        Row(
-          row.video.id.value,
-          topic.name,
-          parent.map(_.name).orNull,
-          grandparent.map(_.name).orNull,
-        )
-      })
-    )
-    val topicStructType = StructType(List(
-      StructField("videoId", StringType, nullable = false),
-      StructField("topic", StringType),
-      StructField("parent", StringType),
-      StructField("grandparent", StringType)
-    ))
-    val topicDataFrame = session.createDataFrame(topicRows, topicStructType)
-    Neo4jDataFrame.mergeEdgeList(
-      session.sparkContext,
-      topicDataFrame.where("topic IS NOT NULL"),
-      source = ("Video", Seq("videoId")),
-      relationship = ("HAS_TOPIC", Nil),
-      target = ("Topic", Seq("topic")),
-      renamedColumns = Map(
-        ("videoId", "uuid"),
-        ("topic", "name")
-      )
-    )
-    Neo4jDataFrame.mergeEdgeList(
-      session.sparkContext,
-      topicDataFrame.where(
-        "topic IS NOT NULL AND parent IS NOT NULL"
-      ),
-      source = ("Topic", Seq("topic")),
-      relationship = ("HAS_PARENT_TOPIC", Nil),
-      target = ("Topic", Seq("parent")),
-      renamedColumns = Map(
-        ("topic", "name"),
-        ("parent", "name")
-      )
-    )
-    Neo4jDataFrame.mergeEdgeList(
-      session.sparkContext,
-      topicDataFrame.where(
-        "parent IS NOT NULL AND grandparent IS NOT NULL"
-      ),
-      source = ("Topic", Seq("parent")),
-      relationship = ("HAS_PARENT_TOPIC", Nil),
-      target = ("Topic", Seq("grandparent")),
-      renamedColumns = Map(
-        ("parent", "name"),
-        ("grandparent", "name")
-      )
-    )
-  }
 
   private def logProcessingStart(name: String): Unit = {
     log.info(name)
