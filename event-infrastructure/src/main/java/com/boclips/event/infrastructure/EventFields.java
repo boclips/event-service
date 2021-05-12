@@ -43,6 +43,7 @@ public class EventFields {
 
     public final static String VIEWPORT_WIDTH = "viewportWidth";
     public final static String VIEWPORT_HEIGHT = "viewportHeight";
+    public final static String IS_RESIZE = "isResize";
 
     public final static String PLAYBACK_VIDEO_INDEX = "videoIndex";
     public final static String PLAYBACK_SEGMENT_START_SECONDS = "segmentStartSeconds";

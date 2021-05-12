@@ -112,7 +112,8 @@ object EventSerializer {
             USER_ID to event.userId,
             TIMESTAMP to Date.from(event.timestamp.toInstant()),
             URL to event.url,
-            TYPE to Type.PAGE_RENDERED
+            TYPE to Type.PAGE_RENDERED,
+            IS_RESIZE to (event.isResize ?: false)
         )
 
         val viewportFields = if (event.viewport != null) {

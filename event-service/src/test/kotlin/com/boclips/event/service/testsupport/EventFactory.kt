@@ -204,13 +204,15 @@ object EventFactory {
         userId: String = "user-12",
         url: String = "http://bbc.co.uk",
         viewport: Viewport? = null,
-        timestamp: ZonedDateTime = ZonedDateTime.now()
+        timestamp: ZonedDateTime = ZonedDateTime.now(),
+        isResize: Boolean? = false
     ): PageRendered {
         return PageRendered.builder()
             .userId(userId)
             .url(url)
             .viewport(viewport)
             .timestamp(timestamp)
+            .isResize(isResize)
             .build()
     }
 

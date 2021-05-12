@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.Date
+import java.util.*
 
 class EventSerializerTest {
 
@@ -63,7 +63,7 @@ class EventSerializerTest {
             .query("hello")
             .pageVideoIds(listOf("v1", "v2"))
             .totalResults(100)
-            .queryParams(mapOf<String,List<String>>(Pair("age_facets", listOf("01-03","05-07"))))
+            .queryParams(mapOf<String, List<String>>(Pair("age_facets", listOf("01-03", "05-07"))))
             .build()
 
         val document = EventSerializer.convertVideosSearched(videosSearched = event)
@@ -328,6 +328,7 @@ class EventSerializerTest {
             userId = "my-test-id",
             url = "http://teachers.boclips.com/test/page?data=123",
             viewport = Viewport(320, 640),
+            isResize = false,
             timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC)
         )
 
@@ -344,6 +345,33 @@ class EventSerializerTest {
             )
         )
         assertThat(document[TYPE]).isEqualTo("PAGE_RENDERED")
+        assertThat(document[IS_RESIZE]).isEqualTo(false)
+    }
+
+    @Test
+    fun convertPageRenderedWhenIsResizeNotSpecified() {
+        val event = createPageRendered(
+            userId = "my-test-id",
+            url = "http://teachers.boclips.com/test/page?data=123",
+            viewport = Viewport(320, 640),
+            isResize = null,
+            timestamp = ZonedDateTime.of(2019, 5, 12, 12, 14, 15, 100000000, ZoneOffset.UTC)
+        )
+
+        val document = EventSerializer.convertPageRendered(event)
+
+        assertThat(document[USER_ID]).isEqualTo("my-test-id")
+        assertThat(document[URL]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document[VIEWPORT_WIDTH]).isEqualTo(320)
+        assertThat(document[VIEWPORT_HEIGHT]).isEqualTo(640)
+        assertThat(document[URL]).isEqualTo("http://teachers.boclips.com/test/page?data=123")
+        assertThat(document[TIMESTAMP]).isEqualTo(
+            Date.from(
+                ZonedDateTime.parse("2019-05-12T12:14:15.1Z").toInstant()
+            )
+        )
+        assertThat(document[TYPE]).isEqualTo("PAGE_RENDERED")
+        assertThat(document[IS_RESIZE]).isEqualTo(false)
     }
 
     @Test
@@ -485,7 +513,7 @@ class EventSerializerTest {
             .totalResults(23)
             .pageResourceIds(listOf("id-1", "id-2"))
             .timestamp(ZonedDateTime.of(2023, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC))
-            .queryParams(mapOf<String,List<String>>(Pair("age_facets", listOf("01-03","05-07"))))
+            .queryParams(mapOf<String, List<String>>(Pair("age_facets", listOf("01-03", "05-07"))))
             .build()
 
         val document = EventSerializer.convertResourcesSearched(event)
@@ -505,13 +533,13 @@ class EventSerializerTest {
     @Test
     fun `convert SearchQueryCompletionsSuggested`() {
         val event = SearchQueryCompletionsSuggested.builder()
-                .userId("user-id")
-                .url("www.example.com")
-                .searchQuery("bio")
-                .completionId("completion-id")
-                .impressions(listOf("biology", "biodiversity"))
-                .componentId("component-id")
-                .timestamp(ZonedDateTime.of(2023, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC)).build()
+            .userId("user-id")
+            .url("www.example.com")
+            .searchQuery("bio")
+            .completionId("completion-id")
+            .impressions(listOf("biology", "biodiversity"))
+            .componentId("component-id")
+            .timestamp(ZonedDateTime.of(2023, 5, 12, 12, 14, 15, 100, ZoneOffset.UTC)).build()
 
         val document = EventSerializer.convertSearchQueryCompletionsSuggested(event)
 
