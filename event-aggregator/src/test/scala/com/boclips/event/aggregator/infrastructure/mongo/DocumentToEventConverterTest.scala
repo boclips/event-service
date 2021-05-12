@@ -294,7 +294,8 @@ class DocumentToEventConverterTest extends Test {
       userId = "renderer-user",
       url = "https://teachers.boclips.com/videos?page=1&q=fractions",
       viewportHeight = 25,
-      viewportWidth = 30
+      viewportWidth = 30,
+      isResize = true,
     ).asBoclipsUser()
 
     val event = DocumentToEventConverter.convert(document)
@@ -304,6 +305,7 @@ class DocumentToEventConverterTest extends Test {
     event.asInstanceOf[PageRenderedEvent].viewportWidth shouldBe Some(30)
     event.asInstanceOf[PageRenderedEvent].userIdentity.id should contain(UserId("renderer-user"))
     event.asInstanceOf[PageRenderedEvent].url shouldBe Some(Url.parse("https://teachers.boclips.com/videos?page=1&q=fractions"))
+    event.asInstanceOf[PageRenderedEvent].isResize shouldBe true
   }
 
   "Transforming event documents of type COLLECTION_INTERACTED_WITH" should "convert properties" in {

@@ -174,6 +174,7 @@ object DocumentToEventConverter {
       url = document.url,
       viewportWidth = document.getIntOption(VIEWPORT_WIDTH),
       viewportHeight = document.getIntOption(VIEWPORT_HEIGHT),
+      isResize = document.getBooleanOption(IS_RESIZE).getOrElse(false),
     )
   }
 

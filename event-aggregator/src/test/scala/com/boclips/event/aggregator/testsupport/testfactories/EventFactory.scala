@@ -39,6 +39,7 @@ object EventFactory {
                                   url: String = "the/url",
                                   viewportWidth: Int = 10,
                                   viewportHeight: Int = 20,
+                                  isResize: Boolean = false,
                                 ): Document = {
     val properties = Map[String, Object](
       (EventFields.TYPE, "PAGE_RENDERED"),
@@ -47,6 +48,7 @@ object EventFactory {
       (EventFields.URL, url),
       (EventFields.VIEWPORT_WIDTH, Int.box(viewportWidth)),
       (EventFields.VIEWPORT_HEIGHT, Int.box(viewportHeight)),
+      (EventFields.IS_RESIZE, Boolean.box(isResize)),
     )
     new Document(properties.asJava)
   }
@@ -56,6 +58,7 @@ object EventFactory {
                                userIdentity: UserIdentity = createBoclipsUserIdentity(),
                                viewportWidth: Option[Int] = Some(10),
                                viewportHeight: Option[Int] = Some(20),
+                               isResize: Boolean = false,
                                url: String = "http://test.com"): PageRenderedEvent = {
     PageRenderedEvent(
       timestamp = timestamp,
@@ -63,6 +66,7 @@ object EventFactory {
       url = Some(Url.parse(url)),
       viewportWidth = viewportWidth,
       viewportHeight = viewportHeight,
+      isResize = isResize
     )
 
   }

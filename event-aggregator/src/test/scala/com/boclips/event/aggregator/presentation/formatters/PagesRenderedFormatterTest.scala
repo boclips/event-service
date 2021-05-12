@@ -2,7 +2,7 @@ package com.boclips.event.aggregator.presentation.formatters
 
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createPageRenderedEvent
-import com.google.gson.JsonNull
+import com.google.gson.{JsonNull, JsonPrimitive}
 
 class PagesRenderedFormatterTest extends Test {
 
@@ -38,4 +38,12 @@ class PagesRenderedFormatterTest extends Test {
     json.get("viewportHeight") shouldBe JsonNull.INSTANCE
   }
 
+  it should "write the resize flag" in {
+    val json = PagesRenderedFormatter formatRow createPageRenderedEvent(
+      url = "http://ricky-gervais.teachers.com/videos/test?data=thistest&age=59",
+      isResize = true
+    )
+
+    json.get("isResize").getAsBoolean shouldBe true
+  }
 }

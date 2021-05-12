@@ -15,6 +15,7 @@ case class PageRenderedEvent
   url: Option[Url],
   viewportWidth: Option[Int],
   viewportHeight: Option[Int],
+  isResize: Boolean,
 ) extends Event {
   override val typeName: String = EventFields.Type.PAGE_RENDERED
   override val subtype: Option[String] = None
