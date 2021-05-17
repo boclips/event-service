@@ -228,6 +228,7 @@ class VideoFormatterTest extends Test {
 
     val orderJson = json.get("orders").getAsJsonArray.get(0).getAsJsonObject
     orderJson.getString("id") should not be empty
+    orderJson.getString("id").split("_").length shouldBe 3
     orderJson.getString("orderId") shouldBe "orderId"
     orderJson.getDouble("priceGbp") shouldBe 50
     orderJson.getString("customerOrganisationName") shouldBe "Pearson"
