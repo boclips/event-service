@@ -20,9 +20,7 @@ case class ChannelDetails(
                            contentTypes: Option[List[String]],
                            contentCategories: Option[List[String]],
                            language: Option[Locale],
-                           hubspotId: Option[String],
                            contractId: Option[String],
-                           awards: Option[String],
                            notes: Option[String]
                          )
 

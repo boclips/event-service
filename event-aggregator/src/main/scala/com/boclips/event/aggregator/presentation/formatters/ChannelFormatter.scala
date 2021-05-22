@@ -12,9 +12,7 @@ object ChannelFormatter extends SingleRowFormatter[Channel] {
     json.addStringArrayProperty("detailsContentTypes", obj.details.contentTypes.getOrElse(Nil))
     json.addStringArrayProperty("detailsContentCategories", obj.details.contentCategories.getOrElse(Nil))
     json.addProperty("detailsLanguage", obj.details.language.map(_.toLanguageTag).orNull)
-    json.addProperty("detailsHubspotId", obj.details.hubspotId.orNull)
     json.addProperty("detailsContractId", obj.details.contractId.orNull)
-    json.addProperty("detailsAwards", obj.details.awards.orNull)
     json.addProperty("detailsNotes", obj.details.notes.orNull)
 
     json.addProperty("ingestType", obj.ingest._type)

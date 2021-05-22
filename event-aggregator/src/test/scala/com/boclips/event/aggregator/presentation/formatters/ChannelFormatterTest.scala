@@ -17,9 +17,7 @@ class ChannelFormatterTest extends Test {
         contentTypes = Some(List("STOCK", "INSTRUCTIONAL")),
         contentCategories = Some(List("My category")),
         language = Some(Locale.CANADA_FRENCH),
-        hubspotId = Some("hubspot-id"),
         contractId = Some("contract-id"),
-        awards = Some("Awards text"),
         notes = Some("Notes text")
       ),
       ingest = ChannelIngest(
@@ -50,9 +48,7 @@ class ChannelFormatterTest extends Test {
     json.getStringList("detailsContentTypes") shouldBe List("STOCK", "INSTRUCTIONAL")
     json.getStringList("detailsContentCategories") shouldBe List("My category")
     json.getString("detailsLanguage") shouldBe "fr-CA"
-    json.getString("detailsHubspotId") shouldBe "hubspot-id"
     json.getString("detailsContractId") shouldBe "contract-id"
-    json.getString("detailsAwards") shouldBe "Awards text"
     json.getString("detailsNotes") shouldBe "Notes text"
 
     json.getString("ingestType") shouldBe "MRSS"
@@ -80,9 +76,7 @@ class ChannelFormatterTest extends Test {
         contentTypes = None,
         contentCategories = None,
         language = None,
-        hubspotId = None,
         contractId = None,
-        awards = None,
         notes = None
       ),
       ingest = ChannelIngest(
@@ -113,9 +107,7 @@ class ChannelFormatterTest extends Test {
     json.getStringList("detailsContentTypes") shouldBe List()
     json.getStringList("detailsContentCategories") shouldBe List()
     json.get("detailsLanguage") shouldBe JsonNull.INSTANCE
-    json.get("detailsHubspotId") shouldBe JsonNull.INSTANCE
     json.get("detailsContractId") shouldBe JsonNull.INSTANCE
-    json.get("detailsAwards") shouldBe JsonNull.INSTANCE
     json.get("detailsNotes") shouldBe JsonNull.INSTANCE
 
     json.getString("ingestType") shouldBe "MRSS"
@@ -143,9 +135,7 @@ class ChannelFormatterTest extends Test {
         contentTypes = None,
         contentCategories = None,
         language = None,
-        hubspotId = None,
         contractId = None,
-        awards = None,
         notes = None
       ),
       ingest = ChannelIngest(

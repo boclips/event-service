@@ -48,9 +48,7 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
                     contentTypes = listOf("NEWS", "INSTRUCTIONAL"),
                     contentCategories = listOf("Training", "Learning", "Animation"),
                     language = Locale.ITALIAN,
-                    hubspotId = "hubspot-id",
                     contractId = "contract-id",
-                    awards = "worst channel 1998",
                     notes = "just kidding"
                 )
             )
@@ -62,9 +60,7 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(details.contentTypes).containsExactlyInAnyOrder("NEWS", "INSTRUCTIONAL")
         assertThat(details.contentCategories).containsExactlyInAnyOrder("Training", "Learning", "Animation")
         assertThat(details.language).isEqualTo("it")
-        assertThat(details.hubspotId).isEqualTo("hubspot-id")
         assertThat(details.contractId).isEqualTo("contract-id")
-        assertThat(details.awards).isEqualTo("worst channel 1998")
         assertThat(details.notes).isEqualTo("just kidding")
     }
 

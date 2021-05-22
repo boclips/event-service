@@ -56,9 +56,7 @@ fun ChannelTopLevelDetails.toDocument(): ChannelDetailsDocument =
         .contentTypes(contentTypes)
         .contentCategories(contentCategories)
         .language(language?.toLanguageTag())
-        .hubspotId(hubspotId)
         .contractId(contractId)
-        .awards(awards)
         .notes(notes)
         .build()
 

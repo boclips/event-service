@@ -34,9 +34,7 @@ object ChannelFactory {
         contentTypes: List<String>? = null,
         contentCategories: List<String>? = null,
         language: Locale? = null,
-        hubspotId: String? = null,
         contractId: String? = null,
-        awards: String? = null,
         notes: String? = null
     ): ChannelTopLevelDetails =
         ChannelTopLevelDetails
@@ -44,9 +42,7 @@ object ChannelFactory {
             .contentTypes(contentTypes)
             .contentCategories(contentCategories)
             .language(language)
-            .hubspotId(hubspotId)
             .contractId(contractId)
-            .awards(awards)
             .notes(notes)
             .build()
 

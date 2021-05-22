@@ -19,9 +19,7 @@ class DocumentToChannelConverterTest extends Test {
           .contentTypes(List("STOCK", "NEWS").asJava)
           .contentCategories(List("My category").asJava)
           .language("fr-CA")
-          .hubspotId("hubspot-id")
           .contractId("contract-id")
-          .awards("Awards text")
           .notes("Notes text")
           .build()
       )
@@ -62,9 +60,7 @@ class DocumentToChannelConverterTest extends Test {
     channel.details.contentTypes should contain(List("STOCK", "NEWS"))
     channel.details.contentCategories should contain(List("My category"))
     channel.details.language should contain(Locale.CANADA_FRENCH)
-    channel.details.hubspotId should contain("hubspot-id")
     channel.details.contractId should contain("contract-id")
-    channel.details.awards should contain("Awards text")
     channel.details.notes should contain("Notes text")
 
     channel.ingest._type shouldBe "MANUAL"
@@ -92,9 +88,7 @@ class DocumentToChannelConverterTest extends Test {
           .contentTypes(null)
           .contentCategories(null)
           .language(null)
-          .hubspotId(null)
           .contractId(null)
-          .awards(null)
           .notes(null)
           .build()
       )
@@ -131,9 +125,7 @@ class DocumentToChannelConverterTest extends Test {
     channel.details.contentTypes shouldBe None
     channel.details.contentCategories shouldBe None
     channel.details.language shouldBe None
-    channel.details.hubspotId shouldBe None
     channel.details.contractId shouldBe None
-    channel.details.awards shouldBe None
     channel.details.notes shouldBe None
 
     channel.ingest._type shouldBe "MANUAL"

@@ -280,9 +280,7 @@ class VideoFormatterTest extends Test {
         contentTypes = Some(List("STOCK", "INSTRUCTIONAL")),
         contentCategories = Some(List("My category")),
         language = Some(Locale.CANADA_FRENCH),
-        hubspotId = Some("hubspot-id"),
         contractId = Some("contract-id"),
-        awards = Some("Awards text"),
         notes = Some("Notes text")
       ),
       ingest = ChannelIngest(
@@ -317,9 +315,7 @@ class VideoFormatterTest extends Test {
     channelJson.getStringList("detailsContentTypes") shouldBe List("STOCK", "INSTRUCTIONAL")
     channelJson.getStringList("detailsContentCategories") shouldBe List("My category")
     channelJson.getString("detailsLanguage") shouldBe "fr-CA"
-    channelJson.getString("detailsHubspotId") shouldBe "hubspot-id"
     channelJson.getString("detailsContractId") shouldBe "contract-id"
-    channelJson.getString("detailsAwards") shouldBe "Awards text"
     channelJson.getString("detailsNotes") shouldBe "Notes text"
 
     channelJson.getString("ingestType") shouldBe "MRSS"

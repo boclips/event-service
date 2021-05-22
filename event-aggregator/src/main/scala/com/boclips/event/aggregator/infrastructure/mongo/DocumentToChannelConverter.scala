@@ -21,9 +21,7 @@ object DocumentToChannelConverter {
         contentTypes = Option(details.getContentTypes).map(_.asScala.toList),
         contentCategories = Option(details.getContentCategories).map(_.asScala.toList),
         language = Option(details.getLanguage).map(Locale.forLanguageTag),
-        hubspotId = Option(details.getHubspotId),
         contractId = Option(details.getContractId),
-        awards = Option(details.getAwards),
         notes = Option(details.getNotes)
       ),
       ingest = ChannelIngest(
