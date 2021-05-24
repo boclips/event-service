@@ -16,8 +16,29 @@ class MongoOrderLoaderTest extends IntegrationTest {
     val orderIds = orders.map(_.id.value)
 
     orders should have size 2
-    orderIds should contain ("order-1")
-    orderIds should contain ("order-3")
+    orderIds should contain("order-1")
+    orderIds should contain("order-3")
+  }
+
+  it should "load orders with from B2B revamp and status INCOMPLETED" in mongoSparkTest { (spark: SparkSession, mongo) =>
+    val collection = mongo.collection[OrderDocument]("orders")
+
+    collection insertOne OrderDocument.sample
+      .id("order-legacy")
+      .status("INCOMPLETED")
+      .orderSource("LEGACY")
+      .build()
+
+    collection insertOne OrderDocument.sample.id("order-tazingo")
+      .status("INCOMPLETED")
+      .orderSource("BOCLIPS")
+      .build()
+
+    val orders = new MongoOrderLoader(mongo).load()(spark).toLocalIterator.toList
+    val orderIds = orders.map(_.id.value)
+
+    orders should have size 1
+    orderIds should contain ("order-tazingo")
   }
 
 }

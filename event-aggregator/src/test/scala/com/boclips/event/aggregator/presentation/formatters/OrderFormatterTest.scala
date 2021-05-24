@@ -46,10 +46,16 @@ class OrderFormatterTest extends Test {
     json.getString("customerOrganisationName") shouldBe "org name"
   }
 
-  it should "write order status" in {
+  it should "write order source" in {
     val json = OrderFormatter formatRow createOrder(orderSource = "LEGACY")
 
     json.getString("orderSource") shouldBe "LEGACY"
+  }
+
+  it should "write order status" in {
+    val json = OrderFormatter formatRow createOrder(status = "QUO")
+
+    json.getString("orderStatus") shouldBe "QUO"
   }
 
   it should "write video items" in {
