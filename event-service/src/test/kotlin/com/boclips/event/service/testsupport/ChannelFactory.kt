@@ -2,6 +2,7 @@ package com.boclips.event.service.testsupport
 
 import com.boclips.eventbus.domain.AgeRange
 import com.boclips.eventbus.domain.Subject
+import com.boclips.eventbus.domain.category.CategoryWithAncestors
 import com.boclips.eventbus.domain.contentpartner.Channel
 import com.boclips.eventbus.domain.contentpartner.ChannelId
 import com.boclips.eventbus.domain.contentpartner.ChannelIngestDetails
@@ -19,7 +20,8 @@ object ChannelFactory {
         details: ChannelTopLevelDetails = createChannelTopLevelDetails(),
         pedagogy: ChannelPedagogyDetails = createChannelPedagogyDetails(),
         ingest: ChannelIngestDetails = createChannelIngestDetails(),
-        marketing: ChannelMarketingDetails = createChannelMarketingDetails()
+        marketing: ChannelMarketingDetails = createChannelMarketingDetails(),
+        categories: Set<CategoryWithAncestors>? = setOf(createCategoryWithAncestors())
     ): Channel =
         Channel.builder()
             .id(ChannelId.builder().value(id).build())
@@ -28,6 +30,19 @@ object ChannelFactory {
             .pedagogy(pedagogy)
             .ingest(ingest)
             .marketing(marketing)
+            .categories(categories)
+            .build()
+
+    fun createCategoryWithAncestors(
+        code: String = "AB",
+        description: String = "Animals",
+        ancestors: Set<String> = setOf("A")
+    ): CategoryWithAncestors =
+        CategoryWithAncestors
+            .builder()
+            .code(code)
+            .description(description)
+            .ancestors(ancestors)
             .build()
 
     fun createChannelTopLevelDetails(

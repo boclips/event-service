@@ -1,12 +1,8 @@
 package com.boclips.event.service.infrastructure.mongodb
 
-import com.boclips.event.infrastructure.channel.ChannelDetailsDocument
-import com.boclips.event.infrastructure.channel.ChannelDocument
-import com.boclips.event.infrastructure.channel.ChannelIngestDocument
-import com.boclips.event.infrastructure.channel.ChannelMarketingDocument
-import com.boclips.event.infrastructure.channel.ChannelPedagogyDocument
-import com.boclips.event.infrastructure.channel.DistributionMethodDocument
+import com.boclips.event.infrastructure.channel.*
 import com.boclips.event.service.domain.ChannelRepository
+import com.boclips.eventbus.domain.category.CategoryWithAncestors
 import com.boclips.eventbus.domain.contentpartner.Channel
 import com.boclips.eventbus.domain.contentpartner.ChannelIngestDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelMarketingDetails
@@ -49,6 +45,7 @@ fun Channel.toDocument(): ChannelDocument =
         .ingest(ingest.toDocument())
         .pedagogy(pedagogy.toDocument())
         .marketing(marketing.toDocument())
+        .categories((categories.map { it.toDocument()}).toSet())
         .build()
 
 fun ChannelTopLevelDetails.toDocument(): ChannelDetailsDocument =
@@ -92,3 +89,11 @@ fun ChannelMarketingDetails.toDocument(): ChannelMarketingDocument =
         .showreel(showreel)
         .sampleVideos(sampleVideos)
         .build()
+
+fun CategoryWithAncestors.toDocument(): CategoryWithAncestorsDocument =
+    CategoryWithAncestorsDocument.builder()
+        .code(code)
+        .description(description)
+        .ancestors(ancestors)
+        .build()
+

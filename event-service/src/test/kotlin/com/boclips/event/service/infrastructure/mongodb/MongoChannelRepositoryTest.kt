@@ -1,9 +1,11 @@
 package com.boclips.event.service.infrastructure.mongodb
 
+import com.boclips.event.infrastructure.channel.CategoryWithAncestorsDocument
 import com.boclips.event.infrastructure.channel.ChannelDocument
 import com.boclips.event.infrastructure.channel.DistributionMethodDocument
 import com.boclips.event.service.domain.ChannelRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
+import com.boclips.event.service.testsupport.ChannelFactory.createCategoryWithAncestors
 import com.boclips.event.service.testsupport.ChannelFactory.createChannel
 import com.boclips.event.service.testsupport.ChannelFactory.createChannelIngestDetails
 import com.boclips.event.service.testsupport.ChannelFactory.createChannelMarketingDetails
@@ -87,6 +89,37 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
                 DistributionMethodDocument.STREAM,
                 DistributionMethodDocument.DOWNLOAD
             )
+    }
+
+    @Test
+    fun `save channel with taxonomy categories when they exist`() {
+        val id = "ingest-channel"
+        val categories = setOf(createCategoryWithAncestors(
+                code = "BS",
+                description = "Stout",
+                ancestors = setOf("B")
+                )
+        )
+        channelRepository.save(
+            createChannel(
+                id = id,
+                categories = categories
+                )
+            )
+
+        val document = getSingleDocument()
+
+        assertThat(document.id).isEqualTo(id)
+
+        val docCategories = document.categories
+        assertThat(docCategories.size).isEqualTo(1)
+        assertThat(docCategories).isEqualTo(setOf(
+            CategoryWithAncestorsDocument.builder()
+                .code("BS")
+                .description("Stout")
+                .ancestors(setOf("B")).build()
+                )
+        )
     }
 
     @Test

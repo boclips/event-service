@@ -2,6 +2,9 @@ package com.boclips.event.infrastructure.channel;
 
 import lombok.*;
 
+import java.util.Collections;
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,6 +22,8 @@ public class ChannelDocument {
     private ChannelPedagogyDocument pedagogy;
     @NonNull
     private ChannelMarketingDocument marketing;
+    @NonNull
+    private Set<CategoryWithAncestorsDocument> categories;
 
     public static ChannelDocumentBuilder sample() {
         return ChannelDocument.builder()
@@ -27,6 +32,7 @@ public class ChannelDocument {
                 .details(ChannelDetailsDocument.sample().build())
                 .ingest(ChannelIngestDocument.sample().build())
                 .pedagogy(ChannelPedagogyDocument.sample().build())
-                .marketing(ChannelMarketingDocument.sample().build());
+                .marketing(ChannelMarketingDocument.sample().build())
+                .categories(Collections.singleton(CategoryWithAncestorsDocument.sample().build()));
     }
 }
