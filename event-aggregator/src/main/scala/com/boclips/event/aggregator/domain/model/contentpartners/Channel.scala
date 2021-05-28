@@ -13,7 +13,8 @@ case class Channel(
                     details: ChannelDetails,
                     ingest: ChannelIngest,
                     pedagogy: ChannelPedagogy,
-                    marketing: ChannelMarketing
+                    marketing: ChannelMarketing,
+                    categories: Option[Set[CategoryWithAncestors]],
                   )
 
 case class ChannelDetails(
@@ -54,3 +55,9 @@ case class ChannelMarketing(
                              showreel: Option[String],
                              sampleVideos: Option[List[String]]
                            )
+
+case class CategoryWithAncestors(
+                            code: Option[String],
+                            description: Option[String],
+                            ancestors: Option[Set[String]],
+                            )

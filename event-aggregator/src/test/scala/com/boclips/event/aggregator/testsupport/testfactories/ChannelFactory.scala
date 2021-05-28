@@ -11,6 +11,8 @@ object ChannelFactory {
                      ingest: ChannelIngest = ExampleInstance.create[ChannelIngest](),
                      pedagogy: ChannelPedagogy = ExampleInstance.create[ChannelPedagogy](),
                      marketing: ChannelMarketing = ExampleInstance.create[ChannelMarketing](),
+                     categories: Option[Set[CategoryWithAncestors]] = Some(Set(ExampleInstance
+                      .create[CategoryWithAncestors])),
                    ): Channel =
     Channel(
       id = ChannelId(id),
@@ -18,6 +20,7 @@ object ChannelFactory {
       details,
       ingest,
       pedagogy,
-      marketing
+      marketing,
+      categories,
     )
 }

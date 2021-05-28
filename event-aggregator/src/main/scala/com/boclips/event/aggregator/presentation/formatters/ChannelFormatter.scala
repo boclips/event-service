@@ -4,6 +4,8 @@ import com.boclips.event.aggregator.domain.model.contentpartners.Channel
 import com.boclips.event.aggregator.presentation.formatters.common.SingleRowFormatter
 import com.google.gson.JsonObject
 
+import scala.collection.immutable.Set
+
 object ChannelFormatter extends SingleRowFormatter[Channel] {
   override def writeRow(obj: Channel, json: JsonObject): Unit = {
     json.addProperty("id", obj.id.value)
@@ -40,5 +42,18 @@ object ChannelFormatter extends SingleRowFormatter[Channel] {
     json.addProperty("marketingUniqueLogo", uniqueLogo.orNull)
     json.addProperty("marketingShowreel", obj.marketing.showreel.orNull)
     json.addStringArrayProperty("marketingSampleVideos", obj.marketing.sampleVideos.getOrElse(Nil))
-  }
+
+    val taxonomyCategoriesJson = obj.categories match {
+      case None => Nil
+      case Some(categoriesSet) => categoriesSet.toList.map(element => {
+        val categoryJson = new JsonObject
+        categoryJson.addProperty("code",element.code.orNull)
+        categoryJson.addProperty("description",element.description.orNull)
+        categoryJson.addStringArrayProperty("ancestors", element.ancestors.getOrElse(Nil).toList)
+        categoryJson
+      }
+      )
+    }
+    json.addJsonArrayProperty("taxonomyCategories",taxonomyCategoriesJson)
+    }
 }

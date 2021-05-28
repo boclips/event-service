@@ -1,12 +1,12 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import java.time.Period
-import java.util.Locale
-
 import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.aggregator.testsupport.testfactories.ChannelFactory.createChannel
 import com.google.gson.JsonNull
+
+import java.time.Period
+import java.util.Locale
 
 class ChannelFormatterTest extends Test {
   it should "write full channel" in {
@@ -37,6 +37,12 @@ class ChannelFormatterTest extends Test {
         logos = Some(List("http://logo.com","logo2")),
         showreel = Some("http://showreel.com"),
         sampleVideos = Some(List("http://sampleVideos.com"))
+      ),
+      categories = Some(Set(CategoryWithAncestors(
+        code = Some("AA"),
+        description = Some("Antelopes"),
+        ancestors = Some(Set("AA","PP")))
+        )
       )
     )
 
@@ -66,6 +72,12 @@ class ChannelFormatterTest extends Test {
     json.getString("marketingUniqueLogo") shouldBe "http://logo.com"
     json.getString("marketingShowreel") shouldBe "http://showreel.com"
     json.getStringList("marketingSampleVideos") shouldBe List("http://sampleVideos.com")
+
+
+    val categoriesJson = json.get("taxonomyCategories").getAsJsonArray.get(0).getAsJsonObject
+    categoriesJson.getString("code") shouldBe("AA")
+    categoriesJson.getString("description") shouldBe("Antelopes")
+    categoriesJson.getStringList("ancestors") shouldBe List("AA","PP")
   }
 
   it should "write all-none channel" in {
@@ -96,7 +108,8 @@ class ChannelFormatterTest extends Test {
         logos = None,
         showreel = None,
         sampleVideos = None
-      )
+      ),
+      categories = None
     )
 
     val json = ChannelFormatter formatRow channel
@@ -125,6 +138,8 @@ class ChannelFormatterTest extends Test {
     json.get("marketingUniqueLogo") shouldBe JsonNull.INSTANCE
     json.get("marketingShowreel") shouldBe JsonNull.INSTANCE
     json.getStringList("marketingSampleVideos") shouldBe List()
+    json.getAsJsonArray("taxonomyCategories").size() shouldBe 0
+
   }
 
   it should "deal with empty list of logos" in {
@@ -162,5 +177,20 @@ class ChannelFormatterTest extends Test {
 
     json.getStringList("marketingLogos") shouldBe List()
     json.get("marketingUniqueLogo") shouldBe JsonNull.INSTANCE
+  }
+
+  it should "deal with taxonomy category null values" in {
+    val channel = createChannel(
+      categories = Some(Set(CategoryWithAncestors(None,None,None)))
+    )
+
+    val json = ChannelFormatter formatRow channel
+
+    val categoriesJson = json.get("taxonomyCategories").getAsJsonArray.get(0).getAsJsonObject
+    categoriesJson.get("code") shouldBe JsonNull.INSTANCE
+    categoriesJson.get("description") shouldBe JsonNull.INSTANCE
+    categoriesJson.getStringList("ancestors") shouldBe List()
+
+
   }
 }

@@ -2,8 +2,7 @@ package com.boclips.event.aggregator.infrastructure.mongo
 
 import java.time.Period
 import java.util.Locale
-
-import com.boclips.event.aggregator.domain.model.contentpartners.{ChannelId, Download, Streaming}
+import com.boclips.event.aggregator.domain.model.contentpartners.{CategoryWithAncestors, ChannelId, Download, Streaming}
 import com.boclips.event.aggregator.testsupport.Test
 import com.boclips.event.infrastructure.channel._
 
@@ -41,6 +40,13 @@ class DocumentToChannelConverterTest extends Test {
           .bestForTags(List("cool", "tag").asJava)
           .build()
       )
+      .categories(
+        Set(CategoryWithAncestorsDocument.sample()
+          .code("AAZ")
+          .description("Ants")
+          .ancestors(Set("AA","BB").asJava).build()
+        ).asJava
+      )
       .marketing(
         ChannelMarketingDocument.sample
           .status("Status")
@@ -77,6 +83,15 @@ class DocumentToChannelConverterTest extends Test {
     channel.marketing.logos should contain(List("http://logo1.com", "http://logo2.com"))
     channel.marketing.showreel should contain("http://showreel.com")
     channel.marketing.sampleVideos should contain(List("http://video1.com", "http://video2.com"))
+
+    channel.categories.size shouldBe 1
+    channel.categories shouldBe Some(Set(CategoryWithAncestors(
+      code = Some("AAZ"),
+      description = Some("Ants"),
+      ancestors = Some(Set("AA","BB"))
+        )
+      )
+    )
   }
 
   it should "convert an as-null-as-possible document" in {
@@ -115,7 +130,17 @@ class DocumentToChannelConverterTest extends Test {
           .sampleVideos(null)
           .build()
       )
+      .categories(
+        Set(CategoryWithAncestorsDocument.sample
+        .code(null)
+        .description(null)
+        .ancestors(null)
+        .build()
+        ).asJava
+    )
       .build()
+
+
 
     val channel = DocumentToChannelConverter convert document
 
@@ -141,5 +166,14 @@ class DocumentToChannelConverterTest extends Test {
     channel.marketing.logos shouldBe None
     channel.marketing.showreel shouldBe None
     channel.marketing.sampleVideos shouldBe None
+
+    channel.categories.size shouldBe 1
+    channel.categories shouldBe Some(Set(CategoryWithAncestors(
+      code = None,
+      description = None,
+      ancestors = None
+      )
+    )
+    )
   }
 }
