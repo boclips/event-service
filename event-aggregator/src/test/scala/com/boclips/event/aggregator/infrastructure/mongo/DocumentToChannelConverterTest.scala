@@ -25,7 +25,6 @@ class DocumentToChannelConverterTest extends Test {
       .ingest(
         ChannelIngestDocument.sample
           .`type`("MANUAL")
-          .deliveryFrequency("P1M")
           .distributionMethods(Set(
             DistributionMethodDocument.STREAM,
             DistributionMethodDocument.DOWNLOAD
@@ -70,7 +69,6 @@ class DocumentToChannelConverterTest extends Test {
     channel.details.notes should contain("Notes text")
 
     channel.ingest._type shouldBe "MANUAL"
-    channel.ingest.deliveryFrequency should contain(Period.ofMonths(1))
     channel.ingest.distributionMethods should contain(Set(Streaming, Download))
 
     channel.pedagogy.subjectNames should contain(List("ENGLISH", "MATH"))
@@ -110,7 +108,6 @@ class DocumentToChannelConverterTest extends Test {
       .ingest(
         ChannelIngestDocument.sample
           .`type`("MANUAL")
-          .deliveryFrequency(null)
           .build()
       )
       .pedagogy(
@@ -154,7 +151,6 @@ class DocumentToChannelConverterTest extends Test {
     channel.details.notes shouldBe None
 
     channel.ingest._type shouldBe "MANUAL"
-    channel.ingest.deliveryFrequency shouldBe None
 
     channel.pedagogy.subjectNames shouldBe None
     channel.pedagogy.ageRangeMin shouldBe None

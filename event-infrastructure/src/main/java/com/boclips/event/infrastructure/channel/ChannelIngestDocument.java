@@ -14,13 +14,11 @@ import static com.boclips.event.infrastructure.channel.DistributionMethodDocumen
 public class ChannelIngestDocument {
     @NonNull
     private String type;
-    private String deliveryFrequency;
     private Set<DistributionMethodDocument> distributionMethods;
 
     public static ChannelIngestDocumentBuilder sample() {
         return ChannelIngestDocument.builder()
                 .type("MRSS")
-                .deliveryFrequency("P1D")
                 .distributionMethods(Collections.singleton(STREAM));
     }
 }

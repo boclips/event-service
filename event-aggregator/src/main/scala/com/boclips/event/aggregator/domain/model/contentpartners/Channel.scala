@@ -27,7 +27,6 @@ case class ChannelDetails(
 
 case class ChannelIngest(
                           _type: String,
-                          deliveryFrequency: Option[Period],
                           distributionMethods: Option[Set[DistributionMethod]]
                         )
 

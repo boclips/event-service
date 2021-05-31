@@ -10,7 +10,6 @@ import com.boclips.eventbus.domain.contentpartner.ChannelMarketingDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelPedagogyDetails
 import com.boclips.eventbus.domain.contentpartner.ChannelTopLevelDetails
 import com.boclips.eventbus.domain.contentpartner.DistributionMethod
-import java.time.Period
 import java.util.Locale
 
 object ChannelFactory {
@@ -78,12 +77,10 @@ object ChannelFactory {
 
     fun createChannelIngestDetails(
         type: String = "MRSS",
-        deliveryFrequency: Period? = null,
         distributionMethods: Set<DistributionMethod>? = null
     ): ChannelIngestDetails =
         ChannelIngestDetails.builder()
             .type(type)
-            .deliveryFrequency(deliveryFrequency)
             .distributionMethods(distributionMethods)
             .build()
 

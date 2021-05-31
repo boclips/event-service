@@ -22,7 +22,6 @@ class ChannelFormatterTest extends Test {
       ),
       ingest = ChannelIngest(
         _type = "MRSS",
-        deliveryFrequency = Some(Period.ofMonths(2)),
         distributionMethods = Some(Set(Streaming, Download))
       ),
       pedagogy = ChannelPedagogy(
@@ -58,7 +57,6 @@ class ChannelFormatterTest extends Test {
     json.getString("detailsNotes") shouldBe "Notes text"
 
     json.getString("ingestType") shouldBe "MRSS"
-    json.getString("ingestDeliveryFrequency") shouldBe "P2M"
     json.getStringList("ingestDistributionMethods") shouldBe List("STREAM", "DOWNLOAD")
 
     json.getStringList("pedagogySubjects") shouldBe List("Maths")
@@ -93,7 +91,6 @@ class ChannelFormatterTest extends Test {
       ),
       ingest = ChannelIngest(
         _type = "MRSS",
-        deliveryFrequency = None,
         distributionMethods = None
       ),
       pedagogy = ChannelPedagogy(
@@ -124,7 +121,6 @@ class ChannelFormatterTest extends Test {
     json.get("detailsNotes") shouldBe JsonNull.INSTANCE
 
     json.getString("ingestType") shouldBe "MRSS"
-    json.getString("ingestDeliveryFrequency") shouldBe "UNKNOWN"
     json.getStringList("ingestDistributionMethods") shouldBe List()
 
     json.getStringList("pedagogySubjects") shouldBe List()
@@ -155,7 +151,6 @@ class ChannelFormatterTest extends Test {
       ),
       ingest = ChannelIngest(
         _type = "MRSS",
-        deliveryFrequency = None,
         distributionMethods = None
       ),
       pedagogy = ChannelPedagogy(

@@ -18,7 +18,6 @@ import com.boclips.eventbus.domain.contentpartner.DistributionMethod
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.Period
 import java.util.Locale
 
 class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
@@ -46,7 +45,8 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         val id = "top-level-channel"
         channelRepository.save(
             createChannel(
-                id = id, details = createChannelTopLevelDetails(
+                id = id,
+                details = createChannelTopLevelDetails(
                     contentTypes = listOf("NEWS", "INSTRUCTIONAL"),
                     contentCategories = listOf("Training", "Learning", "Animation"),
                     language = Locale.ITALIAN,
@@ -71,9 +71,9 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         val id = "ingest-channel"
         channelRepository.save(
             createChannel(
-                id = id, ingest = createChannelIngestDetails(
+                id = id,
+                ingest = createChannelIngestDetails(
                     type = "MRSS",
-                    deliveryFrequency = Period.ofMonths(2),
                     distributionMethods = setOf(DistributionMethod.STREAM, DistributionMethod.DOWNLOAD)
                 )
             )
@@ -83,7 +83,6 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.id).isEqualTo(id)
         val ingest = document.ingest
         assertThat(ingest.type).isEqualTo("MRSS")
-        assertThat(ingest.deliveryFrequency).isEqualTo("P2M")
         assertThat(ingest.distributionMethods)
             .containsExactlyInAnyOrder(
                 DistributionMethodDocument.STREAM,
@@ -127,7 +126,8 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         val id = "pedagogy-channel"
         channelRepository.save(
             createChannel(
-                id = id, pedagogy = createChannelPedagogyDetails(
+                id = id,
+                pedagogy = createChannelPedagogyDetails(
                     subjects = listOf(
                         Subject
                             .builder()
@@ -161,7 +161,8 @@ class MongoChannelRepositoryTest : AbstractSpringIntegrationTest() {
         val id = "marketing-channel"
         channelRepository.save(
             createChannel(
-                id = id, marketing = createChannelMarketingDetails(
+                id = id,
+                marketing = createChannelMarketingDetails(
                     status = "My status",
                     oneLineIntro = "One line intro",
                     logos = listOf("http://website.one", "http://website.two"),

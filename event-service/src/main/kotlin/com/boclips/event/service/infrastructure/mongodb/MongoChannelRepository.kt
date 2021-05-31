@@ -60,7 +60,6 @@ fun ChannelTopLevelDetails.toDocument(): ChannelDetailsDocument =
 fun ChannelIngestDetails.toDocument(): ChannelIngestDocument =
     ChannelIngestDocument.builder()
         .type(type)
-        .deliveryFrequency(deliveryFrequency?.toString())
         .distributionMethods(
             distributionMethods?.map { method ->
                 method?.let {

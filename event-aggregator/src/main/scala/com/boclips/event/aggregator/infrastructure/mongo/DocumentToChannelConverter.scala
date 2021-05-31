@@ -27,7 +27,6 @@ object DocumentToChannelConverter {
       ),
       ingest = ChannelIngest(
         _type = ingest.getType,
-        deliveryFrequency = Option(ingest.getDeliveryFrequency).map(Period.parse),
         distributionMethods = Option(ingest.getDistributionMethods).map(_.asScala.map {
           case DistributionMethodDocument.STREAM => Streaming
           case DistributionMethodDocument.DOWNLOAD => Download
