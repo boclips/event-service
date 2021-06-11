@@ -14,6 +14,9 @@ inputs:
 outputs:
 - name: dist
 
+params:
+  GCE_METADATA_HOST: 169.254.169.254
+
 caches:
 - path: .gradle/
 
