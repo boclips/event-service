@@ -61,6 +61,7 @@ class BigQueryTableWriterTest extends IntegrationTest with BeforeAndAfterEach {
       .build()
     val jobId = JobId.of(UUID.randomUUID.toString)
     val bigquery = BigQueryOptions.newBuilder()
+      .setProjectId(config.projectId)
       .build()
       .getService
     val queryJob = bigquery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build).waitFor()
@@ -68,5 +69,4 @@ class BigQueryTableWriterTest extends IntegrationTest with BeforeAndAfterEach {
     queryJob.getStatus.getError shouldBe null
     queryJob
   }
-
 }
