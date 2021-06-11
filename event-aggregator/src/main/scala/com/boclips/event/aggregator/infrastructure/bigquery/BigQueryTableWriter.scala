@@ -45,8 +45,6 @@ class BigQueryTableWriter(private val config: BigQueryConfig) extends TableWrite
     conf.set("fs.AbstractFileSystem.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS")
     conf.set("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
     conf.set("fs.gs.project.id", config.projectId)
-    conf.set("google.cloud.auth.service.account.enable", "true")
-    conf.set("google.cloud.auth.service.account.json.keyfile", config.serviceAccountKeyPath.toFile.getPath)
     conf
   }
 }

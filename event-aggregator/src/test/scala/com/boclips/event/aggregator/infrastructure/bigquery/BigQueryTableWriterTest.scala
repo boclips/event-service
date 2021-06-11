@@ -61,9 +61,6 @@ class BigQueryTableWriterTest extends IntegrationTest with BeforeAndAfterEach {
       .build()
     val jobId = JobId.of(UUID.randomUUID.toString)
     val bigquery = BigQueryOptions.newBuilder()
-      .setCredentials(
-        ServiceAccountCredentials.fromStream(new FileInputStream(config.serviceAccountKeyPath.toFile))
-      )
       .build()
       .getService
     val queryJob = bigquery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build).waitFor()
