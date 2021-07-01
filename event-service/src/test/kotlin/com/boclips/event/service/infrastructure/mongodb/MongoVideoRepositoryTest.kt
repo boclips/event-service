@@ -2,13 +2,12 @@ package com.boclips.event.service.infrastructure.mongodb
 
 import com.boclips.event.infrastructure.video.VideoDocument
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
+import com.boclips.event.service.testsupport.CategoryFactory
+import com.boclips.event.service.testsupport.CategoryFactory.createCategoryWithAncestors
 import com.boclips.event.service.testsupport.VideoFactory.createVideo
 import com.boclips.eventbus.domain.AgeRange
-import com.boclips.eventbus.domain.video.Dimensions
-import com.boclips.eventbus.domain.video.PlaybackProviderType
-import com.boclips.eventbus.domain.video.VideoAsset
-import com.boclips.eventbus.domain.video.VideoTopic
-import com.boclips.eventbus.domain.video.VideoType
+import com.boclips.eventbus.domain.category.CategoryWithAncestors
+import com.boclips.eventbus.domain.video.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -17,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.Locale
+import java.util.*
 
 class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
@@ -72,7 +71,8 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
                 ),
                 keywords = listOf("key", "words", "are", "cool"),
                 sourceVideoReference = "video-reference",
-                deactivated = true
+                deactivated = true,
+                categories = mutableMapOf(VideoCategorySource.MANUAL to mutableSetOf(createCategoryWithAncestors(code = "BBB", description = "Bats", ancestors = setOf("Mammals"))))
             )
         )
 
@@ -101,6 +101,9 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         assertThat(document.keywords).containsExactly("key", "words", "are", "cool")
         assertThat(document.sourceVideoReference).isEqualTo("video-reference")
         assertThat(document.deactivated).isEqualTo(true)
+        assertThat(document.categories).isNotNull
+        assertThat(document.categories["MANUAL"]!!.map { it.code.toString() }[0]).isEqualTo("BBB")
+
 
         val firstTopic = document.topics.first()
         assertThat(firstTopic.name).isEqualTo("topic")
@@ -153,6 +156,18 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
 
         val document = document()
         assertThat(document.assets).isNull()
+    }
+
+    @Test
+    fun `creating a video when categories are empty`() {
+        videoRepository.saveVideo(
+            createVideo(
+                categories = Collections.emptyMap()
+        )
+        )
+
+        val document = document()
+        assertThat(document.categories).isEmpty()
     }
 
     @Test

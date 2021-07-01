@@ -1,5 +1,6 @@
 package com.boclips.event.service.testsupport
 
+import com.boclips.event.service.testsupport.CategoryFactory.createCategoryWithAncestors
 import com.boclips.eventbus.domain.AgeRange
 import com.boclips.eventbus.domain.Subject
 import com.boclips.eventbus.domain.category.CategoryWithAncestors
@@ -32,17 +33,6 @@ object ChannelFactory {
             .categories(categories)
             .build()
 
-    fun createCategoryWithAncestors(
-        code: String = "AB",
-        description: String = "Animals",
-        ancestors: Set<String> = setOf("A")
-    ): CategoryWithAncestors =
-        CategoryWithAncestors
-            .builder()
-            .code(code)
-            .description(description)
-            .ancestors(ancestors)
-            .build()
 
     fun createChannelTopLevelDetails(
         contentTypes: List<String>? = null,

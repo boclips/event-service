@@ -1,12 +1,10 @@
 package com.boclips.event.infrastructure.video;
 
+import com.boclips.event.infrastructure.channel.CategoryWithAncestorsDocument;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Builder
@@ -44,6 +42,7 @@ public class VideoDocument implements Serializable {
     private List<VideoTopicDocument> topics;
     private String sourceVideoReference;
     private Boolean deactivated;
+    private Map<String, Set<CategoryWithAncestorsDocument>> categories;
 
     public static VideoDocumentBuilder sample() {
         return VideoDocument.builder()
@@ -78,6 +77,7 @@ public class VideoDocument implements Serializable {
                 ))
                 .keywords(Collections.singletonList("keyword"))
                 .sourceVideoReference("some-video-reference")
-                .deactivated(false);
+                .deactivated(false)
+                .categories(new HashMap<>());
     }
 }

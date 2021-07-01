@@ -5,7 +5,7 @@ import com.boclips.event.infrastructure.channel.ChannelDocument
 import com.boclips.event.infrastructure.channel.DistributionMethodDocument
 import com.boclips.event.service.domain.ChannelRepository
 import com.boclips.event.service.testsupport.AbstractSpringIntegrationTest
-import com.boclips.event.service.testsupport.ChannelFactory.createCategoryWithAncestors
+import com.boclips.event.service.testsupport.CategoryFactory.createCategoryWithAncestors
 import com.boclips.event.service.testsupport.ChannelFactory.createChannel
 import com.boclips.event.service.testsupport.ChannelFactory.createChannelIngestDetails
 import com.boclips.event.service.testsupport.ChannelFactory.createChannelMarketingDetails

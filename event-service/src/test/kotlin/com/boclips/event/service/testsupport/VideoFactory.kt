@@ -2,16 +2,12 @@ package com.boclips.event.service.testsupport
 
 import com.boclips.event.service.testsupport.SubjectFactory.createSubjects
 import com.boclips.eventbus.domain.AgeRange
+import com.boclips.eventbus.domain.category.CategoryWithAncestors
 import com.boclips.eventbus.domain.contentpartner.ChannelId
-import com.boclips.eventbus.domain.video.Dimensions
-import com.boclips.eventbus.domain.video.PlaybackProviderType
-import com.boclips.eventbus.domain.video.Video
-import com.boclips.eventbus.domain.video.VideoAsset
-import com.boclips.eventbus.domain.video.VideoId
-import com.boclips.eventbus.domain.video.VideoTopic
-import com.boclips.eventbus.domain.video.VideoType
+import com.boclips.eventbus.domain.video.*
 import java.time.LocalDate
 import java.time.ZonedDateTime
+import java.util.*
 
 object VideoFactory {
 
@@ -34,7 +30,8 @@ object VideoFactory {
         keywords: List<String> = emptyList(),
         sourceVideoReference: String? = null,
         deactivated: Boolean? = false,
-        hasTranscript: Boolean = false
+        hasTranscript: Boolean = false,
+        categories: MutableMap<VideoCategorySource,MutableSet<CategoryWithAncestors>> = Collections.emptyMap()
     ): Video {
         return Video
             .builder()
@@ -58,6 +55,7 @@ object VideoFactory {
             .sourceVideoReference(sourceVideoReference)
             .deactivated(deactivated)
             .hasTranscript(hasTranscript)
+            .categories(categories)
             .build()
     }
 }
