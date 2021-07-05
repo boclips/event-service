@@ -1,8 +1,7 @@
 package com.boclips.event.aggregator.testsupport.testfactories
 
 import java.time.{Duration, LocalDate, ZonedDateTime}
-
-import com.boclips.event.aggregator.domain.model.contentpartners.ChannelId
+import com.boclips.event.aggregator.domain.model.contentpartners.{CategoryWithAncestors, ChannelId}
 import com.boclips.event.aggregator.domain.model.videos._
 import com.boclips.event.aggregator.domain.model.{videos, _}
 
@@ -27,6 +26,7 @@ object VideoFactory {
                    keywords: List[String] = Nil,
                    sourceVideoReference: Option[String] = None,
                    deactivated: Boolean = false,
+                   categories: Option[collection.Map[String, collection.mutable.Set[CategoryWithAncestors]]] = None,
                  ): Video = {
     videos.Video(
       id = VideoId(id),
@@ -47,6 +47,7 @@ object VideoFactory {
       keywords = keywords,
       sourceVideoReference = sourceVideoReference,
       deactivated = deactivated,
+      categories = categories
     )
   }
 

@@ -1,9 +1,10 @@
 package com.boclips.event.aggregator.domain.model.videos
 
 import java.time.{Duration, LocalDate, ZonedDateTime}
-
 import com.boclips.event.aggregator.domain.model._
-import com.boclips.event.aggregator.domain.model.contentpartners.ChannelId
+import com.boclips.event.aggregator.domain.model.contentpartners.{CategoryWithAncestors, ChannelId}
+
+import scala.collection.mutable
 
 
 case class Video(
@@ -24,7 +25,8 @@ case class Video(
                   topics: List[VideoTopic],
                   keywords: List[String],
                   sourceVideoReference: Option[String],
-                  deactivated: Boolean
+                  deactivated: Boolean,
+                  categories: Option[collection.Map[String,mutable.Set[CategoryWithAncestors]]],
                 ) {
 
   def monthlyStorageCostGbp(): Double = {

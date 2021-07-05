@@ -1,14 +1,15 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import java.time.{Duration, LocalDate, ZonedDateTime}
-import java.util.Locale
-
-import com.boclips.event.aggregator.domain.model.contentpartners.ChannelId
+import com.boclips.event.aggregator.domain.model.contentpartners.{CategoryWithAncestors, ChannelId}
 import com.boclips.event.aggregator.domain.model.videos._
 import com.boclips.event.aggregator.domain.model.{videos, _}
+import com.boclips.event.infrastructure.channel.CategoryWithAncestorsDocument
 import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument, VideoTopicDocument}
 
+import java.time.{Duration, LocalDate, ZonedDateTime}
+import java.util.Locale
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 
 object DocumentToVideoConverter {
 
@@ -37,9 +38,27 @@ object DocumentToVideoConverter {
       topics = document.getTopics.asScala.toList.map(convertTopic),
       keywords = Option(document.getKeywords).map(_.asScala.toList).getOrElse(Nil),
       sourceVideoReference = Option(document.getSourceVideoReference),
-      deactivated = document.getDeactivated
+      deactivated = document.getDeactivated,
+      categories = convertVideoCategories(Option(document.getCategories.asScala)),
     )
   }
+
+  private def convertVideoCategories(categories: Option[collection.Map[String,java.util.Set[CategoryWithAncestorsDocument]]]) : Option[collection.Map[String, mutable.Set[CategoryWithAncestors]]] = {
+      categories match {
+        case None => None
+        case Some(categoriesMap) => val valuesAsMap = categoriesMap.mapValues(value => value.asScala).map(identity)
+        Some(valuesAsMap.mapValues(value => value.map(it => convertCategoryWithAncestorsDocument(it))).map(identity))
+      }
+  }
+
+  private def convertCategoryWithAncestorsDocument(document: CategoryWithAncestorsDocument): CategoryWithAncestors = {
+    CategoryWithAncestors(
+      code = Option(document.getCode),
+      description = Option(document.getDescription),
+      ancestors = Option(document.getAncestors).map(_.asScala.toSet),
+    )
+  }
+
 
   private def convertAsset(document: VideoAssetDocument): VideoAsset = {
     VideoAsset(

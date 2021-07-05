@@ -17,7 +17,6 @@ import org.bson.Document
 import org.litote.kmongo.getCollection
 import java.time.format.DateTimeFormatter.ISO_DATE
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
-import kotlin.collections.mutableMapOf as mutableMapOf1
 
 class MongoVideoRepository(private val mongoClient: MongoClient) : VideoRepository {
     companion object : KLogging() {
