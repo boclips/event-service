@@ -1,12 +1,16 @@
 package com.boclips.event.aggregator
 
-import com.boclips.event.aggregator.config.EventAggregatorConfig
+import com.boclips.event.aggregator.infrastructure.mongo.MongoChannelLoader.CHANNELS_COLLECTION
 import com.boclips.event.aggregator.infrastructure.mongo.MongoEventLoader.EVENTS_COLLECTION
 import com.boclips.event.aggregator.infrastructure.mongo.MongoVideoLoader.VIDEOS_COLLECTION
 import com.boclips.event.aggregator.presentation.TableNames
 import com.boclips.event.aggregator.testsupport.testfactories.EventFactory.createVideoSegmentPlayedEventDocument
 import com.boclips.event.aggregator.testsupport.{IntegrationTest, TestTableWriter}
+import com.boclips.event.infrastructure.channel.{CategoryWithAncestorsDocument, ChannelDocument}
 import com.boclips.event.infrastructure.video.VideoDocument
+
+import java.util.Collections.emptySet
+import scala.collection.JavaConverters._
 
 class EventAggregatorAppIntegrationTest extends IntegrationTest {
 
@@ -48,5 +52,56 @@ class EventAggregatorAppIntegrationTest extends IntegrationTest {
     List("device-1", "device-2") should contain(
       videosTable.get.head.getAsJsonArray("playbacks").get(0).getAsJsonObject.get("deviceId").getAsString
     )
+  }
+
+  it should "convert videos with categories" in mongoSparkTest { (spark, mongo) =>
+    val videosCollection = mongo.collection[VideoDocument](VIDEOS_COLLECTION)
+    videosCollection.insertOne(
+      VideoDocument.sample()
+        .categories(Map("CHANNEL" -> Set(CategoryWithAncestorsDocument.sample
+          .code("K")
+          .description("Eco")
+          .ancestors(emptySet())
+          .build()).asJava,
+          "Manual" -> Set(CategoryWithAncestorsDocument.sample().build()).asJava).asJava
+        )
+      .id("v1").build()
+
+    )
+
+    val channelsCollection = mongo.collection[ChannelDocument](CHANNELS_COLLECTION)
+    channelsCollection.insertOne(
+      ChannelDocument.sample()
+        .categories(Set(CategoryWithAncestorsDocument.sample()
+          .code("ABC")
+          .description("Bugs")
+          .ancestors(Set("AA", "BB").asJava).build()).asJava).build()
+    )
+
+
+    val eventsCollection = mongo.collection(EVENTS_COLLECTION)
+    eventsCollection.insertOne(
+      createVideoSegmentPlayedEventDocument(userId = None, deviceId = Some("device-1"), videoId = "v1")
+    )
+    eventsCollection.insertOne(
+      createVideoSegmentPlayedEventDocument(userId = None, deviceId = Some("device-2"), videoId = "v1")
+    )
+
+    val tableWriter = new TestTableWriter()
+    val app = new EventAggregatorApp(
+      tableWriter,
+      mongo
+    )(spark)
+
+    app.run()
+
+    val videosTable = tableWriter.table(TableNames.VIDEOS)
+    videosTable should not be empty
+    videosTable.get should have size 1
+    videosTable.get.head.getAsJsonArray("playbacks").size() shouldBe 2
+    List("device-1", "device-2") should contain(
+      videosTable.get.head.getAsJsonArray("playbacks").get(0).getAsJsonObject.get("deviceId").getAsString
+    )
+
   }
 }

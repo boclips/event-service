@@ -3,7 +3,6 @@ package com.boclips.event.aggregator.infrastructure.mongo
 import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.infrastructure.channel.{CategoryWithAncestorsDocument, ChannelDocument, DistributionMethodDocument}
 
-import java.time.Period
 import java.util.Locale
 import scala.collection.JavaConverters._
 import scala.collection.convert.ImplicitConversions.`set asScala`
@@ -45,13 +44,13 @@ object DocumentToChannelConverter {
         showreel = Option(marketing.getShowreel),
         sampleVideos = Option(marketing.getSampleVideos).map(_.asScala.toList)
       ),
-      categories = Option(categories.map(DocumentToCategoryWithAncestorsConverter.convert(_)).toSet
+      categories = Option(categories.map(DocumentToCategoryWithAncestorsConverter.convert).toSet
       )
     )
   }
 }
 
-object DocumentToCategoryWithAncestorsConverter{
+object DocumentToCategoryWithAncestorsConverter {
   def convert(document: CategoryWithAncestorsDocument): CategoryWithAncestors = {
     CategoryWithAncestors(
       code = Option(document.getCode),

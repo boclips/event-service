@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryWithAncestorsDocument {
+public class CategoryWithAncestorsDocument implements Serializable {
     private String code;
     private String description;
     private Set<String> ancestors;

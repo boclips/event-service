@@ -1,14 +1,14 @@
 package com.boclips.event.aggregator.infrastructure.mongo
 
-import java.time.{Duration, ZonedDateTime}
-import java.util.Collections.{singleton, singletonList}
-import java.util.Locale
-
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.videos.{Dimensions, VideoAsset, VideoId}
 import com.boclips.event.aggregator.testsupport.Test
+import com.boclips.event.infrastructure.channel.CategoryWithAncestorsDocument
 import com.boclips.event.infrastructure.video.{VideoAssetDocument, VideoDocument, VideoTopicDocument}
 
+import java.time.{Duration, ZonedDateTime}
+import java.util.Collections.{emptySet, singleton, singletonList}
+import java.util.Locale
 import scala.collection.JavaConverters._
 
 class DocumentToVideoConverterTest extends Test {
