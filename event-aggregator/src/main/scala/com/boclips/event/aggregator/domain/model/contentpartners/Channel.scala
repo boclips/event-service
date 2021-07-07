@@ -1,6 +1,5 @@
 package com.boclips.event.aggregator.domain.model.contentpartners
 
-import java.time.Period
 import java.util.Locale
 
 case class ChannelId(value: String) extends Ordered[ChannelId] {

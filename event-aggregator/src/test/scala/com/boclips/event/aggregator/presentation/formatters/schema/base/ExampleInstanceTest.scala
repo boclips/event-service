@@ -38,12 +38,20 @@ class ExampleInstanceTest extends Test {
     ExampleInstance.create[Set[ExampleClass]]() shouldBe Set(ExampleClass(0, "", Some(0)))
   }
 
+  it should "handle mutable sets" in {
+    ExampleInstance.create[collection.mutable.Set[ExampleClass]]() shouldBe Set(ExampleClass(0, "", Some(0)))
+  }
+
   it should "handle iterables" in {
     ExampleInstance.create[Iterable[ExampleClass]]() should contain only ExampleClass(0, "", Some(0))
   }
 
   it should "handle maps" in {
     ExampleInstance.create[Map[String, ExampleClass]]() shouldBe Map("" -> ExampleClass(0, "", Some(0)))
+  }
+
+  it should "handle mutable maps" in {
+    ExampleInstance.create[collection.mutable.Map[String, ExampleClass]]() shouldBe collection.mutable.Map("" -> ExampleClass(0, "", Some(0)))
   }
 
   it should "handle java time api types" in {

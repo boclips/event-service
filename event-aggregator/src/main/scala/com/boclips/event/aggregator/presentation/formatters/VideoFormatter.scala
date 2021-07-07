@@ -1,6 +1,5 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import java.time.LocalDate
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.orders.VideoItemWithOrder
 import com.boclips.event.aggregator.domain.model.videos.Video
@@ -8,7 +7,9 @@ import com.boclips.event.aggregator.presentation.formatters.common.SingleRowForm
 import com.boclips.event.aggregator.presentation.model.VideoTableRow
 import com.google.gson.JsonObject
 
+import java.time.LocalDate
 import java.util.UUID
+import scala.collection.breakOut
 
 object NestedOrderFormatter extends SingleRowFormatter[VideoItemWithOrder] {
   override def writeRow(obj: VideoItemWithOrder, json: JsonObject): Unit = {
@@ -71,6 +72,22 @@ object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
 
     val topicsJson = row.video.topics.map(VideoTopicThreeLevelFormatter.formatRow)
     json.addJsonArrayProperty(property = "topics", topicsJson)
+
+    val taxonomyCategoriesJson = row.video.categories match {
+      case None => Nil
+      case Some(categoriesMap) => categoriesMap.flatMap(
+        item => item._2.map(element => {
+          val categoryJson = new JsonObject
+          categoryJson.addProperty("code", element.code.orNull)
+          categoryJson.addProperty("description", element.description.orNull)
+          categoryJson.addProperty("categorySource", item._1)
+          categoryJson.addStringArrayProperty("ancestors", element.ancestors.getOrElse(Nil).toList)
+          categoryJson
+        }
+        )(breakOut)
+      ).toList
+    }
+    json.addJsonArrayProperty("taxonomyCategories", taxonomyCategoriesJson)
 
     val youTubeStatsJson = row.youTubeStats.map(_.viewCount) match {
       case Some(count) =>

@@ -26,7 +26,7 @@ object VideoFactory {
                    keywords: List[String] = Nil,
                    sourceVideoReference: Option[String] = None,
                    deactivated: Boolean = false,
-                   categories: Option[collection.Map[String, collection.mutable.Set[CategoryWithAncestors]]] = None,
+                   categories: Option[collection.mutable.Map[String, collection.mutable.Set[CategoryWithAncestors]]] = None,
                  ): Video = {
     videos.Video(
       id = VideoId(id),

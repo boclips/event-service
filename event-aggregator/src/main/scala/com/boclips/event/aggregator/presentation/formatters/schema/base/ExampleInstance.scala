@@ -88,6 +88,9 @@ object ExampleInstance {
     else if (tpe <:< typeOf[Set[_]]) {
       Some(createOrNoneToStopInfiniteRecursion(tpe.typeArgs.head, dependentTypes).toSet)
     }
+    else if (tpe <:< typeOf[collection.mutable.Set[_]]) {
+      Some(createOrNoneToStopInfiniteRecursion(tpe.typeArgs.head, dependentTypes).toSet)
+    }
     else if (tpe <:< typeOf[Option[_]]) {
       Some(createOrNoneToStopInfiniteRecursion(tpe.typeArgs.head, dependentTypes))
     }
@@ -119,6 +122,12 @@ object ExampleInstance {
       val key = ExampleInstance.create(tpe.typeArgs.head, dependentTypes)
       val value = ExampleInstance.create(tpe.typeArgs.tail.head, dependentTypes)
       Some(Map(key -> value))
+    }
+
+    else if (tpe <:< typeOf[collection.mutable.Map[_, _]]) {
+      val key = ExampleInstance.create(tpe.typeArgs.head, dependentTypes)
+      val value = ExampleInstance.create(tpe.typeArgs.tail.head, dependentTypes)
+      Some(collection.mutable.Map(key -> value))
     }
     else if (tpe <:< typeOf[Iterable[_]]) {
       Some(createOrNoneToStopInfiniteRecursion(tpe.typeArgs.head, dependentTypes).toList)

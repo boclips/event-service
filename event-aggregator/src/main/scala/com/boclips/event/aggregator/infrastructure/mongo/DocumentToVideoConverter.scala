@@ -43,11 +43,14 @@ object DocumentToVideoConverter {
     )
   }
 
-  private def convertVideoCategories(categories: Option[collection.Map[String,java.util.Set[CategoryWithAncestorsDocument]]]) : Option[collection.Map[String, mutable.Set[CategoryWithAncestors]]] = {
+  private def convertVideoCategories(categories: Option[collection.Map[String,java.util.Set[CategoryWithAncestorsDocument]]]) : Option[collection.mutable.Map[String, mutable.Set[CategoryWithAncestors]]] = {
       categories match {
         case None => None
-        case Some(categoriesMap) => val valuesAsMap = categoriesMap.mapValues(value => value.asScala).map(identity)
-        Some(valuesAsMap.mapValues(value => value.map(it => convertCategoryWithAncestorsDocument(it))).map(identity))
+        case Some(categoriesMap) if categoriesMap.isEmpty => None
+        case Some(categoriesMap) =>
+        val valuesAsMap = categoriesMap.mapValues(value => value.asScala).map(identity)
+        val serializedSet = valuesAsMap.mapValues(value => value.map(it => convertCategoryWithAncestorsDocument(it))).map(identity)
+        Some(collection.mutable.Map(serializedSet.toSeq:_*))
       }
   }
 

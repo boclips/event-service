@@ -211,7 +211,7 @@ class DocumentToVideoConverterTest extends Test {
           .build()
       )
 
-      video.categories shouldBe Some(Map())
+      video.categories shouldBe None
   }
 
 }

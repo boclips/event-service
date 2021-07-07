@@ -26,7 +26,7 @@ case class Video(
                   keywords: List[String],
                   sourceVideoReference: Option[String],
                   deactivated: Boolean,
-                  categories: Option[collection.Map[String,mutable.Set[CategoryWithAncestors]]],
+                  categories: Option[collection.mutable.Map[String,mutable.Set[CategoryWithAncestors]]],
                 ) {
 
   def monthlyStorageCostGbp(): Double = {

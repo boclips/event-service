@@ -1,8 +1,5 @@
 package com.boclips.event.aggregator.presentation.formatters
 
-import java.time.{Duration, LocalDate, Period, ZonedDateTime}
-import java.util.{Currency, Locale}
-
 import com.boclips.event.aggregator.domain.model._
 import com.boclips.event.aggregator.domain.model.contentpartners._
 import com.boclips.event.aggregator.domain.model.orders.{OrderId, VideoItemWithOrder}
@@ -19,6 +16,8 @@ import com.boclips.event.aggregator.testsupport.testfactories.UserFactory.create
 import com.boclips.event.aggregator.testsupport.testfactories.VideoFactory.{createVideo, createVideoAsset}
 import com.google.gson.{JsonNull, JsonObject}
 
+import java.time.{Duration, LocalDate, ZonedDateTime}
+import java.util.{Currency, Locale}
 import scala.collection.JavaConverters._
 
 
@@ -602,5 +601,32 @@ class VideoFormatterTest extends Test {
     val result: JsonObject = VideoFormatter formatRow tableRow
     val deactivated = result.getBool("deactivated")
     deactivated should be(true)
+  }
+
+  it should "write taxonomy fields when they exist" in {
+    val tableRow = model.VideoTableRow(
+      createVideo(
+        id = "1",
+        categories = Some(collection.mutable.Map("MANUAL" -> collection.mutable.Set(CategoryWithAncestors(code = Some("AA"),
+         description = Some("Antelopes"), ancestors = Some(Set("AA","PP"))))))
+      )
+    )
+    val json: JsonObject = VideoFormatter formatRow tableRow
+    val categoriesJson = json.get("taxonomyCategories").getAsJsonArray.get(0).getAsJsonObject
+    categoriesJson.getString("code") shouldBe("AA")
+    categoriesJson.getString("description") shouldBe "Antelopes"
+    categoriesJson.getStringList("ancestors") shouldBe List("AA","PP")
+    categoriesJson.getString("categorySource") shouldBe("MANUAL")
+  }
+
+  it should "handle taxonomy fields when they do not exist" in {
+    val tableRow = model.VideoTableRow(
+      createVideo(
+        id = "1",
+        categories = None
+      )
+    )
+    val json: JsonObject = VideoFormatter formatRow tableRow
+    val categoriesJson = json.get("taxonomyCategories").getAsJsonArray.size() shouldBe 0
   }
 }
