@@ -637,4 +637,13 @@ class VideoFormatterTest extends Test {
     val json: JsonObject = VideoFormatter formatRow tableRow
     val categoriesJson = json.get("taxonomyCategories").getAsJsonArray.size() shouldBe 0
   }
+
+  it should "write keywords" in {
+    val video = createVideo(keywords = List("very", "key", "words"))
+
+    val jsonObject: JsonObject = VideoFormatter formatRow model.VideoTableRow(video)
+
+    val keywords = jsonObject.getStringList("keywords")
+    keywords.shouldBe(List("very", "key", "words"))
+  }
 }

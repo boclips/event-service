@@ -104,6 +104,7 @@ object VideoFormatter extends SingleRowFormatter[VideoTableRow] {
     json.addStringArrayProperty("ages", AgeFormatter.formatAges(row.video.ageRange))
     json.addProperty("durationSeconds", row.video.duration.getSeconds)
     json.addProperty("title", row.video.title)
+    json.addStringArrayProperty("keywords", row.video.keywords)
     json.addProperty("description", row.video.description)
     json.addProperty("type", row.video.contentType)
     json.addProperty("monthlyStorageCostGbp", row.video.monthlyStorageCostGbp())
