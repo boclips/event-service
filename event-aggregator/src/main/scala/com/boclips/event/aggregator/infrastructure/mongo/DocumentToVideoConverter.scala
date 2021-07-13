@@ -17,6 +17,7 @@ object DocumentToVideoConverter {
     videos.Video(
       id = VideoId(document.getId),
       title = document.getTitle,
+      description = document.getDescription,
       channelId = ChannelId(document.getChannelId),
       playbackProvider = document.getPlaybackProviderType,
       playbackId = document.getPlaybackId,

@@ -12,6 +12,7 @@ case class Video(
                   releasedOn: LocalDate,
                   ingestedAt: ZonedDateTime,
                   title: String,
+                  description: String,
                   channelId: ChannelId,
                   playbackProvider: String,
                   playbackId: String,

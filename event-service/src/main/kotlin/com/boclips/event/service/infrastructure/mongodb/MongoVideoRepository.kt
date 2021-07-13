@@ -29,6 +29,7 @@ class MongoVideoRepository(private val mongoClient: MongoClient) : VideoReposito
             .ingestedAt(video.ingestedAt.withFixedOffsetZone().format(ISO_DATE_TIME))
             .releasedOn(video.releasedOn.format(ISO_DATE))
             .title(video.title)
+            .description(video.description)
             .channelId(video.channelId.value)
             .playbackProviderType(video.playbackProviderType.name)
             .playbackId(video.playbackId)

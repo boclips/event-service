@@ -14,6 +14,7 @@ object VideoFactory {
     fun createVideo(
         id: String = "",
         title: String = "",
+        description: String = "",
         channelId: String = "",
         playbackProviderType: PlaybackProviderType = PlaybackProviderType.KALTURA,
         playbackId: String = "",
@@ -39,6 +40,7 @@ object VideoFactory {
             .ingestedAt(ingestedAt)
             .releasedOn(releasedOn)
             .title(title)
+            .description(description)
             .channelId(ChannelId(channelId))
             .playbackProviderType(playbackProviderType)
             .playbackId(playbackId)

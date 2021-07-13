@@ -26,6 +26,12 @@ class DocumentToVideoConverterTest extends Test {
     video.title shouldBe "the title"
   }
 
+  it should "convert the description" in {
+    val video = DocumentToVideoConverter convert VideoDocument.sample().description("the description").build()
+
+    video.description shouldBe "the description"
+  }
+
   it should "convert channel id" in {
     val video = DocumentToVideoConverter convert VideoDocument.sample().channelId("channel-id").build()
 

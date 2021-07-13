@@ -29,6 +29,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
             createVideo(
                 id = "1234",
                 title = "the title",
+                description = "the description",
                 channelId = "channel id",
                 playbackProviderType = PlaybackProviderType.YOUTUBE,
                 playbackId = "playback id",
@@ -79,6 +80,7 @@ class MongoVideoRepositoryTest : AbstractSpringIntegrationTest() {
         val document = document()
         assertThat(document.id).isEqualTo("1234")
         assertThat(document.title).isEqualTo("the title")
+        assertThat(document.description).isEqualTo("the description")
         assertThat(document.channelId).isEqualTo("channel id")
         assertThat(document.playbackProviderType).isEqualTo("YOUTUBE")
         assertThat(document.playbackId).isEqualTo("playback id")

@@ -18,6 +18,7 @@ public class VideoDocument implements Serializable {
     private String releasedOn;
     @NonNull
     private String title;
+    private String description;
     @NonNull
     private String channelId;
     @NonNull
@@ -50,6 +51,7 @@ public class VideoDocument implements Serializable {
                 .ingestedAt("2020-05-26T17:10:40+00:00")
                 .releasedOn("2020-05-26")
                 .title("video title")
+                .description("video description")
                 .channelId("channel id")
                 .playbackProviderType("providertype")
                 .playbackId("playbackId")

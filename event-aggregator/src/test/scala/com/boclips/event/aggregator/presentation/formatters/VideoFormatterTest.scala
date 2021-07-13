@@ -97,6 +97,14 @@ class VideoFormatterTest extends Test {
     jsonObject.get("title").getAsString shouldBe "Video title"
   }
 
+  it should "write video description" in {
+    val video = createVideo(description = "Video description")
+
+    val jsonObject = VideoFormatter formatRow model.VideoTableRow(video)
+
+    jsonObject.get("description").getAsString shouldBe "Video description"
+  }
+
   it should "write contentType when known" in {
     val video = createVideo(contentType = Some("STOCK"))
 
